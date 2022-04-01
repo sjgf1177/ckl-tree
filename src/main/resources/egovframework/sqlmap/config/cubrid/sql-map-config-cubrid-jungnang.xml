@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN"
+    "http://www.ibatis.com/dtd/sql-map-config-2.dtd">
+
+<sqlMapConfig>
+	<sqlMap resource="egovframework/sqlmap/kr/go/jungnang/HospitalBoard_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/go/jungnang/LandBoard_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/go/jungnang/vodRecommend_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/funnywork/petition_subcontract_SQL_cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/go/jungnang/search_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/go/jungnang/Asbestos_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/go/jungnang/FindJibun_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/go/jungnang/SafeBoard_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/go/jungnang/IntegrateApp_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/go/jungnang/PraiseBoard_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/go/jungnang/IntegrateApplicant_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/go/jungnang/event_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/go/jungnang/eventApplicant_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/go/jungnang/selfDiagnosis_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/go/jungnang/infoEducation_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/go/jungnang/infoEduApplicant_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/go/jungnang/SidamBoard_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/go/jungnang/appLocation_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/go/jungnang/SmsService_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/go/jungnang/DozenFile_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/go/jungnang/appLaw_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/go/jungnang/appHoliday_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/go/jungnang/B0000271Board_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/go/jungnang/B0000294Board_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/go/jungnang/GujungBoard_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/go/jungnang/StudyTeacher_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/go/jungnang/StudyJorg_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/go/jungnang/pubCategory_SQL_Cubrid.xml"/>
+</sqlMapConfig>

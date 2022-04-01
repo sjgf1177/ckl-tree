@@ -1,0 +1,1786 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="optionalBoard">
+
+	<typeAlias  alias="zvl" type="kr.co.unp.util.ZValue"/>
+	<typeAlias  alias="zValue" type="kr.co.unp.util.ZValue"/>
+
+	<insert id="optionalBoardDAO.insertBoardArticle" parameterClass="zvl" >
+
+		<selectKey resultClass="java.lang.Long" keyProperty="nttId">
+			SELECT NVL(MAX(NTT_ID),0)+1 AS NTT_ID  FROM $tableNm$
+		</selectKey>
+		/* optionalBoardDAO.insertBoardArticle */
+			INSERT INTO $tableNm$
+			(NTT_ID, BBS_ID, NTT_SJ, NTT_CN, SORT_ORDR,
+			 NTCR_ID, NTCR_NM, PASSWORD, INQIRE_CO,
+			 NTCE_BGNDE, NTCE_ENDDE, REPLY_AT,
+			 PARNTS,
+			 NTT_NO, REPLY_LC, ATCH_FILE_ID,NTCR_EMAIL, NTCR_TEL, NTCR_HP, NTCR_ADDR1, NTCR_ADDR2,
+			 FRST_REGISTER_ID, FRST_REGIST_PNTTM, LAST_UPDT_PNTTM, USE_AT,
+			 SECRET_AT, DELETE_CODE, NTT_TYPE, DEPT_ID,
+			 OPTION1, OPTION2, OPTION3,
+			 OPTION4, OPTION5, OPTION6, OPTION7, OPTION8,
+			 OPTION9, OPTION10, OPTION11, OPTION12, OPTION13,
+			 OPTION14, OPTION15, OPTION16, OPTION17, OPTION18,
+			 OPTION19, OPTION20, HTML_AT, NTCR_CI, IMG_DESC_CN
+			 )
+			VALUES
+			( #nttId#, #bbsId#, #nttSj#, #nttCn:CLOB#, #sortOrdr#,
+			  #ntcrId#, #ntcrNm#, #password#, 0,
+			  #ntceBgnde#, #ntceEndde#, #replyAt#,
+			  #parnts#,
+			  #nttNo#, #replyLc#, #atchFileId#, #ntcrEmail#, #ntcrTel#, #ntcrHp#, #ntcrAddr1#, #ntcrAddr2#,
+			  #frstRegisterId#, SYSDATE, SYSDATE, 'Y',
+			  #secret#, NVL(#delcode#, '0'), #nttType#, #deptId#,
+			  #option1#, #option2#, #option3#,
+			  #option4#, #option5#, #option6#, #option7#, #option8#,
+			  #option9#, #option10#, #option11#, #option12#, #option13#,
+			  #option14#, #option15#, #option16#, #option17#, #option18#,
+			  #option19#, #option20#, NVL(#htmlYn#, 'N'), #ntPinno#, #imgDescCn:CLOB#
+			 )
+	</insert>
+
+
+
+
+
+
+
+	<sql id="optionalBoardDAO.selectBoardArticleList-where">
+		<isNotEmpty prepend="AND" property="sdate">
+			<![CDATA[	TO_CHAR(a.FRST_REGIST_PNTTM, 'YYYYMMDD') >= REPLACE(#sdate#,'-','') 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="edate">
+			<![CDATA[	TO_CHAR(a.FRST_REGIST_PNTTM, 'YYYYMMDD') <= REPLACE(#edate#,'-','') 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchBgnDe">
+			<![CDATA[	REPLACE(a.NTCE_BGNDE,'-','') >= REPLACE(#searchBgnDe#,'-','') 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchEndDe">
+			<![CDATA[	REPLACE(a.NTCE_ENDDE,'-','') <= REPLACE(#searchEndDe#,'-','') 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="useAt">
+			<![CDATA[	a.USE_AT = #useAt# 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="deptId">
+			<![CDATA[	a.DEPT_ID = #deptId# 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="delcode">
+			<![CDATA[	a.DELETE_CODE = #delcode# 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="option1">
+			<![CDATA[	a.OPTION1 = #option1# 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="option2">
+			<![CDATA[	a.OPTION2 = #option2# 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="option3">
+			<![CDATA[	a.OPTION3 = #option3# 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="option4">
+			<![CDATA[	a.OPTION4 = #option4# 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="option5">
+			<![CDATA[	a.OPTION5 = #option5# 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchWrd">
+			<isEqual property="searchCnd" compareValue="1">
+				<![CDATA[	a.NTT_SJ LIKE '%' || #searchWrd# || '%' 		]]>
+			</isEqual>
+			<isEqual property="searchCnd" compareValue="2">
+				<![CDATA[	a.NTT_CN LIKE '%' || #searchWrd# || '%' 		]]>
+			</isEqual>
+			<isEqual property="searchCnd" compareValue="3">
+				<![CDATA[	( a.NTT_SJ LIKE '%' || #searchWrd# || '%' OR a.NTT_CN LIKE '%' || #searchWrd# || '%' )	]]>
+			</isEqual>
+			<isEqual property="searchCnd" compareValue="4">
+				<![CDATA[	a.NTCR_NM LIKE '%' || #searchWrd# || '%' 		]]>
+			</isEqual>
+			<isEqual property="searchCnd" compareValue="5">
+				<![CDATA[	a.OPTION1 LIKE '%' || #searchWrd# || '%' 		]]>
+			</isEqual>
+			<isEqual property="searchCnd" compareValue="6">
+				<![CDATA[	a.OPTION6 LIKE '%' || #searchWrd# || '%' 		]]>
+			</isEqual>
+		</isNotEmpty>
+
+		<isNotEmpty prepend="AND" property="ntcrId">
+			a.NTCR_ID = #ntcrId#
+		</isNotEmpty>
+
+		<isEmpty property="d03CategoryId">
+			<isEmpty property="d02CategoryId">
+				<isNotEmpty prepend="AND" property="gubun">
+					a.gubun IN (SELECT  CATEGORY_ID  FROM CATEGORY WHERE CATEGORY_CLASS=1 AND USE_YN='Y' START WITH CATEGORY_ID=#gubun# CONNECT BY PRIOR CATEGORY_ID = UPPER_CATEGORY_ID)
+				</isNotEmpty>
+			</isEmpty>
+			<isNotEmpty prepend="AND" property="d02CategoryId">
+				a.gubun IN (SELECT  CATEGORY_ID  FROM CATEGORY WHERE CATEGORY_CLASS=1 AND USE_YN='Y' START WITH CATEGORY_ID=#d02CategoryId# CONNECT BY PRIOR CATEGORY_ID = UPPER_CATEGORY_ID)
+			</isNotEmpty>
+		</isEmpty>
+		<isNotEmpty prepend="AND" property="d03CategoryId">
+			a.gubun IN (SELECT  CATEGORY_ID  FROM CATEGORY WHERE CATEGORY_CLASS=1 AND USE_YN='Y' START WITH CATEGORY_ID=#d03CategoryId# CONNECT BY PRIOR CATEGORY_ID = UPPER_CATEGORY_ID)
+		</isNotEmpty>
+		<!-- isNotEmpty prepend="AND" property="gubunData">
+					a.gubun IN
+			<iterate conjunction="," open="(" close=")" property="gubunData">
+				#gubunData[]#
+			</iterate>
+		</isNotEmpty -->
+	</sql>
+
+	<select id="optionalBoardDAO.selectBoardArticleListCnt" parameterClass="zvl" resultClass="int" >
+		<![CDATA[
+			SELECT
+				COUNT(a.NTT_ID)
+			FROM
+				$tableNm$ a
+            LEFT OUTER JOIN $tableNm$ b ON a.NTT_ID = b.PARNTS AND b.DELETE_CODE = 0
+			WHERE  a.BBS_ID = #bbsId# AND a.PARNTS = 0
+		]]>
+		<include refid="optionalBoardDAO.selectBoardArticleList-where" />
+	</select>
+
+	<select id="optionalBoardDAO.selectBoardArticleFiles" parameterClass="zvl" resultClass="zvl" >
+		<![CDATA[
+			SELECT a.ATCH_FILE_ID,
+			       a.FILE_SN,
+			       a.FILE_STRE_COURS,
+			       a.STRE_FILE_NM,
+			       a.ORIGNL_FILE_NM,
+			       a.FILE_EXTSN,
+			       a.FILE_MG,
+			       a.FILE_CN,
+			       a.FILE_FIELD_NM	AS	FILE_FIELD_NAME,
+				   b.NTT_ID,
+				   b.BBS_ID
+			  FROM TC_COMMNFILE_DETAIL a
+			  INNER JOIN $tableNm$ b ON b.ATCH_FILE_ID = a.ATCH_FILE_ID
+			  WHERE 1=1
+		]]>
+		<isNotEmpty prepend="AND" property="atchFileIdData">
+					a.ATCH_FILE_ID IN
+			<iterate conjunction="," open="(" close=")" property="atchFileIdData">
+				#atchFileIdData[]#
+			</iterate>
+		</isNotEmpty>
+	 			order by a.FILE_SN desc
+	</select>
+
+
+
+
+	<!-- 유형별 심의ㆍ조치 내역 리스트 -->
+	<resultMap id="optionalBoardDAO.selectDlbrtBoardArticleList" class="zvl">
+		<result property="nttId" column="NTT_ID"/>
+		<result property="bbsId" column="BBS_ID"/>
+		<result property="ntcrId" column="NTCR_ID"/>
+		<result property="electionCd" column="ELECTION_CD"/>
+		<result property="electionNm" column="ELECTION_NM"/>
+		<result property="sumTotal" column="SUM_TOTAL"/>
+		<result property="dstorMaputSum" column="DSTOR_MAPUT_SUM"/>
+		<result property="dstorMaputFobjct" column="DSTOR_MAPUT_FOBJCT"/>
+		<result property="dstorMaputMntrng" column="DSTOR_MAPUT_MNTRNG"/>
+		<result property="dstorMaputQotat" column="DSTOR_MAPUT_QOTAT"/>
+		<result property="dstorMaputDsmssl" column="DSTOR_MAPUT_DSMSSL"/>
+		<result property="dstorMaputRject" column="DSTOR_MAPUT_RJECT"/>
+		<result property="dstorMaputAccs" column="DSTOR_MAPUT_ACCS"/>
+		<result property="dstorMaputInvst" column="DSTOR_MAPUT_INVST"/>
+		<result property="dstorMaputWarn" column="DSTOR_MAPUT_WARN"/>
+		<result property="dstorMaputObsry" column="DSTOR_MAPUT_OBSRY"/>
+		<result property="dstorMaputFfnlg" column="DSTOR_MAPUT_FFNLG"/>
+		<result property="dstorMaputEtc" column="DSTOR_MAPUT_ETC"/>
+		<result property="hmpgUnregistSum" column="HMPG_UNREGIST_SUM"/>
+		<result property="hmpgUnregistFobjct" column="HMPG_UNREGIST_FOBJCT"/>
+		<result property="hmpgUnregistMntrng" column="HMPG_UNREGIST_MNTRNG"/>
+		<result property="hmpgUnregistQotat" column="HMPG_UNREGIST_QOTAT"/>
+		<result property="hmpgUnregistDsmssl" column="HMPG_UNREGIST_DSMSSL"/>
+		<result property="hmpgUnregistRject" column="HMPG_UNREGIST_RJECT"/>
+		<result property="hmpgUnregistAccs" column="HMPG_UNREGIST_ACCS"/>
+		<result property="hmpgUnregistInvst" column="HMPG_UNREGIST_INVST"/>
+		<result property="hmpgUnregistWarn" column="HMPG_UNREGIST_WARN"/>
+		<result property="hmpgUnregistObsry" column="HMPG_UNREGIST_OBSRY"/>
+		<result property="hmpgUnregistFfnlg" column="HMPG_UNREGIST_FFNLG"/>
+		<result property="hmpgUnregistEtc" column="HMPG_UNREGIST_ETC"/>
+		<result property="sampleSum" column="SAMPLE_SUM"/>
+		<result property="sampleFobjct" column="SAMPLE_FOBJCT"/>
+		<result property="sampleMntrng" column="SAMPLE_MNTRNG"/>
+		<result property="sampleQotat" column="SAMPLE_QOTAT"/>
+		<result property="sampleDsmssl" column="SAMPLE_DSMSSL"/>
+		<result property="sampleRject" column="SAMPLE_RJECT"/>
+		<result property="sampleAccs" column="SAMPLE_ACCS"/>
+		<result property="sampleInvst" column="SAMPLE_INVST"/>
+		<result property="sampleWarn" column="SAMPLE_WARN"/>
+		<result property="sampleObsry" column="SAMPLE_OBSRY"/>
+		<result property="sampleFfnlg" column="SAMPLE_FFNLG"/>
+		<result property="sampleEtc" column="SAMPLE_ETC"/>
+		<result property="onvyVioltSum" column="ONVY_VIOLT_SUM"/>
+		<result property="onvyVioltFobjct" column="ONVY_VIOLT_FOBJCT"/>
+		<result property="onvyVioltMntrng" column="ONVY_VIOLT_MNTRNG"/>
+		<result property="onvyVioltQotat" column="ONVY_VIOLT_QOTAT"/>
+		<result property="onvyVioltDsmssl" column="ONVY_VIOLT_DSMSSL"/>
+		<result property="onvyVioltRject" column="ONVY_VIOLT_RJECT"/>
+		<result property="onvyVioltAccs" column="ONVY_VIOLT_ACCS"/>
+		<result property="onvyVioltInvst" column="ONVY_VIOLT_INVST"/>
+		<result property="onvyVioltWarn" column="ONVY_VIOLT_WARN"/>
+		<result property="onvyVioltObsry" column="ONVY_VIOLT_OBSRY"/>
+		<result property="onvyVioltFfnlg" column="ONVY_VIOLT_FFNLG"/>
+		<result property="onvyVioltEtc" column="ONVY_VIOLT_ETC"/>
+		<result property="publictVioltSum" column="PUBLICT_VIOLT_SUM"/>
+		<result property="publictVioltFobjct" column="PUBLICT_VIOLT_FOBJCT"/>
+		<result property="publictVioltMntrng" column="PUBLICT_VIOLT_MNTRNG"/>
+		<result property="publictVioltQotat" column="PUBLICT_VIOLT_QOTAT"/>
+		<result property="publictVioltDsmssl" column="PUBLICT_VIOLT_DSMSSL"/>
+		<result property="publictVioltRject" column="PUBLICT_VIOLT_RJECT"/>
+		<result property="publictVioltAccs" column="PUBLICT_VIOLT_ACCS"/>
+		<result property="publictVioltInvst" column="PUBLICT_VIOLT_INVST"/>
+		<result property="publictVioltWarn" column="PUBLICT_VIOLT_WARN"/>
+		<result property="publictVioltObsry" column="PUBLICT_VIOLT_OBSRY"/>
+		<result property="publictVioltFfnlg" column="PUBLICT_VIOLT_FFNLG"/>
+		<result property="publictVioltEtc" column="PUBLICT_VIOLT_ETC"/>
+		<result property="etcSum" column="ETC_SUM"/>
+		<result property="etcFobjct" column="ETC_FOBJCT"/>
+		<result property="etcMntrng" column="ETC_MNTRNG"/>
+		<result property="etcQotat" column="ETC_QOTAT"/>
+		<result property="etcDsmssl" column="ETC_DSMSSL"/>
+		<result property="etcRject" column="ETC_RJECT"/>
+		<result property="etcAccs" column="ETC_ACCS"/>
+		<result property="etcInvst" column="ETC_INVST"/>
+		<result property="etcWarn" column="ETC_WARN"/>
+		<result property="etcObsry" column="ETC_OBSRY"/>
+		<result property="etcFfnlg" column="ETC_FFNLG"/>
+		<result property="etcEtc" column="ETC_ETC"/>
+		<result property="sumFobjct" column="SUM_FOBJCT"/>
+		<result property="sumMntrng" column="SUM_MNTRNG"/>
+		<result property="sumQotat" column="SUM_QOTAT"/>
+		<result property="sumDsmssl" column="SUM_DSMSSL"/>
+		<result property="sumRject" column="SUM_RJECT"/>
+		<result property="sumAccs" column="SUM_ACCS"/>
+		<result property="sumInvst" column="SUM_INVST"/>
+		<result property="sumWarn" column="SUM_WARN"/>
+		<result property="sumObsry" column="SUM_OBSRY"/>
+		<result property="sumFfnlg" column="SUM_FFNLG"/>
+		<result property="sumEtc" column="SUM_ETC"/>
+	</resultMap>
+
+	<!-- 유형별 심의ㆍ조치 내역 리스트 -->
+	<select id="optionalBoardDAO.selectDlbrtBoardArticleList" parameterClass="zvl" resultMap="optionalBoardDAO.selectDlbrtBoardArticleList">
+		/* optionalBoardDAO.selectDlbrtBoardArticleList */
+		<![CDATA[
+			SELECT
+			  	   NTT_ID
+				 , BBS_ID
+				 , NTCR_ID
+				 , ELECTION_CD
+				 , ELECTION_NM
+				 , DSTOR_MAPUT_FOBJCT + DSTOR_MAPUT_MNTRNG + DSTOR_MAPUT_QOTAT + DSTOR_MAPUT_DSMSSL + DSTOR_MAPUT_RJECT + DSTOR_MAPUT_ACCS + DSTOR_MAPUT_INVST + DSTOR_MAPUT_WARN + DSTOR_MAPUT_OBSRY + DSTOR_MAPUT_FFNLG + DSTOR_MAPUT_ETC +
+				   HMPG_UNREGIST_FOBJCT + HMPG_UNREGIST_MNTRNG + HMPG_UNREGIST_QOTAT + HMPG_UNREGIST_DSMSSL + HMPG_UNREGIST_RJECT + HMPG_UNREGIST_ACCS + HMPG_UNREGIST_INVST + HMPG_UNREGIST_WARN + HMPG_UNREGIST_OBSRY + HMPG_UNREGIST_FFNLG + HMPG_UNREGIST_ETC +
+				   SAMPLE_FOBJCT + SAMPLE_MNTRNG + SAMPLE_QOTAT + SAMPLE_DSMSSL + SAMPLE_RJECT + SAMPLE_ACCS + SAMPLE_INVST + SAMPLE_WARN + SAMPLE_OBSRY + SAMPLE_FFNLG + SAMPLE_ETC +
+				   ONVY_VIOLT_FOBJCT + ONVY_VIOLT_MNTRNG + ONVY_VIOLT_QOTAT + ONVY_VIOLT_DSMSSL + ONVY_VIOLT_RJECT + ONVY_VIOLT_ACCS + ONVY_VIOLT_INVST + ONVY_VIOLT_WARN + ONVY_VIOLT_OBSRY + ONVY_VIOLT_FFNLG + ONVY_VIOLT_ETC +
+				   PUBLICT_VIOLT_FOBJCT + PUBLICT_VIOLT_MNTRNG + PUBLICT_VIOLT_QOTAT + PUBLICT_VIOLT_DSMSSL + PUBLICT_VIOLT_RJECT + PUBLICT_VIOLT_ACCS + PUBLICT_VIOLT_INVST + PUBLICT_VIOLT_WARN + PUBLICT_VIOLT_OBSRY + PUBLICT_VIOLT_FFNLG + PUBLICT_VIOLT_ETC +
+				   ETC_FOBJCT + ETC_MNTRNG + ETC_QOTAT + ETC_DSMSSL + ETC_RJECT + ETC_ACCS + ETC_INVST + ETC_WARN + ETC_OBSRY + ETC_FFNLG + ETC_ETC
+				   AS SUM_TOTAL
+				 , DSTOR_MAPUT_FOBJCT + DSTOR_MAPUT_MNTRNG + DSTOR_MAPUT_QOTAT + DSTOR_MAPUT_DSMSSL + DSTOR_MAPUT_RJECT + DSTOR_MAPUT_ACCS + DSTOR_MAPUT_INVST + DSTOR_MAPUT_WARN + DSTOR_MAPUT_OBSRY + DSTOR_MAPUT_FFNLG + DSTOR_MAPUT_ETC AS DSTOR_MAPUT_SUM
+				 , DSTOR_MAPUT_FOBJCT
+				 , DSTOR_MAPUT_MNTRNG
+				 , DSTOR_MAPUT_QOTAT
+				 , DSTOR_MAPUT_DSMSSL
+				 , DSTOR_MAPUT_RJECT
+				 , DSTOR_MAPUT_ACCS
+				 , DSTOR_MAPUT_INVST
+				 , DSTOR_MAPUT_WARN
+				 , DSTOR_MAPUT_OBSRY
+				 , DSTOR_MAPUT_FFNLG
+				 , DSTOR_MAPUT_ETC
+				 , HMPG_UNREGIST_FOBJCT + HMPG_UNREGIST_MNTRNG + HMPG_UNREGIST_QOTAT + HMPG_UNREGIST_DSMSSL + HMPG_UNREGIST_RJECT + HMPG_UNREGIST_ACCS + HMPG_UNREGIST_INVST + HMPG_UNREGIST_WARN + HMPG_UNREGIST_OBSRY + HMPG_UNREGIST_FFNLG + HMPG_UNREGIST_ETC AS HMPG_UNREGIST_SUM
+				 , HMPG_UNREGIST_FOBJCT
+				 , HMPG_UNREGIST_MNTRNG
+				 , HMPG_UNREGIST_QOTAT
+				 , HMPG_UNREGIST_DSMSSL
+				 , HMPG_UNREGIST_RJECT
+				 , HMPG_UNREGIST_ACCS
+				 , HMPG_UNREGIST_INVST
+				 , HMPG_UNREGIST_WARN
+				 , HMPG_UNREGIST_OBSRY
+				 , HMPG_UNREGIST_FFNLG
+				 , HMPG_UNREGIST_ETC
+				 , SAMPLE_FOBJCT + SAMPLE_MNTRNG + SAMPLE_QOTAT + SAMPLE_DSMSSL + SAMPLE_RJECT + SAMPLE_ACCS + SAMPLE_INVST + SAMPLE_WARN + SAMPLE_OBSRY + SAMPLE_FFNLG + SAMPLE_ETC AS SAMPLE_SUM
+				 , SAMPLE_FOBJCT
+				 , SAMPLE_MNTRNG
+				 , SAMPLE_QOTAT
+				 , SAMPLE_DSMSSL
+				 , SAMPLE_RJECT
+				 , SAMPLE_ACCS
+				 , SAMPLE_INVST
+				 , SAMPLE_WARN
+				 , SAMPLE_OBSRY
+				 , SAMPLE_FFNLG
+				 , SAMPLE_ETC
+				 , ONVY_VIOLT_FOBJCT + ONVY_VIOLT_MNTRNG + ONVY_VIOLT_QOTAT + ONVY_VIOLT_DSMSSL + ONVY_VIOLT_RJECT + ONVY_VIOLT_ACCS + ONVY_VIOLT_INVST + ONVY_VIOLT_WARN + ONVY_VIOLT_OBSRY + ONVY_VIOLT_FFNLG + ONVY_VIOLT_ETC AS ONVY_VIOLT_SUM
+				 , ONVY_VIOLT_FOBJCT
+				 , ONVY_VIOLT_MNTRNG
+				 , ONVY_VIOLT_QOTAT
+				 , ONVY_VIOLT_DSMSSL
+				 , ONVY_VIOLT_RJECT
+				 , ONVY_VIOLT_ACCS
+				 , ONVY_VIOLT_INVST
+				 , ONVY_VIOLT_WARN
+				 , ONVY_VIOLT_OBSRY
+				 , ONVY_VIOLT_FFNLG
+				 , ONVY_VIOLT_ETC
+				 , PUBLICT_VIOLT_FOBJCT + PUBLICT_VIOLT_MNTRNG + PUBLICT_VIOLT_QOTAT + PUBLICT_VIOLT_DSMSSL + PUBLICT_VIOLT_RJECT + PUBLICT_VIOLT_ACCS + PUBLICT_VIOLT_INVST + PUBLICT_VIOLT_WARN + PUBLICT_VIOLT_OBSRY + PUBLICT_VIOLT_FFNLG + PUBLICT_VIOLT_ETC AS PUBLICT_VIOLT_SUM
+				 , PUBLICT_VIOLT_FOBJCT
+				 , PUBLICT_VIOLT_MNTRNG
+				 , PUBLICT_VIOLT_QOTAT
+				 , PUBLICT_VIOLT_DSMSSL
+				 , PUBLICT_VIOLT_RJECT
+				 , PUBLICT_VIOLT_ACCS
+				 , PUBLICT_VIOLT_INVST
+				 , PUBLICT_VIOLT_WARN
+				 , PUBLICT_VIOLT_OBSRY
+				 , PUBLICT_VIOLT_FFNLG
+				 , PUBLICT_VIOLT_ETC
+				 , ETC_FOBJCT + ETC_MNTRNG + ETC_QOTAT + ETC_DSMSSL + ETC_RJECT + ETC_ACCS + ETC_INVST + ETC_WARN + ETC_OBSRY + ETC_FFNLG + ETC_ETC AS ETC_SUM
+				 , ETC_FOBJCT
+				 , ETC_MNTRNG
+				 , ETC_QOTAT
+				 , ETC_DSMSSL
+				 , ETC_RJECT
+				 , ETC_ACCS
+				 , ETC_INVST
+				 , ETC_WARN
+				 , ETC_OBSRY
+				 , ETC_FFNLG
+				 , ETC_ETC
+				 , DSTOR_MAPUT_FOBJCT + HMPG_UNREGIST_FOBJCT + SAMPLE_FOBJCT + ONVY_VIOLT_FOBJCT + PUBLICT_VIOLT_FOBJCT + ETC_FOBJCT AS SUM_FOBJCT
+				 , DSTOR_MAPUT_MNTRNG + HMPG_UNREGIST_MNTRNG + SAMPLE_MNTRNG + ONVY_VIOLT_MNTRNG + PUBLICT_VIOLT_MNTRNG + ETC_MNTRNG AS SUM_MNTRNG
+				 , DSTOR_MAPUT_QOTAT + HMPG_UNREGIST_QOTAT + SAMPLE_QOTAT + ONVY_VIOLT_QOTAT + PUBLICT_VIOLT_QOTAT + ETC_QOTAT AS SUM_QOTAT
+				 , DSTOR_MAPUT_DSMSSL + HMPG_UNREGIST_DSMSSL + SAMPLE_DSMSSL + ONVY_VIOLT_DSMSSL + PUBLICT_VIOLT_DSMSSL + ETC_DSMSSL AS SUM_DSMSSL
+				 , DSTOR_MAPUT_RJECT + HMPG_UNREGIST_RJECT + SAMPLE_RJECT + ONVY_VIOLT_RJECT + PUBLICT_VIOLT_RJECT + ETC_RJECT AS SUM_RJECT
+				 , DSTOR_MAPUT_ACCS + HMPG_UNREGIST_ACCS + SAMPLE_ACCS + ONVY_VIOLT_ACCS + PUBLICT_VIOLT_ACCS + ETC_ACCS AS SUM_ACCS
+				 , DSTOR_MAPUT_INVST + HMPG_UNREGIST_INVST + SAMPLE_INVST + ONVY_VIOLT_INVST + PUBLICT_VIOLT_INVST + ETC_INVST AS SUM_INVST
+				 , DSTOR_MAPUT_WARN + HMPG_UNREGIST_WARN + SAMPLE_WARN + ONVY_VIOLT_WARN + PUBLICT_VIOLT_WARN + ETC_WARN AS SUM_WARN
+				 , DSTOR_MAPUT_OBSRY + HMPG_UNREGIST_OBSRY + SAMPLE_OBSRY + ONVY_VIOLT_OBSRY + PUBLICT_VIOLT_OBSRY + ETC_OBSRY AS SUM_OBSRY
+				 , DSTOR_MAPUT_FFNLG + HMPG_UNREGIST_FFNLG + SAMPLE_FFNLG + ONVY_VIOLT_FFNLG + PUBLICT_VIOLT_FFNLG + ETC_FFNLG AS SUM_FFNLG
+				 , DSTOR_MAPUT_ETC + HMPG_UNREGIST_ETC + SAMPLE_ETC + ONVY_VIOLT_ETC + PUBLICT_VIOLT_ETC + ETC_ETC AS SUM_ETC
+		 	  FROM TP_DLBRT_DTLS
+			 WHERE BBS_ID = #bbsId#
+			   AND ELECTION_CD = '1'
+		]]>
+
+	</select>
+
+
+
+		<resultMap id="optionalBoardDAO.selectBoardArticleListMap" class="zvl">
+			<result property="nttId" column="NTT_ID"/>
+			<result property="bbsId" column="BBS_ID"/>
+			<result property="ntcrId" column="NTCR_ID"/>
+			<result property="sortOrdr" column="SORT_ORDR"/>
+			<result property="ntcrNm" column="NTCR_NM"/>
+			<result property="ntcrEmail" column="NTCR_EMAIL"/>
+			<result property="ntcrCi" column="NTCR_CI"/>
+			<result property="ntcrZipcode" column="NTCR_ZIPCODE"/>
+			<result property="ntcrAddr1" column="NTCR_ADDR1"/>
+			<result property="ntcrAddr2" column="NTCR_ADDR2"/>
+			<result property="ntcrTel" column="NTCR_TEL"/>
+			<result property="ntcrHp" column="NTCR_HP"/>
+			<result property="password" column="PASSWORD"/>
+			<result property="nttSj" column="NTT_SJ"/>
+			<result property="nttCn" column="NTT_CN"  jdbcType="CLOB" javaType="java.lang.String"/>
+			<result property="inqireCo" column="INQIRE_CO"/>
+			<result property="useAt" column="USE_AT"/>
+			<result property="ntceBgnde" column="NTCE_BGNDE"/>
+			<result property="ntceEndde" column="NTCE_ENDDE"/>
+			<result property="frstRegisterPnttm" column="FRST_REGISTER_PNTTM"/>
+			<result property="regDate" column="REG_DATE"/>
+			<result property="lastUpdtPnttm" column="LAST_UPDT_PNTTM"/>
+			<result property="frstRegisterId" column="FRST_REGISTER_ID"/>
+			<result property="lastUpdusrId" column="LAST_UPDUSR_ID"/>
+			<result property="replyAt" column="REPLY_AT"/>
+			<result property="parnts" column="PARNTS"/>
+			<result property="nttNo" column="NTT_NO"/>
+			<result property="replyLc" column="REPLY_LC"/>
+			<result property="atchFileId" column="ATCH_FILE_ID"/>
+			<result property="delcode" column="DELCODE"/>
+			<result property="secret" column="SECRET"/>
+			<result property="option1" column="OPTION1"/>
+			<result property="option2" column="OPTION2"/>
+			<result property="option3" column="OPTION3"/>
+			<result property="option4" column="OPTION4"/>
+			<result property="option5" column="OPTION5"/>
+			<result property="option6" column="OPTION6"/>
+			<result property="option7" column="OPTION7"/>
+			<result property="option8" column="OPTION8"/>
+			<result property="option9" column="OPTION9"/>
+			<result property="option10" column="OPTION10"/>
+			<result property="ntttype2" column="NTTTYPE2"/>
+			<result property="nttType" column="NTT_TYPE"/>
+			<result property="deptId" column="DEPT_ID"/>
+			<result property="option11" column="OPTION11"/>
+			<result property="option12" column="OPTION12"/>
+			<result property="option13" column="OPTION13"/>
+			<result property="option14" column="OPTION14"/>
+			<result property="option15" column="OPTION15"/>
+			<result property="option16" column="OPTION16"/>
+			<result property="option17" column="OPTION17"/>
+			<result property="option18" column="OPTION18"/>
+			<result property="option19" column="OPTION19"/>
+			<result property="option20" column="OPTION20"/>
+			<result property="htmlYn" column="HTML_YN"/>
+			<result property="bbsSe" column="BBS_SE"/>
+			<result property="replyRegisterPnttm" column="REPLY_REGISTER_PNTTM"/>
+			<result property="replyNtcrNm" column="REPLY_NTCR_NM"/>
+	</resultMap>
+
+
+
+	<select id="optionalBoardDAO.selectBoardArticleList" parameterClass="zvl" resultMap="optionalBoardDAO.selectBoardArticleListMap">
+		/* optionalBoardDAO.selectBoardArticleList */
+		<![CDATA[
+			SELECT  *
+			  FROM  (
+			SELECT ROWNUM RNUM, ALL_LIST.*
+			  FROM  (
+
+			SELECT
+				  a.NTT_ID
+				, a.BBS_ID
+				, a.NTCR_ID
+				, a.SORT_ORDR
+				, a.NTCR_NM
+				, a.NTCR_EMAIL
+				, a.NTCR_CI
+				, a.NTCR_ZIPCODE
+				, a.NTCR_ADDR1
+				, a.NTCR_ADDR2
+				, a.NTCR_TEL
+				, a.NTCR_HP
+				, a.PASSWORD
+				, a.NTT_SJ
+				, a.NTT_CN
+				, a.INQIRE_CO
+				, a.USE_AT
+				, a.NTCE_BGNDE
+				, a.NTCE_ENDDE
+				, TO_CHAR(a.FRST_REGIST_PNTTM, 'YYYY-MM-DD') as FRST_REGISTER_PNTTM
+				, a.FRST_REGIST_PNTTM as REG_DATE
+				, a.LAST_UPDT_PNTTM
+				, a.FRST_REGISTER_ID
+				, a.LAST_UPDUSR_ID
+				, a.REPLY_AT
+				, a.PARNTS
+				, a.NTT_NO
+				, a.REPLY_LC
+				, a.ATCH_FILE_ID
+				, a.DELETE_CODE AS DELCODE
+				, a.SECRET_AT AS SECRET
+				, a.OPTION1, a.OPTION2, a.OPTION3, a.OPTION4, a.OPTION5, a.OPTION6, a.OPTION7, a.OPTION8, a.OPTION9, a.OPTION10
+				, a.NTT_TYPE AS nttType2
+				, CASE
+					when a.NTT_TYPE = '1'
+					AND REPLACE(a.NTCE_BGNDE,'-','') <= TO_CHAR(SYSDATE, 'YYYYMMDD')
+					AND REPLACE(a.NTCE_ENDDE,'-','') >= TO_CHAR(SYSDATE, 'YYYYMMDD')
+					THEN '1'
+					ELSE '2'
+				  END AS ntt_type
+				, a.DEPT_ID
+				, a.OPTION11, a.OPTION12, a.OPTION13, a.OPTION14, a.OPTION15, a.OPTION16, a.OPTION17, a.OPTION18, a.OPTION19, a.OPTION20
+				, a.HTML_AT HTML_YN
+				, a.BBS_SE
+				, TO_CHAR(b.FRST_REGIST_PNTTM, 'YYYY-MM-DD') AS REPLY_REGISTER_PNTTM
+				, b.NTCR_NM AS REPLY_NTCR_NM
+			FROM
+				$tableNm$ a
+            LEFT OUTER JOIN $tableNm$ b ON a.NTT_ID = b.PARNTS AND b.DELETE_CODE = 0
+			WHERE  a.BBS_ID = #bbsId# AND a.PARNTS = 0
+		]]>
+		<isEqual property="bbsId" compareValue="B0000072" prepend="AND">
+			<isNotEqual property="siteName" compareValue="bos">
+			<![CDATA[	a.OPTION1 = 'N'	]]>
+			</isNotEqual>
+		</isEqual>
+		
+		<include refid="optionalBoardDAO.selectBoardArticleList-where" />
+
+		<!-- 일반게시판 -->
+		<isEqual property="bbsTyCode" compareValue="BBST01">
+			<![CDATA[	ORDER BY a.FRST_REGIST_PNTTM DESC	]]>
+		</isEqual>
+		<!-- 계단형게시판 -->
+		<isEqual property="bbsTyCode" compareValue="BBST02">
+			<![CDATA[	ORDER BY a.PARNTS desc, a.REPLY_LC ASC	]]>
+		</isEqual>
+		<!-- 공지게시판 -->
+		<isEqual property="bbsTyCode" compareValue="BBST03">
+			<![CDATA[	ORDER BY NTT_TYPE ASC, a.FRST_REGIST_PNTTM DESC	]]>
+		</isEqual>
+		<![CDATA[
+				    ) ALL_LIST
+				    )
+			 WHERE  RNUM  > #firstIndex#
+			   AND  RNUM <= #firstIndex# + #recordCountPerPage#
+		]]>
+		<isEqual property="bbsId" compareValue="B0000072">
+			<isNotEqual property="siteName" compareValue="bos">
+			<![CDATA[
+				UNION ALL
+				SELECT 0, ALL_LIST.*
+				  FROM  (
+				SELECT
+					  a.NTT_ID
+					, a.BBS_ID
+					, a.NTCR_ID
+					, a.SORT_ORDR
+					, a.NTCR_NM
+					, a.NTCR_EMAIL
+					, a.NTCR_CI
+					, a.NTCR_ZIPCODE
+					, a.NTCR_ADDR1
+					, a.NTCR_ADDR2
+					, a.NTCR_TEL
+					, a.NTCR_HP
+					, a.PASSWORD
+					, a.NTT_SJ
+					, a.NTT_CN
+					, a.INQIRE_CO
+					, a.USE_AT
+					, a.NTCE_BGNDE
+					, a.NTCE_ENDDE
+					, TO_CHAR(a.FRST_REGIST_PNTTM, 'YYYY-MM-DD') as FRST_REGISTER_PNTTM
+					, a.FRST_REGIST_PNTTM as REG_DATE
+					, a.LAST_UPDT_PNTTM
+					, a.FRST_REGISTER_ID
+					, a.LAST_UPDUSR_ID
+					, a.REPLY_AT
+					, a.PARNTS
+					, a.NTT_NO
+					, a.REPLY_LC
+					, a.ATCH_FILE_ID
+					, a.DELETE_CODE AS DELCODE
+					, a.SECRET_AT AS SECRET
+					, a.OPTION1, a.OPTION2, a.OPTION3, a.OPTION4, a.OPTION5, a.OPTION6, a.OPTION7, a.OPTION8, a.OPTION9, a.OPTION10
+					, a.NTT_TYPE AS nttType2
+					, CASE
+						when a.NTT_TYPE = '1'
+						AND REPLACE(a.NTCE_BGNDE,'-','') <= TO_CHAR(SYSDATE, 'YYYYMMDD')
+						AND REPLACE(a.NTCE_ENDDE,'-','') >= TO_CHAR(SYSDATE, 'YYYYMMDD')
+						THEN '1'
+						ELSE '2'
+					  END AS ntt_type
+					, a.DEPT_ID
+					, a.OPTION11, a.OPTION12, a.OPTION13, a.OPTION14, a.OPTION15, a.OPTION16, a.OPTION17, a.OPTION18, a.OPTION19, a.OPTION20
+					, a.HTML_AT HTML_YN
+					, a.BBS_SE
+					, TO_CHAR(b.FRST_REGIST_PNTTM, 'YYYY-MM-DD') AS REPLY_REGISTER_PNTTM
+					, b.NTCR_NM AS REPLY_NTCR_NM
+				FROM
+					TB_BBS_ESTN a
+	            LEFT OUTER JOIN TB_BBS_ESTN b ON a.NTT_ID = b.PARNTS AND b.DELETE_CODE = 0
+				WHERE  a.BBS_ID = 'B0000072' AND a.PARNTS = 0
+			AND
+					a.OPTION1 = 'Y'	
+			
+			AND
+					a.DELETE_CODE = '0' 		
+	
+			
+					ORDER BY a.FRST_REGIST_PNTTM DESC	
+					    ) ALL_LIST
+			]]>
+			</isNotEqual>
+		</isEqual>
+	</select>
+
+ 	<select id="optionalBoardDAO.selectBoardExcelList" parameterClass="zvl" resultClass="zvl" >
+ 		/* optionalBoardDAO.selectBoardExcelList */
+		<![CDATA[
+			SELECT
+				a.NTT_ID
+				, a.NTT_SJ
+				, a.NTT_CN
+				, a.FRST_REGISTER_ID
+				, a.NTCR_NM
+				, a.NTT_NO
+				, a.INQIRE_CO
+				, a.PARNTS
+				, a.REPLY_AT
+				, a.REPLY_LC
+				, a.USE_AT
+				, a.ATCH_FILE_ID
+				, a.BBS_ID
+				, a.NTCE_BGNDE
+				, a.NTCE_ENDDE
+				, a.SECRET_AT SECRET
+				, a.NTT_TYPE AS NTT_TYPE2
+				, case
+					when NTT_TYPE = '1'
+					AND REPLACE(a.NTCE_BGNDE,'-','') <= TO_CHAR(SYSDATE, 'YYYYMMDD')
+					AND REPLACE(a.NTCE_ENDDE,'-','') >= TO_CHAR(SYSDATE, 'YYYYMMDD')
+					then '1'
+					else '2'
+					END AS NTT_TYPE
+				, TO_CHAR(a.FRST_REGIST_PNTTM, 'YYYY-MM-DD') as FRST_REGISTER_PNTTM
+				, a.FRST_REGIST_PNTTM as reg_date
+				, a.HTML_AT HTML_YN
+				, a.DELETE_CODE DELCODE
+				, a.DEPT_ID
+				, OPTION1, OPTION2, OPTION3,OPTION4, OPTION5, OPTION6, OPTION7, OPTION8, OPTION9, OPTION10
+				, OPTION11, OPTION12, OPTION13, OPTION14, OPTION15, OPTION16, OPTION17, OPTION18, OPTION19, OPTION20
+			FROM
+				$tableNm$ a
+			WHERE a.BBS_ID = #bbsId#
+		]]>
+		<include refid="optionalBoardDAO.selectBoardArticleList-where" />
+
+		<!-- 일반게시판 -->
+		<isEqual property="bbsTyCode" compareValue="BBST01">
+			<![CDATA[	ORDER BY a.FRST_REGIST_PNTTM DESC	]]>
+		</isEqual>
+		<!-- 계단형게시판 -->
+		<isEqual property="bbsTyCode" compareValue="BBST02">
+			<![CDATA[	ORDER BY a.PARNTS desc, a.REPLY_LC ASC	]]>
+		</isEqual>
+		<!-- 공지게시판 -->
+		<isEqual property="bbsTyCode" compareValue="BBST03">
+			<![CDATA[	ORDER BY a.NTT_TYPE ASC, a.FRST_REGIST_PNTTM DESC	]]>
+		</isEqual>
+	</select>
+
+
+
+
+
+
+	<select id="optionalBoardDAO.selectCmmntBoardArticleList" parameterClass="zvl" resultClass="zvl">
+		/* optionalBoardDAO.selectCmmntBoardArticleList */
+		<![CDATA[
+			SELECT  *
+			  FROM  (
+			SELECT ROWNUM RNUM, ALL_LIST.*
+			  FROM  (
+
+			SELECT
+				a.NTT_ID
+				, a.NTT_SJ
+				, a.NTT_CN
+				, a.FRST_REGISTER_ID
+				, a.NTCR_NM
+				, a.NTT_NO
+				, a.INQIRE_CO
+				, a.PARNTS
+				, a.REPLY_AT
+				, nvl(a.REPLY_LC,0) as REPLY_LC
+				, a.USE_AT
+				, a.ATCH_FILE_ID
+				, a.BBS_ID
+				, a.NTCE_BGNDE
+				, a.NTCE_ENDDE
+				, a.SECRET_AT as secret
+				, NVL(c.COMMENT_CNT,0) AS comment_cnt
+				, TO_CHAR(a.FRST_REGIST_PNTTM, 'YYYY-MM-DD') as FRST_REGISTER_PNTTM
+				, a.FRST_REGIST_PNTTM as reg_date
+				, a.SECTION
+				, a.HTML_AT HTML_YN
+				, a.DELETE_CODE DELCODE
+				, a.DEPT_ID
+			FROM
+				$tableNm$ a
+			LEFT OUTER JOIN (
+				SELECT BBS_ID, NTT_ID, COUNT(*) AS COMMENT_CNT
+				FROM TB_BBS_CMMNT
+				GROUP BY BBS_ID, NTT_ID
+			) c on a.BBS_ID = c.BBS_ID AND a.NTT_ID = c.NTT_ID
+			WHERE  a.BBS_ID = #bbsId#
+		]]>
+		<include refid="optionalBoardDAO.selectBoardArticleList-where" />
+		<![CDATA[
+			ORDER BY a.PARNTS desc, a.REPLY_LC ASC
+
+				    ) ALL_LIST
+				    )
+			 WHERE  RNUM  > #firstIndex#
+			   AND  RNUM <= #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="optionalBoardDAO.selectBoardArticles" parameterClass="zvl" resultClass="zvl" >
+		<![CDATA[
+			SELECT
+				a.NTT_ID
+				, a.NTT_SJ
+				, a.NTT_CN
+				, a.FRST_REGISTER_ID
+				, a.NTCR_NM
+				, a.NTT_NO
+				, a.INQIRE_CO
+				, a.PARNTS
+				, a.REPLY_AT
+				, a.REPLY_LC
+				, a.USE_AT
+				, a.ATCH_FILE_ID
+				, a.BBS_ID
+				, a.NTCE_BGNDE
+				, a.NTCE_ENDDE
+				, a.SECRET_AT SECRET
+				, a.NTT_TYPE AS ntt_type2
+				, case
+					when NTT_TYPE = '1'
+					AND REPLACE(a.NTCE_BGNDE,'-','') <= TO_CHAR(SYSDATE, 'YYYYMMDD')
+					AND REPLACE(a.NTCE_ENDDE,'-','') >= TO_CHAR(SYSDATE, 'YYYYMMDD')
+					then '1'
+					else '2'
+					END AS ntt_type
+				,TO_CHAR(a.FRST_REGIST_PNTTM, 'YYYY-MM-DD') as FRST_REGISTER_PNTTM
+				, a.FRST_REGIST_PNTTM as reg_date
+				, a.GUBUN
+				, a.HTML_AT HTML_YN
+				, a.DELETE_CODE as del_code
+				, a.DEPT_ID
+			FROM
+				$tableNm$ a
+			WHERE a.BBS_ID = #bbsId#
+		]]>
+		<include refid="optionalBoardDAO.selectBoardArticleList-where" />
+			ORDER BY a.FRST_REGIST_PNTTM DESC
+	</select>
+
+	 <resultMap id="optionalBoardDAO.selectBoardArticleMap" class="zvl">
+		<result property="nttSj" column="NTT_SJ" />
+		<result property="ntcrId" column="NTCR_ID" />
+		<result property="ntcrNm" column="NTCR_NM" />
+		<result property="nttCn" column="NTT_CN"  jdbcType="CLOB" javaType="java.lang.String"/>
+		<result property="password" column="PASSWORD" />
+		<result property="frstRegisterId" column="FRST_REGISTER_ID" />
+		<result property="ntceBgnde" column="NTCE_BGNDE" />
+		<result property="ntceEndde" column="NTCE_ENDDE" />
+		<result property="inqireCo" column="INQIRE_CO" />
+		<result property="useAt" column="USE_AT" />
+		<result property="atchFileId" column="ATCH_FILE_ID" />
+		<result property="bbsId" column="BBS_ID" />
+		<result property="nttId" column="NTT_ID" />
+		<result property="ntcrTel" column="NTCR_TEL" />
+		<result property="ntcrHp" column="NTCR_HP" />
+		<result property="ntcrEmail" column="NTCR_EMAIL" />
+		<result property="ntcrAddr1" column="NTCR_ADDR1" />
+		<result property="ntcrAddr2" column="NTCR_ADDR2" />
+		<result property="parnts" column="PARNTS" />
+		<result property="replyAt" column="REPLY_AT" />
+		<result property="replyLc" column="REPLY_LC" />
+		<result property="secret" column="SECRET" />
+		<result property="nttType" column="NTT_TYPE" />
+		<result property="delcode" column="DELCODE" />
+		<result property="newYn" column="NEW_YN" />
+		<result property="frstRegisterPnttm" column="FRST_REGISTER_PNTTM" />
+		<result property="regDate" column="REG_DATE" />
+		<result property="lastUpdusrPnttm" column="LAST_UPDUSR_PNTTM" />
+		<result property="uptDate" column="UPT_DATE" />
+		<result property="deptId" column="DEPT_ID" />
+		<result property="option1" column="OPTION1" />
+		<result property="option2" column="OPTION2" />
+		<result property="option3" column="OPTION3" />
+		<result property="option4" column="OPTION4" />
+		<result property="option5" column="OPTION5" />
+		<result property="option6" column="OPTION6" />
+		<result property="option7" column="OPTION7" />
+		<result property="option8" column="OPTION8" />
+		<result property="option9" column="OPTION9" />
+		<result property="option10" column="OPTION10" />
+		<result property="option11" column="OPTION11" />
+		<result property="option12" column="OPTION12" />
+		<result property="option13" column="OPTION13" />
+		<result property="option14" column="OPTION14" />
+		<result property="option15" column="OPTION15" />
+		<result property="option16" column="OPTION16" />
+		<result property="option17" column="OPTION17" />
+		<result property="option18" column="OPTION18" />
+		<result property="option19" column="OPTION19" />
+		<result property="option20" column="OPTION20" />
+		<result property="htmlYn" column="HTML_YN" />
+		<result property="ntcrCi" column="NTCR_CI" />
+		<result property="userNm" column="USER_NM" />
+		<result property="imgDescCn" column="IMG_DESC_CN" jdbcType="CLOB" javaType="java.lang.String"/>
+	</resultMap>
+
+	<select id="optionalBoardDAO.selectBoardArticle" parameterClass="zvl" resultMap="optionalBoardDAO.selectBoardArticleMap" >
+		/* optionalBoardDAO.selectBoardArticle */
+		<![CDATA[
+			SELECT
+				a.NTT_SJ
+				, a.NTCR_ID
+				, a.NTCR_NM
+				--, a.NTT_CN
+				, REPLACE(a.NTT_CN, 'alt=""', 'alt="'||REPLACE(a.IMG_DESC_CN, '"', '''')||'"') as NTT_CN
+				, a.PASSWORD
+				, a.FRST_REGISTER_ID
+				, a.NTCE_BGNDE
+				, a.NTCE_ENDDE
+				, a.INQIRE_CO
+				, a.USE_AT
+				, a.ATCH_FILE_ID
+				, a.BBS_ID
+				, a.NTT_ID
+				, a.NTCR_TEL
+				, a.NTCR_HP
+				, a.NTCR_EMAIL
+				, a.NTCR_ADDR1
+				, a.NTCR_ADDR2
+				, a.PARNTS
+				, a.REPLY_AT
+				, a.REPLY_LC
+				, a.SECRET_AT SECRET
+				, a.NTT_TYPE
+				, a.DELETE_CODE DELCODE
+				, case
+					when a.FRST_REGIST_PNTTM >= SYSDATE-1 then 'Y'
+					else 'N'
+				  END AS new_yn
+				, TO_CHAR(a.FRST_REGIST_PNTTM, 'YYYY-MM-DD') as FRST_REGISTER_PNTTM
+				, TO_CHAR(a.FRST_REGIST_PNTTM, 'YYYY-MM-DD HH24:MI:SS') as REG_DATE
+				, TO_CHAR(a.LAST_UPDT_PNTTM, 'YYYY-MM-DD') as LAST_UPDUSR_PNTTM
+				, TO_CHAR(a.LAST_UPDT_PNTTM, 'YYYY-MM-DD HH24:MI:SS') as UPT_DATE
+				, a.DEPT_ID
+				, OPTION1, OPTION2, OPTION3,OPTION4, OPTION5, OPTION6, OPTION7, OPTION8, OPTION9, OPTION10
+				, OPTION11, OPTION12, OPTION13, OPTION14, OPTION15, OPTION16, OPTION17, OPTION18, OPTION19, OPTION20
+				, HTML_AT HTML_YN
+				, NTCR_CI
+                , b.USER_NM
+                , a.IMG_DESC_CN
+			FROM
+				$tableNm$ a
+            LEFT OUTER JOIN TM_ADMIN b ON a.OPTION10 = b.USER_ID
+			WHERE
+				a.BBS_ID = #bbsId#
+			AND
+				a.NTT_ID = #nttId#
+		]]>
+	</select>
+
+	<select id="optionalBoardDAO.selectBoardArticleByGubun" parameterClass="zvl" resultClass="zvl" >
+
+		/* optionalBoardDAO.selectBoardArticleByGubun */
+		<![CDATA[
+			SELECT
+				a.NTT_SJ
+				, a.NTCR_ID
+				, a.NTCR_NM
+				, a.NTT_CN
+				, a.PASSWORD
+				, a.FRST_REGISTER_ID
+				, a.NTCE_BGNDE
+				, a.NTCE_ENDDE
+				, a.INQIRE_CO
+				, a.USE_AT
+				, a.ATCH_FILE_ID
+				, a.BBS_ID
+				, a.NTT_ID
+				, a.PARNTS
+				, a.REPLY_AT
+				, a.REPLY_LC
+				, a.SECRET_AT SECRET
+				, a.NTT_TYPE
+				, a.DELETE_CODE DELCODE
+				, case
+					when a.FRST_REGIST_PNTTM >= SYSDATE-1 then 'Y'
+					else 'N'
+				  END AS new_yn
+				, TO_CHAR(a.FRST_REGIST_PNTTM, 'YYYY-MM-DD') as FRST_REGISTER_PNTTM
+				, TO_CHAR(a.FRST_REGIST_PNTTM, 'YYYY-MM-DD HH24:MI:SS') as REG_DATE
+				, TO_CHAR(a.LAST_UPDT_PNTTM, 'YYYY-MM-DD') as LAST_UPDUSR_PNTTM
+				, TO_CHAR(a.LAST_UPDT_PNTTM, 'YYYY-MM-DD HH24:MI:SS') as UPT_DATE
+				, a.DEPT_ID
+				, OPTION1, OPTION2, OPTION3,OPTION4, OPTION5, OPTION6, OPTION7, OPTION8, OPTION9, OPTION10
+				, OPTION11, OPTION12, OPTION13, OPTION14, OPTION15, OPTION16, OPTION17, OPTION18, OPTION19, OPTION20
+				, HTML_AT HTML_YN
+				, GUBUN
+			FROM
+				$tableNm$ a
+			WHERE a.BBS_ID = #bbsId#
+		]]>
+		<isEmpty prepend="AND" property="delCode">
+			<![CDATA[	a.DELETE_CODE = '0'		]]>
+		</isEmpty>
+		<isNotEmpty prepend="AND" property="delCode">
+			<![CDATA[	a.DELETE_CODE = #delCode#		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="nttId">
+			<![CDATA[	a.NTT_ID = #nttId#	]]>
+		</isNotEmpty>
+		<isEmpty prepend="AND" property="nttId">
+			<![CDATA[	gubun = #gubun# AND ROWNUM = 1	]]>
+		</isEmpty>
+	</select>
+
+ 	<update id="optionalBoardDAO.updateBoardArticle" parameterClass="zvl">
+ 		<![CDATA[
+			UPDATE $tableNm$ SET
+				NTT_SJ = #nttSj#,
+				NTT_CN = #nttCn:CLOB#,
+				NTCR_ID = #ntcrId#,
+				NTCR_NM = #ntcrNm#,
+				PASSWORD = #password#,
+				NTCE_BGNDE = #ntceBgnde#,
+				NTCE_ENDDE = #ntceEndde#,
+				LAST_UPDUSR_ID = #lastUpdusrId#,
+				ATCH_FILE_ID = #atchFileId#,
+				NTCR_EMAIL = #ntcrEmail#,
+				NTCR_TEL = #ntcrTel#,
+				NTCR_HP = #ntcrHp#,
+				NTCR_ADDR1 = #ntcrAddr1#,
+				NTCR_ADDR2 = #ntcrAddr2#,
+				SECRET_AT = #secret#,
+				REPLY_AT = #replyAt#,
+				LAST_UPDT_PNTTM = SYSDATE,
+				NTT_TYPE = #nttType#,
+				USE_AT = #useAt#,
+				DEPT_ID = #deptId#,
+				OPTION1 = #option1#,
+				OPTION2 = #option2#,
+				OPTION3 = #option3#,
+				OPTION4 = #option4#,
+				OPTION5 = #option5#,
+				OPTION6 = #option6#,
+				OPTION7 = #option7#,
+				OPTION8 = #option8#,
+				OPTION9 = #option9#,
+				OPTION10 = #option10#,
+				OPTION11 = #option11#,
+				OPTION12 = #option12#,
+				OPTION13 = #option13#,
+				OPTION14 = #option14#,
+				OPTION15 = #option15#,
+				OPTION16 = #option16#,
+				OPTION17 = #option17#,
+				OPTION18 = #option18#,
+				OPTION19 = #option19#,
+				OPTION20 = #option20#,
+				HTML_AT = #htmlYn#,
+				IMG_DESC_CN = #imgDescCn:CLOB#
+			WHERE BBS_ID = #bbsId#
+			AND NTT_ID = #nttId#
+ 		]]>
+ 	</update>
+
+
+
+
+ 	<update id="optionalBoardDAO.deleteBoardArticle" parameterClass="zvl">
+ 		<![CDATA[
+			UPDATE $tableNm$ SET
+				USE_AT = 'N',
+				LAST_UPDUSR_ID = #lastUpdusrId#,
+				LAST_UPDT_PNTTM = SYSDATE,
+				DELETE_CODE = #delcode#
+			WHERE BBS_ID = #bbsId#
+			AND NTT_ID = #nttId#
+ 		]]>
+ 	</update>
+
+ 	<update id="optionalBoardDAO.deleteInjstBoardArticle" parameterClass="zvl">
+ 		<![CDATA[
+			UPDATE TP_INJST_MANAGE SET
+				USE_AT = 'N',
+				LAST_UPDUSR_ID = #lastUpdusrId#,
+				LAST_UPDT_PNTTM = SYSDATE,
+				DELETE_CODE = '1'
+			WHERE BBS_ID = #bbsId#
+			AND NTT_ID = #nttId#
+ 		]]>
+ 	</update>
+
+ 	<!-- 심의결정 세부내역 삭제 -->
+ 	<update id="optionalBoardDAO.deleteDecsnBoardArticle" parameterClass="zvl">
+ 		<![CDATA[
+			UPDATE TP_DECSN_DTLS SET
+				USE_AT = 'N',
+				LAST_UPDUSR_ID = #lastUpdusrId#,
+				LAST_UPDT_PNTTM = SYSDATE,
+				DELETE_CODE = #delcode#
+			WHERE BBS_ID = #bbsId#
+			AND NTT_ID = #nttId#
+ 		]]>
+ 	</update>
+
+ 	<update id="optionalBoardDAO.restoreBoardArticle" parameterClass="zvl">
+ 		<![CDATA[
+			UPDATE $tableNm$ SET
+				USE_AT = 'Y',
+				LAST_UPDUSR_ID = #lastUpdusrId#,
+				LAST_UPDT_PNTTM = SYSDATE,
+				DELETE_CODE = #delcode#
+			WHERE BBS_ID = #bbsId#
+			AND NTT_ID = #nttId#
+ 		]]>
+ 	</update>
+
+ 	<delete id="optionalBoardDAO.delPermanentlyBoardArticle" parameterClass="zvl">
+ 		<![CDATA[
+			DELETE $tableNm$
+			WHERE BBS_ID = #bbsId#
+			AND NTT_ID = #nttId#
+ 		]]>
+ 	</delete>
+
+ 	<delete id="optionalBoardDAO.delPermanentlyByBbsId" parameterClass="zvl">
+ 		<![CDATA[
+			DELETE $tableNm$
+			WHERE BBS_ID = #bbsId#
+ 		]]>
+ 	</delete>
+
+ 	<select id="optionalBoardDAO.selectMaxInqireCo" resultClass="java.lang.Integer" parameterClass="zvl">
+ 		<![CDATA[
+			SELECT NVL(MAX(INQIRE_CO),0)+1 AS INQIRE_CO FROM $tableNm$
+			WHERE BBS_ID = #bbsId#
+			AND NTT_ID = #nttId#
+ 		]]>
+ 	</select>
+
+ 	<update id="optionalBoardDAO.updateInqireCo" parameterClass="zvl">
+ 		<![CDATA[
+			UPDATE $tableNm$ SET
+				INQIRE_CO = INQIRE_CO+1,
+				LAST_UPDUSR_ID = #lastUpdusrId#,
+				LAST_UPDT_PNTTM = SYSDATE
+			WHERE BBS_ID = #bbsId#
+			AND NTT_ID = #nttId#
+ 		]]>
+ 	</update>
+
+ 	<update id="optionalBoardDAO.updateOnvyInqireCo" parameterClass="zvl">
+ 		<![CDATA[
+			UPDATE $tableNm$
+			   SET INQIRE_CO = INQIRE_CO+1,
+				   LAST_UPDUSR_ID = #lastUpdusrId#,
+				   LAST_UPDT_PNTTM = SYSDATE
+			 WHERE NTT_ID = #nttId#
+ 		]]>
+ 	</update>
+
+ 	<update id="optionalBoardDAO.updateDecsnInqireCo" parameterClass="zvl">
+ 		<![CDATA[
+			UPDATE TP_DECSN_DTLS SET
+				INQIRE_CO = INQIRE_CO+1,
+				LAST_UPDUSR_ID = #lastUpdusrId#,
+				LAST_UPDT_PNTTM = SYSDATE
+			WHERE BBS_ID = #bbsId#
+			AND NTT_ID = #nttId#
+ 		]]>
+ 	</update>
+
+	<select id="optionalBoardDAO.getParentNttNo" parameterClass="zvl" resultClass="java.lang.Long">
+		<![CDATA[
+			SELECT NTT_NO FROM $tableNm$
+			WHERE BBS_ID = #bbsId# AND NTT_ID = #parnts#
+		]]>
+	</select>
+
+	<select id="optionalBoardDAO.selectReplyBoardList" parameterClass="zvl" resultClass="zvl" >
+		<![CDATA[
+			SELECT  *
+			  FROM  (
+			SELECT ROWNUM RNUM, ALL_LIST.*
+			  FROM  (
+
+			SELECT
+				a.NTT_ID
+				, a.NTT_SJ
+				, a.NTT_CN
+				, a.FRST_REGISTER_ID
+				, a.NTCR_NM
+				, a.NTT_NO
+				, a.INQIRE_CO
+				, a.PARNTS
+				, a.REPLY_AT
+				, a.REPLY_LC
+				, a.USE_AT
+				, a.ATCH_FILE_ID
+				, a.BBS_ID
+				, a.SECRET_AT SECRET
+				, a.FRST_REGIST_PNTTM as reg_date
+				, NVL(b.CNT,0) AS commentCnt
+				,TO_CHAR(a.FRST_REGIST_PNTTM, 'YYYY-MM-DD') as FRST_REGISTER_PNTTM
+				, a.DEPT_ID
+			FROM
+				$tableNm$ a
+			LEFT OUTER JOIN (
+				SELECT BBS_ID, NTT_ID, COUNT(*) AS CNT
+				FROM TB_BBS_CMMNT
+				GROUP BY BBS_ID, NTT_ID
+			) b ON b.BBS_ID = a.BBS_ID AND b.NTT_ID = a.NTT_ID
+			WHERE
+				a.BBS_ID = #bbsId#
+				AND a.DELETE_CODE = '0'
+				AND a.PARNTS = #nttId#
+			ORDER BY a.FRST_REGIST_PNTTM DESC
+				    ) ALL_LIST
+				    )
+			 WHERE  RNUM  > #firstIndex#
+			   AND  RNUM <= #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="optionalBoardDAO.selectReplyBoardListCnt" parameterClass="zvl" resultClass="int" >
+		<![CDATA[
+			SELECT COUNT(*)
+			FROM
+				$tableNm$ a
+			WHERE
+				a.BBS_ID = #bbsId#
+				AND a.DELETE_CODE = '0'
+				AND a.PARNTS = #nttId#
+		]]>
+	</select>
+
+
+	 <resultMap id="optionalBoardDAO.selectReplyArticlesMap" class="zvl">
+		<result property="nttId" column="NTT_ID" />
+		<result property="nttSj" column="NTT_SJ" />
+		<result property="nttCn" column="NTT_CN"  jdbcType="CLOB" javaType="java.lang.String"/>
+		<result property="frstRegisterId" column="FRST_REGISTER_ID" />
+		<result property="ntcrNm" column="NTCR_NM" />
+		<result property="nttNo" column="NTT_NO" />
+		<result property="inqireCo" column="INQIRE_CO" />
+		<result property="parnts" column="PARNTS" />
+		<result property="replyAt" column="REPLY_AT" />
+		<result property="replyLc" column="REPLY_LC" />
+		<result property="useAt" column="USE_AT" />
+		<result property="atchFileId" column="ATCH_FILE_ID" />
+		<result property="bbsId" column="BBS_ID" />
+		<result property="secret" column="SECRET" />
+		<result property="regDate" column="REG_DATE" />
+		<result property="frstRegisterPnttm" column="FRST_REGISTER_PNTTM" />
+		<result property="deptId" column="DEPT_ID" />
+		<result property="imgDescCn" column="IMG_DESC_CN"  jdbcType="CLOB" javaType="java.lang.String"/>
+	</resultMap>
+
+	<select id="optionalBoardDAO.selectReplyArticles" parameterClass="zvl" resultClass="zvl" resultMap="optionalBoardDAO.selectReplyArticlesMap">
+		<![CDATA[
+			SELECT
+				a.NTT_ID
+				, a.NTT_SJ
+				, a.NTT_CN
+				, a.FRST_REGISTER_ID
+				, a.NTCR_NM
+				, a.NTT_NO
+				, a.INQIRE_CO
+				, a.PARNTS
+				, a.REPLY_AT
+				, a.REPLY_LC
+				, a.USE_AT
+				, a.ATCH_FILE_ID
+				, a.BBS_ID
+				, a.SECRET_AT SECRET
+				, a.FRST_REGIST_PNTTM as reg_date
+				, TO_CHAR(a.FRST_REGIST_PNTTM, 'YYYY-MM-DD') as FRST_REGISTER_PNTTM
+				, a.DEPT_ID
+				, a.IMG_DESC_CN
+			FROM
+				$tableNm$ a
+			WHERE
+				a.BBS_ID = #bbsId#
+				AND a.DELETE_CODE = '0'
+				AND a.PARNTS = #nttId#
+			ORDER BY a.FRST_REGIST_PNTTM DESC
+		]]>
+	</select>
+
+	<select id="optionalBoardDAO.selectPrevNexArticle" parameterClass="zvl" resultClass="zvl" >
+	/* optionalBoardDAO.selectPrevNexArticle */
+		<![CDATA[
+		SELECT
+			ntt_id, nvl(prev_ntt_id, 0) as prev_ntt_id, nvl(next_ntt_id, 0) as next_ntt_id, prev_ntt_sj, next_ntt_sj
+		FROM (
+			SELECT
+      			NTT_ID
+			    , LEAD(ntt_id, 1, '') OVER (ORDER BY FRST_REGIST_PNTTM DESC) AS prev_ntt_id
+			    , LAG(ntt_id, 1, '') OVER (ORDER BY FRST_REGIST_PNTTM DESC ) AS next_ntt_id
+			    , LEAD(ntt_sj, 1, '') OVER (ORDER BY FRST_REGIST_PNTTM DESC) AS prev_ntt_sj
+			    , LAG(ntt_sj, 1, '') OVER (ORDER BY FRST_REGIST_PNTTM DESC ) AS next_ntt_sj
+			FROM
+				$tableNm$ a
+			WHERE BBS_ID = #bbsId# AND a.DELETE_CODE = '0'
+		]]>
+		<include refid="optionalBoardDAO.selectBoardArticleList-where" />
+		<![CDATA[
+		)
+		WHERE ntt_id = #nttId#
+		]]>
+	</select>
+
+	<select id="optionalBoardDAO.prevSelectPrevNexArticle" parameterClass="zvl" resultClass="zvl" >
+	/* optionalBoardDAO.prevSelectPrevNexArticle */
+		<![CDATA[
+		SELECT aa.NTT_TYPE, aa.NTT_ID, aa.NTT_SJ
+		FROM (
+			SELECT
+            	'NEXT' AS ntt_type
+				,a.NTT_ID
+				,a.NTT_SJ
+			FROM
+				$tableNm$ a
+			WHERE a.BBS_ID = #bbsId#
+				AND a.DELETE_CODE = '0'
+				AND a.NTT_ID IN (
+					SELECT MIN(NTT_ID)
+					FROM $tableNm$
+					WHERE BBS_ID = #bbsId# AND DELETE_CODE = '0' AND NTT_ID > #nttId#
+		]]>
+		<include refid="optionalBoardDAO.selectBoardArticleList-where" />
+		<![CDATA[
+				)
+
+			UNION ALL
+
+			SELECT
+            	'PREV' AS ntt_type
+				,a.NTT_ID
+				,a.NTT_SJ
+			FROM
+				$tableNm$ a
+			WHERE a.BBS_ID = #bbsId#
+				AND a.DELETE_CODE = '0'
+				AND a.NTT_ID IN (
+					SELECT MAX(NTT_ID)
+					FROM $tableNm$
+					WHERE BBS_ID = #bbsId# AND DELETE_CODE = '0' AND NTT_ID < #nttId#
+		]]>
+		<include refid="optionalBoardDAO.selectBoardArticleList-where" />
+		<![CDATA[
+				)
+		) aa
+		]]>
+	</select>
+
+	<!-- "구분", "지표명", "키워드(핵심어)", "지표설명", "출처", "URL", "최종수정일", "등록일" -->
+	<resultMap id="optionalBoardDAO.selectB0000002BoardExcelListResultMap" class="zvl">
+		<result property="gubun" column="GUBUN"/>
+		<result property="nttSj" column="NTT_SJ"/>
+		<result property="option1" column="OPTION1"/>
+		<result property="nttCn" column="NTT_CN" />
+		<result property="option2" column="OPTION2"/>
+		<result property="option3" column="OPTION3"/>
+		<result property="lastUpdusrPnttm" column="LAST_UPDUSR_PNTTM"/>
+		<result property="frstRegisterPnttm" column="FRST_REGISTER_PNTTM"/>
+	</resultMap>
+
+ 	<select id="optionalBoardDAO.selectB0000002BoardExcelList" parameterClass="zvl" resultMap="optionalBoardDAO.selectB0000002BoardExcelListResultMap" >
+		<![CDATA[
+			SELECT
+				a.GUBUN
+				, a.NTT_SJ
+				, a.OPTION1
+				, a.NTT_CN
+				, a.OPTION2
+				, a.OPTION3
+				, TO_CHAR(a.LAST_UPDT_PNTTM, 'YYYY-MM-DD') as LAST_UPDUSR_PNTTM
+				, TO_CHAR(a.FRST_REGIST_PNTTM, 'YYYY-MM-DD') as FRST_REGISTER_PNTTM
+			FROM
+				$tableNm$ a
+			WHERE a.BBS_ID = #bbsId#
+		]]>
+		<include refid="optionalBoardDAO.selectBoardArticleList-where" />
+			ORDER BY a.FRST_REGIST_PNTTM DESC
+	</select>
+
+	<select id="optionalBoardDAO.staticsOfIndex" parameterClass="zvl" resultClass="zvl" >
+		<![CDATA[
+               SELECT b.CATEGORY_NAME01, SUM(a.INQIRE_CO) AS INQIRE_CO_CNT
+               FROM TB_BBS_ESTN a
+               INNER JOIN (
+                  SELECT
+                         substr(regexp_substr(CATEGORY_NAME2, '@[^@]*', 1, 1),2) as CATEGORY_NAME01,
+                         AA.*
+                  FROM (
+                      SELECT CATEGORY_ID
+                       , UPPER_CATEGORY_ID
+                       , CATEGORY_NAME
+                       , LEVEL lv
+                       , SYS_CONNECT_BY_PATH(CATEGORY_ID, '@') CATEGORY_ID2
+                       , SYS_CONNECT_BY_PATH(CATEGORY_NAME, '@') CATEGORY_NAME2
+                       , ORDERLY
+                      FROM CATEGORY
+                      WHERE USE_YN = 'Y'
+                      START WITH UPPER_CATEGORY_ID = 0
+                      CONNECT BY PRIOR CATEGORY_ID = UPPER_CATEGORY_ID
+                  ) AA
+               ) b ON b.CATEGORY_ID = a.GUBUN
+               WHERE a.BBS_ID = 'B0000002' AND a.DELETE_CODE = '0'
+
+		]]>
+		<isNotEmpty prepend="AND" property="sdate">
+			<![CDATA[	TO_CHAR(a.FRST_REGIST_PNTTM, 'YYYYMMDD') >= REPLACE(#sdate#,'-','') 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="edate">
+			<![CDATA[	TO_CHAR(a.FRST_REGIST_PNTTM, 'YYYYMMDD') <= REPLACE(#edate#,'-','') 		]]>
+		</isNotEmpty>
+		<![CDATA[
+               GROUP BY b.CATEGORY_NAME01
+		]]>
+	</select>
+
+	<select id="optionalBoardDAO.selectAllBoardArticles" parameterClass="zvl" resultClass="zvl" >
+		/* optionalBoardDAO.selectAllBoardArticles */
+		<![CDATA[
+			SELECT
+				a.NTT_SJ
+				, a.NTCR_ID
+				, a.NTCR_NM
+				, a.PASSWORD
+				, a.FRST_REGISTER_ID
+				, a.NTCE_BGNDE
+				, a.NTCE_ENDDE
+				, a.INQIRE_CO
+				, a.USE_AT
+				, a.ATCH_FILE_ID
+				, a.BBS_ID
+				, a.NTT_ID
+				, a.PARNTS
+				, a.REPLY_AT
+				, a.REPLY_LC
+				, a.SECRET_AT SECRET
+				, a.NTT_TYPE
+				, a.DELETE_CODE DELCODE
+				, case
+					when a.FRST_REGIST_PNTTM >= SYSDATE-1 then 'Y'
+					else 'N'
+				  END AS new_yn
+				, TO_CHAR(a.FRST_REGIST_PNTTM, 'YYYY-MM-DD') as FRST_REGISTER_PNTTM
+				, TO_CHAR(a.FRST_REGIST_PNTTM, 'YYYY-MM-DD HH24:MI:SS') as REG_DATE
+				, TO_CHAR(a.LAST_UPDT_PNTTM, 'YYYY-MM-DD') as LAST_UPDUSR_PNTTM
+				, TO_CHAR(a.LAST_UPDT_PNTTM, 'YYYY-MM-DD HH24:MI:SS') as UPT_DATE
+				, a.DEPT_ID
+				, OPTION1, OPTION2, OPTION3,OPTION4, OPTION5, OPTION6, OPTION7, OPTION8, OPTION9, OPTION10
+				, OPTION11, OPTION12, OPTION13, OPTION14, OPTION15, OPTION16, OPTION17, OPTION18, OPTION19, OPTION20
+				, HTML_AT HTML_YN
+				, BBS_SE GUBUN
+			FROM TB_BBS_ESTN a
+			WHERE a.BBS_ID = #bbsId# AND a.DELETE_CODE = '0'
+		]]>
+	</select>
+
+	<select id="optionalBoardDAO.selectPrevArticle" parameterClass="zvl" resultClass="zvl" >
+	/* optionalBoardDAO.selectPrevArticle */
+		<![CDATA[
+		SELECT *
+  		FROM
+       (SELECT ROWNUM RNUM,
+              a.*
+         FROM
+              (SELECT ntt_id,
+                     ntt_id AS prev_ntt_id,
+                     bbs_id,
+                     ntt_sj,
+                     NTT_TYPE,
+                     FRST_REGIST_PNTTM,
+                     DELETE_CODE,
+                     CASE
+                         WHEN REPLACE(NTCE_BGNDE,'-','') > TO_CHAR(SYSDATE, 'YYYYMMDD') THEN '1'
+                         WHEN REPLACE(NTCE_BGNDE,'-','') <= TO_CHAR(SYSDATE, 'YYYYMMDD')
+                          AND REPLACE(NTCE_ENDDE,'-','') >= TO_CHAR(SYSDATE, 'YYYYMMDD') THEN '2'
+                         ELSE '3'
+                     END AS STATUS
+                FROM tb_bbs_estn a
+               WHERE DELETE_CODE = '0'
+                     AND ntt_id > #nttId#
+                     AND bbs_id = #bbsId#
+		]]>
+		<include refid="optionalBoardDAO.selectBoardArticleList-where" />
+		<![CDATA[
+		 ORDER BY FRST_REGIST_PNTTM
+              ) a
+       )a
+ 		WHERE A.RNUM = 1
+		]]>
+	</select>
+
+
+	<select id="optionalBoardDAO.selectNextArticle" parameterClass="zvl" resultClass="zvl" >
+	/* optionalBoardDAO.selectNextArticle */
+		<![CDATA[
+		SELECT *
+  		FROM
+       (SELECT ROWNUM RNUM,
+              a.*
+         FROM
+              (SELECT ntt_id,
+                     ntt_id AS next_ntt_id,
+                     bbs_id,
+                     ntt_sj,
+                     FRST_REGIST_PNTTM,
+                     DELETE_CODE,
+                     CASE
+                         WHEN REPLACE(NTCE_BGNDE,'-','') > TO_CHAR(SYSDATE, 'YYYYMMDD') THEN '1'
+                         WHEN REPLACE(NTCE_BGNDE,'-','') <= TO_CHAR(SYSDATE, 'YYYYMMDD')
+                          AND REPLACE(NTCE_ENDDE,'-','') >= TO_CHAR(SYSDATE, 'YYYYMMDD') THEN '2'
+                         ELSE '3'
+                     END AS STATUS
+                FROM tb_bbs_estn a
+               WHERE DELETE_CODE = '0'
+                     AND ntt_id < #nttId#
+                     AND bbs_id = #bbsId#
+		]]>
+		<include refid="optionalBoardDAO.selectBoardArticleList-where" />
+		<![CDATA[
+		 ORDER BY FRST_REGIST_PNTTM DESC
+              ) a
+       )a
+ 		WHERE A.RNUM = 1
+		]]>
+	</select>
+
+	<resultMap id="optionalBoardDAO.selectMainBoardArticleListResultMap" class="zvl">
+		<result property="nttId" column="NTT_ID"/>
+		<result property="nttSj" column="NTT_SJ"/>
+		<result property="nttCn" column="NTT_CN"  jdbcType="CLOB" javaType="java.lang.String"/>
+		<result property="imgDesc" column="IMG_DESC_CN"  jdbcType="CLOB" javaType="java.lang.String"/>
+		<result property="bbsId" column="BBS_ID"/>
+		<result property="option1" column="OPTION1"/>
+		<result property="regDate" column="REG_DATE"/>
+		<result property="frstRegisterPnttm" column="FRST_REGISTER_PNTTM"/>
+		<result property="atchFileId" column="ATCH_FILE_ID"/>
+		<result property="fileSn" column="FILE_SN"/>
+		<result property="newYn" column="NEW_YN"/>
+		<result property="ntceBgnde" column="NTCE_BGNDE"/>	
+		<result property="option12" column="OPTION12"/>
+	</resultMap>
+	<select id="optionalBoardDAO.selectMainBoardArticleList" parameterClass="zvl" resultClass="zvl" resultMap="optionalBoardDAO.selectMainBoardArticleListResultMap">
+		<![CDATA[
+			SELECT  *
+			  FROM  (
+			SELECT ROWNUM RNUM, ALL_LIST.*
+			  FROM  (
+
+			SELECT
+				a.NTT_ID
+				, a.NTT_SJ
+				, a.NTT_CN
+				, a.IMG_DESC_CN
+				, a.BBS_ID
+				, a.OPTION1
+				, a.FRST_REGIST_PNTTM as REG_DATE
+				, TO_CHAR(a.FRST_REGIST_PNTTM, 'YYYY-MM-DD') as FRST_REGISTER_PNTTM
+				, a.ATCH_FILE_ID
+				, c.FILE_SN
+				, case
+					WHEN a.FRST_REGIST_PNTTM >= SYSDATE-1 then 'Y'
+					ELSE 'N'
+				  END AS NEW_YN
+				, CASE
+					when a.NTT_TYPE = '1'
+					AND REPLACE(a.NTCE_BGNDE,'-','') <= TO_CHAR(SYSDATE, 'YYYYMMDD')
+					AND REPLACE(a.NTCE_ENDDE,'-','') >= TO_CHAR(SYSDATE, 'YYYYMMDD')
+					THEN '1'
+					ELSE '2'
+				  END AS ntt_type
+				, NTCE_BGNDE
+				,a.OPTION12
+			FROM
+				TB_BBS_ESTN a
+			LEFT JOIN TC_COMMNFILE_DETAIL c on a.ATCH_FILE_ID = c.ATCH_FILE_ID AND c.FILE_SN = 1
+			WHERE
+				a.DELETE_CODE = '0'
+			AND a.BBS_ID = #bbsId#
+			AND a.USE_AT = 'Y'
+		]]>
+		<isNotEmpty prepend="AND" property="option1">
+			<![CDATA[	a.OPTION1 = #option1# 		]]>
+		</isNotEmpty>
+		<![CDATA[
+			ORDER BY NTT_TYPE ASC, REG_DATE DESC
+
+			    ) ALL_LIST
+				)
+			WHERE  RNUM  > '0'
+			   AND  RNUM <= '0' + #mainRecordCountPerPage#
+		]]>
+	</select>
+	
+	<!-- 메인 문의하기 -->
+	<resultMap id="optionalBoardDAO.selectCnslBoardListResultMap" class="zvl">
+		<result property="nttId" column="NTT_ID"/>
+		<result property="nttSj" column="NTT_SJ"/>
+		<result property="nttCn" column="NTT_CN"  jdbcType="CLOB" javaType="java.lang.String"/>
+		<result property="imgDesc" column="IMG_DESC_CN"  jdbcType="CLOB" javaType="java.lang.String"/>
+		<result property="bbsId" column="BBS_ID"/>
+		<result property="option1" column="OPTION1"/>
+		<result property="regDate" column="REG_DATE"/>
+		<result property="frstRegisterPnttm" column="FRST_REGISTER_PNTTM"/>
+		<result property="atchFileId" column="ATCH_FILE_ID"/>
+		<result property="fileSn" column="FILE_SN"/>
+		<result property="newYn" column="NEW_YN"/>
+		<result property="replyAt" column="REPLY_AT"/>
+		<result property="secret" column="SECRET_AT"/>
+	</resultMap>
+	<select id="optionalBoardDAO.selectCnslBoardList" parameterClass="zvl" resultClass="zvl" resultMap="optionalBoardDAO.selectCnslBoardListResultMap">
+		<![CDATA[
+			SELECT  *
+			  FROM  (
+			SELECT ROWNUM RNUM, ALL_LIST.*
+			  FROM  (
+
+			SELECT
+				a.NTT_ID
+				, a.NTT_SJ
+				, a.NTT_CN
+				, a.IMG_DESC_CN
+				, a.BBS_ID
+				, a.OPTION1
+				, a.FRST_REGIST_PNTTM as REG_DATE
+				, TO_CHAR(a.FRST_REGIST_PNTTM, 'YYYY.MM.DD') as FRST_REGISTER_PNTTM
+				, a.ATCH_FILE_ID
+				, c.FILE_SN
+				, a.REPLY_AT
+				, a.SECRET_AT
+				, case
+					WHEN a.FRST_REGIST_PNTTM >= SYSDATE-1 then 'Y'
+					ELSE 'N'
+				  END AS NEW_YN
+			FROM
+				TB_BBS_ESTN a
+			LEFT JOIN TC_COMMNFILE_DETAIL c on a.ATCH_FILE_ID = c.ATCH_FILE_ID 
+			WHERE
+				a.DELETE_CODE = '0'
+			AND a.BBS_ID = #bbsId#
+			AND a.USE_AT = 'Y'
+			AND a.OPTION1 IS NOT NULL
+			ORDER BY REG_DATE DESC
+
+			    ) ALL_LIST
+				)
+			WHERE  RNUM  > '0'
+			   AND  RNUM <= '0' + #mainRecordCountPerPage#
+		]]>
+	</select>
+	
+	<!-- 교육지원사업 서브메인 게시판종합 -->
+	<resultMap id="optionalBoardDAO.selectEduBoardListResultMap" class="zvl">
+		<result property="nttId" column="NTT_ID"/>
+		<result property="nttSj" column="NTT_SJ"/>
+		<result property="nttCn" column="NTT_CN"  jdbcType="CLOB" javaType="java.lang.String"/>
+		<result property="imgDesc" column="IMG_DESC_CN"  jdbcType="CLOB" javaType="java.lang.String"/>
+		<result property="bbsId" column="BBS_ID"/>
+		<result property="menuName" column="MENU_NM"/>
+		<result property="menuNo" column="MENU_NM"/>
+		<result property="option1" column="OPTION1"/>
+		<result property="regDate" column="REG_DATE"/>
+		<result property="frstRegisterPnttm" column="FRST_REGISTER_PNTTM"/>
+		<result property="atchFileId" column="ATCH_FILE_ID"/>
+		<result property="fileSn" column="FILE_SN"/>
+		<result property="newYn" column="NEW_YN"/>
+		<result property="replyAt" column="REPLY_AT"/>
+	</resultMap>
+	<select id="optionalBoardDAO.selectEduBoardList" parameterClass="zvl" resultClass="zvl" resultMap="optionalBoardDAO.selectEduBoardListResultMap">
+		<![CDATA[
+			SELECT  *
+			  FROM  (
+			SELECT ROWNUM RNUM, ALL_LIST.*
+			  FROM  (
+			SELECT
+				a.NTT_ID
+				, a.NTT_SJ
+				, a.NTT_CN
+				, a.IMG_DESC_CN
+				, a.BBS_ID
+				, mn.MENU_NM MENU_NM
+				, mn.MENU_NO MENU_NO
+				, a.OPTION1
+				, a.FRST_REGIST_PNTTM as REG_DATE
+				, TO_CHAR(a.FRST_REGIST_PNTTM, 'YYYY-MM-DD') as FRST_REGISTER_PNTTM
+				, a.ATCH_FILE_ID
+				, c.FILE_SN
+				, a.REPLY_AT
+				, case
+					WHEN a.FRST_REGIST_PNTTM >= SYSDATE-1 then 'Y'
+					ELSE 'N'
+				  END AS NEW_YN
+			FROM
+				TB_BBS_ESTN a
+			LEFT JOIN TC_MENUINFO mn ON mn.BBS_ID = a.BBS_ID  AND mn.MENU_LINK LIKE '/edu/%'
+			LEFT JOIN TC_COMMNFILE_DETAIL c on a.ATCH_FILE_ID = c.ATCH_FILE_ID 
+			WHERE
+				a.DELETE_CODE = '0'
+			AND a.BBS_ID IN ( 'B0000040', 'B0000041', 'B0000043', 'B0000045' ) 
+			AND a.USE_AT = 'Y'
+			-- AND a.OPTION1 IS NOT NULL
+			ORDER BY REG_DATE DESC
+
+			    ) ALL_LIST
+				)
+			WHERE  RNUM  > '0'
+			   AND  RNUM <= '0' + #mainRecordCountPerPage#
+		]]>
+	</select>
+
+	<!-- 여론조사결과 리스트 -->
+	<select id="optionalBoardDAO.selectMainONVBoardArticleList" parameterClass="zvl" resultClass="zvl" >
+		/*optionalBoardDAO.selectMainONVBoardArticleList*/
+		<![CDATA[
+
+			SELECT  *
+			  FROM  (
+			SELECT ROWNUM RNUM, ALL_LIST.*
+			  FROM  (
+
+			SELECT
+			      	NTT_ID
+			      , USER_ID
+			      , USER_NM
+			      , WRITER_NM
+			      , POLL_NAME
+			      , TO_CHAR(REG_DATE, 'YYYY-MM-DD') AS REG_DATE
+			      , POLL_AREA
+			      , DECISION
+			      , POLL_VIEW_DATE
+			      , MODIFY_REQUEST_DATE
+
+			   FROM TB_BBS_OPINION_POLL
+			  WHERE DELETE_CODE = 0
+			  AND   SAVE_TYPE = #saveTp#
+			  ORDER BY REG_DATE DESC
+
+			    ) ALL_LIST
+				)
+			WHERE  RNUM  > '0'
+			   AND  RNUM <= '0' + #mainRecordCountPerPage#
+		]]>
+	</select>
+
+ 	<update id="optionalBoardDAO.updateReplyAt" parameterClass="zvl">
+ 		<![CDATA[
+			UPDATE TB_BBS_ESTN SET
+				REPLY_AT = #replyAt#
+			WHERE BBS_ID = #bbsId#
+			AND NTT_ID = #parnts#
+ 		]]>
+ 	</update>
+
+ 	<update id="optionalBoardDAO.chargerChange" parameterClass="zvl">
+ 		<![CDATA[
+			UPDATE TB_BBS_ESTN SET
+				OPTION10 = #option10#
+			WHERE NTT_ID = #nttId#
+ 		]]>
+ 	</update>
+
+	<select id="optionalBoardDAO.articeByAccess" parameterClass="zvl" resultClass="zvl" >
+		<![CDATA[
+			SELECT
+				NTT_ID, BBS_ID, DEPT_ID, NTCR_CI, NTCR_ID, SECRET_AT SECRET
+			FROM
+				$tableNm$ a
+			WHERE
+				a.BBS_ID = #bbsId# AND a.NTT_ID = #nttId#
+		]]>
+	</select>
+	
+	
+	<!-- 공지사항 -->
+	<resultMap id="optionalBoardDAO.selectRecentNoticeListResultMap" class="zvl">
+	<result property="nttSj" column="NTT_SJ"/>
+	<result property="nttType" column="NTT_TYPE"/>
+	<result property="regDate" column="REG_DATE"/>
+	<result property="nttCn" column="NTT_CN"  jdbcType="CLOB" javaType="java.lang.String"/>
+	<result property="imgDescCn" column="IMG_DESC_CN" jdbcType="CLOB" javaType="java.lang.String"/>
+	</resultMap>
+	<select id="optionalBoardDAO.selectRecentNoticeList" parameterClass="zvl" resultClass="zvl" resultMap="optionalBoardDAO.selectRecentNoticeListResultMap">
+		<![CDATA[
+			SELECT * FROM(
+			SELECT
+				a.NTT_SJ
+				, a.NTT_TYPE
+				, a.NTT_CN
+				, a.IMG_DESC_CN
+				, a.ATCH_FILE_ID
+				, a.FRST_REGIST_PNTTM as REG_DATE
+			FROM
+				TB_BBS_ESTN a
+			WHERE
+				a.DELETE_CODE = '0'
+			AND a.BBS_ID = 'B0000011'
+			AND a.USE_AT = 'Y'
+      ORDER BY REG_DATE DESC
+      ) WHERE ROWNUM <= 3
+		]]>
+	</select>
+	
+	<!-- 이벤트 -->
+	<resultMap id="optionalBoardDAO.selectRecentEventListResultMap" class="zvl">
+	<result property="nttId" column="NTT_ID"/>
+	<result property="bbsId" column="BBS_ID"/>
+	<result property="nttSj" column="NTT_SJ"/>
+	<result property="nttType" column="NTT_TYPE"/>
+	<result property="regDate" column="REG_DATE"/>
+	<result property="imgDescCn" column="IMG_DESC_CN" jdbcType="CLOB" javaType="java.lang.String"/>
+	<result property="nttCn" column="NTT_CN" jdbcType="CLOB" javaType="java.lang.String"/>
+	<result property="atchFileId" column="ATCH_FILE_ID"/>
+	<result property="fileSn" column="FILE_SN"/>
+	<result property="ntceBgnde" column="NTCE_BGNDE"/>
+	<result property="ntceEndde" column="NTCE_ENDDE"/>
+	</resultMap>
+	<select id="optionalBoardDAO.selectRecentEventList" parameterClass="zvl" resultClass="zvl" resultMap="optionalBoardDAO.selectRecentEventListResultMap">
+		<![CDATA[
+			SELECT * FROM(
+			SELECT
+				a.NTT_SJ
+				, a.NTT_ID
+				, a.NTT_TYPE
+				, a.BBS_ID
+				, a.NTCE_BGNDE
+				, a.NTCE_ENDDE
+				, a.NTT_CN
+				, a.IMG_DESC_CN
+				, a.ATCH_FILE_ID
+				, c.FILE_SN
+        		, CASE WHEN b.USE_AT = 'Y' THEN c.FILE_STRE_COURS ELSE NULL END FILE_LINK
+				, a.FRST_REGIST_PNTTM as REG_DATE
+			FROM
+				TB_BBS_ESTN a
+			LEFT JOIN TC_COMMNFILE b on a.ATCH_FILE_ID = b.ATCH_FILE_ID
+			LEFT JOIN TC_COMMNFILE_DETAIL c on b.ATCH_FILE_ID = c.ATCH_FILE_ID 
+			WHERE
+				a.DELETE_CODE = '0'
+			AND a.BBS_ID = 'B0000048'
+			AND a.USE_AT = 'Y'
+			AND SYSDATE between to_date(ntce_bgnde, 'yyyy-mm-dd') and to_date(ntce_endde, 'yyyy-mm-dd')
+      ORDER BY REG_DATE DESC
+      ) WHERE ROWNUM <= 3
+		]]>
+	</select>
+	
+	<select id="optionalBoardDAO.selectEduSuportList" parameterClass="zvl" resultClass="zvl" >
+		<![CDATA[
+			select *
+               FROM (
+	               select * from (
+		           	select * from (
+		           		select * from TB_BBS_ESTN where BBS_ID = 'B0000041' AND PARNTS = 0 and DELETE_CODE = '0' 
+		           		order by FRST_REGIST_PNTTM desc
+	               ) where rownum < 4
+	               UNION ALL
+	               	select * from (
+	               		select * from TB_BBS_ESTN where BBS_ID = 'B0000072' AND PARNTS = 0 and DELETE_CODE = '0'  
+	               		order by FRST_REGIST_PNTTM desc
+	               	) where rownum < 4
+	               
+	               )
+               ) order by FRST_REGIST_PNTTM desc
+		]]>
+	</select>
+	
+	<select id="optionalBoardDAO.selectThemeEvent" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+			select 
+				*
+			from TC_NTCN
+			where USE_AT = 'Y'
+			  and SITE_ID = 5
+			  and NTCN_NM like '%테마과정%'
+			  and NTCN_NM not like '%이벤트%'
+			  and SYSDATE between BGNDE and ENDDE
+		]]>
+	</select>
+
+</sqlMap>

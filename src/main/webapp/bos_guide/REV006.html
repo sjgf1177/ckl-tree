@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=Edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<meta name="robots" content="all" />
+<link rel="stylesheet" type="text/css" href="/js/bootstrap/css/bootstrap.css" />
+<link rel="stylesheet" type="text/css" href="/js/bootstrap/css/bootstrap-theme.css" />
+<link rel="stylesheet" type="text/css" href="/js/jquery-ui/jquery-ui.css">
+<link rel="stylesheet" type="text/css" href="/portal/css/common.css" />
+<link rel="stylesheet" type="text/css" href="/bos/css/common.css" />
+<link rel="stylesheet" type="text/css" href="/bos/css/bosLayout.css" />
+
+<script type="text/javascript" src="/js/jquery.js"></script>
+<script type="text/javascript" src="/js/bootstrap/bootstrap.js"></script>
+<script type="text/javascript" src="/js/bootstrap/respond.min.js"></script>
+<script type="text/javascript" src="/js/jquery-ui/jquery-ui.js"></script>
+<script type="text/javascript" src="/js/jquery.highlight-4.js"></script>
+<script type="text/javascript" src="/js/miya_validator.js"></script>
+<script type="text/javascript" src="/bos/js/common.js"></script>
+
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+<script type="text/javascript" src="/js/html5shiv.js"></script><script type="text/javascript" src="js/respond.min.js"></script>
+<![endif]-->
+
+<script type="text/javascript">
+	$(function(){
+		$("#search").click(function(){
+			search();
+		});
+		$("#searchTxt").bind("keyup", function(event){
+			search();
+		});
+	});
+	function search(){
+		var searchTxt = $("#searchTxt").val();
+		if(searchTxt)
+		{
+			$("#lnb ul li").each(function(){
+				var text = $(this).text();
+				var showMenu = (text.indexOf(searchTxt) != -1) || (cho_hangul(text).indexOf(searchTxt) != -1);
+				if( showMenu ){
+					$(this).show();
+				} else {
+					if($(this).parent())
+						$(this).hide();
+				}
+			});
+		} else {
+			$("#lnb ul li").show();
+		}
+	}
+
+	function cho_hangul(str) {
+	  cho = ["ㄱ","ㄲ","ㄴ","ㄷ","ㄸ","ㄹ","ㅁ","ㅂ","ㅃ","ㅅ","ㅆ","ㅇ","ㅈ","ㅉ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"];
+	  result = "";
+	  for(i=0;i<str.length;i++) {
+	    code = str.charCodeAt(i)-44032;
+	    if(code>-1 && code<11172) result += cho[Math.floor(code/588)];
+	  }
+	  return result;
+	}
+
+	function pagePrint(Obj) {
+		alert(Obj);
+	    var W = Obj.offsetWidth;        //screen.availWidth;
+	    var H = Obj.offsetHeight;        //screen.availHeight;
+	    var features
+	= "menubar=no,toolbar=no,location=no,directories=no,status=no,scrollbars=yes,resizable=yes,width=" + W
+	+ ",height=" + H + ",left=0,top=0";
+	    var PrintPage = window.open("about:blank",Obj.id,features);
+	    PrintPage.document.open();
+	    PrintPage.document.write("\n\n" + Obj.innerHTML + "\n");
+	    PrintPage.document.close();
+	    PrintPage.document.title = document.domain;
+	    PrintPage.print(PrintPage.location.reload());
+	}
+
+	//pagePrint(document.getElementById('content'));
+	 function print_area()
+	 {
+		  var W=document.documentElement.clientWidth; if(!W){W=document.body.clientWidth;}
+		  var H=document.documentElement.clientHeight; if(!H){H=document.body.clientHeight;}
+		  var features = "menubar=no,toolbar=no,location=no,directories=no,status=no,scrollbars=yes,resizable=yes,width=" + W + ",height=" + H + ",left=0,top=0";
+		  var PrintPage = window.open("about:blank","tmp_print",features);
+		  PrintPage.document.open();
+		  PrintPage.document.write("<html><head><title></title></head><body>" + document.getElementById('content').innerHTML + "</body></html>");
+		  PrintPage.document.close();
+		  PrintPage.print();
+		  PrintPage.close();
+	 }
+
+	 function printf(){
+		 document.frames['contentFrame'].focus();
+		 document.frames['contentFrame'].print();
+		 //document.frames['contentFrame'].contentWindow.location.href="/bos/forprint.jsp";
+	 }
+
+	 function println(){
+		 window.open('/bos/forprint.jsp', 'popwin', 'left=20,top=20,width=616,height=700');
+		 document.frames['contentFrame'].focus();
+		 //document.frames['contentFrame'].print();
+	 }
+
+	function openPopup()
+	{
+		url = "/bos/member/forUpdateMy.do?viewType=BODY";
+		window.open(url, "deptName", "resizable=no, status=no, scrollbars=no, toolbar=no, menubar=no, width=1000, height=700");
+	}
+</script>
+</head>
+<body>
+<div id="wrap">
+	<div id="header_wrap">
+		<div class="header">
+			<h1><a href="/bos/main/main.do"><img src="/bos/images/common/logo.gif" alt="콘텐츠코리아랩" /></a></h1>
+			<p class="user bold"><span class="color1">[]CKL관리자(ckladmin)</span>님 로그인 접속IP:0:0:0:0:0:0:0:1</p>
+			<div class="util btn-group"> <a href="javascript:openPopup();"class="btn btn-success"><i class="fa fa-power-off"></i>내정보수정</a> <a href="/bos/member/logout.do" class="btn btn-info"><i class="fa fa-power-off"></i> 로그아웃</a> </div>
+		</div>
+		<div id="gnb">
+			<ul class="gnb_width">
+				<li class='on'> <a href="/bos/member/list.do?menuNo=100001" >관리자관리</a> </li>
+				<li > <a href="/bos/bbs/B0000002/list.do?menuNo=100009" >게시물관리</a> </li>
+				<li > <a href="/bos/mpm/commonContents/list.do?siteId=2&amp;menuNo=100020" >콘텐츠관리</a> </li>
+				<li class='pr0'> <a href="/bos/cmmncode/CmmnCodeClList.do?menuNo=100021" >사이트관리</a> </li>
+			</ul>
+		</div>
+	</div>
+	<div id="container" class="clearfix" >
+		<div id="lnb">
+			<h2>관리자관리</h2>
+			<!-- <p><input type="text" name="searchTxt" id="searchTxt" value="" /> <label for="search"><a id="search" href="#search">조회</a></label></p> -->
+			
+			<ul>
+				<li> <a href="/bos/member/list.do?menuNo=100002" title="/bos/member/list.do" >관리자정보</a> </li>
+				<li> <a href="/bos/mpm/MenuCreatManageSelect.do?menuNo=100003" title="/bos/mpm/MenuCreatManageSelect.do" >권한관리</a>
+					<ol>
+						<li> <a href="/bos/cmm/sec/ram/AuthorList.do?menuNo=100004" title="/bos/cmm/sec/ram/AuthorList.do" >권한관리</a> </li>
+						<li> <a href="/bos/mpm/MenuCreatManageSelect.do?menuNo=100005" title="/bos/mpm/MenuCreatManageSelect.do" >권한별 메뉴관리</a> </li>
+					</ol>
+				</li>
+			</ul>
+		</div>
+		<div id="content">
+			<div class="hgroup clearfix">
+				<h3 class="fl">예약현황(시설예약)</h3>
+				<div class="fr"> <a class="btn btn-sm btn-success" href="/bos/forprint.jsp" id="print" title="새창" onclick="window.open(this.href, 'printPage', 'width=800,height=550,scrollbars,toolbar,status');return false;" alt="인쇄하기 (자바스크립트 미지원시 브라우저은 인쇄기능을 이용하세요)"><i class="fa fa-hover fa-print"></i><span >인쇄하기</span></a> </div>
+			</div>
+			<ul class="navWizard">
+				<li><span>공간 및 일자/시간 선택</span></li>
+				<li><span>예약자 정보 입력</span></li>
+				<li class="last active"><span class="sr-only">(현재 페이지)</span><span>예약완료</span></li>
+			</ul>
+			
+			
+			<div class="alert alert-info clear">
+				<p class="fs18">시설 예약이 완료되었습니다.</p>
+			</div>
+			
+			
+			<h4 class="clear">예약정보</h4>
+						
+			<div class="bdView">	
+				<table class="table table-bordered">
+					<caption>
+					
+					</caption>
+					<colgroup>
+					<col />
+					<col />
+					<col />
+					<col />
+					</colgroup>
+					<tbody>
+						<tr>
+							<th scope="row">예약번호</th>
+							<td colspan="3">1123K</td>
+						</tr>
+						<tr>
+							<th scope="row">시설공간</th>
+							<td colspan="3">2층 &gt; 소회의실 &gt; 소회의실 1</td>
+						</tr>
+						<tr>
+							<th scope="row">예약일자</th>
+							<td>2015년 10월 01일</td>
+							<th scope="row" >예약시간</th>
+							<td> 오후 1:00 ~ 오후 3:59    (3시간)</td>
+						</tr>
+						<tr>
+							<th scope="row">등록일시</th>
+							<td colspan="3">2015년 9월 28일 오전 9시 30분</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			
+			<h4>장비 신청정보</h4>
+			<div class="bdView">
+				<table class="table table-bordered">
+					<caption>
+					
+					</caption>
+					<colgroup>
+					<col />
+					<col />
+					</colgroup>
+					<thead>
+						<tr>
+							<th scope="row" >장비구분</th>
+							<th>신청수량</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td scope="row" >PC1 (Windows)</td>
+							<td>1</td>
+						</tr>
+						<tr>
+							<td scope="row" >HD 캠코더</td>
+							<td>2</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			
+			
+			<h4>예약자 정보</h4>
+			<div class="tbrinfo text-danger"><span class="hide_star"><span class="sr-only">(필수입력)</span></span> 표시 항목은 필수 입력 항목입니다.</div>
+			<div class="bdView">
+				<table class="table table-bordered">
+					<caption>
+					
+					</caption>
+					<colgroup>
+					<col />
+					<col />
+					<col />
+					<col />
+					</colgroup>
+					<tbody>
+						<tr>
+							<th scope="row" >이름</th>
+							<td colspan="3">홍길동</td>
+						</tr>
+						<tr>
+							<th scope="row" >휴대폰</th>
+							<td>010-1234-1234</td>
+							<th scope="row" >이메일</th>
+							<td>test@nate.com</td>
+						</tr>
+						<tr>
+							<th scope="row" >나이</th>
+							<td>20대</td>
+							<th scope="row" >직업</th>
+							<td>대학생</td>
+						</tr>
+						<tr>
+							<th scope="row" >거주지역</th>
+							<td>서울특별시</td>
+							<th scope="row" >사용인원</th>
+							<td>2 명</td>
+						</tr>
+						<tr>
+							<th scope="row" >사용목적</th>
+							<td colspan="3">콘텐츠 작업을 위한 공간 예약 신청</td>
+						</tr>
+						<tr>
+							<th scope="row" >예약정보 수신방법</th>
+							<td colspan="3">SMS,    E-mail</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			
+			<div class="row clear mt20 tac">
+				<div class="col-md-2"><a href="#self" class="btn btn-default">이전</a></div>
+				<div class="col-md-10"><a href="#self" class="btn btn-primary">다음</a> <a href="#self" class="btn btn-default">취소</a></div>
+			</div>
+			
+			<!-- board list end //-->
+			
+			</form>
+		</div>
+	</div>
+</div>
+<div id="footer">
+	<p><span class="bold">콘텐츠코리아랩</span>&nbsp;&nbsp;&nbsp;
+		서울시 영등포구 여의나루로 76(150-010),
+		&nbsp;&nbsp;&nbsp; <span class="bold">전화번호</span>: 02)767-7114 </p>
+	<em>Copyright ⓒ 2012 CKL Corp. All Rights reserved.</em> </div>
+
+<!--[if lte IE 7]>
+<script type="text/javascript">
+//<![CDATA[
+	$('*').each(function(index) {
+		if ($(this).css("overflow")=="hidden"){ $(this).css("zoom",1)}
+		if ($(this).css("display")=="inline-block"){ $(this).css("display",'inline'); $(this).css("zoom",1)}
+	});
+//]]>
+</script>
+<![endif]-->
+
+<div class="posr">
+	<div class="souceUrl" style="color:#f00">*/WEB-INF/jsp/bos/member/list.jsp</div>
+	<div class="check" style="display: none">복사완료</div>
+	<div class="souceUrl" style="color:#f00">WEB-INF/jsp/bos/member/list.jsp</div>
+	<div class="check" style="display: none">복사완료</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,462 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="archiveUser">
+
+	<typeAlias alias="archiveVO" type="kr.co.unp.archive.vo.ArchiveVO" />
+	<typeAlias alias="zvl" type="kr.co.unp.util.ZValue" />
+
+	<resultMap id="archiveDAO.viewMap" class="zvl">
+		<result property="taskSeq"              column="ARCHIVE_TASK_SEQ" />
+		<result property="organNm"              column="ORGAN_NM" />
+		<result property="archiveField1"        column="ARCHIVE_FIELD1" />
+		<result property="archiveField2"        column="ARCHIVE_FIELD2" />
+		<result property="archiveField3"        column="ARCHIVE_FIELD3" />
+		<result property="archiveFieldEtc1"     column="ARCHIVE_FIELD_ETC1" />
+		<result property="archiveFieldEtc2"     column="ARCHIVE_FIELD_ETC2" />
+		<result property="archiveFieldEtc3"     column="ARCHIVE_FIELD_ETC3" />
+		<result property="archiveFieldFullName" column="ARCHIVE_FIELD_FULL_NM" />
+		<result property="taskSummary"          column="TASK_SUMMARY" jdbcType="CLOB" javaType="java.lang.String" />
+		<result property="atchFileId"           column="ATCH_FILE_ID" />
+		<result property="useAt"                column="USE_AT" />
+	</resultMap>
+	
+	 <!-- 주요성과 목록  -->
+ <select id="archiveDAO.mainResultList" parameterClass="zvl" resultClass="zvl">
+  /* archiveDAO.mainResultList */
+  <![CDATA[
+  SELECT *
+    FROM (
+           SELECT ROWNUM RNUM, ALL_LIST.*
+             FROM (
+			       SELECT TAP.ARCHIVE_TASK_SEQ
+			             , TAP.ARCHIVE_PROJECT_SEQ
+			             , TAT.TASK_NM
+			             , TAP.PROJECT_NM
+			             , TAP.EXPERT
+			             , TAP.STUDENTS
+			             , TAP.PROJECT_SUMMARY
+			             , TAP.RESULT_VIDEO
+			             , TAP.RESULT_URL
+			             , TAP.MAIN_RESULT_AT
+			             , TAP.USE_AT
+			             , TAP.OPEN_AT
+			             , TAP.ATCH_FILE_ID
+			             , TAP.RESULT_ETC_FILE
+			             , TAT.YEAR
+			             , TAT.WORK_FIELD
+			             , TAT.ORGAN_NM
+			             , AUFN.ARCHIVE_FIELD_FULL_NM
+			             , TAT.ARCHIVE_FIELD1
+			             , TAT.ARCHIVE_FIELD2
+			             , TAT.ARCHIVE_FIELD3
+			             , TAT.ARCHIVE_FIELD_ETC1
+			             , TAT.ARCHIVE_FIELD_ETC2
+			             , TAT.ARCHIVE_FIELD_ETC3
+			             , TAT.TASK_SUMMARY
+			             , TAP.FRST_REGISTER_ID
+			             , TAP.FRST_REGIST_PNTTM
+			             , TAP.LAST_UPDUSR_ID
+			             , TAP.LAST_UPDT_PNTTM
+			          FROM TN_ARCHIVE_PROJECT TAP
+			         INNER JOIN TN_ARCHIVE_TASK TAT ON TAT.ARCHIVE_TASK_SEQ = TAP.ARCHIVE_TASK_SEQ          
+			         LEFT OUTER JOIN
+			         (	
+			         	SELECT CASE
+						       /* 분야1 선택 */
+						       WHEN FN_ARCHIVE_FIELD_NM1 IS NOT NULL AND FN_ARCHIVE_FIELD_NM2 IS NULL AND FN_ARCHIVE_FIELD_NM3 IS NULL 
+				               THEN FN_ARCHIVE_FIELD_NM1
+				               /* 분야1, 2 선택 */             
+						         WHEN FN_ARCHIVE_FIELD_NM1 IS NOT NULL AND FN_ARCHIVE_FIELD_NM2 IS NOT NULL AND FN_ARCHIVE_FIELD_NM3 IS NULL 
+						          THEN FN_ARCHIVE_FIELD_NM1 || ' | ' ||  FN_ARCHIVE_FIELD_NM2
+						         /* 분야1, 2, 3 선택 */  
+						         WHEN FN_ARCHIVE_FIELD_NM1 IS NOT NULL AND FN_ARCHIVE_FIELD_NM2 IS NOT NULL AND FN_ARCHIVE_FIELD_NM3 IS NOT NULL 
+						          THEN FN_ARCHIVE_FIELD_NM1 || ' | ' ||  FN_ARCHIVE_FIELD_NM2 || ' | ' || FN_ARCHIVE_FIELD_NM3
+						         ELSE ''
+						         END ARCHIVE_FIELD_FULL_NM
+						       , AFN.ARCHIVE_TASK_SEQ
+						  FROM (    /* 분야명을 가져온다. */
+							        SELECT DECODE(ARCHIVE_FIELD1, '13', ARCHIVE_FIELD_ETC1, FN_ARCHIVE_FIELD_NM(ARCHIVE_FIELD1)) AS FN_ARCHIVE_FIELD_NM1
+							     , DECODE(ARCHIVE_FIELD2, '13', ARCHIVE_FIELD_ETC2, FN_ARCHIVE_FIELD_NM(ARCHIVE_FIELD2)) AS FN_ARCHIVE_FIELD_NM2
+							     , DECODE(ARCHIVE_FIELD3, '13', ARCHIVE_FIELD_ETC3, FN_ARCHIVE_FIELD_NM(ARCHIVE_FIELD3)) AS FN_ARCHIVE_FIELD_NM3
+							     , ARCHIVE_TASK_SEQ
+							     FROM TN_ARCHIVE_TASK
+						      ) AFN     
+					 ) AUFN ON AUFN.ARCHIVE_TASK_SEQ = TAT.ARCHIVE_TASK_SEQ
+			         WHERE 1=1
+			           AND TAP.MAIN_RESULT_AT = 'Y'
+			           AND TAP.USE_AT = 'Y'
+			           AND TAT.WORK_FIELD = #workField#
+ 			 ]]>
+	        <![CDATA[
+	          ORDER BY FRST_REGIST_PNTTM DESC 
+	             ) ALL_LIST
+	             )
+	         WHERE  RNUM  > #firstIndex#
+	           AND  RNUM <= #firstIndex# + #recordCountPerPage#
+	       ]]>
+ </select>
+ 
+ 
+ <!-- 주요성과 목록 개수  -->
+ <select id="archiveDAO.mainResultListCnt" parameterClass="zvl" resultClass="int">
+  /* archiveDAO.mainResultListCnt */
+  <![CDATA[
+   SELECT COUNT(*) AS TOTCNT
+     FROM TN_ARCHIVE_PROJECT TAP
+    INNER JOIN TN_ARCHIVE_TASK TAT ON TAT.ARCHIVE_TASK_SEQ = TAP.ARCHIVE_TASK_SEQ 
+    LEFT OUTER JOIN
+			         (	
+			         	SELECT CASE
+						       /* 분야1 선택 */
+						       WHEN FN_ARCHIVE_FIELD_NM1 IS NOT NULL AND FN_ARCHIVE_FIELD_NM2 IS NULL AND FN_ARCHIVE_FIELD_NM3 IS NULL 
+				               THEN FN_ARCHIVE_FIELD_NM1
+				               /* 분야1, 2 선택 */             
+						         WHEN FN_ARCHIVE_FIELD_NM1 IS NOT NULL AND FN_ARCHIVE_FIELD_NM2 IS NOT NULL AND FN_ARCHIVE_FIELD_NM3 IS NULL 
+						          THEN FN_ARCHIVE_FIELD_NM1 || ' | ' ||  FN_ARCHIVE_FIELD_NM2
+						         /* 분야1, 2, 3 선택 */  
+						         WHEN FN_ARCHIVE_FIELD_NM1 IS NOT NULL AND FN_ARCHIVE_FIELD_NM2 IS NOT NULL AND FN_ARCHIVE_FIELD_NM3 IS NOT NULL 
+						          THEN FN_ARCHIVE_FIELD_NM1 || ' | ' ||  FN_ARCHIVE_FIELD_NM2 || ' | ' || FN_ARCHIVE_FIELD_NM3
+						         ELSE ''
+						         END ARCHIVE_FIELD_FULL_NM
+						       , AFN.ARCHIVE_TASK_SEQ
+						  FROM (    /* 분야명을 가져온다. */
+							        SELECT DECODE(ARCHIVE_FIELD1, '13', ARCHIVE_FIELD_ETC1, FN_ARCHIVE_FIELD_NM(ARCHIVE_FIELD1)) AS FN_ARCHIVE_FIELD_NM1
+							     , DECODE(ARCHIVE_FIELD2, '13', ARCHIVE_FIELD_ETC2, FN_ARCHIVE_FIELD_NM(ARCHIVE_FIELD2)) AS FN_ARCHIVE_FIELD_NM2
+							     , DECODE(ARCHIVE_FIELD3, '13', ARCHIVE_FIELD_ETC3, FN_ARCHIVE_FIELD_NM(ARCHIVE_FIELD3)) AS FN_ARCHIVE_FIELD_NM3
+							     , ARCHIVE_TASK_SEQ 
+							     FROM TN_ARCHIVE_TASK
+						      ) AFN     
+					 ) AUFN ON AUFN.ARCHIVE_TASK_SEQ = TAT.ARCHIVE_TASK_SEQ
+			         WHERE 1=1
+			           AND TAP.MAIN_RESULT_AT = 'Y'
+			           AND TAP.USE_AT = 'Y'
+			           AND TAT.WORK_FIELD = #workField#
+  ]]>    
+ </select>
+
+ <!-- 프로젝트 -->
+ <resultMap id="archiveDAO.projectListMap"  class="zvl">
+  <result property="archiveTaskSeq"         column="ARCHIVE_TASK_SEQ" />
+  <result property="archiveProjectSeq"      column="ARCHIVE_PROJECT_SEQ" />
+  <result property="projectNm"              column="PROJECT_NM" />
+  <result property="expert"                 column="EXPERT" />
+  <result property="students"               column="STUDENTS" />
+  <result property="projectSummary"         column="PROJECT_SUMMARY" jdbcType="CLOB" javaType="java.lang.String"/>
+  <result property="resultVideo"            column="RESULT_VIDEO" />
+  <result property="resultUrl"              column="RESULT_URL" />
+  <result property="mainResultAt"           column="MAIN_RESULT_AT" />
+  <result property="projectUseAt"           column="USE_AT" />
+  <result property="openAt"                 column="OPEN_AT" />
+  <result property="atchFileId"             column="ATCH_FILE_ID" />
+  <result property="resultEtcFile"          column="RESULT_ETC_FILE" />
+  <result property="userNm"                 column="USER_NM" />
+  <result property="projectFrstRegisterId"  column="FRST_REGISTER_ID" />
+  <result property="projectFirstDate"       column="FRST_REGIST_PNTTM" />
+  <result property="projectFirstUpdateId"   column="LAST_UPDUSR_ID" />
+  <result property="projectFirstUpdateDate" column="LAST_UPDT_PNTTM" />
+ </resultMap>
+
+<!-- 아카이브 프로젝트 상세 -->
+ <select id="archiveDAO.ajaxProjectDetail" parameterClass="zvl" resultClass="zvl" resultMap="archiveDAO.projectListMap">
+  /* archiveDAO.ajaxProjectDetail */
+  SELECT TAP.ARCHIVE_TASK_SEQ
+    , TAP.ARCHIVE_PROJECT_SEQ
+    , TAP.PROJECT_NM
+    , TAP.EXPERT
+    , TAP.STUDENTS
+    , TAP.PROJECT_SUMMARY
+    , TAP.RESULT_VIDEO
+    , TAP.RESULT_URL
+    , TAP.MAIN_RESULT_AT
+    , TAP.USE_AT
+    , TAP.OPEN_AT
+    , TAP.ATCH_FILE_ID
+    , TAP.RESULT_ETC_FILE
+    , TU.USER_NM
+    , TAP.FRST_REGISTER_ID
+    , TAP.FRST_REGIST_PNTTM
+    , TAP.LAST_UPDUSR_ID
+    , TAP.LAST_UPDT_PNTTM
+    FROM TN_ARCHIVE_PROJECT TAP
+   INNER JOIN TM_USER TU ON TAP.FRST_REGISTER_ID = TU.USER_ID
+   WHERE 1 = 1
+     AND TAP.ARCHIVE_PROJECT_SEQ = #archiveProjectSeq#
+ </select>
+
+	<select id="archiveDAO.list" parameterClass="zvl" resultClass="zvl">
+		/* archiveDAO.list */
+		<![CDATA[
+		SELECT *
+		  FROM (
+		         SELECT ROWNUM RNUM, ALL_LIST.*
+		           FROM (
+						 SELECT TAT.ARCHIVE_TASK_SEQ
+						      , TAT.YEAR
+						      , TAT.TASK_NM 
+						      , TAT.ORGAN_NM
+						      , TAT.TASK_SUMMARY 
+						      , TAT.ATCH_FILE_ID
+						      , TAT.ARCHIVE_FIELD1
+						      , TAT.ARCHIVE_FIELD2
+						      , TAT.ARCHIVE_FIELD3
+						      , TAT.ARCHIVE_FIELD_ETC1
+						      , TAT.ARCHIVE_FIELD_ETC2
+						      , AUFN.ARCHIVE_FIELD_FULL_NM
+					        FROM TN_ARCHIVE_TASK TAT
+					        LEFT OUTER JOIN
+					         (	
+					         	SELECT CASE
+								       /* 분야1 선택 */
+								       WHEN FN_ARCHIVE_FIELD_NM1 IS NOT NULL AND FN_ARCHIVE_FIELD_NM2 IS NULL AND FN_ARCHIVE_FIELD_NM3 IS NULL 
+						               THEN FN_ARCHIVE_FIELD_NM1
+						               /* 분야1, 2 선택 */             
+								         WHEN FN_ARCHIVE_FIELD_NM1 IS NOT NULL AND FN_ARCHIVE_FIELD_NM2 IS NOT NULL AND FN_ARCHIVE_FIELD_NM3 IS NULL 
+								          THEN FN_ARCHIVE_FIELD_NM1 || ' | ' ||  FN_ARCHIVE_FIELD_NM2
+								         /* 분야1, 2, 3 선택 */  
+								         WHEN FN_ARCHIVE_FIELD_NM1 IS NOT NULL AND FN_ARCHIVE_FIELD_NM2 IS NOT NULL AND FN_ARCHIVE_FIELD_NM3 IS NOT NULL 
+								          THEN FN_ARCHIVE_FIELD_NM1 || ' | ' ||  FN_ARCHIVE_FIELD_NM2 || ' | ' || FN_ARCHIVE_FIELD_NM3
+								         ELSE ''
+								         END ARCHIVE_FIELD_FULL_NM
+								       , AFN.ARCHIVE_TASK_SEQ
+								  FROM (    /* 분야명을 가져온다. */
+									        SELECT DECODE(ARCHIVE_FIELD1, '13', ARCHIVE_FIELD_ETC1, FN_ARCHIVE_FIELD_NM(ARCHIVE_FIELD1)) AS FN_ARCHIVE_FIELD_NM1
+									     , DECODE(ARCHIVE_FIELD2, '13', ARCHIVE_FIELD_ETC2, FN_ARCHIVE_FIELD_NM(ARCHIVE_FIELD2)) AS FN_ARCHIVE_FIELD_NM2
+									     , DECODE(ARCHIVE_FIELD3, '13', ARCHIVE_FIELD_ETC3, FN_ARCHIVE_FIELD_NM(ARCHIVE_FIELD3)) AS FN_ARCHIVE_FIELD_NM3
+									     , ARCHIVE_TASK_SEQ
+									     FROM TN_ARCHIVE_TASK
+								      ) AFN     
+							 ) AUFN ON AUFN.ARCHIVE_TASK_SEQ = TAT.ARCHIVE_TASK_SEQ
+					        
+					       WHERE USE_AT = 'Y'
+				         AND WORK_FIELD = #workField#
+			     ]]>
+		 		<isNotEmpty prepend="AND" property="year">
+				 <![CDATA[	YEAR = #year# ]]>
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="organNm">
+				<![CDATA[   ORGAN_NM LIKE '%' || #organNm# || '%' ]]>
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="archiveField1">
+				<![CDATA[   ARCHIVE_FIELD1 = #archiveField1#  ]]>
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="taskNm">
+				 <![CDATA[	TASK_NM LIKE '%' || #taskNm# || '%' ]]>
+				</isNotEmpty>
+				 <![CDATA[				         
+							      ORDER BY FRST_REGIST_PNTTM DESC
+							          ) ALL_LIST
+						    )
+					 WHERE  RNUM  > #firstIndex#
+					   AND  RNUM <= #firstIndex# + #recordCountPerPage#
+					]]>
+	</select>
+	
+		<select id="archiveDAO.listCnt" parameterClass="zvl" resultClass="int">
+		/* archiveDAO.listCnt */
+		<![CDATA[
+			SELECT  COUNT(*) as totcnt
+			  FROM  TN_ARCHIVE_TASK TAT
+					        LEFT OUTER JOIN
+					         (	
+					         	SELECT CASE
+								       /* 분야1 선택 */
+								       WHEN FN_ARCHIVE_FIELD_NM1 IS NOT NULL AND FN_ARCHIVE_FIELD_NM2 IS NULL AND FN_ARCHIVE_FIELD_NM3 IS NULL 
+						               THEN FN_ARCHIVE_FIELD_NM1
+						               /* 분야1, 2 선택 */             
+								         WHEN FN_ARCHIVE_FIELD_NM1 IS NOT NULL AND FN_ARCHIVE_FIELD_NM2 IS NOT NULL AND FN_ARCHIVE_FIELD_NM3 IS NULL 
+								          THEN FN_ARCHIVE_FIELD_NM1 || ' | ' ||  FN_ARCHIVE_FIELD_NM2
+								         /* 분야1, 2, 3 선택 */  
+								         WHEN FN_ARCHIVE_FIELD_NM1 IS NOT NULL AND FN_ARCHIVE_FIELD_NM2 IS NOT NULL AND FN_ARCHIVE_FIELD_NM3 IS NOT NULL 
+								          THEN FN_ARCHIVE_FIELD_NM1 || ' | ' ||  FN_ARCHIVE_FIELD_NM2 || ' | ' || FN_ARCHIVE_FIELD_NM3
+								         ELSE ''
+								         END ARCHIVE_FIELD_FULL_NM
+								       , AFN.ARCHIVE_TASK_SEQ
+								  FROM (    /* 분야명을 가져온다. */
+									        SELECT DECODE(ARCHIVE_FIELD1, '13', ARCHIVE_FIELD_ETC1, FN_ARCHIVE_FIELD_NM(ARCHIVE_FIELD1)) AS FN_ARCHIVE_FIELD_NM1
+									     , DECODE(ARCHIVE_FIELD2, '13', ARCHIVE_FIELD_ETC2, FN_ARCHIVE_FIELD_NM(ARCHIVE_FIELD2)) AS FN_ARCHIVE_FIELD_NM2
+									     , DECODE(ARCHIVE_FIELD3, '13', ARCHIVE_FIELD_ETC3, FN_ARCHIVE_FIELD_NM(ARCHIVE_FIELD3)) AS FN_ARCHIVE_FIELD_NM3
+									     , ARCHIVE_TASK_SEQ
+									     FROM TN_ARCHIVE_TASK
+								      ) AFN     
+							 ) AUFN ON AUFN.ARCHIVE_TASK_SEQ = TAT.ARCHIVE_TASK_SEQ
+					        
+					       WHERE USE_AT = 'Y'
+				         AND WORK_FIELD = #workField#
+		]]>
+		<isNotEmpty prepend="AND" property="year">
+			YEAR = #year#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="organNm">
+			ORGAN_NM LIKE '%' || #organNm# || '%'
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="archiveField1">
+		<![CDATA[   ARCHIVE_FIELD1 = #archiveField1#  ]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="taskNm">
+			TASK_NM LIKE '%' || #taskNm# || '%'
+		</isNotEmpty>
+	</select>
+
+	<select id="archiveDAO.taskDetail" parameterClass="zvl" resultClass="zvl" resultMap="archiveDAO.viewMap">
+			/* archiveDAO.taskDetail */
+			SELECT TAT.ARCHIVE_TASK_SEQ
+                  , TAT.YEAR
+                  , TAT.WORK_FIELD
+                  , TAT.ORGAN_NM
+                  , TAT.TASK_NM
+                  , TAT.USE_AT
+                  , TAT.TASK_SUMMARY
+                  , TAT.ATCH_FILE_ID
+                  , AUFN.ARCHIVE_FIELD_FULL_NM
+                  , TAT.ARCHIVE_FIELD1
+                  , TAT.ARCHIVE_FIELD2
+                  , TAT.ARCHIVE_FIELD3
+                  , TAT.ARCHIVE_FIELD_ETC1
+                  , TAT.ARCHIVE_FIELD_ETC2
+                  , TAT.ARCHIVE_FIELD_ETC3
+              FROM TN_ARCHIVE_TASK TAT
+               LEFT OUTER JOIN
+         (	
+         	SELECT CASE
+			       /* 분야1 선택 */
+			       WHEN FN_ARCHIVE_FIELD_NM1 IS NOT NULL AND FN_ARCHIVE_FIELD_NM2 IS NULL AND FN_ARCHIVE_FIELD_NM3 IS NULL 
+	               THEN FN_ARCHIVE_FIELD_NM1
+	               /* 분야1, 2 선택 */             
+			         WHEN FN_ARCHIVE_FIELD_NM1 IS NOT NULL AND FN_ARCHIVE_FIELD_NM2 IS NOT NULL AND FN_ARCHIVE_FIELD_NM3 IS NULL 
+			          THEN FN_ARCHIVE_FIELD_NM1 || ' | ' ||  FN_ARCHIVE_FIELD_NM2
+			         /* 분야1, 2, 3 선택 */  
+			         WHEN FN_ARCHIVE_FIELD_NM1 IS NOT NULL AND FN_ARCHIVE_FIELD_NM2 IS NOT NULL AND FN_ARCHIVE_FIELD_NM3 IS NOT NULL 
+			          THEN FN_ARCHIVE_FIELD_NM1 || ' | ' ||  FN_ARCHIVE_FIELD_NM2 || ' | ' || FN_ARCHIVE_FIELD_NM3
+			         ELSE ''
+			         END ARCHIVE_FIELD_FULL_NM
+			       , AFN.ARCHIVE_TASK_SEQ
+			  FROM (    /* 분야명을 가져온다. */
+				        SELECT DECODE(ARCHIVE_FIELD1, '13', ARCHIVE_FIELD_ETC1, FN_ARCHIVE_FIELD_NM(ARCHIVE_FIELD1)) AS FN_ARCHIVE_FIELD_NM1
+				     , DECODE(ARCHIVE_FIELD2, '13', ARCHIVE_FIELD_ETC2, FN_ARCHIVE_FIELD_NM(ARCHIVE_FIELD2)) AS FN_ARCHIVE_FIELD_NM2
+				     , DECODE(ARCHIVE_FIELD3, '13', ARCHIVE_FIELD_ETC3, FN_ARCHIVE_FIELD_NM(ARCHIVE_FIELD3)) AS FN_ARCHIVE_FIELD_NM3
+				     , ARCHIVE_TASK_SEQ
+				     FROM TN_ARCHIVE_TASK
+			      ) AFN     
+		 ) AUFN ON AUFN.ARCHIVE_TASK_SEQ = TAT.ARCHIVE_TASK_SEQ
+             WHERE TAT.ARCHIVE_TASK_SEQ = #taskSeq#
+		</select>
+		
+		<select id="archiveDAO.projectList" parameterClass="zvl" resultClass="zvl">
+  			/* archiveDAO.projectList */
+   			 SELECT  TAP.ARCHIVE_TASK_SEQ
+                   , TAP.ARCHIVE_PROJECT_SEQ
+                   , TAP.ATCH_FILE_ID
+                   , TAT.YEAR
+                   , TAP.PROJECT_NM
+                   , TAP.FRST_REGIST_PNTTM
+                   , TAP.USE_AT
+                   , TAP.STUDENTS
+               FROM TN_ARCHIVE_PROJECT TAP
+         INNER JOIN TN_ARCHIVE_TASK TAT ON TAT.ARCHIVE_TASK_SEQ = TAP.ARCHIVE_TASK_SEQ 
+             WHERE 1=1
+               AND TAP.USE_AT           = 'Y'
+               AND TAP.OPEN_AT          = 'Y'
+               AND TAP.ARCHIVE_TASK_SEQ =  #taskSeq#
+             ORDER BY FRST_REGIST_PNTTM DESC
+		</select>
+
+
+	<!-- 아카이브 과제 목록 -->
+	<select id="archiveDAO.listDetail" parameterClass="zvl" resultClass="zvl">
+		/* archiveDAO.listDetail */
+		SELECT TAT.ARCHIVE_TASK_SEQ /* 과제일련번호 */
+			 , TAT.YEAR               /* 연도 */
+			 , TAT.WORK_FIELD         /* 사업분야 */
+			 , TAT.ORGAN_NM           /* 주관기관명 */
+			 , TAT.TASK_NM            /* 과제명 */
+			 , TAT.ARCHIVE_FIELD1     /* 분야1 */
+			 , TAT.ARCHIVE_FIELD2     /* 분야1 */
+			 , TAT.ARCHIVE_FIELD3     /* 분야1 */
+			 , TAT.ARCHIVE_FIELD_ETC1 /* 분야_기타1 */
+			 , TAT.ARCHIVE_FIELD_ETC2 /* 분야_기타2 */
+			 , TAT.ARCHIVE_FIELD_ETC3 /* 분야_기타3 */
+			 , TAT.TASK_SUMMARY       /* 과제개요 */
+			 , TAT.ATCH_FILE_ID       /* 첨부파일 - 과제썸네일 */
+			 , TAT.USE_AT             /* 사용여부 */
+			 , TU.USER_NM             /* 등록자 */
+			 , TAT.FRST_REGISTER_ID   /* 최초등록자아이디 */
+			 , TAT.FRST_REGIST_PNTTM  /* 최초등록시점 */
+			 , TAT.LAST_UPDUSR_ID     /* 최종수정자아이디 */
+			 , TAT.LAST_UPDT_PNTTM    /* 최종수정시점 */
+		 FROM TN_ARCHIVE_TASK TAT
+		INNER JOIN TM_USER TU ON TAT.FRST_REGISTER_ID = TU.USER_ID
+		WHERE TAT.ARCHIVE_TASK_SEQ = #taskSeq#
+	</select>
+
+	
+	<select id="archiveDAO.projectListCnt" parameterClass="zvl" resultClass="int">
+		/* archiveDAO.projectListCnt */
+	
+		<![CDATA[
+			SELECT  COUNT(*) as totcnt
+			  FROM  TN_ARCHIVE_PROJECT
+			  WHERE  ARCHIVE_TASK_SEQ = #taskSeq#
+		]]>
+	</select>
+	
+	   <!-- 아카이브 프로젝트 목록  -->
+	<select id="archiveDAO.taskProjectList" parameterClass="zvl" resultClass="zvl">
+			/* archiveDAO.taskProjectList */
+			
+			SELECT TAT.ARCHIVE_TASK_SEQ   /* 과제일련번호 */
+				 , TAT.YEAR               /* 연도 */
+				 , TAT.WORK_FIELD         /* 사업분야 */
+				 , TAT.ORGAN_NM           /* 주관기관명 */
+				 , TAT.TASK_NM            /* 과제명 */
+				 , TAT.ARCHIVE_FIELD1     /* 분야1 */
+				 , TAT.ARCHIVE_FIELD2     /* 분야1 */
+				 , TAT.ARCHIVE_FIELD3     /* 분야1 */
+				 , TAT.ARCHIVE_FIELD_ETC1 /* 분야_기타1 */
+				 , TAT.ARCHIVE_FIELD_ETC2 /* 분야_기타2 */
+				 , TAT.ARCHIVE_FIELD_ETC3 /* 분야_기타3 */
+				 , TAT.TASK_SUMMARY       /* 과제개요 */
+				 , TAT.ATCH_FILE_ID     /* 첨부파일 - 과제썸네일 */
+				 , TAT.USE_AT             /* 사용여부 */
+				 , TAT.FRST_REGISTER_ID   /* 최초등록자아이디 */
+				 , TAT.FRST_REGIST_PNTTM  /* 최초등록시점 */
+				 , TAT.LAST_UPDUSR_ID     /* 최종수정자아이디 */
+				 , TAT.LAST_UPDT_PNTTM    /* 최종수정시점 */
+			  FROM TN_ARCHIVE_TASK TAT
+			 WHERE 1 = 1
+			   AND TAT.ARCHIVE_TASK_SEQ = #taskSeq#
+	</select>
+	
+	
+	
+	<!-- 아카이브 프로젝트 상세 목록 -->
+	<select id="archiveDAO.projectListDetail" parameterClass="zvl" resultClass="zvl">
+			/* archiveDAO.projectListDetail */
+			
+			SELECT TAP.ARCHIVE_TASK_SEQ
+				 , TAP.ARCHIVE_PROJECT_SEQ
+				 , TAP.PROJECT_NM
+				 , TAP.EXPERT
+				 , TAP.STUDENTS
+				 , TAP.PROJECT_SUMMARY
+				 , TAP.RESULT_VIDEO
+				 , TAP.RESULT_URL
+				 , TAP.MAIN_RESULT_AT
+				 , TAP.USE_AT
+				 , TAP.OPEN_AT
+				 , TAP.ATCH_FILE_ID
+				 , TAP.RESULT_ETC_FILE
+				 , TU.USER_NM
+				 , TAP.FRST_REGISTER_ID
+				 , TAP.FRST_REGIST_PNTTM
+				 , TAP.LAST_UPDUSR_ID
+				 , TAP.LAST_UPDT_PNTTM
+			  FROM TN_ARCHIVE_PROJECT TAP
+			 INNER JOIN TM_USER TU ON TAP.FRST_REGISTER_ID = TU.USER_ID
+			 WHERE 1 = 1
+			   AND TAP.ARCHIVE_PROJECT_SEQ = #projectTaskSeq#
+			   
+	</select>
+	
+	
+</sqlMap>

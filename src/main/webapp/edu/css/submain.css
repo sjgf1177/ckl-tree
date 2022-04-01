@@ -1,0 +1,244 @@
+
+h2{}
+
+#container, #content{width:1180px;}
+#content{padding:0 0 80px 0}
+
+/*
+.sub06 .svisualSet{height:121px; opacity: 0}
+.sub06{background: url(/edu/images/submain/sm05Visual.jpg) repeat-x 50% 130px}
+*/
+
+.submainCtsSet{width:1180px; background: #fff;}
+
+/* .sm1RollingSet{position: relative;float: left;width: 600px;height: 340px;margin-right: 10px;}
+#sm1Rolling{width: 600px;height:340px;float: left;}
+#sm1Rolling h2{margin:0;padding:0;line-height: 0;overflow:hidden;}
+.sm1RollCtrl{width: 460px;height: 50px;position:absolute;z-index: 100}
+.sm1RollCtrl li{float:left}
+.sm1RollCtrl button{position:absolute;right:0;z-index: 100;float:left;border:none;height:50px;width:50px;background:url(/edu/images/main/main.png) no-repeat 0 0;cursor:pointer}
+.sm1RollCtrl .prevPop{background-position:0 -500px;top:133px;left:0;}
+.sm1RollCtrl .playPop{background-position:0 -605px;right: 8px;top:260px;}
+.sm1RollCtrl .stopPop{background-position:-50px -605px;right:8px;top:260px;}
+.sm1RollCtrl .nextPop{background-position:-50px -500px;top:133px;right:0;}
+.sm1Roller{width:460px;height:315px;overflow:hidden;}
+.sm1Roller ul{float:left;position:absolute;z-index:1;}
+.sm1Roller li{float:left;width: 460px;height: 315px;}
+.sm1Roller li img{width:460px;height:315px}
+.sm1Roller li a{display:block;width: 460px;height: 315px;}
+
+ */
+
+
+.jobMain{margin-top: 50px;width: 1160px;margin-left: 10px;float: left;}
+
+.sm1RollingSet{position: relative;z-index:1;float: left;width: 808px;height: 255px;}
+.popupzone{width:808px;height:255px;float:left;position:absolute}
+.popupzone .ctrl{position: absolute;left:0;top:0;width:808px;height:0;z-index:100}
+.popupzone .ctrl button{position:absolute;top:0;z-index:10;float:left;width:50px;height:50px;
+	background:url(/edu/images/submain/controller.png) no-repeat 0 0}
+.popupzone .ctrl button span{font-size:0;overflow:hidden;white-space: nowrap;text-indent:100%;}
+.popupzone .ctrl .popupzone_pre{top:100px;left:-10px;}
+.popupzone .ctrl .popupzone_next{background-position:100% 0;right: -10px; top:100px;}
+.popupzone .ctrl .popupzone_play{position: relative;left:80px;top:-50px;background-position:0 -60px;width:30px}
+.popupzone .ctrl .popupzone_stop{position: relative;left:80px;top:-50px;background-position:0 -120px;width:30px}
+.popupzone .area{float:left;position: relative;z-index:1;}
+.popupzone .area ul{}
+.popupzone .area ul li{float:left}
+.popupzone .area ul li a{position:relative;z-index:300}
+.popupzone .area ul li a span{}
+.popupzone .area ul li .num .r,.popupzone .area ul li .num{ background:url(/edu/images/submain/controller.png) no-repeat 0 -182px;font-size:0;line-height:54px}
+.popupzone .area ul li .num{display:block;height:54px;overflow: hidden;left:0;top:-50px}
+.popupzone .area ul li .num .r{display:block;overflow: hidden;width:15px;background-position:right -180px}
+.popupzone .area ul li .num .t{visibility:hidden}
+.popupzone .area ul li .view{position: absolute;left:0;top:0;display:block;z-index:1;width:808px;text-align: right}
+.popupzone .area ul li .view img{vertical-align: top}
+.popupzone .area ul li.on .num .r,.popupzone .area ul li.on .num{}
+.popupzone .area ul li.on .num{background:url(/edu/images/submain/controller.png) no-repeat 0 -240px}
+.popupzone .area ul li.on .num .r{width:45px;background:none}
+.popupzone .area ul li.on .num .t{}
+.popupzone .area ul li.on .view{display:block}
+.popupzone .area ul li .view img{}
+.popupzone .btn_popupzone{position:absolute;top:118px;left:30px}
+.popupzone .btn_visual a{padding-left:10px}
+
+
+
+/*
+.visual_con{position: relative;z-index:1;float: left;width: 808px;height: 255px;}
+
+.popupzone{position:relative;float:left;width: 808px;height: 340px;margin-right: 40px;}
+.popupzone h2{margin:0;padding:0;line-height: 0;overflow:hidden;display:none;}
+.popupzone .ctrl{}
+.popupzone .ctrl button{position:absolute;right:0;top:0;z-index:10;float:left;width:50px;height:50px;
+	background:url(/edu/images/submain/controller.png) no-repeat 0 0}
+.popupzone .ctrl button span{font-size:0;overflow:hidden;white-space: nowrap;text-indent:100%;}
+.popupzone .ctrl .popupzone_pre{top:100px;left:-10px;}
+.popupzone .ctrl .popupzone_next{background-position:right 0;right: -10px; top:100px;}
+.popupzone .ctrl .popupzone_play{position: relative;left:70px;top:-50px;background-position:0 -70px;width:30px}
+.popupzone .ctrl .popupzone_stop{position: relative;left:70px;top:-50px;background-position:0 -130px;width:30px}
+.popupzone .area{position: absolute;top:0;z-index:1;width:808px;height: 255px;}
+.popupzone .area ul{padding:0;}
+.popupzone .area ul li{float:left;padding:0;width:808px;height: 255px;}
+.popupzone .area ul li a{}
+.popupzone .area img{width:808px;height: 255px;}
+.popupzone .area ul li a span{}
+.popupzone .area ul li .num .r,
+.popupzone .area ul li .num{width:15px;background:url(/edu/images/submain/controller.png) no-repeat 0 -190px;font-size:0}
+.popupzone .area ul li .num{position: relative;top:-50px;display:block;height:50px;width:15px; overflow:hidden}
+.popupzone .area ul li .num .r{display:block;overflow:hidden;width:0;background-position:right -190px}
+.popupzone .area ul li .num .t{visibility:hidden}
+.popupzone .area ul li.on .num{width:35px;}
+.popupzone .area ul li.on .num{background:url(/edu/images/submain/controller.png) no-repeat 0 -250px}
+.popupzone .area ul li.on .num .r{}
+.popupzone .area ul li.on .num .t{}
+.popupzone .area ul li .view{position:absolute;left:0;top:0;display:none}
+.popupzone .area ul li.on .view{display:block}
+*/
+
+
+
+
+.jobMain h2{margin:0 0 8px;}
+
+.jobInfoLt{position: relative;width: 818px;height: 318px;float:left; margin-right: 30px;}
+.jobInfoLt h2{margin-top: 25px;margin-bottom: 10px}
+.jobList li{float: left;margin-right: 10px;width: 255px;height: 180px;border: 2px solid #82bde7;background:#e4f1fa}
+.jobList .more{position: absolute;right: 0;top: -50px;display: block;width: 50px;height: 50px; background: url(/edu/images/submain/moreNotice.gif) no-repeat;}
+.jobList span{display:block;}
+.inDesc{padding:10px;}
+.listInfo{position: relative;width: 100%;height: 180px;clear:both;}
+
+.jobInfoLink{float: left;background: url(/edu/images/submain/jobInfoLink.gif) repeat-x;width:312px;height:223px;}
+.telLink{background: url(/edu/images/submain/jobInfoLinkTel.gif) no-repeat;width: 312px;height:148px;}
+.jobInfoLink .facebookLk{display: block;background:url(/edu/images/submain/facebookLk.PNG) no-repeat 50% 0; width:100%;height: 56px; }
+
+.listInfo .more, .section02 .more{position: absolute;right: 0;width: 50px;height:45px;background: url(/edu/images/submain/jobMore.gif) no-repeat 100% 0;}
+.listInfo .more{top:-43px;right:0;}
+.section02 .more{top:6px;}
+
+.jobMain .desc, .jobMain .descDay{font-size: 0.813em;line-height:16px}
+.jobMain .descDay{color:#a94442;}
+.submainCtsSet strong{display: inline-block;font-weight: 600;line-height: 0.875em;margin-bottom:7px;}
+.submainCtsSet .jobList strong{margin-bottom: 13px}
+
+.jobInfoRt strong{margin-bottom: 0;}
+.jobInfoRt li{margin-bottom: 10px;}
+.jobInfoRt{position: relative;width:268px;height: 378px;padding:20px 30px;float:left;background-color: #f1f2f2;margin-top: 33px;}
+.jobInfoRt span{display:block;}
+.jobInfoRt .more{position: absolute;right: 10px;top:14px;width: 50px;height: 50px;background: url(/edu/images/submain/jobMore.gif) no-repeat 100% 0;}
+
+
+
+.section02{float: left;margin-top: 25px;}
+.noticeSet{position: relative;width:310px;height:255px; background: url(/edu/images/submain/noticeBg.png); padding: 20px; float: right;}
+.noticeSet a{display: inline-block;	color:#fff;}
+.noticeSet .more{position: absolute;right: 0;top: 0; width: 72px;height: 72px;background: url(/edu/images/submain/moreNotice.gif) no-repeat;}
+.noticeSet li{line-height: 23px; background: url(/edu/images/submain/dot.gif) no-repeat 0 12px; padding-left: 15px;}
+.noticeSet li a{white-space: nowrap;overflow: hidden;text-overflow:ellipsis;width:260px;}
+
+.section02 li{width: 266px;height:280px;margin-right:10px;float: left;background:#3e3a39;}
+.section02 li a{color:#fff;}
+.section02 li span{display:block;margin:6px 18px;color:#b5b5b5}
+.section02 li .title{display: block;height: 40px;overflow: hidden;color:#fff}
+.section02 li img{width:266px;height: 192px;border:1px solid #f1f2f2;}
+
+.ingJobSet{position: relative;float: left;}
+.ingJob{clear:both;width:818px;height:260px;float: left;margin-bottom: 18px;}
+.ingJob .ctrl{position: absolute;right: 0;top:-30px;height: 40px;text-align: right;width: 100%;}
+
+.ingJob2{position: relative;width:312px;height:297px;float: left;margin-left: 30px;}
+.section02 .ingJob2 a{color:#3e3a39;}
+.section02 .ingJob2 span{display:block;margin:6px 18px;color:#3e3a39}
+.section02 .ingJob2 .title{display: block;height:18px;overflow: hidden;color:#3e3a39;white-space: nowrap;text-overflow:ellipsis;}
+.section02 .ingJob2 img{border:none;}
+.section02 .ingJob2 .boxs{height: 280px;background-color: #f1f2f2;}
+
+
+
+
+
+
+
+.photoGallery4 li{padding:0;}
+.photo4Profile{margin-bottom: 10px;}
+.section1 {max-width:619px; width:100%; display:inline-block;}
+.section2 {max-width:300px; width:100%; display:inline-block; margin-left:5px; vertical-align:top; }
+.section3 {max-width:240px; width:100%; display:inline-block; margin-left:5px; vertical-align:top; }
+.section1 .col {width:304px; float:left;}
+.section1 .col2 {width:304px; float:right; }
+
+
+.infoTelLk{float:left;height: 76px;width: 289px;}
+.infoTelLk a{display: inline-block;float: left;}
+
+.section3 .sidebanner img { width:100%; height:auto; }
+.section3 h3,.section3 h4{color:#fff;font-size: 14px;}
+
+
+.boxCol ul{width:100%}
+.boxCol li{width: 33.333%;text-align: center;border:none;color:#fff;}
+.boxCol a{width:300px; color: #fff;display:inline;}
+.boxCol a:hover span, .boxCol a:focus span, .boxCol a:active span{text-decoration: underline;}
+.boxCol img{margin: 0}
+.boxCol .db{display: block;clear:both;padding:20px;text-align: left;background:#34546b}
+.boxCol .db .title{display:block;border-bottom: 1px solid #fff;height: 26px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap}
+.boxCol .db .desc{min-height:40px;height:40px;overflow:hidden}
+.boxCol .bdn{border:none !important}
+.boxCol .db2{display: block;clear:both;padding:20px;text-align: left;background:#e6e6e6 url(/edu/images/sub4/040201_bg.gif) repeat-x;color:#000}
+.boxCol .db2 .desc{display:block;overflow:hidden;font-weight: normal;height: 42px}
+
+
+.community{background:#9f5297;margin: 10px 0;}
+.community>div{padding:5px 20px 10px 20px}
+.community h3{border-bottom:1px solid #fff;}
+.community a{display: inline-block;font-size:0.875em;width: 249px; white-space: nowrap;text-overflow:ellipsis; overflow:hidden;}
+
+.broadCast{background:#d9d9d9}
+.broadCast>div{padding:5px 20px 10px 20px;color:#3e3a39;}
+.broadCast h3{border-bottom:1px solid #bbb;color:#3e3a39;margin:5px 0 8px 0;}
+.broadCast>div .title{color:#000;font-size:14px;margin:5px 0;display: block;height: 42px;overflow:hidden;text-overflow:ellipsis;}
+.broadCast>div a{font-size:12px;color:#3e3a39}
+.broadCast img{width: 249px;height: 110px;}
+
+#sm01Roller{width:287px;height: 270px;overflow:hidden;position: relative;z-index:1;}
+#sm01Roll{position: absolute;z-index:1;top:0;left:0;}
+#sm01Roll li{position: relative;z-index:1;float: left;width:287px;}
+#sm01Roll li .titleSet{display: block;position: absolute;z-index:10;bottom:0;width: 100%;padding:10px;
+background: url(/images/common/white50p.png);color:#000;font-weight: 600;}
+#sm01Roll li .titleSet .titleCa{display: block;}
+.sm01Ctrl {position: absolute;z-index:10;top:80px;left:0;width: 100%;	}
+.sm01Ctrl a{display: inline-block;width:50px;}
+.rollerIcoLt{display: inline-block;float:left;background:url(/edu/images/submain/slide_left.png) no-repeat 0 50%; width:40px;height: 50px;}
+.rollerIcoRt{display: inline-block;float:right;background:url(/edu/images/submain/slide_right.png) no-repeat 100% 50%; width:40px;height: 50px;}
+.sm01play{position: absolute;z-index:10;right:-10px;top:85px;width: 50px;height: 50px;background:url(/images/common/btn_play.png) no-repeat;}
+.sm01stop{position: absolute;z-index:10;right:-10px;top:85px;width: 50px;height: 50px;background:url(/images/common/btn_stop.png) no-repeat;}
+
+#sm02Roller{width:287px;margin-bottom: 0;position: relative;text-align: left;float: left;}
+#sm02Roller li dl dt img{width:287px;height:208px;}
+.sm02Roll{position: absolute;z-index:1;top:45%;left:0;}
+.boxCol .mentiGp li{float: left;width:287px;height:446px;}
+.sm02Ctrl {position: absolute;z-index:5;top:85px;left:0;width: 100%;}
+.sm02Ctrl a{display: inline-block;width:30px;}
+.sm02Ctrl a.sm02play,
+.sm02Ctrl a.sm02stop{width:50px;height: 50px;position: absolute;z-index:10;right:-10px;top:85px;}
+.sm02play{background:url(/images/common/btn_play.png) no-repeat;}
+.sm02stop{background:url(/images/common/btn_stop.png) no-repeat;}
+
+.infoBox dd{padding:0 0 5px 0;width:95px;}
+
+.boxCol .db{width:287px;margin-bottom: 5px;	}
+.infoBox{background:#7986a8}
+.mentiMain{height: 410px;}
+.colGoup  h2{font-size:16px; line-height:30px;margin:5px 20px;border-bottom: 1px solid #fff;color:#fff}
+.photo4Profile dl .title, .dl-horizontal{margin-left: 20px;}
+.photo4Profile .dl-horizontal{margin-left: 20px;width:260px;}
+
+.photo4Profile li{margin-right: 0;margin-bottom: 0;width:287px;overflow:hidden;}
+.photo4Profile{background: #e6e6e6}
+.photo4Profile dl{width:287px;;}
+.photo4Profile dl.mentiMain dt{display: block;}
+.quickSet {display:none;}
+.ellipsis_2row{display:block;height:55px;line-height: 18px;	overflow: hidden;	}
+/*#container{background: #fff}*/
+/*#locationSet, .navSet, .quickSet {display:none;}*/

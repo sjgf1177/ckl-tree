@@ -1,0 +1,85 @@
+/* COMMON */
+#footer, #footer *{list-style:none; text-decoration:none; color:#444; box-sizing: border-box;}
+#footer .container{width:calc(100% - 30px);}
+@media (max-width: 1199px){
+	#footer .container{width:calc(100% - 30px); max-width:100%}
+}
+
+
+
+    /* span */
+span{display:inline-block;}
+    /* a */
+#footer a{cursor:pointer; color:#767676; display:inline-block;}
+#footer a:hover{color:#767676;}
+#footer a.white:hover{color:white !important;}
+    /* font */
+#footer .white{color:white !important;}
+#footer .black{color:black;}
+#footer .main_blue{color:#1f6db5;}
+#footer .point_blue{color:#2d9dcb;}
+#footer .point_orange{color:#dd7b09;}
+    /*background*/
+.bg_main_blue{background:#01a1c3;}
+    /* seperate line */
+.seperate_line{border:none; border-right:1px solid white; opacity:0.5; display:inline-block; vertical-align:middle;}
+    /* scroll */
+.scroll-none{-ms-overflow-style: none;}
+.scroll-none::-webkit-scrollbar{display:none;}
+    /* select */
+#footer select{background-image: url('/edu/new_image/relation_site_arrow.png'); background-repeat: no-repeat; -webkit-appearance: none; appearance: none; border:solid 2px #e5e5e5; color:#767676; border-radius:5px;}
+
+
+
+
+/* FOOTER */
+#footer {max-width: 100% !important; padding:0 !important;}
+#footer .container{border-top:solid 1px #e3eff3; padding-top:30px;}
+#footer > div{padding:0}
+#footer *{color:#282828;}
+#footer > div:first-child ul{padding:0; margin-bottom:25px;}
+#footer > div:first-child ul:first-child{margin-top:0;}
+#footer > div:first-child ul:first-child:after{content:''; display:block; clear:both;}
+#footer > div:first-child ul:first-child li{display:inline-block; padding:0 10px; border-right:solid 1px #767676; font-size:11px;}
+#footer > div:first-child ul:first-child li:first-child{padding-left:0;}
+#footer > div:first-child ul:first-child li:first-child a{font-weight:900; color:#282828; font-size:15px; margin-top:-4px;}
+#footer > div:first-child ul:first-child li:last-child{border:none;}
+#footer > div:first-child ul:nth-child(3){margin:0}
+#footer > div:first-child ul:nth-child(3) li{line-height:20px; font-size:12px;}
+#footer > div:first-child ul:nth-child(3) li:last-child{margin-top:5px;}
+#footer > div:first-child span:nth-child(2){padding-bottom:30px; font-size:12px;}
+#footer > div:first-child span:last-child{margin-bottom:20px;}
+    /* app_download */
+.app_download{display:block; width:100%; text-align:right; height:36px; margin-top:5px;}
+.app_download img{height:100%;}
+
+.app_download + div{text-align: right; margin-top:60px;}
+    /* relation_site */
+.relation_site{ background-position:122px 10px; background-size:10px; font-size:1.2rem; line-height: 2.0rem; border:none; border-bottom:2px solid white; padding:5px 15px; outline: none; display:inline-block;}
+.relation_site_button{height:34px; display:inline-block; width:45px; text-align:center; border-radius:5px !important; color:#767676 !important;}
+    /* footer_util_link */
+.footer_util_link{display:inline-block; margin-top:35px;}
+.footer_util_link:after{content:''; display:block; clear:both;}
+.footer_util_link li{display:inline-block; width:40px; margin-left:5px; height:40px; position: relative;}
+.footer_util_link li a{width:100%; height:100%;}
+.footer_util_link li a img{max-width:100%; position: absolute; top:50%; left:50%; transform: translate(-50%, -50%); max-height:40px;padding:1px;}
+.footer_sns_link {display:none;}
+.footer_sns_icon {margin-right:20px;}
+.relation_site_link{display:inline-block;}
+
+@media (max-width: 1199px){
+	#footer > div > div:first-child{width:100%;}
+	#footer > div > div:first-child ul:first-child{text-align:center;}
+	#footer > div > div:first-child ul:nth-child(3) li{text-align:center;}
+	#footer > div > div:first-child span:nth-child(2){text-align:center; width:100%}
+    #footer > div > div:first-child span:last-child{margin-bottom:10px;}
+    #footer > div > div:last-child{width:100%; margin-bottom:40px;}
+	.relation_site_link{width:100%; text-align: center;}
+    .app_download{display:inline-block; width:auto; text-align:left; margin-top:0px;}
+    .app_download + div{text-align:left; margin-top:0px; width:100%;}
+    .footer_sns_link {display:block; margin-bottom:15px; text-align:center;}
+    .footer_util_link{width:100%;}
+}
+@media (max-width: 502px){
+	#footer > div:first-child ul:first-child li{margin-bottom:8px}
+}

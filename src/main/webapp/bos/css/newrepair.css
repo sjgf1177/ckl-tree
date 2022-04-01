@@ -1,0 +1,149 @@
+@CHARSET "UTF-8";
+
+
+
+/* */
+.txt_ct{
+	text-align:center ! important;
+}
+.vt_md{
+	vertical-align:middle ! important;
+}
+.pd_4_5{
+	padding:4px 5px ! important;
+}
+.txt_ct input[type="checkbox"]{
+	margin:0;
+}
+.td1 input[type="text"].col-md-12{
+	padding:4px 5px;
+} 
+/* 관리자 설문보기 관리 팝업*/
+
+.layer_box{
+	position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0,0,0, 0.7);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorStr=#b3000000, endColorStr=#b3000000 );
+    -ms-filter: â€œprogid:DXImageTransform.Microsoft.gradient( startColorStr=#b3000000, endColorStr=#b3000000 );
+    z-index: 777;
+    display:none;
+}
+.pup_box{
+	background-color: #fff;
+    width: 70%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    height: 550px;
+}
+#content .pup_box h5{
+	position: relative;
+    font-size: 16px;
+    padding-right: 60px;
+    background-color: #444444;
+    color: #fff;
+    line-height: 20px;
+    padding: 15px 60px 15px 10px;
+    margin: 0 ! important;
+}
+.pup_box h5 span{
+	position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+}
+.pup_box .pup_container{
+	width: 100%;
+	display: flex;
+	padding: 10px 20px;
+	height: 100%;
+	box-sizing: border-box;
+}
+.pup_container .left{
+	width: 62%;
+	margin-right: 10px;
+}
+.left .table{
+	margin-bottom:0;
+}
+.table_head .th1{
+	width: 65px;
+}
+.table_head .th2{
+	vertical-align: middle;
+    width: 436px;
+}
+.table_head .th3{
+	vertical-align: middle;
+    width: 84px;
+}
+.table_head .th4{
+	width: 82px;
+}
+.tbody_box{
+	height: 355px;
+    overflow-y: scroll;
+}
+.tbody_box tr{
+	width: 100%;
+}
+.tbody_box .td1{
+	text-align: center;
+    vertical-align: middle;
+    padding: 7px 5px;
+    width: 10%;
+}
+.tbody_box .td2{
+	padding: 7px 5px;
+	vertical-align: middle;
+}
+.tbody_box .td3{
+	text-align: center;
+    padding: 7px 5px;
+    vertical-align: middle;
+}
+.tbody_box .td4{
+	text-align: center;
+    padding: 7px 5px;
+    vertical-align: middle;
+}
+
+.tbody_box .tdx{
+	display: none;
+}
+
+.pup_container .right{
+	width: 37%;
+	height: 100%;
+}
+.right .td1{
+	padding: 4px 10px;
+}
+.right .bdView table th{
+	min-width:auto;
+}
+.right .td1 div input[type="text"]{
+	width: 100%;
+}
+.pup_btn_box{
+	display: flex;
+    justify-content: center;
+}
+
+.btn-mode{
+	margin-right:10px;
+}
+
+.hover_table table tr:hover { background-color:#eeeeee; }
+
+
+

@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="mentorManage">
+
+	<typeAlias alias="zvl" type="kr.co.unp.util.ZValue" />
+
+	<sql id="mentorManageDAO.selectMentorManageList-where">
+		<isNotEmpty prepend="AND" property="insttSn">
+				<![CDATA[	a.INSTT_SN LIKE  #insttSn# 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="nm">
+				<![CDATA[	UPPER(a.NM) LIKE UPPER('%' || #nm# || '%') 		]]>
+		</isNotEmpty>
+	</sql>
+
+
+
+
+	<select id="mentorManageDAO.selectMentorManageCnt" resultClass="int">
+		<![CDATA[
+		/* mentorManageDAO.selectMentorManageCnt */
+
+			SELECT COUNT(*)
+			  FROM TN_MENTO a
+			  WHERE DELETE_AT = 'N'
+			  	AND USE_AT = 'Y'
+		]]>
+		<include refid="mentorManageDAO.selectMentorManageList-where" />
+	</select>
+
+	<select id="mentorManageDAO.psitnCodeList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/* mentorManageDAO.psitnCodeList */
+			SELECT A.INSTT_SN,
+			       A.YEAR,
+			       FN_CMMNCODE_NM('COM084', a.YEAR) AS YEAR_NM,
+			       A.INSTT_NM,
+			       A.THEMA_COLOR
+			  FROM TN_PLTFOM_INSTT A
+			 WHERE DELETE_AT = 'N'
+			 	AND USE_AT = 'Y'
+			ORDER BY a.SORT_ORDR ASC
+
+		]]>
+	</select>
+
+
+
+
+	<!--CLOB 타입을 위한 리절트맵 -->
+	<resultMap id="mentorManageDAO.selectMentorManageListMap" class="zvl">
+		<result property="mentoSn" column="MENTO_SN" />
+		<result property="insttSn" column="INSTT_SN" />
+		<result property="nm" column="NM" />
+		<result property="psitn" column="PSITN" />
+		<result property="histSe" column="HIST_SE" />
+		<result property="histCn" column="HIST_CN" jdbcType="CLOB" javaType="java.lang.String" />
+		<result property="mentoNm" column="MENTO_NM" />
+		<result property="sortOrdr" column="SORT_ORDR" />
+		<result property="frstRegistPnttm" column="FRST_REGIST_PNTTM" />
+		<result property="frstRegisterId" column="FRST_REGISTER_ID" />
+		<result property="lastUpdtPnttm" column="LAST_UPDT_PNTTM" />
+		<result property="lastUpdusrId" column="LAST_UPDUSR_ID" />
+		<result property="deleteAt" column="DELETE_AT" />
+		<result property="atchFileId" column="ATCH_FILE_ID" />
+		<result property="useAt" column="USE_AT" />
+	</resultMap>
+
+
+	<select id="mentorManageDAO.selectMentorManageList" parameterClass="zvl" resultMap="mentorManageDAO.selectMentorManageListMap">
+		<![CDATA[
+		/* mentorManageDAO.selectMentorManageList */
+
+			SELECT *
+			  FROM
+			       (
+			       SELECT ROWNUM RNUM,
+			              ALL_LIST.*
+			         FROM
+			         (
+					 SELECT a.MENTO_SN,
+					       a.INSTT_SN,
+					       a.NM,
+					       a.PSITN,
+					       a.HIST_SE,
+					       a.HIST_CN,
+					       a.MENTO_NM,
+					       a.SORT_ORDR,
+					       a.FRST_REGIST_PNTTM,
+					       a.FRST_REGISTER_ID,
+					       a.LAST_UPDT_PNTTM,
+					       a.LAST_UPDUSR_ID,
+					       a.DELETE_AT,
+					       a.ATCH_FILE_ID,
+					       a.USE_AT
+					  FROM TN_MENTO A
+					  WHERE DELETE_AT = 'N'  	
+				]]>
+				<isEqual prepend="AND" property="siteName"  compareValue="edu">
+					<![CDATA[ a.USE_AT = 'Y']]>
+				</isEqual>
+				<include refid="mentorManageDAO.selectMentorManageList-where" />
+				<isEqual property="siteName"  compareValue="bos">
+			        <![CDATA[
+					   	  ORDER BY
+					   	  	a.FRST_REGIST_PNTTM DESC
+             		]]>
+             	</isEqual>
+             	<isEqual property="siteName"  compareValue="edu">
+			        <![CDATA[
+					   	  ORDER BY
+					   	    a.INSTT_SN ASC,
+             				a.SORT_ORDR ASC,
+             				a.FRST_REGIST_PNTTM DESC
+             		]]>
+             	</isEqual>
+             	<![CDATA[			 
+			              ) ALL_LIST
+			       )
+			 WHERE  RNUM  > #firstIndex#
+			   AND  RNUM <= #firstIndex# + #recordCountPerPage#
+		]]>
+
+</select>
+
+	<select id="mentorManageDAO.selectEduMentorManageList" parameterClass="zvl" resultMap="mentorManageDAO.selectMentorManageListMap">
+		<![CDATA[
+		/* mentorManageDAO.selectMentorManageList */
+		SELECT ROWNUM RNUM,
+			              ALL_LIST.*
+			         FROM
+			         (
+					 SELECT a.MENTO_SN,
+					       a.INSTT_SN,
+					       a.NM,
+					       a.PSITN,
+					       a.HIST_SE,
+					       a.HIST_CN,
+					       a.MENTO_NM,
+					       a.SORT_ORDR,
+					       a.FRST_REGIST_PNTTM,
+					       a.FRST_REGISTER_ID,
+					       a.LAST_UPDT_PNTTM,
+					       a.LAST_UPDUSR_ID,
+					       a.DELETE_AT,
+					       a.ATCH_FILE_ID,
+					  	   a.USE_AT
+					  FROM TN_MENTO a JOIN TN_PLTFOM_INSTT b
+						ON a.INSTT_SN = b.INSTT_SN
+					  WHERE a.DELETE_AT = 'N'
+					  	AND a.USE_AT = 'Y'
+				]]>
+				<include refid="mentorManageDAO.selectMentorManageList-where" />
+			        <![CDATA[
+					   	  ORDER BY
+					   	      a.INSTT_SN ASC,
+             				 a.SORT_ORDR ASC,
+             				 a.FRST_REGIST_PNTTM DESC
+			              ) ALL_LIST
+		]]>
+
+</select>
+
+	<insert id="mentorManageDAO.mentorManageInsert" parameterClass="zvl">
+	<selectKey resultClass="java.lang.Long" keyProperty="mentoSn">
+		SELECT NVL(MAX(MENTO_SN),0)+1 AS MENTO_SN FROM TN_MENTO
+	</selectKey>
+ 	 <![CDATA[
+		/* mentorManageDAO.mentorManageInsert */
+			INSERT INTO TN_MENTO
+		       (
+		           MENTO_SN,
+		           INSTT_SN,
+		           NM,
+		           PSITN,
+		           HIST_SE,
+		           HIST_CN,
+		           MENTO_NM,
+		           SORT_ORDR,
+		           FRST_REGIST_PNTTM,
+		           FRST_REGISTER_ID,
+		           DELETE_AT,
+		           ATCH_FILE_ID,
+		           USE_AT
+		       )
+		       VALUES
+		       (
+		           #mentoSn#,
+		           #insttSn#,
+		           #nm#,
+		           #psitn#,
+		           #histSe#,
+		           #histCn:CLOB#,
+		           #mentoNm#,
+		           #sortOrdr#,
+		           sysdate,
+		           #frstRegisterId#,
+		           NVL(#deleteAt#,'N'),
+		           #atchFileId#,
+		           #useAt#
+		       )
+			]]>
+</insert>
+
+	<!--CLOB 타입을 위한 리절트맵 -->
+	<resultMap id="mentorManageDAO.selectMentorManageMap" class="zvl">
+		<result property="mentoSn" column="MENTO_SN" />
+		<result property="insttSn" column="INSTT_SN" />
+		<result property="nm" column="NM" />
+		<result property="psitn" column="PSITN" />
+		<result property="histSe" column="HIST_SE" />
+		<result property="histCn" column="HIST_CN" jdbcType="CLOB" javaType="java.lang.String" />
+		<result property="mentoNm" column="MENTO_NM" />
+		<result property="sortOrdr" column="SORT_ORDR" />
+		<result property="frstRegistPnttm" column="FRST_REGIST_PNTTM" />
+		<result property="frstRegisterId" column="FRST_REGISTER_ID" />
+		<result property="lastUpdtPnttm" column="LAST_UPDT_PNTTM" />
+		<result property="lastUpdusrId" column="LAST_UPDUSR_ID" />
+		<result property="deleteAt" column="DELETE_AT" />
+		<result property="atchFileId" column="ATCH_FILE_ID" />
+		<result property="useAt" column="USE_AT" />
+	</resultMap>
+
+	<select id="mentorManageDAO.selectMentorManage" parameterClass="zvl" resultMap="mentorManageDAO.selectMentorManageMap">
+ 		<![CDATA[
+		SELECT a.MENTO_SN,
+			a.INSTT_SN,
+			a.NM,
+			a.PSITN,
+			a.HIST_SE,
+			a.HIST_CN,
+			a.MENTO_NM,
+			a.SORT_ORDR,
+			a.FRST_REGIST_PNTTM,
+			a.FRST_REGISTER_ID,
+			a.LAST_UPDT_PNTTM,
+			a.LAST_UPDUSR_ID,
+			a.DELETE_AT,
+			a.ATCH_FILE_ID,
+			a.USE_AT
+			FROM TN_MENTO A
+		WHERE a.MENTO_SN = #mentoSn#
+		]]>
+	</select>
+
+	<update id="mentorManageDAO.updateMentorManage" parameterClass="zvl">
+ 		<![CDATA[
+ 		/* mentorManageDAO.updatementorManage*/
+			UPDATE TN_MENTO
+			       SET
+				   INSTT_SN = #insttSn#,
+			       NM = #nm#,
+			       PSITN = #psitn#,
+			       HIST_SE = #histSe#,
+			       HIST_CN = #histCn#,
+			       MENTO_NM = #mentoNm#,
+			       SORT_ORDR = #sortOrdr#,
+			       LAST_UPDT_PNTTM = sysdate,
+			       LAST_UPDUSR_ID = #lastUpdusrId#,
+			       ATCH_FILE_ID = #atchFileId#,
+			       USE_AT = #useAt#
+			 WHERE MENTO_SN = #mentoSn#
+
+ 		]]>
+	</update>
+
+	<update id="mentorManageDAO.deleteMentorManage" parameterClass="zvl">
+		/* empymnCnslListDAO.deleteMentorManage*/
+		<![CDATA[
+		UPDATE TN_MENTO
+			   SET
+			   LAST_UPDT_PNTTM = SYSDATE,
+			   LAST_UPDUSR_ID = #lastUpdusrId#,
+			   DELETE_AT = 'Y'
+		WHERE MENTO_SN = #mentoSn#
+		]]>
+	</update>
+
+	<resultMap id="mentorManageDAO.listMainMentorMap" class="zvl">
+		<result property="mentoSn" column="MENTO_SN" />
+		<result property="insttSn" column="INSTT_SN" />
+		<result property="nm" column="NM" />
+		<result property="psitn" column="PSITN" />
+		<result property="histSe" column="HIST_SE" />
+		<result property="histCn" column="HIST_CN" jdbcType="CLOB" javaType="java.lang.String" />
+		<result property="mentoNm" column="MENTO_NM" />
+		<result property="sortOrdr" column="SORT_ORDR" />
+		<result property="atchFileId" column="ATCH_FILE_ID" />
+		<result property="insttNm" column="INSTT_NM" />
+		<result property="themaColor" column="THEMA_COLOR" />
+	</resultMap>
+
+<!-- 메인 멘토라인업 목록 -->
+	<select id="mentorManageDAO.listMainMentor" parameterClass="zvl" resultClass="zvl" resultMap="mentorManageDAO.listMainMentorMap">
+		<![CDATA[
+			SELECT  *
+			  FROM  (
+			SELECT ROWNUM RNUM, ALL_LIST.*
+			  FROM  (
+			 SELECT A.MENTO_SN,
+			       A.INSTT_SN,
+			       A.NM,
+			       A.PSITN,
+			       A.HIST_SE,
+			       A.HIST_CN,
+			       A.MENTO_NM,
+			       A.SORT_ORDR,
+			       A.ATCH_FILE_ID,
+			       B.INSTT_NM,
+			       B.THEMA_COLOR
+			  FROM TN_MENTO A
+              LEFT OUTER JOIN TN_PLTFOM_INSTT B ON A.INSTT_SN = B.INSTT_SN
+			  WHERE A.DELETE_AT = 'N'
+              ORDER BY B.SORT_ORDR, A.SORT_ORDR
+			    ) ALL_LIST
+				)
+			WHERE  RNUM  > '0'
+			   AND  RNUM <= '0' + #mainRecordCountPerPage#
+		]]>
+	</select>
+
+
+
+</sqlMap>
+

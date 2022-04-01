@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+<![CDATA[
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
+<%@ taglib uri="http://bibeault.org/tld/ccc" prefix="ccc" %>
+
+<ccc:constantsMap className="kr.co.unp.bbs.vo.SearchVO" var="SearchVO"/>
+
+<jsp:include page="/WEB-INF/jsp/bos/bbs/com/bbsHead.jsp" flush="true" />
+
+<script type="text/javascript" src="/js/miya_validator.js"></script>
+
+<script type="text/javascript">
+
+	function del(){
+		var form = $("#board")[0];
+		form.action = "/bos/bbs/${paramVO.bbsId}/delete.do";
+		form.submit();
+	}
+
+	function restore(){
+		var form = $("#board")[0];
+		form.action = "/bos/bbs/${paramVO.bbsId}/restore.do";
+		form.submit();
+	}
+
+	function delPermanently(){
+		var form = $("#board")[0];
+		form.action = "/bos/bbs/${paramVO.bbsId}/delPermanently.do";
+		form.submit();
+	}
+
+</script>
+
+<title><c:out value='${masterVO.bbsNm}'/> - 게시글쓰기</title>
+</head>
+<body>
+
+<div id="content">
+	<div class="hgroup">
+		<h1 >${masterVO.bbsNm}</h1>
+		<a class="btn btn-success" href="/bos/forprint.jsp" id="print" title="새창" onclick="window.open(this.href, 'printPage', 'width=800,height=550,scrollbars,toolbar,status');return false;" alt="인쇄하기 (자바스크립트 미지원시 브라우저은 인쇄기능을 이용하세요)"><i class="fa fa-hover fa-print"></i> <span>인쇄하기</span></a>
+	</div>
+
+<form id="board" name="board" method="post" enctype="multipart/form-data" action="${action}">
+	<input type="hidden" name="pageQueryString" value="${pageQueryString}" />
+	<input type="hidden" name="nttId" value="${empty result.nttId ? 0 : result.nttId }" />
+	<input type="hidden" name="bbsId" value="${masterVO.bbsId}" />
+	<input type="hidden" id="atchFileId0" name="atchFileId" value="${result.atchFileId}" />
+
+<div class="bdView">
+		<table summary="]]><forEach><isEqual value="default">[fieldText],</isEqual><isEqual value="default-checkbox">[fieldText],</isEqual><isEqual value="default-radio">[fieldText],</isEqual><isEqual value="default-select">[fieldText],</isEqual><isEqual value="frstRegisterPnttm"><![CDATA[<c:if test="${not empty result}">[fieldText],</c:if>]]></isEqual><isEqual value="inqireCo"><![CDATA[<c:if test="${not empty result}">[fieldText],</c:if>]]></isEqual><isEqual value="atchFileId">첨부파일,</isEqual><isEqual value="replyAt">답변상태,</isEqual></forEach> <![CDATA[ 포함">
+			<caption>${result.nttSj} (읽기)</caption>
+			<colgroup>
+				<col style="width:15%"/>
+				<col/>
+			</colgroup>
+			<tbody>
+]]>
+	<forEach>
+		<isEqual value="default">
+		<![CDATA[
+				<tr>
+					<th scope="row">[fieldText]</th>
+					<td>
+						${result.[fieldName]}
+					</td>
+				</tr>
+		]]>
+		</isEqual>
+		<isEqual value="default-checkbox">
+		<![CDATA[
+				<tr>
+					<th scope="row">[fieldText]</th>
+					<td>
+						${result.[fieldName]}
+					</td>
+				</tr>
+		]]>
+		</isEqual>
+		<isEqual value="default-radio">
+		<![CDATA[
+				<tr>
+					<th scope="row">[fieldText]</th>
+					<td>
+						${result.[fieldName]}
+					</td>
+				</tr>
+		]]>
+		</isEqual>
+		<isEqual value="default-select">
+		<![CDATA[
+				<tr>
+					<th scope="row">[fieldText]</th>
+					<td>
+						${result.[fieldName]}
+					</td>
+				</tr>
+		]]>
+		</isEqual>
+		<isEqual value="frstRegisterPnttm">
+		<![CDATA[
+			<c:if test="${not empty result}">
+				<tr>
+					<th scope="row">[fieldText]</th>
+					<td>${result.regDate}</td>
+				</tr>
+			</c:if>
+		]]>
+		</isEqual>
+		<isEqual value="inqireCo">
+		<![CDATA[
+			<c:if test="${not empty result}">
+				<tr>
+					<th scope="row">[fieldText]</th>
+					<td>${result.inqireCo}</td>
+				</tr>
+			</c:if>
+		]]>
+		</isEqual>
+		<isEqual value="atchFileId">
+		<![CDATA[
+				<tr>
+					<th scope="row">첨부파일</th>
+					<td>
+						<jsp:include page="/WEB-INF/jsp/bos/share/EgovFileList.jsp" flush="true" />
+					</td>
+				</tr>
+
+		]]>
+		</isEqual>
+		<isEqual value="replyAt">
+		<![CDATA[
+				<tr>
+					<th scope="row">답변상태</th>
+					<td>
+					  <c:choose>
+						<c:when test="${result.replyAt eq SearchVO.RECEIPT}">접수</c:when>
+						<c:when test="${result.replyAt eq SearchVO.COMPLETE_ANSWER}">보급완료</c:when>
+						<c:when test="${result.replyAt eq SearchVO.CANCEL}">보급제외</c:when>
+					  </c:choose>
+					</td>
+				</tr>
+
+		]]>
+		</isEqual>
+	</forEach>
+
+<![CDATA[
+
+			</tbody>
+		</table>
+	</div>
+</form>
+<div class="btnSet">
+	<c:if test="${not empty result}">
+	<div class="fl">
+		<a class="btn btn-danger" href="javascript:delPermanently();" onclick="return confirm('정말로 영구삭제하시겠습니까?');"><span>영구삭제</span></a>
+	</div>
+	</c:if>
+
+ 	<div class="fl">
+		<c:if test="${prevNextMap['PREV'].prevNttId > 0}">
+		<a class="btn" href="/bos/bbs/${paramVO.bbsId}/view.do?nttId=${prevNextMap['PREV'].prevNttId}&${pageQueryString}"><span>이전글</span></a>
+	    </c:if>
+		<c:if test="${prevNextMap['NEXT'].nextNttId > 0}">
+		<a class="btn" href="/bos/bbs/${paramVO.bbsId}/view.do?${prevNextMap['NEXT'].nextNttId}.do&${pageQueryString}"><span>다음글</span></a>
+	    </c:if>
+	</div>
+	<div class="fr" >
+		<a class="btn btn-primary" href="/bos/bbs/${paramVO.bbsId}/forUpdate.do?nttId=${result.nttId}&${pageQueryString}&${result.delcode}"><span>수정</span></a>
+	<c:if test="${result.delcode eq '0' }" >
+		<a class="btn btn-danger" href="javascript:del();" onclick="return confirm('정말로 삭제하시겠습니까?');"><span>삭제</span></a>
+	</c:if>
+	<c:if test="${result.delcode eq '1' }" >
+		<a class="btn btn-inverse" href="javascript:restore();" onclick="return confirm('정말로 복구하시겠습니까?');"><span>원글복구</span></a>
+	</c:if>
+		<c:url var="url" value="/bos/bbs/${paramVO.bbsId}/list.do?${pageQueryString}" />
+		<a class="btn btn-primary" href="${url}"><span>목록</span></a>
+	</div>
+</div>
+
+<c:if test="${masterVO.cmmntPosblAt eq 'Y' and not empty result}">
+
+<div class="tableSet">
+	<table class="table table-bordered table-striped table-hover" summary="번호,관리자,내용,등록일 포함">
+		 <caption class="tit"><h2>네티즌의견목록</h2></caption>
+		<colgroup>
+			<col style="width:8%" />
+			<col style="width:10%" />
+			<col />
+			<col style="width:10%" />
+		</colgroup>
+		<thead>
+			<tr>
+				<th scope="col">번호</th>
+				<th scope="col">관리자</th>
+				<th scope="col">내용</th>
+				<th scope="col" class="last">등록일</th>
+			</tr>
+		</thead>
+		<tbody>
+		<c:forEach var="cmmnt" items="${cmmntList}" varStatus="status">
+			<tr id="ftr_${cmmnt.cmmntId}" class="notice_on">
+				<td>${fn:length(cmmntList) - status.count + 1}</td>
+				<td>${cmmnt.name}</td>
+				<td>${cmmnt.content}</td>
+				<td><span title="등록일">${cmmnt.regDate}</span></td>
+			</tr>
+		</c:forEach>
+		<c:if test="${fn:length(cmmntList) == 0}"><tr><td colspan="4" class="noData">데이터가 없습니다.</td></tr></c:if>
+		</tbody>
+	</table>
+</div>
+</c:if>
+
+</div>
+<c:catch var ="catchException">
+	<jsp:include page="/WEB-INF/jsp/bos/share/printPath.jsp" flush="true" />
+</c:catch>
+</body>
+</html>
+]]>
+</page>

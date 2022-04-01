@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ablmanAcademy">
+
+	<typeAlias alias="zvl" type="kr.co.unp.util.ZValue" />
+
+	<sql id="ablmanAcademyDAO.list-where">
+		<isNotEmpty prepend="AND" property="userId">
+				<![CDATA[	B.USER_ID LIKE '%' || #userId# || '%'   ]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="nm">
+				<![CDATA[	A.NM LIKE '%' || #nm# || '%'   ]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="prgCl">
+				<![CDATA[	C.PRG_CL = #prgCl#   ]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="prgNm">
+				<![CDATA[	C.PRG_NM = #prgNm#   ]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="partcptnComptAt">
+				<![CDATA[	C.PARTCPTN_COMPT_AT = #partcptnComptAt#   ]]>
+		</isNotEmpty>
+	</sql>
+
+	<select id="ablmanAcademyDAO.listCnt" parameterClass="zvl" resultClass="int" >
+		<![CDATA[
+			SELECT COUNT(*) FROM TN_REQUEST_INDVDLINFO A
+			LEFT OUTER JOIN TM_USER B ON A.USER_SN = B.USER_SN
+			LEFT OUTER JOIN TN_PROGRAM C ON A.PRG_SN = C.PRG_SN
+			LEFT OUTER JOIN TN_ABLMAN_ACADEMY D ON A.USER_SN = D.USER_SN AND D.LAST_VER_AT = 'Y'
+			WHERE A.DELETE_AT = '0' AND C.PRG_SE = '01'
+		]]>
+		<include refid="ablmanAcademyDAO.list-where" />
+	</select>
+
+	<select id="ablmanAcademyDAO.list" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		SELECT * FROM
+		( SELECT a.*, rownum+rnum-1 as TOTAL_ROWS
+		   FROM ( SELECT a.*, rownum rnum
+				FROM (
+					SELECT
+					   A.NM,
+				       A.BRTHDY,
+				       A.SEX,
+				       A.EMAIL,
+				       A.CONFM_STTUS,
+				       A.USER_SN,
+				       A.PRG_SN,
+				       A.RCEPT_STTUS,
+				       A.PARTCPTN_COMPT_AT,
+				       A.DELETE_AT,
+				       A.UPDDE,
+				       B.USER_ID,
+                       C.PRG_SE,
+			   		   FN_CMMNCODE_NM('COM050', C.PRG_CL) AS PRG_CL_NM,
+                       C.PRG_NM,
+                       D.ABLMAN_STTUS
+					FROM TN_REQUEST_INDVDLINFO A
+					LEFT OUTER JOIN TM_USER B ON A.USER_SN = B.USER_SN
+					LEFT OUTER JOIN TN_PROGRAM C ON A.PRG_SN = C.PRG_SN
+					LEFT OUTER JOIN TN_ABLMAN_ACADEMY D ON A.USER_SN = D.USER_SN AND D.LAST_VER_AT = 'Y'
+					WHERE A.DELETE_AT = '0' AND C.PRG_SE = '01' AND A.RCEPT_STTUS = '02'
+	     ]]>
+	     <include refid="ablmanAcademyDAO.list-where" />
+		<![CDATA[
+		    		ORDER BY A.UPDDE DESC
+			            ) a
+			          ORDER BY rnum DESC ) a
+			  ORDER BY rnum )
+			WHERE rnum BETWEEN #firstIndex# + 1 AND #lastIndex#
+		]]>
+	</select>
+
+	<select id="ablmanAcademyDAO.chghst" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+			SELECT
+			   A.USER_SN,
+		       A.PRG_SN,
+		       A.ABLMAN_STTUS,
+		       A.FNTN_DT,
+		       A.COPNY_SE,
+		       A.COPNY_NM,
+		       A.CHARGER_NM,
+		       A.TELNO,
+		       A.FAXNUM,
+		       A.EMAIL,
+		       A.ETC,
+		       A.HIST_SN,
+		       A.LAST_VER_AT,
+		       A.FRST_REGIST_PNTTM,
+		       A.FRST_REGISTER_ID
+			FROM TN_ABLMAN_ACADEMY A
+			WHERE HIST_SN = #histSn#
+	     ]]>
+	</select>
+
+	<select id="ablmanAcademyDAO.view" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+			SELECT
+			   A.NM,
+		       A.BRTHDY,
+		       A.SEX,
+		       B.USER_ID
+			FROM TN_REQUEST_INDVDLINFO A
+			LEFT OUTER JOIN TM_USER B ON A.USER_SN = B.USER_SN
+			WHERE A.DELETE_AT = '0' AND A.RCEPT_STTUS = '02' AND A.PRG_SN = #prgSn# AND A.USER_SN = #userSn#
+	    ]]>
+	</select>
+
+	<insert id="ablmanAcademyDAO.insert" parameterClass="zvl">
+		<selectKey resultClass="java.lang.Long" keyProperty="histSn">
+			SELECT NVL(MAX(HIST_SN),0)+1 AS HIST_SN FROM TN_ABLMAN_ACADEMY
+		</selectKey>
+ 	 	<![CDATA[
+			INSERT INTO TN_ABLMAN_ACADEMY (
+				USER_SN,PRG_SN,ABLMAN_STTUS,FNTN_DT,COPNY_SE,COPNY_NM,CHARGER_NM,TELNO,FAXNUM,EMAIL,ETC,HIST_SN,LAST_VER_AT,FRST_REGIST_PNTTM,FRST_REGISTER_ID
+			)
+			VALUES (
+				#userSn#,#prgSn#,#ablmanSttus#,#fntnDt#,#copnySe#,#copnyNm#,#chargerNm#,#telno#,#faxnum#,#email#,#etc#,#histSn#,'Y',SYSDATE,#frstRegisterId#
+			)
+		]]>
+	</insert>
+
+	<delete id="ablmanAcademyDAO.delete" parameterClass="zvl">
+ 	 	<![CDATA[
+ 	 		DELETE FROM TN_ABLMAN_ACADEMY
+ 	 		WHERE HIST_SN = #histSn#
+ 	 	]]>
+	</delete>
+
+	<!-- 최종버젼여부 조회 -->
+	<select id="ablmanAcademyDAO.lastVerAtCnt" parameterClass="zvl" resultClass="int" >
+		<![CDATA[
+			SELECT COUNT(*) FROM TN_ABLMAN_ACADEMY
+ 	 		WHERE PRG_SN = #prgSn# AND USER_SN = #userSn#
+		]]>
+	</select>
+
+	<!-- 최종버젼여부 수정 -->
+	<update id="ablmanAcademyDAO.lastVerAtChange" parameterClass="zvl">
+ 	 	<![CDATA[
+ 	 		UPDATE TN_ABLMAN_ACADEMY SET
+ 	 			LAST_VER_AT = #lastVerAtVal#
+ 	 		WHERE PRG_SN = #prgSn# AND USER_SN = #userSn#
+ 	 	]]>
+	</update>
+
+	<!-- 변경이력 목록 -->
+	<select id="ablmanAcademyDAO.chghstList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+			SELECT
+			   A.HIST_SN,
+		       A.LAST_VER_AT,
+		       A.FRST_REGIST_PNTTM,
+		       A.FRST_REGISTER_ID,
+			   B.USER_NM,
+			   C.NM,
+			   C.SEX,
+			   C.BRTHDY,
+			   D.USER_ID,
+			   rownum rnum
+		    FROM TN_ABLMAN_ACADEMY A
+		    LEFT OUTER JOIN TM_ADMIN B ON A.FRST_REGISTER_ID = B.USER_ID
+			LEFT OUTER JOIN TN_REQUEST_INDVDLINFO C ON A.USER_SN = C.USER_SN AND A.PRG_SN = C.PRG_SN
+			LEFT OUTER JOIN TM_USER D ON C.USER_SN = D.USER_SN
+		    WHERE A.PRG_SN = #prgSn# AND A.USER_SN = #userSn#
+		    ORDER BY A.FRST_REGIST_PNTTM DESC
+		]]>
+	</select>
+
+	<select id="ablmanAcademyDAO.listExcel" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		  SELECT
+	           E.CODE_NM AS PRG_CL,
+	           C.PRG_NM,
+		       B.USER_ID,
+			   A.NM,
+	           DECODE(A.SEX, 'M', '남자', '여자') AS SEX,
+		       A.BRTHDY,
+	           DECODE(A.PARTCPTN_COMPT_AT, '01', 'O', 'X') AS PARTCPTN_COMPT_AT,
+	           F.CODE_NM AS ABLMAN_STTUS,
+			   TO_CHAR(D.FNTN_DT, 'YYYY-MM-DD') as FNTN_DT,
+	           G.CODE_NM AS COPNY_SE,
+	           D.COPNY_NM,
+	           D.CHARGER_NM,
+	           D.TELNO,
+	           D.FAXNUM,
+	           D.EMAIL,
+	           D.ETC
+			FROM TN_REQUEST_INDVDLINFO A
+			LEFT OUTER JOIN TM_USER B ON A.USER_SN = B.USER_SN
+			LEFT OUTER JOIN TN_PROGRAM C ON A.PRG_SN = C.PRG_SN
+			LEFT OUTER JOIN TN_ABLMAN_ACADEMY D ON A.USER_SN = D.USER_SN AND D.LAST_VER_AT = 'Y'
+			LEFT OUTER JOIN TC_CMMNCODE_DETAIL E ON E.CODE_ID = 'COM051' AND E.CODE = C.PRG_CL
+			LEFT OUTER JOIN TC_CMMNCODE_DETAIL F ON F.CODE_ID = 'COM080' AND F.CODE = D.ABLMAN_STTUS
+			LEFT OUTER JOIN TC_CMMNCODE_DETAIL G ON G.CODE_ID = 'COM082' AND G.CODE = D.COPNY_SE
+			WHERE A.DELETE_AT = '0' AND C.PRG_SE = '01'
+		]]>
+	</select>
+
+</sqlMap>
+

@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="mainRsltManage">
+
+	<typeAlias alias="zvl" type="kr.co.unp.util.ZValue" />
+
+	<sql id="mainRsltManageDAO.selectMainRsltManageList-where">
+		<isNotEmpty prepend="AND" property="year">
+				<![CDATA[	a.YEAR LIKE  #year# 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="prdctNm">
+				<![CDATA[	UPPER(a.PRDCT_NM) LIKE UPPER('%' || #prdctNm# || '%') 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="rsltSe">
+				<![CDATA[	a.RSLT_SE LIKE '%' || #rsltSe# || '%' 		]]>
+		</isNotEmpty>
+		<isNotEqual prepend="and" property="siteName"  compareValue="bos"  >
+				<![CDATA[	a.MAIN_EXPSR_AT LIKE 'Y' 	]]>
+		</isNotEqual>
+	</sql>
+
+	<sql id="mentorManageDAO.order-where">
+		<isEqual  property="siteName" compareValue="bos">
+				<![CDATA[
+				ORDER BY
+			          YEAR_NM DESC,
+			        	a.SORT_ORDR ASC,
+				 		]]>
+		</isEqual >
+		<isNotEqual  property="siteName" compareValue="bos">
+				<![CDATA[
+				ORDER BY
+			          YEAR_NM ASC,
+			        	a.SORT_ORDR ASC,
+						]]>
+		</isNotEqual >
+	</sql>
+
+
+	<select id="mainRsltManageDAO.selectMainRsltManageCnt" resultClass="int">
+		<![CDATA[
+ 		/* mainRsltManageDAO.selectMainRsltManageCnt */
+			SELECT COUNT(*)
+			  FROM TN_MAIN_RSLT a
+				          WHERE 1=1 AND a.DELETE_AT = 'N'
+
+		]]>
+		<include refid="mainRsltManageDAO.selectMainRsltManageList-where" />
+	</select>
+
+		<!--CLOB 타입을 위한 리절트맵 -->
+	<resultMap id="mainRsltManageDAO.selectMainRsltManageListMap" class="zvl">
+		<result property="yearNm" column="YEAR_NM" />
+		<result property="year" column="YEAR" jdbcType="NUMBER" javaType="java.lang.String" />
+		<result property="rsltSn" column="RSLT_SN" />
+		<result property="rsltSe" column="RSLT_SE" />
+		<result property="rsltSeNm" column="RSLT_SE_NM" />
+		<result property="prdctNm" column="PRDCT_NM" />
+		<result property="mentiNm" column="MENTI_NM" />
+		<result property="mentoNm" column="MENTO_NM" />
+		<result property="atchFileId" column="ATCH_FILE_ID" />
+		<result property="mainExpsrAt" column="MAIN_EXPSR_AT" />
+		<result property="sortOrdr" column="SORT_ORDR" />
+		<result property="frstRegistPnttm" column="FRST_REGIST_PNTTM" />
+		<result property="frstRegisterId" column="FRST_REGISTER_ID" />
+		<result property="lastUpdtPnttm" column="LAST_UPDT_PNTTM" />
+		<result property="lastUpdusrId" column="LAST_UPDUSR_ID" />
+		<result property="deleteAt" column="DELETE_AT" />
+	</resultMap>
+
+
+
+
+
+	<select id="mainRsltManageDAO.selectMainRsltManageList" remapResults="true" parameterClass="zvl" resultMap="mainRsltManageDAO.selectMainRsltManageListMap">
+		<![CDATA[
+ 		/* mainRsltManageDAO.selectMainRsltManageList */
+			SELECT *
+			  FROM
+			       (
+			       SELECT ROWNUM RNUM,
+			              ALL_LIST.*
+			         FROM
+			         (
+						SELECT a.RSLT_SN,
+							   a.YEAR,
+						       FN_CMMNCODE_NM('COM087', a.YEAR) AS YEAR_NM,
+					           FN_CMMNCODE_NM('COM085', a.RSLT_SE) AS RSLT_SE_NM,
+						       a.RSLT_SE,
+						       a.PRDCT_NM,
+						       a.MENTI_NM,
+						       a.MENTO_NM,
+						       a.ATCH_FILE_ID,
+						       a.MAIN_EXPSR_AT,
+						       a.SORT_ORDR,
+						       a.FRST_REGIST_PNTTM,
+						       a.FRST_REGISTER_ID,
+						       a.LAST_UPDT_PNTTM,
+						       a.LAST_UPDUSR_ID,
+						       a.DELETE_AT
+						  FROM TN_MAIN_RSLT a
+					  WHERE 1=1 AND a.DELETE_AT = 'N'
+			     ]]>
+		<include refid="mainRsltManageDAO.selectMainRsltManageList-where" />
+		<include refid="mentorManageDAO.order-where" />
+		    <![CDATA[
+           					a.FRST_REGIST_PNTTM DESC
+			              ) ALL_LIST
+			               )
+			 ]]>
+			<isEqual  property="siteName"  compareValue="bos"  >
+			  <![CDATA[
+
+				 WHERE  RNUM  > #firstIndex#
+				   AND  RNUM <= #firstIndex# + #recordCountPerPage#
+			   ]]>
+			   </isEqual >
+	</select>
+
+
+
+	<insert id="mainRsltManageDAO.mainRsltManageInsert" parameterClass="zvl">
+		<selectKey resultClass="java.lang.Long" keyProperty="rsltSn">
+			SELECT NVL(MAX(RSLT_SN),0)+1 AS RSLT_SN FROM TN_MAIN_RSLT
+		</selectKey>
+ 	 <![CDATA[
+		/* mainRsltManageDAO.mainRsltManageInsert */
+			INSERT INTO TN_MAIN_RSLT
+		       (
+		           RSLT_SN,
+		           YEAR,
+		           RSLT_SE,
+		           PRDCT_NM,
+		           MENTI_NM,
+		           MENTO_NM,
+		           ATCH_FILE_ID,
+		           DETAIL_CN,
+		           MAIN_EXPSR_AT,
+		           SORT_ORDR,
+		           FRST_REGIST_PNTTM,
+		           FRST_REGISTER_ID,
+		           DELETE_AT
+		       )
+		       VALUES
+		       (
+		           #rsltSn#,
+		           #year#,
+		           #rsltSe#,
+		           #prdctNm#,
+		           #mentiNm#,
+		           #mentoNm#,
+		           #atchFileId#,
+		           #detailCn#,
+		           #mainExpsrAt#,
+		           #sortOrdr#,
+		           sysdate,
+		           #frstRegisterId#,
+		           NVL(#deleteAt#,'N')
+		       )
+			]]>
+	</insert>
+
+		<!--CLOB 타입을 위한 리절트맵 -->
+	<resultMap id="mainRsltManageDAO.selectMainRsltManageMap" class="zvl">
+		<result property="year" column="YEAR" jdbcType="NUMBER" javaType="java.lang.String" />
+		<result property="yearNm" column="YEAR_NM" />
+		<result property="rsltSeNm" column="RSLT_SE_NM" />
+		<result property="rsltSn" column="RSLT_SN" />
+		<result property="rsltSe" column="RSLT_SE" />
+		<result property="prdctNm" column="PRDCT_NM" />
+		<result property="mentiNm" column="MENTI_NM" />
+		<result property="mentoNm" column="MENTO_NM" />
+		<result property="atchFileId" column="ATCH_FILE_ID" />
+		<result property="detailCn" column="DETAIL_CN" jdbcType="CLOB" javaType="java.lang.String" />
+		<result property="mainExpsrAt" column="MAIN_EXPSR_AT" />
+		<result property="sortOrdr" column="SORT_ORDR" />
+		<result property="frstRegistPnttm" column="FRST_REGIST_PNTTM" />
+		<result property="frstRegisterId" column="FRST_REGISTER_ID" />
+		<result property="lastUpdtPnttm" column="LAST_UPDT_PNTTM" />
+		<result property="lastUpdusrId" column="LAST_UPDUSR_ID" />
+		<result property="deleteAt" column="DELETE_AT" />
+	</resultMap>
+
+
+	<select id="mainRsltManageDAO.selectMainRsltManage" parameterClass="zvl" resultMap="mainRsltManageDAO.selectMainRsltManageMap">
+		<![CDATA[
+			SELECT A.RSLT_SN,
+		       A.YEAR,
+		       A.RSLT_SE,
+               FN_CMMNCODE_NM('COM087', a.YEAR) AS YEAR_NM,
+ 	           FN_CMMNCODE_NM('COM085', a.RSLT_SE) AS RSLT_SE_NM,
+		       A.PRDCT_NM,
+		       A.MENTI_NM,
+		       A.MENTO_NM,
+		       A.ATCH_FILE_ID,
+		       A.DETAIL_CN,
+		       A.MAIN_EXPSR_AT,
+		       A.SORT_ORDR,
+		       A.FRST_REGIST_PNTTM,
+		       A.FRST_REGISTER_ID,
+		       A.LAST_UPDT_PNTTM,
+		       A.LAST_UPDUSR_ID,
+		       A.DELETE_AT
+		  FROM TN_MAIN_RSLT A
+		  WHERE RSLT_SN = #rsltSn#
+		]]>
+		</select>
+
+		<update id="mainRsltManageDAO.updateMainRsltManage" parameterClass="zvl">
+ 		<![CDATA[
+ 		/* mainRsltManageDAO.updatemainRsltManage*/
+			UPDATE TN_MAIN_RSLT
+			       SET
+				   RSLT_SN = #rsltSn#,
+			       YEAR = #year#,
+			       RSLT_SE = #rsltSe#,
+			       PRDCT_NM = #prdctNm#,
+			       MENTI_NM = #mentiNm#,
+			       MENTO_NM = #mentoNm#,
+			       ATCH_FILE_ID = #atchFileId#,
+			       DETAIL_CN = #detailCn#,
+			       MAIN_EXPSR_AT = #mainExpsrAt#,
+			       SORT_ORDR = #sortOrdr#,
+			       LAST_UPDT_PNTTM = #lastUpdtPnttm#,
+			       LAST_UPDUSR_ID = #lastUpdusrId#,
+			       DELETE_AT = NVL(#deleteAt#,'N')
+			 WHERE RSLT_SN = #rsltSn#
+
+ 		]]>
+	</update>
+
+	<update id="mainRsltManageDAO.deleteMainRsltManage" parameterClass="zvl">
+		/* empymnCnslListDAO.deleteMainRsltManage*/
+		<![CDATA[
+		UPDATE TN_MAIN_RSLT a
+		       SET a.DELETE_AT = 'Y',
+		       a.LAST_UPDUSR_ID = #lastUpdusrId#,
+		       a.LAST_UPDT_PNTTM = SYSDATE
+		 WHERE RSLT_SN = #rsltSn#
+		]]>
+	</update>
+
+		<!--CLOB 타입을 위한 리절트맵 -->
+	<resultMap id="mainRsltManageDAO.popUpMainRsltManageListMap" class="zvl">
+		<result property="yearNm" column="YEAR_NM" />
+		<result property="year" column="YEAR" jdbcType="NUMBER" javaType="java.lang.String" />
+		<result property="rsltSn" column="RSLT_SN" />
+		<result property="rsltSe" column="RSLT_SE" />
+		<result property="rsltSeNm" column="RSLT_SE_NM" />
+		<result property="prdctNm" column="PRDCT_NM" />
+		<result property="mentiNm" column="MENTI_NM" />
+		<result property="mentoNm" column="MENTO_NM" />
+		<result property="atchFileId" column="ATCH_FILE_ID" />
+		<result property="sortOrdr" column="SORT_ORDR" />
+		<result property="detailCn" column="DETAIL_CN"  jdbcType="CLOB" javaType="java.lang.String" />
+		<result property="frstRegistPnttm" column="FRST_REGIST_PNTTM" />
+		<result property="frstRegisterId" column="FRST_REGISTER_ID" />
+		<result property="lastUpdtPnttm" column="LAST_UPDT_PNTTM" />
+		<result property="lastUpdusrId" column="LAST_UPDUSR_ID" />
+		<result property="deleteAt" column="DELETE_AT" />
+	</resultMap>
+
+
+	<select id="mainRsltManageDAO.popUpMainRsltManageList" parameterClass="zvl" resultMap="mainRsltManageDAO.popUpMainRsltManageListMap">
+		<![CDATA[
+ 		/* mainRsltManageDAO.popUpMainRsltManageList */
+		SELECT a.RSLT_SN,
+		       a.YEAR,
+		       FN_CMMNCODE_NM('COM087', a.YEAR) AS YEAR_NM,
+		       FN_CMMNCODE_NM('COM085', a.RSLT_SE) AS RSLT_SE_NM,
+		       a.RSLT_SE,
+		       a.PRDCT_NM,
+		       a.MENTI_NM,
+		       a.MENTO_NM,
+		       a.ATCH_FILE_ID,
+		       a.SORT_ORDR,
+		       a.DETAIL_CN,
+		       a.FRST_REGIST_PNTTM,
+		       a.FRST_REGISTER_ID,
+		       a.LAST_UPDT_PNTTM,
+		       a.LAST_UPDUSR_ID,
+		       a.DELETE_AT
+		  FROM TN_MAIN_RSLT a
+		 WHERE 1=1
+		       AND year = #year# and DELETE_AT = 'N'
+		 ORDER BY a.SORT_ORDR ASC, a.FRST_REGIST_PNTTM DESC
+
+		]]>
+	</select>
+
+	<select id="mainRsltManageDAO.recentYear" resultClass="java.lang.String">
+		<![CDATA[
+			SELECT YEAR
+		  	FROM TN_MAIN_RSLT
+		 	WHERE DELETE_AT = 'N' AND ROWNUM = 1
+			ORDER BY FN_CMMNCODE_NM('COM087', YEAR) DESC
+		]]>
+	</select>
+
+</sqlMap>
+

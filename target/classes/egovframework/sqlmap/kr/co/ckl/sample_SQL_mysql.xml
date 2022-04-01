@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="sample">
+
+	<typeAlias  alias="zvl" type="kr.co.unp.util.ZValue"/>
+
+	<sql id="SampleDAO.hlist-where">
+
+		<isNotEmpty prepend="AND" property="sdate">
+			<![CDATA[	DATE_FORMAT(a.FRST_REGISTER_PNTTM, '%Y%m%d') >= REPLACE(#sdate#,'-','') 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="edate">
+			<![CDATA[	DATE_FORMAT(a.FRST_REGISTER_PNTTM, '%Y%m%d') <= REPLACE(#edate#,'-','') 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="useAt">
+			<![CDATA[	a.USE_AT = #useAt# 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="gubun">
+			<![CDATA[	a.GUBUN = #gubun# 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchWrd">
+			<isEqual property="searchCnd" compareValue="1">
+				<![CDATA[	a.NTT_SJ LIKE CONCAT('%',trim(#searchWrd#), '%') 		]]>
+			</isEqual>
+			<isEqual property="searchCnd" compareValue="2">
+				<![CDATA[	a.NTT_CN LIKE CONCAT('%',trim(#searchWrd#), '%') 		]]>
+			</isEqual>
+			<isEqual property="searchCnd" compareValue="3">
+				<![CDATA[	( a.NTT_SJ LIKE CONCAT('%',trim(#searchWrd#), '%') OR a.NTT_CN LIKE '%' || #searchWrd# + '%' )	]]>
+			</isEqual>
+			<isEqual property="searchCnd" compareValue="4">
+				<![CDATA[	a.NTCR_NM LIKE CONCAT('%',trim(#searchWrd#), '%') 		]]>
+			</isEqual>
+		</isNotEmpty>
+		<isNotEmpty property="delcode">
+			<isEqual prepend="AND" property="delcode" compareValue="0">
+				<![CDATA[	a.DELCODE = '0' 		]]>
+			</isEqual>
+			<isNotEqual prepend="AND" property="delcode" compareValue="0">
+				<![CDATA[	a.DELCODE IN ('1', '2')	]]>
+			</isNotEqual>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="gubunData">
+					a.gubun IN
+			<iterate conjunction="," open="(" close=")" property="gubunData">
+				#gubunData[]#
+			</iterate>
+		</isNotEmpty>
+	</sql>
+
+
+	<select id="SampleDAO.hlist" parameterClass="zvl" resultClass="zvl">
+		/* SampleDAO.hlist */
+		<![CDATA[
+			SELECT  *
+			  FROM  (
+			SELECT ROWNUM RNUM, ALL_LIST.*
+			  FROM  (
+
+			SELECT
+				a.NTT_ID
+				, a.NTT_SJ
+				, a.FRST_REGISTER_ID
+				, a.NTCR_NM
+				, a.INQIRE_CO
+				, a.USE_AT
+				, a.ATCH_FILE_ID
+				, a.BBS_ID
+				, a.NTCE_BGNDE
+				, a.NTCE_ENDDE
+				,DATE_FORMAT(a.FRST_REGISTER_PNTTM, '%Y-%m-%d') as FRST_REGISTER_PNTTM
+				, a.FRST_REGISTER_PNTTM as regDate
+				,a.DELCODE
+			 	,a.NAME, a.GUBUN
+			FROM
+				TB_BBS_SAMPLE a
+			WHERE  a.BBS_ID = #bbsId#
+		]]>
+		<include refid="SampleDAO.hlist-where" />
+
+		<![CDATA[	ORDER BY a.FRST_REGISTER_PNTTM DESC	]]>
+
+		<![CDATA[
+				    ) ALL_LIST
+				    )
+			 WHERE  RNUM  > #firstIndex#
+			   AND  RNUM <= #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+
+
+	<select id="SampleDAO.hlistCnt" parameterClass="zvl" resultClass="int" >
+		<![CDATA[
+			SELECT
+				COUNT(a.NTT_ID)
+			FROM
+				TB_BBS_SAMPLE a
+			WHERE
+				a.BBS_ID = #bbsId#
+		]]>
+		<include refid="SampleDAO.hlist-where" />
+	</select>
+
+	<resultMap id="SampleDAO.viewMap" class="zvl">
+		<result property="nttSj" column="NTT_SJ"/>
+		<result property="ntcrId" column="NTCR_ID"/>
+		<result property="ntcrNm" column="NTCR_NM"/>
+		<result property="nttCn" column="NTT_CN" jdbcType="CLOB" javaType="java.lang.String"/>
+		<result property="password" column="PASSWORD"/>
+		<result property="frstRegisterId" column="FRST_REGISTER_ID"/>
+		<result property="ntceBgnde" column="NTCE_BGNDE"/>
+		<result property="ntceEndde" column="NTCE_ENDDE"/>
+		<result property="inqireCo" column="INQIRE_CO"/>
+		<result property="useAt" column="USE_AT"/>
+		<result property="atchFileId" column="ATCH_FILE_ID"/>
+		<result property="bbsId" column="BBS_ID"/>
+		<result property="nttId" column="NTT_ID"/>
+		<result property="delcode" column="DELCODE"/>
+		<result property="newYn" column="new_yn"/>
+		<result property="frstRegisterPnttm" column="FRST_REGISTER_PNTTM"/>
+		<result property="regDate" column="reg_date"/>
+	</resultMap>
+
+	<select id="SampleDAO.view" parameterClass="zvl" resultMap="SampleDAO.viewMap" >
+		<![CDATA[
+			SELECT
+				a.NTT_SJ
+				, a.NTCR_ID
+				, a.NTCR_NM
+				, a.NTT_CN
+				, a.PASSWORD
+				, a.FRST_REGISTER_ID
+				, a.NTCE_BGNDE
+				, a.NTCE_ENDDE
+				, a.INQIRE_CO
+				, a.USE_AT
+				, a.ATCH_FILE_ID
+				, a.BBS_ID
+				, a.NTT_ID
+				, a.DELCODE
+				,case
+					when a.FRST_REGISTER_PNTTM >= SYSDATE-1 then 'Y'
+					else 'N'
+				 END AS new_yn
+				,DATE_FORMAT(a.FRST_REGISTER_PNTTM, '%Y-%m-%d') as FRST_REGISTER_PNTTM
+				,a.FRST_REGISTER_PNTTM as reg_date
+			 	,a.NAME, a.GUBUN
+			FROM
+				TB_BBS_SAMPLE a
+			WHERE
+				a.BBS_ID = #bbsId#
+			AND
+				a.NTT_ID = #nttId#
+		]]>
+	</select>
+
+	<insert id="SampleDAO.insert" parameterClass="zvl" >
+		<selectKey resultClass="java.lang.Long" keyProperty="nttId">
+			SELECT IFNULL(MAX(NTT_ID),0)+1 AS NTT_ID  FROM TB_BBS_SAMPLE
+		</selectKey>
+		<![CDATA[
+			INSERT INTO TB_BBS_SAMPLE 
+			(NTT_ID, BBS_ID, NTT_SJ,
+			 NTCR_ID, NTCR_NM, PASSWORD, INQIRE_CO,
+			 ATCH_FILE_ID,
+			 FRST_REGISTER_ID, USE_AT,
+			 NAME, GUBUN
+			 )
+			VALUES
+			( #nttId#, #bbsId#, #nttSj#,
+			  #ntcrId#, #ntcrNm#, #password#, 0,
+			  #atchFileId#,
+			  #frstRegisterId#, 'Y',
+			  #name#, #gubun#
+			 )
+		]]>
+	</insert>
+
+ 	<update id="SampleDAO.updateInqireCo" parameterClass="zvl">
+ 		<![CDATA[
+			UPDATE TB_BBS_SAMPLE SET
+				INQIRE_CO = INQIRE_CO+1,
+				LAST_UPDUSR_ID = #lastUpdusrId#,
+				LAST_UPDUSR_PNTTM = SYSDATE
+			WHERE BBS_ID = #bbsId#
+			AND NTT_ID = #nttId#
+ 		]]>
+ 	</update>
+
+</sqlMap>

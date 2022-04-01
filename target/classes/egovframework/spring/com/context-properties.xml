@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+
+	<bean name="propertiesService" class="egovframework.rte.fdl.property.impl.EgovPropertyServiceImpl" destroy-method="destroy">
+      <property name="properties">
+         <map>
+            <entry key="pageUnit" value="10"/>
+            <entry key="pageSize" value="10"/>
+
+            <entry key="Globals.fileStorePath" value="${Globals.fileStorePath}"/>
+
+            <entry key="Contents.fileStorePath" value="${Globals.webRootPath}/upload"/>
+
+            <entry key="contentsPathRoot" value="${Globals.webRootPath}/WEB-INF/jsp"/>
+
+            <entry key="mainUrl" value="http://pms.ccbrain.co.kr:9999/portal/main.do"/>
+
+            <entry key="mainFilePath" value="${Globals.webRootPath}/main.jsp"/>
+
+			<!-- 워크넷 open api키 -->
+			<entry key="Globals.oepnapi.WorkApikey" value="${Globals.oepnapi.WorkApikey}"/>
+
+			<!-- facebook 설정 -->
+            <entry key="Globals.Facebook.returnUrl" value="${Globals.Facebook.returnUrl}"/>
+            <entry key="Sns.facebookAppKey" value="${Sns.facebookAppKey}"/>
+            <entry key="Sns.facebookSecretKey" value="${Sns.facebookSecretKey}"/>
+            <entry key="Sns.facebookCallBackUrl" value="${Sns.facebookCallBackUrl}"/>
+            <entry key="Sns.facebookAccessToken" value="${Sns.facebookAccessToken}"/>
+
+			<!-- twitter설정 -->
+            <entry key="Sns.twitterAppKey" value="${Sns.twitterAppKey}"/>
+            <entry key="Sns.twitterSecretKey" value="${Sns.twitterSecretKey}"/>
+            <entry key="Sns.twitterCallBackUrl" value="${Sns.twitterCallBackUrl}"/>
+
+			<!-- kakao appkey -->
+			<entry key="Sns.kakaoAppKey" value="${Sns.kakaoAppKey}"/>
+			<entry key="Sns.kakaoJavascriptKey" value="${Sns.kakaoJavascriptKey}"/>
+			<entry key="Sns.kakaoDomain" value="${Sns.kakaoDomain}"/>
+
+			<!-- google+ appkey -->
+			<entry key="Sns.googlePlusAppKey" value="${Sns.googlePlusAppKey}"/>
+			<entry key="Sns.googlePlusEmail" value="${Sns.googlePlusEmail}"/>
+			<entry key="Sns.googlePlusSecretKey" value="${Sns.googlePlusSecretKey}"/>
+
+			<!-- naver appkey -->
+			<entry key="Sns.naverAppKey" value="${Sns.naverAppKey}"/>
+			<entry key="Sns.naverSecretKey" value="${Sns.naverSecretKey}"/>
+			<entry key="Sns.naverCallbackUrl" value="${Sns.naverCallbackUrl}"/>
+
+         </map>
+      </property>
+	</bean>
+
+</beans>

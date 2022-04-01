@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="category">
+
+	<typeAlias  alias="zvl" type="kr.co.unp.util.ZValue"/>
+
+	<insert id="categoryDAO.insert" parameterClass="zvl" >
+		<selectKey resultClass="int" keyProperty="categoryId">
+			SELECT NVL(MAX(category_id),0)+1 AS categoryId  FROM CATEGORY
+		</selectKey>
+		<![CDATA[
+			INSERT INTO CATEGORY
+			(
+				category_id,
+				upper_category_id,
+				category_name,
+				orderly,
+				use_yn,
+				FRST_REGISTER_PNTTM,
+				LAST_UPDUSR_PNTTM,
+				FRST_REGISTER_ID,
+				LAST_UPDUSR_ID,
+				CATEGORY_CLASS
+			)
+			VALUES
+			(
+				#categoryId#,
+				#upperCategoryId#,
+				#categoryName#,
+				(SELECT NVL(MAX(orderly),0)+5 FROM CATEGORY where upper_category_id = #upperCategoryId#),
+				#useYn#,
+				sysdate,
+				sysdate,
+				#frstRegisterId#,
+				#lastUpdusrId#,
+				#cls#
+			)
+		]]>
+	</insert>
+
+	<sql id="categoryDAO.list-where">
+		<isNotEmpty prepend="AND" property="searchWrd">
+			<isEqual property="searchCnd" compareValue="1">
+				<![CDATA[	category_name2 LIKE CONCAT('%',trim(#searchWrd#), '%') 		]]>
+			</isEqual>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="categoryId">
+			<![CDATA[	category_id = #categoryId#		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="upperCategoryId">
+			<![CDATA[	upper_category_id = #upperCategoryId#		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="useYn">
+			<![CDATA[	use_yn = #useYn#		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="lv">
+			<![CDATA[	lv = #lv#		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="cls">
+			<![CDATA[	CATEGORY_CLASS = #cls#		]]>
+		</isNotEmpty>
+	</sql>
+
+	<select id="categoryDAO.list" parameterClass="zvl" resultClass="zvl" >
+		<![CDATA[
+			SELECT
+				category_id,
+				upper_category_id,
+				category_name,
+				orderly,
+				use_yn,
+				category_class
+			FROM
+				CATEGORY a
+			WHERE 1=1
+		]]>
+		<include refid="categoryDAO.list-where" />
+		<![CDATA[
+			ORDER BY orderly asc
+		]]>
+	</select>
+
+	<select id="categoryDAO.hlist" parameterClass="zvl" resultClass="zvl" >
+		<![CDATA[
+			SELECT * FROM (
+				SELECT CATEGORY_ID
+				 , UPPER_CATEGORY_ID
+			     , CATEGORY_NAME
+			     , LEVEL lv
+			     , SUBSTR(SYS_CONNECT_BY_PATH(CATEGORY_ID, ' > '), 2) CATEGORY_ID2
+			     , SUBSTR(SYS_CONNECT_BY_PATH(CATEGORY_NAME, ' > '), 2) CATEGORY_NAME2
+			     , ORDERLY
+			     , USE_YN
+			     , CATEGORY_CLASS
+			  FROM CATEGORY
+			 START WITH UPPER_CATEGORY_ID = 0
+			 ]]>
+			 <isNotEmpty prepend="AND" property="gubun"><![CDATA[	CATEGORY_ID = #gubun#		]]></isNotEmpty>
+			 <![CDATA[
+			CONNECT BY PRIOR CATEGORY_ID = UPPER_CATEGORY_ID
+			) A
+			WHERE USE_YN = 'Y'
+		]]>
+		<include refid="categoryDAO.list-where" />
+		<![CDATA[
+			ORDER BY UPPER_CATEGORY_ID, lv, ORDERLY ASC
+		]]>
+	</select>
+
+	<select id="categoryDAO.view" parameterClass="zvl" resultClass="zvl" >
+		<![CDATA[
+
+			SELECT
+				category_id,
+				upper_category_id,
+				category_name,
+				orderly,
+				use_yn
+			FROM
+				CATEGORY a
+			WHERE category_id = #categoryId#
+		]]>
+	</select>
+
+ 	<update id="categoryDAO.update" parameterClass="zvl">
+ 		<![CDATA[
+			UPDATE CATEGORY
+			SET
+				upper_category_id = #upperCategoryId#,
+				category_name = #categoryName#,
+				orderly = #orderly#,
+				use_yn = #useYn#,
+				LAST_UPDUSR_PNTTM = sysdate,
+				LAST_UPDUSR_ID = #lastUpdusrId#
+			WHERE category_id = #categoryId#
+ 		]]>
+ 	</update>
+
+ 	<delete id="categoryDAO.delete" parameterClass="zvl">
+ 		<![CDATA[
+			DELETE CATEGORY
+			WHERE category_id = #categoryId#
+ 		]]>
+ 	</delete>
+
+	<select id="categoryDAO.select2depthInfoForTest" parameterClass="zvl" resultClass="zvl" >
+		<![CDATA[
+			SELECT
+				category_id,
+				upper_category_id,
+				category_name,
+				orderly,
+				use_yn
+			FROM
+				CATEGORY a
+			WHERE category_name = #categoryName#
+			and rownum = 1
+		]]>
+	</select>
+
+	<select id="categoryDAO.selectCategoryIdByUpperId" parameterClass="zvl" resultClass="zvl" >
+		<![CDATA[
+			SELECT
+				category_id,
+				upper_category_id,
+				category_name,
+				orderly,
+				use_yn
+			FROM
+				CATEGORY a
+			WHERE use_yn = 'Y' and upper_category_id = #upperCategoryId#
+		]]>
+	</select>
+
+</sqlMap>

@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="dicary">
+
+	<typeAlias alias="zvl" type="kr.co.unp.util.ZValue" />
+
+	<sql id="dicaryDAO.selectDicaryList-where">
+		<isNotEmpty prepend="AND" property="sdate">
+			<![CDATA[	TO_CHAR(a.HOPE_ERA, 'YYYYMMDD') >= REPLACE(#sdate#,'-','') 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="ctgrySe1">
+				<![CDATA[	a.CTGRY_SE1 LIKE '%' || #ctgrySe1# || '%' 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="ctgrySe2">
+				<![CDATA[	a.CTGRY_SE2 LIKE '%' || #ctgrySe2# || '%' 		]]>
+		</isNotEmpty>
+
+		<isNotEmpty prepend="AND" property="searchWrd">
+			<isEqual property="searchCnd" compareValue="1">
+				<![CDATA[	a.DICARY_SJ LIKE '%' || #searchWrd# || '%' 		]]>
+			</isEqual>
+
+		</isNotEmpty>
+
+
+
+	</sql>
+
+	<!--CLOB 타입을 위한 리절트맵   -->
+	<resultMap id="dicaryDAO.selectDicaryListMap" class="zvl">
+
+		<result property="cnsltReqCn" column="CNSLT_REQ_CN"  jdbcType="CLOB" javaType="java.lang.String"/>
+		<result property="frstRegistPnttm" column="FRST_REGIST_PNTTM"/>
+
+	</resultMap>
+
+	<select id="dicaryDAO.selectDicaryList" parameterClass="zvl" resultClass="zvl">
+
+		<![CDATA[
+		/* dicaryDAO.selectDicaryList */
+
+			SELECT *
+			  FROM
+			       (
+			       SELECT ROWNUM RNUM,
+			              ALL_LIST.*
+			         FROM
+			         (
+					SELECT A.DICARY_SN,
+					       A.CTGRY_SE1,
+					       FN_CMMNCODE_NM('COM083', A.CTGRY_SE1) AS CTGRY_SE1_NM,
+					       A.CTGRY_SE2,
+					       FN_CMMNCODE_NM('COM083', A.CTGRY_SE2) AS CTGRY_SE2_NM,
+					       A.DICARY_SJ,
+					       A.FRST_REGIST_PNTTM,
+					       A.FRST_REGISTER_ID,
+					       A.LAST_UPDT_PNTTM,
+					       A.LAST_UPDUSR_ID,
+					       A.DELETE_AT
+					  FROM TN_JOB_DICARY A
+					       WHERE 1=1
+			     ]]>
+			       <include refid="dicaryDAO.selectDicaryList-where" />
+			        <![CDATA[    ORDER BY a.FRST_REGIST_PNTTM DESC
+			              ) ALL_LIST
+			       )
+
+			 WHERE  RNUM  > #firstIndex#
+			   AND  RNUM <= #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+
+	<insert id="dicaryDAO.dicaryInsert" parameterClass="zvl">
+		<selectKey resultClass="java.lang.Long" keyProperty="dicarySn">
+			SELECT NVL(MAX(DICARY_SN),0)+1 AS DICARY_SN FROM TN_JOB_DICARY
+		</selectKey>
+ 	 <![CDATA[
+		/* dicaryDAO.dicaryInsert */
+
+		INSERT INTO TN_JOB_DICARY
+       (
+           DICARY_SN,
+           CTGRY_SE1,
+           CTGRY_SE2,
+           DICARY_SJ,
+           FRST_REGIST_PNTTM,
+           FRST_REGISTER_ID,
+           DELETE_AT
+       )
+       VALUES
+       (
+           #dicarySn#,
+           #ctgrySe1#,
+           #ctgrySe2#,
+           #dicarySj#,
+           sysdate,
+           #frstRegisterId#,
+           NVL(#deleteAt#,'Y')
+       )
+
+			]]>
+	</insert>
+
+
+	<insert id="dicaryDAO.dicaryCnInsert" parameterClass="zvl">
+		<selectKey resultClass="java.lang.Long" keyProperty="dicarySn">
+			SELECT NVL(MAX(DICARY_SN),0)+1 AS DICARY_SN FROM TN_JOB_DICARY_CN
+		</selectKey>
+ 	 <![CDATA[
+		/* dicaryDAO.dicaryCnInsert */
+
+				INSERT INTO TN_JOB_DICARY_CN
+		       (
+		           DICARY_SN,
+		           CN_SN,
+		           SUB_SJ,
+		           SUB_CN,
+		           FRST_REGIST_PNTTM
+		       )
+		       VALUES
+		       (
+		           #dicarySn#,
+		           #cnSn#,
+		           #subSj#,
+		           #subCn:CLOB#,
+		           sysdate
+		       )
+
+			]]>
+	</insert>
+
+
+
+	<select id="dicaryDAO.selectDicaryListCnt" resultClass="int">
+		<![CDATA[
+		/* dicaryDAO.selectDicaryListCnt */
+				SELECT COUNT(*)
+				  FROM TN_JOB_DICARY a
+				 WHERE 1=1
+
+		]]>
+		 <include refid="dicaryDAO.selectDicaryList-where" />
+	</select>
+
+	<update id="dicaryDAO.updateDicary" parameterClass="zvl">
+ 		<![CDATA[
+ 		/* dicaryDAO.updateDicary*/
+			UPDATE TN_JOB_DICARY
+			       SET
+			       CTGRY_SE1 = #ctgrySe1#,
+			       CTGRY_SE2 = #ctgrySe2#,
+			       DICARY_SJ = #dicarySj#,
+			       LAST_UPDT_PNTTM = sysdate,
+			       LAST_UPDUSR_ID = #lastUpdusrId#
+			 WHERE DICARY_SN = #dicarySn#
+
+ 		]]>
+	</update>
+
+
+<!-- 직업사전 메인  -->
+	<select id="dicaryDAO.selectDicary" parameterClass="zvl" resultClass="zvl">
+
+		<![CDATA[
+		/* dicaryDAO.selectDicary */
+			SELECT A.DICARY_SN,
+		       A.CTGRY_SE1,
+		        FN_CMMNCODE_NM('COM083', A.CTGRY_SE1) AS CTGRY_SE1_NM,
+		       A.CTGRY_SE2,
+		        FN_CMMNCODE_NM('COM083', A.CTGRY_SE2) AS CTGRY_SE2_NM,
+		       A.DICARY_SJ,
+		       A.FRST_REGIST_PNTTM,
+		       A.FRST_REGISTER_ID,
+		       A.LAST_UPDT_PNTTM,
+		       A.LAST_UPDUSR_ID,
+		       A.DELETE_AT
+		  FROM TN_JOB_DICARY A
+		       WHERE A.DICARY_SN = #dicarySn#
+
+		]]>
+
+	<!-- 직업사전 서브제목 & 서브내용 CLOB 타입-->
+	</select>
+		<resultMap id="dicaryDAO.selectDicaryCnMap" class="zvl">
+		<result property="dicarySn" column="DICARY_SN"/>
+		<result property="cnSn" column="CN_SN"/>
+		<result property="subSj" column="SUB_SJ"/>
+		<result property="subCn" column="SUB_CN"  jdbcType="CLOB" javaType="java.lang.String"/>
+		<result property="frstRegistPnttm" column="FRST_REGIST_PNTTM"/>
+	</resultMap>
+	<!-- 직업사전 내용 쿼리  -->
+	<select id="dicaryDAO.selectDicaryCn" parameterClass="zvl" resultMap="dicaryDAO.selectDicaryCnMap">
+
+		<![CDATA[
+		/* dicaryDAO.selectDicaryCn */
+		SELECT A.DICARY_SN,
+		       A.CN_SN,
+		       A.SUB_SJ,
+		       A.SUB_CN,
+		       A.FRST_REGIST_PNTTM
+		  FROM TN_JOB_DICARY_CN A
+		  WHERE a.DICARY_SN = #cnSn#
+		]]>
+	</select>
+	<!-- 직업메인 삭제 -->
+	<delete id="dicaryDAO.deleteDicary" parameterClass="zvl" >
+		<![CDATA[
+		/* dicaryDAO.deleteDicary*/
+			DELETE
+			  FROM TN_JOB_DICARY
+			 WHERE DICARY_SN = #dicarySn#
+		]]>
+	</delete>
+	<!-- 직업서브 삭제 -->
+	<delete id="dicaryDAO.deleteDicaryCn" parameterClass="zvl" >
+		<![CDATA[
+		/* dicaryDAO.deleteDicaryCn*/
+			DELETE
+			  FROM TN_JOB_DICARY_CN
+			 WHERE CN_SN = #cnSn#
+
+		]]>
+	</delete>
+	<!-- 직업사전 내용 삭제 -->
+	<delete id="dicaryDAO.selectDeleteDicaryCn" parameterClass="zvl" >
+		<![CDATA[
+		/* dicaryDAO.selectDeleteDicaryCn*/
+
+		DELETE FROM TN_JOB_DICARY_CN A
+			WHERE A.DICARY_SN = #dicarySn# AND A.CN_SN =#cnSn#
+		]]>
+	</delete>
+
+		<!-- 직업사전 번째 리스트 내용 삭제 -->
+
+	<select id="dicaryDAO.OccpDetailList" parameterClass="zvl" resultClass="zvl" >
+		<![CDATA[
+		/* dicaryDAO.OccpDetailList */
+			SELECT A.DICARY_SN,
+			       A.CTGRY_SE1,
+			       A.CTGRY_SE2,
+			       A.DICARY_SJ,
+			       A.FRST_REGIST_PNTTM,
+			       A.FRST_REGISTER_ID,
+			       A.LAST_UPDT_PNTTM,
+			       A.LAST_UPDUSR_ID,
+			       A.DELETE_AT
+			  FROM TN_JOB_DICARY A
+				  WHERE
+					  a.CTGRY_SE1 = #ctgrySe1#
+					   	AND a.CTGRY_SE2 = #ctgrySe2#
+			  		 ORDER BY a.DICARY_SN
+
+		]]>
+	</select>
+
+
+
+
+</sqlMap>
+

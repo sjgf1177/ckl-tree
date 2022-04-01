@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="BBSMaster">
+
+	<typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+	<typeAlias  alias="BoardMasterVO" type="kr.co.unp.bbs.vo.BoardMasterVO"/>
+
+	<insert id="BBSAttributeManageDAO.insertBBSMasterInf" parameterClass="BoardMasterVO" >
+		<![CDATA[
+			INSERT INTO TB_BBS_MASTR
+			(BBS_ID, BBS_TY_CODE, BBS_ATTRB_CODE, BBS_NM, BBS_INTRCN,
+			 REPLY_POSBL_AT, FILE_ATCH_POSBL_AT, POSBL_ATCH_FILE_NUMBER,
+			 POSBL_ATCH_FILE_SIZE, USE_AT,
+			 FRST_REGISTER_ID, FRST_REGIST_PNTTM, NTCE_BGNDE, NTCE_ENDDE, ADIT_CNTNTS,
+			 TABLE_NM,PREV_NEXT_POSBL_AT, CMMNT_POSBL_AT, PAGE_UNIT, PAGE_SIZE )
+			VALUES
+			( #bbsId#, #bbsTyCode#, #bbsAttrbCode#, #bbsNm#, #bbsIntrcn#,
+			  #replyPosblAt#, #fileAtchPosblAt#, #posblAtchFileNumber#,
+			  #posblAtchFileSize#, #useAt#, #frstRegisterId#, SYSDATE, #ntceBgnde#, #ntceEndde#, #addCon#,
+			  #tableNm#, #preNextPosblAt#, #cmmntPosblAt#, #pageUnit#, #pageSize#
+			 )
+		]]>
+	</insert>
+
+	<select id="BBSAttributeManageDAO.selectBBSMasterInfs" parameterClass="BoardMasterVO" resultClass="BoardMasterVO" >
+		<![CDATA[
+		SELECT * FROM
+		( SELECT a.*, rownum+rnum-1 as TOTAL_ROWS
+		   FROM ( SELECT a.*, rownum rnum
+		            FROM (
+
+			SELECT
+				a.BBS_ID as bbsId, a.BBS_TY_CODE as bbsTyCode, b.CODE_NM as bbsTyCodeNm,
+				a.BBS_ATTRB_CODE as bbsAttrbCode, c.ATTRB_NM as bbsAttrbCodeNm, a.BBS_NM as bbsNm,
+				a.USE_AT as useAt,
+				TO_CHAR(a.FRST_REGIST_PNTTM, 'YYYY-MM-DD') as frstRegisterPnttm,
+				TABLE_NM as tableNm, PREV_NEXT_POSBL_AT as preNextPosblAt, CMMNT_POSBL_AT as cmmntPosblAt
+			FROM
+				TB_BBS_MASTR a
+			LEFT OUTER JOIN
+				(SELECT CODE_ID, CODE, CODE_NM FROM
+					TC_CMMNCODE_DETAIL WHERE CODE_ID = 'COM004' AND USE_AT='Y') b
+				ON a.BBS_TY_CODE = b.CODE
+			LEFT OUTER JOIN TB_ATTRBINFO c
+				ON a.BBS_ATTRB_CODE = c.ATTRB_CODE
+			WHERE 1=1
+		]]>
+			<isNotEmpty property="useAt">
+				<![CDATA[	AND a.USE_AT = #useAt#		]]>
+			</isNotEmpty>
+			<isEqual prepend="AND" property="searchCnd" compareValue="0">
+				<![CDATA[	a.BBS_NM LIKE '%' || #searchWrd# || '%' 		]]>
+			</isEqual>
+			<isEqual prepend="AND" property="searchCnd" compareValue="1">
+				<![CDATA[	b.CODE_NM LIKE '%' || #searchWrd# || '%'		]]>
+			</isEqual>
+			<isNotEmpty prepend="AND" property="bbsAttrbCode">
+				<![CDATA[	a.BBS_ATTRB_CODE = #bbsAttrbCode#		]]>
+			</isNotEmpty>
+		<![CDATA[
+			ORDER BY a.FRST_REGIST_PNTTM DESC
+
+		            ) a
+		          ORDER BY rnum DESC ) a
+		  ORDER BY rnum )
+		WHERE rnum BETWEEN #firstIndex# + 1 AND #lastIndex#
+
+
+		]]>
+	</select>
+
+	<select id="BBSAttributeManageDAO.selectBBSMasterInfsCnt" parameterClass="BoardMasterVO" resultClass="int" >
+		<![CDATA[
+			SELECT
+				COUNT(a.BBS_ID)
+			FROM
+				TB_BBS_MASTR a
+			LEFT OUTER JOIN
+				(SELECT CODE_ID, CODE, CODE_NM FROM
+					TC_CMMNCODE_DETAIL WHERE CODE_ID = 'COM004' AND USE_AT='Y') b
+				ON a.BBS_TY_CODE = b.CODE
+			LEFT OUTER JOIN TB_ATTRBINFO c
+				ON a.BBS_ATTRB_CODE = c.ATTRB_CODE
+			WHERE 1=1
+		]]>
+			<isNotEmpty property="useAt">
+				AND a.USE_AT = #useAt#
+			</isNotEmpty>
+			<isEqual prepend="AND" property="searchCnd" compareValue="0">
+				<![CDATA[	a.BBS_NM LIKE '%' || #searchWrd# || '%' 		]]>
+			</isEqual>
+			<isEqual prepend="AND" property="searchCnd" compareValue="1">
+				<![CDATA[	b.CODE_NM LIKE '%' || #searchWrd# || '%' 		]]>
+			</isEqual>
+			<isNotEmpty prepend="AND" property="bbsAttrbCode">
+				<![CDATA[	a.BBS_ATTRB_CODE = #bbsAttrbCode#		]]>
+			</isNotEmpty>
+	</select>
+
+	<select id="BBSAttributeManageDAO.selectBBSMasterInf" parameterClass="BoardMasterVO" resultClass="BoardMasterVO" >
+		<![CDATA[
+			SELECT
+				a.BBS_ID as bbsId, a.BBS_TY_CODE as bbsTyCode, b.CODE_NM as bbsTyCodeNm, a.BBS_INTRCN as bbsIntrcn,
+				a.BBS_ATTRB_CODE as bbsAttrbCode, c.ATTRB_NM as bbsAttrbCodeNm, a.BBS_NM as bbsNm,
+				a.FILE_ATCH_POSBL_AT as fileAtchPosblAt, a.POSBL_ATCH_FILE_NUMBER as atchPosblFileNumber,
+				a.POSBL_ATCH_FILE_SIZE as posblAtchFileSize, a.REPLY_POSBL_AT as replyPosblAt, a.FRST_REGISTER_ID as frstRegisterId,
+				a.USE_AT as useAt, TO_CHAR(a.FRST_REGIST_PNTTM, 'YYYY-MM-DD') as frstRegisterPnttm,
+				a.NTCE_BGNDE as ntceBgnde, a.NTCE_ENDDE as ntceEndde, ADIT_CNTNTS as addCon,
+				a.TABLE_NM as tableNm, PREV_NEXT_POSBL_AT as preNextPosblAt, CMMNT_POSBL_AT as cmmntPosblAt,PAGE_UNIT as pageUnit, PAGE_SIZE as pageSize
+			FROM
+				TB_BBS_MASTR a
+			LEFT OUTER JOIN
+				(SELECT CODE_ID, CODE, CODE_NM FROM TC_CMMNCODE_DETAIL WHERE CODE_ID = 'COM004' AND USE_AT='Y') b
+				ON a.BBS_TY_CODE = b.CODE
+			LEFT OUTER JOIN TB_ATTRBINFO c
+				ON a.BBS_ATTRB_CODE = c.ATTRB_CODE
+			LEFT OUTER JOIN TC_TMPLATINFO d
+				ON a.TMPLAT_ID = d.TMPLAT_ID
+			WHERE a.BBS_ID = #bbsId#
+		]]>
+	</select>
+
+ 	<update id="BBSAttributeManageDAO.updateBBSMasterInf" parameterClass="BoardMasterVO">
+ 		<![CDATA[
+			UPDATE TB_BBS_MASTR SET
+				BBS_TY_CODE = #bbsTyCode#,
+				BBS_ATTRB_CODE = #bbsAttrbCode#,
+				BBS_NM = #bbsNm#,
+				BBS_INTRCN = #bbsIntrcn#,
+				REPLY_POSBL_AT = #replyPosblAt#,
+				FILE_ATCH_POSBL_AT = #fileAtchPosblAt#,
+				POSBL_ATCH_FILE_NUMBER = #posblAtchFileNumber#,
+				POSBL_ATCH_FILE_SIZE = #posblAtchFileSize#,
+				LAST_UPDUSR_ID = #lastUpdusrId#,
+				LAST_UPDT_PNTTM = SYSDATE,
+				NTCE_BGNDE = #ntceBgnde#,
+				NTCE_ENDDE = #ntceEndde#,
+				ADIT_CNTNTS = #addCon#,
+				TABLE_NM = #tableNm#,
+				PREV_NEXT_POSBL_AT = #preNextPosblAt#,
+				CMMNT_POSBL_AT = #cmmntPosblAt#,
+				PAGE_UNIT = #pageUnit#,
+				PAGE_SIZE = #pageSize#
+			WHERE BBS_ID = #bbsId#
+ 		]]>
+ 	</update>
+
+ 	<update id="BBSAttributeManageDAO.deleteBBSMasterInf" parameterClass="BoardMasterVO">
+ 		<![CDATA[
+			UPDATE TB_BBS_MASTR SET
+				USE_AT = 'N',
+				LAST_UPDUSR_ID = #lastUpdusrId#,
+				LAST_UPDT_PNTTM = SYSDATE
+			WHERE BBS_ID = #bbsId#
+ 		]]>
+ 	</update>
+
+	<select id="BBSAttributeManageDAO.selectAllBBSMaster" parameterClass="BoardMasterVO" resultClass="BoardMasterVO" >
+		<![CDATA[
+			SELECT
+				BBS_ID as bbsId, BBS_TY_CODE as bbsTyCode, BBS_ATTRB_CODE as bbsAttrbCode, BBS_NM as bbsNm
+			FROM
+				TB_BBS_MASTR
+			WHERE USE_AT = 'Y'
+ 		]]>
+	</select>
+
+	<select id="BBSAttributeManageDAO.selectAllBBSMasterInf" resultClass="BoardMasterVO" >
+		<![CDATA[
+			SELECT
+				a.BBS_ID as bbsId, a.BBS_TY_CODE as bbsTyCode, b.CODE_NM as bbsTyCodeNm, a.BBS_INTRCN as bbsIntrcn,
+				a.BBS_ATTRB_CODE as bbsAttrbCode, c.ATTRB_NM as bbsAttrbCodeNm, a.BBS_NM as bbsNm,
+				a.TMPLAT_ID as tmplatId, d.TMPLAT_NM as tmplatNm, d.TMPLAT_COURS as tmplatCours, a.FILE_ATCH_POSBL_AT as fileAtchPosblAt,
+				a.REPLY_POSBL_AT as replyPosblAt,
+				a.USE_AT as useAt, TO_CHAR(a.FRST_REGIST_PNTTM, 'YYYY-MM-DD') as frstRegisterPnttm,
+				ADIT_CNTNTS as addCon,
+				a.TABLE_NM as tableNm,PREV_NEXT_POSBL_AT as preNextPosblAt, CMMNT_POSBL_AT as cmmntPosblAt,
+				PAGE_UNIT as pageUnit, PAGE_SIZE as pageSize
+			FROM
+				TB_BBS_MASTR a
+			LEFT OUTER JOIN
+				(SELECT CODE_ID, CODE, CODE_NM FROM TC_CMMNCODE_DETAIL WHERE CODE_ID = 'COM004' AND USE_AT='Y') b
+				ON a.BBS_TY_CODE = b.CODE
+			LEFT OUTER JOIN TB_ATTRBINFO c
+				ON a.BBS_ATTRB_CODE = c.ATTRB_CODE
+			LEFT OUTER JOIN TC_TMPLATINFO d
+				ON a.TMPLAT_ID = d.TMPLAT_ID
+			WHERE a.USE_AT = 'Y'
+ 		]]>
+	</select>
+
+	<delete id="BBSAttributeManageDAO.deleteBBSMaster" parameterClass="BoardMasterVO">
+		delete TB_BBS_MASTR where bbs_id = #bbsId#
+
+	</delete>
+
+</sqlMap>

@@ -1,0 +1,269 @@
+@charset "utf-8";
+
+img{max-width:100%}
+
+#wrap {position:relative;z-index:10;margin: 0 auto;width:100%}
+#header{position: relative;left:0;top: 0;z-index:100;height:100px;border-bottom: 2px solid #eb1c24;background:#3e3a39;}
+#header li{display:inline-block;float: left;}
+h1.logo, h1.logo a{display: inline-block;height: 100px;width: 300px;}
+.heading .back{position: absolute;left: 0;top: 0;width: 100px;height: 100px;}
+.heading h1{display: inline-block;color:#fff;line-height:100px;}
+
+.inners{padding:0 10px;}
+
+.gnbOpenSet{position: absolute;display:block;float:right;right: 0;top: 0;}
+.gnbSet{position: absolute;display:block;float:right;width:100%;right: 0;top: 0;background: rgba(0, 0, 0, 0.8);height: 100%;z-index: 1000;display: none;}
+.gnbOpen{width: 100px;height: 100px;}
+.gnbLink{height:100px;width: 80%;margin-left: 20%;background: #bc161d;}
+.gnbLink .btn-sm{background:#fff;border:1px solid #9e1218;color:#3e3a39;}
+
+#gnb {position:absolute;z-index: 1000;width: 80%;margin-left: 20%;height: 100%;background: #eaeaea;}
+#gnb>ul{height: 50px}
+#gnb>ul>li{float: left;line-height:40px;width: 100%;background: #d3d3d3;}
+#gnb>ul>li>a{font-size:15px;font-weight: 600;display: block;float: left;text-align: left;color:#231f20;
+	background: url(/cklmobile/images/common/gnb1m.png) 100% 50% no-repeat;background-size: auto 100%;width:100%;padding-left:20px;line-height:40px;border-bottom:1px solid #fff;}
+#gnb>ul>li.hover>a,
+#gnb>ul>li.on>a,
+#gnb>ul>li>a:hover{}
+#gnb>ul>li>ul{width:100%;float:left;background:#eaeaea;}
+/*#gnb>ul>li:hover>ul, #gnb>ul>li:focus>ul, #gnb>ul>li:active>ul{display: block;}*/
+#gnb>ul>li.hover>ul{display: block;}
+#gnb>ul>li#gnb3>ul, #gnb>ul>li#gnb4>ul{width:400px;}
+#gnb>ul>li>ul{display: none}
+#gnb>ul>li.on>ul{display: block}
+#gnb>ul>li>ul>li{float: left;margin-right: 1px;width: 100%;border-bottom: 1px solid #d3d3d3;}
+#gnb>ul>li>ul>li>a{display: block;height: 30px;line-height: 30px;padding: 0 20px;color: #3e3a39;font-size: 14px;font-weight: 500;text-align:left;}
+#gnb>ul>li>ul>li>a:hover, #gnb>ul>li>ul>li>a:focus, #gnb>ul>li>ul>li>a:active{color: #eb1c24;font-weight: bold;}
+
+.gnbTotMenu{position: absolute;right:-50px;top:0;width: 50px;height: 50px; background:url(/cklmobile/images/common/common.png) no-repeat 0 -200px;}
+.gnbTotMenu a{display: inline-block;width: 50px;height: 50px;}
+
+/* totalMenu */
+.totMenuT{position: absolute;top:0;text-align: center;float:left;width:100%;margin-bottom: 23px;background:#333;display:none;}
+.totMenuT dl{display: inline-block; vertical-align: top;padding:25px 0 30px 0;margin:0;width:198px;height:230px;border-right:1px solid #fff;text-align: center;}
+.totMenuT dl:last-child, .totMenuT dl.tms5{border-right:none;}
+.totMenuT dl dt{color:#fff;font-size:17px;font-weight:600;padding:0;margin-bottom: 10px}
+.totMenuT dl dd{display: block;}
+.totMenuT dl a, .totMenuT dl a:hover, .totMenuT dl a:focus, .totMenuT dl a:active{color:#eee}
+#header .totMenuT ul li{padding:0;display: block;width: 100%;}
+.totMenuT dl{position: relative}
+.totMenuT dl span{position: absolute;left: 0;top: 5px;display: inline-block;width: 10px;height: 10px;background-color:#eb1c24;border:2px solid #fff}
+.closetotMenuT{position: absolute;right: 0;
+	top: -50px;display: block;
+	display: inline-block;width: 50px;height: 50px;background:url(/cklmobile/images/common/common.png) no-repeat -220px -200px}
+
+
+
+.subPageInfo{text-align: center;float:left;width: 100%;height: 80px;position: relative;}
+.subPageInfo h1{font-size:23px;line-height: 40px;margin-top: 20px;}
+.menuSeqArr a{position: absolute;width: 50px;height: 50px;display: block;background:url(/cklmobile/images/common/commonIco.png) no-repeat;}
+.menuSeqArr .leftMenuArr{background-position: -200px -160px;left:410px;top:25px;}
+.menuSeqArr .rightMenuArr{background-position: -260px -160px;right:410px;top:25px;}
+.menuSeqArr .leftMenuArrOff{position: absolute;width: 50px;height: 50px;display: block;background:url(/cklmobile/images/common/commonIco.png) no-repeat -200px -102px;left:410px;top:25px;}
+.menuSeqArr .rightMenuArrOff{position: absolute;width: 50px;height: 50px;display: block;background:url(/cklmobile/images/common/commonIco.png) no-repeat -260px -102px;right:410px;top:25px;}
+
+.rightContents { position: absolute; left: 1270px; top: 106px; width: 630px; height: 882px; }
+.vodView { position: absolute; left: 0px; top: 874px; width: 294px; height: 194px; }
+
+.contentSet{margin:0 auto;border:5px solid #e2e2e2;border-bottom:none;clear:both;}
+#content{margin:0 auto;position: relative;border-bottom:none;overflow:hidden;min-height:300px;padding:0 0 30px 0;}
+.contentSetIn{padding: 10px 20px;}
+.contentRightMini{position: absolute;right:0;top:0;float:right;width:64px;height: 100%; padding:0; border-left:1px solid #e2e2e2;background:#fbfbfb;display: none;}
+
+
+
+
+
+.rightSrcs ul{text-align: center;}
+.rightSrcs li{display: inline-block;float: left;margin-right:5px; margin-bottom: 5px;}
+
+
+#locationSet {position: absolute;right:0;bottom: 0;}
+#locationSet .lnbNav2 { display: none; }
+/* 로케이션 */
+#location {float: right;width:100%; text-align: right;}
+#location ol { display: inline-block;}
+#location li { float: left; padding: 0 8px 0 10px; font-size: 12px; font-weight:400; background: url(/cklmobile/images/common/common1.png) no-repeat left -209px; line-height: 26px;}
+#location .home { height: 30px; background:url(/cklmobile/images/common/common1.png) 0 -87px no-repeat; padding: 0px 8px 0 20px; border: none; }
+#location .current{font-weight:600;color:#eb1c24; text-decoration: underline;}
+
+
+
+.sisulBox{position: absolute;right: 0;top:60px;z-index: 10;display:none;background:#231f20;width:630px;height:1200px;}
+.sisulBoxSet{padding: 34px 15px 0 40px;float: left;width: 605px;height: 800px;}
+.sisulBox *{color:#fff;}
+.sisulBox h2{text-align: center;font-weight:500;}
+.tabSisul h3{margin:0;width:25%}
+.tabSisul h3, .tabSisul h3 a{display:inline-block;float: left;}
+.tabSisul h3 a{border:1px solid #ebebeb;margin-right:-1px;padding:4px 40px;width:100%;text-align:center;color:#828282;}
+.tabSisul h3 a.on{background: url(/cklmobile/images/common/tabArr.gif) no-repeat 50% 100%;border-bottom-color: transparent;color:#fff; font-weight: 400}
+.tabSisul{position: relative;margin: 18px 0; /* border:1px solid #f00; */float: left;width: 550px;}
+
+.tabSisul>ul>li{position: relative;margin-bottom:40px;height: 180px;}
+.tabSisul dl{padding-left:340px;padding-top:5px; color: #fff}
+.tabSisul dl dt{margin-bottom:13px;}
+.btnCircle {border:1px solid #fff;margin-top:37px; -o-border-radius: 20px;-moz-border-radius: 20px;-webkit-border-radius: 20px;border-radius: 20px;}
+.btnCircle:hover, .btnCircle:active, .btnCircle:focus{text-decoration: underline;background:#fff;color:#000;-o-border-radius: 20px;-moz-border-radius: 20px;-webkit-border-radius: 20px;border-radius: 20px;}
+.tabSisul .imgLt{position: absolute;left:0;top:0;}
+.tabSisul ul{position: relative;}
+.tabSisul li.on a { color: #fff; }
+.sisulCts { position: absolute; top: 70px; left: 0; z-index: 1; width:570px; height:620px;display: none;overflow: hidden;overflow-y: scroll;}
+.sisulCts li{height:220px;position: relative;}
+.sisulCts.on { display: block; }
+.sisulClose {position: absolute;right: 0;top: 0;}
+
+
+
+/* tabs */
+.tabs{position: relative;margin: 18px 0 28px; height: 50px;width: 100%;clear:both;}
+.tabs .list-inline{margin:0;padding:0;}
+.tabs li{position: relative;margin:0;padding: 0;height: 46px;line-height:38px;width:20%;float: left;background:#f5f5f5}
+.tabs li a{display:inline-block;float: left;border:1px solid #c8c8c8;margin-right:-1px;padding:4px 0;width:100%;text-align:center;color:#828282;}
+.tabs li a{border-bottom-color: #eb1c24;font-weight: 400;font-size: 12px;}
+.tabs li.on a{background:#fff;border:1px solid #eb1c24; border-bottom-color: transparent;color:#eb1c24; font-weight: 400;text-decoration: underline}
+.tabs li.on{z-index: 2;}
+.tabs .sr-only{position: absolute;z-index:11;right:-7px;top:23px;width:10px;height: 14px;background:url(/cklmobile/images/common/ingArr.gif);clip:auto;}
+.tabs .length2 li{width:50%;}
+.tabs .length3 li{width:33.33333%;}
+
+.noLink li{margin:0;padding: 0;height:58px;line-height:48px;width:20%;float: left;background:#f5f5f5}
+.noLink li{display:inline-block;float: left;border:1px solid #c8c8c8;margin-right:-1px;padding:4px 10px;width:100%;text-align:center;color: #666;}
+.noLink li{border-bottom-color: #eb1c24;font-weight: 400}
+.noLink li.on{background:#fff;border:1px solid #eb1c24; border-bottom-color: transparent;color:#eb1c24; font-weight: 500;text-decoration: underline}
+.child4 li{width:25%; text-align: center}
+
+
+.login3,
+.loginS{position: absolute;top:60px;right: 0;}
+
+.rightAd{position: absolute;right: 151px;top: 174px;}
+.rightAdCtrl{position: absolute;right: 151px;top: 174px;height: 160px;width: 400px;font-size: 0;background-color: transparent;border: none;outline: 0;opacity: 0;}
+
+
+
+/* common */
+object,embed,video { max-width: 100%; }
+.ie6 img { width: 100%; }
+
+/*595858*/
+.totMenuF{margin-top: 30px;background:#595858}
+.totMenuF a{color:#d2d0d0;}
+.totMenuF a:hover, .totMenuF a:focus, .totMenuF a:active{color:#fff;}
+
+.totMenuF {width: 100%;text-align: center;float: left;margin-bottom: 5px;}
+.totMenuF dl{display: inline-block; vertical-align: top;margin:0;width:168px;padding-left: 30px;height:210px;text-align: left;}
+.totMenuF dl dt{color:#fff;font-size:17px;font-weight:600;padding:0;margin-bottom: 10px;margin-top: 25px;}
+.totMenuF dl dt a, .totMenuF dl dt:hover, .totMenuF dl dt:focus, .totMenuF dl dt:active{color:#eee}
+.totMenuF dd>ul>li{padding:0;}
+.totMenuF dd{margin-bottom: 30px;}
+.totMenuF dl{position: relative}
+.totMenuF dl span{position: absolute;left: 0;top: 5px;display: inline-block;width: 10px;height: 10px;background-color:#eb1c24;border:2px solid #fff}
+.totMenuF .tmenu1, .totMenuF .tmenu3, .totMenuF .tmenu5, .totMenuF .tmenu7{background-color:#555454} 
+
+#footer {clear: both; padding: 30px 0 40px 0;width:100%;float:left;margin:auto;font-size: 14px;background: #3e3a39;color: #fff;text-align: center;}
+#footer .copy{clear: both;}
+
+
+
+.navSet{float: left;height: 50px;width: 100%;}
+#lnb{width:100%;height: 50px;background:#e2e2e2;}
+.navSet.lnbTop{position:fixed;left:0;top:51px;z-index:50;}
+.navSet.lnbTop #lnb{position:static;width:1375px;bottom:initial;top:0;margin:0 auto;}
+#lnb>ul { position: relative; text-align: center; background:#e2e2e2; float: left;}
+#lnb>ul>li {display: inline-block; vertical-align:top;border-right:1px solid #fff;height:50px;margin:0;padding:0;position: relative;  }
+#lnb>ul>li.hasList{background:url(/cklmobile/images/common/common1.png) no-repeat 100% -154px;}
+#lnb>ul>li.hasList.on{background-position:100% -114px}
+#lnb>ul>li>a { display: block;padding: 0 36px; font-size:14px; line-height: 50px; height: 55px; font-weight:500;position: relative;z-index: 11;}
+#lnb>ul>li:last-child>a,
+#lnb>ul>li.last>a {border:none;}
+#lnb>ul>li.on>a { color: #e51837; background:url(/cklmobile/images/common/lnbArr.gif) no-repeat 50% 100%; }
+#lnb>ul>li>ul { display:none }
+#lnb>ul>li.on ul { display: block; position: absolute;z-index: 10;left: 0;top: 51px;background: #3e3a39;padding-right: 30px;width: 500px;margin: 0;/* padding: 0; */}
+#lnb>ul>li>ul li { display: inline-block;float: left;}
+#lnb>ul>li>ul li a { display:block;font-size:13px; height:40px; line-height:40px; white-space: nowrap; color: #fff;margin: 0;padding: 0 0 0 30px; background:url(/cklmobile/images/common/common1.png) 0 -40px no-repeat;}
+#lnb>ul>li>ul li a:hover, #lnb>ul>li>ul li a:focus, #lnb>ul>li>ul li.on a { color: #fff; }
+
+
+
+.lnbHome a{display:block;float: left;width: 50px;height:50px;background:url(/cklmobile/images/common/commonIco.png) no-repeat -250px 0;border-right:1px solid #fff}
+.lnbHome a:hover, .lnbHome a:focus, .lnbHome a:active{background-position:-250px -50px;background-color: #eb1c24;}
+
+
+
+/*
+.banner{clear:both;overflow:hidden;width: 100%;height: 117px;float: left;background:url(/cklmobile/images/common/fbannerPat.png) repeat-x 0 100%; margin-bottom: 5px;}
+.banner .ctrl{height: 40px;text-align: right;width: 100%;}
+.banner .ctrl button{display:inline-block;background:url(/cklmobile/images/common/controller.png) no-repeat 0 0;height:45px}
+.banner .ctrl button{width:20px}
+.banner .ctrl button span{position:absolute;visibility:hidden}
+.banner .ctrl .banner_pre{}
+.banner .ctrl .banner_next{background-position:right 0}
+.banner .ctrl .banner_play{background-position:-10px -40px;width:30px;display:none;}
+.banner .ctrl .banner_stop{background-position:50% -80px;width:30px}
+
+.banner .area{float:left;width: 100%;position:relative;overflow:hidden;}
+.banner .area ul{width:9999em;padding:0 0 0 0}
+.banner .area ul li{float:left;padding-right: 10px;}
+.banner .area ul li a{display:block;}
+*/
+/* outlogin */
+.loginS{width:200px;background:#eaeaea;}
+.outLogin{padding: 30px 0 20px 20px;width: 180px;}
+.outLogin input{background:#fff;color:#333;border:1px solid #9d9d9d;width: 100%;}
+.outLogin .loginBtn{width:100%;text-align: center;}
+.outLogin h2{line-height:30px;height:30px;margin:10px 0 0 0;padding: 0; background: url(/cklmobile/images/common/arrBtm.png) no-repeat 135px 50%;}
+.outLogin .icoBox{padding-bottom: 15px;border-bottom:1px solid #9d9d9d; margin-bottom: 15px;float: left;}
+.outLogin .icoBox li{margin-right:7px;width: 32px;float: left;}
+.outLogin .icoBox li a{display: inline-block;}
+.outLogin .fs13{line-height:17px;}
+.outLogin .fs12{color:#3e3a39;}
+.outLogin .btn{padding:6px 12px;}
+.outLogin .btn-xs{width:16px;padding:3px 0;}
+
+
+
+.mb3{margin-bottom:3px !important}
+.bbLine{border-bottom:1px solid #3e3a39;}
+.content p{margin-bottom:12px;}
+.bar{ display: inline-block;width:40px;height: 11px;background: url(/cklmobile/images/common/bar.gif) no-repeat 50% 50%}
+li.bar{padding-right:10px;margin-right: 10px;width: auto;background: url(/cklmobile/images/common/bar.gif) no-repeat 100% 50%}
+
+.snsGoSet {clear:both;width: 100%;}
+.snsGoSet ul{padding-left:10px;padding-top: 10px;}
+.snsGoSet li{width:31%;margin-right:5px;float:left;text-align: center;}
+.snsGoSet li:last-child{margin-right: 0;}
+.snsGoSet li a{color:#3e3a39;display: block;float: left;}
+.snsLinkSet{display:block;background: url(/cklmobile/images/common/snsLink.png) no-repeat;background-size:221px 141px;width: 70px;height: 70px;}
+.snsGoSet .snsLink1{background-position:0 0}
+.snsGoSet .snsLink2{background-position:-75px 0}
+.snsGoSet .snsLink3{background-position:-150px 0}
+
+.snsGoSet .snsLink1:focus, .snsGoSet .snsLink1:active{background-position:0 -71px}
+.snsGoSet .snsLink2:focus, .snsGoSet .snsLink2:active{background-position:-75px -71px}
+.snsGoSet .snsLink3:focus, .snsGoSet .snsLink3:active{background-position:-150px -71px}
+
+
+.box{border:1px solid #c8c8c8;padding:10px 20px;margin:10px 0;clear:both;}
+
+@media only screen and (max-width: 480px) {
+	#header{height:50px;}
+	h1.logo, h1.logo a{display: inline-block;height:50px;width: 150px;	}
+	.gnbOpen, .gnbHome img{width:auto;height: 50px;}
+	.heading .back{width:50px;height: 50px;}
+	.heading h1{line-height:45px}
+	.gnbLink{height:50px}
+	.gnbOpenSet{width: 50px;height: 50px;}
+}
+
+
+@media only screen and (min-width: 481px) {
+	.gnbOpenSet{width: 100px;height: 100px;}
+
+}
+
+/* Desktop Layout: 769px to a max of 1232px.  Inherits styles from: Mobile Layout and Tablet Layout. */
+
+@media only screen and (min-width: 769px) {
+
+}
+

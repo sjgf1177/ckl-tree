@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>온라인모의면접 로그인</title>
+
+<script type="text/javascript" src="/edu/js/bm/gibberish-aes.js"></script>
+<script type="text/javascript">
+
+    var key = "kocca123kocca123kocca123kocca123";
+
+    function AES_Encode(plain_text)
+    {
+        GibberishAES.size(256);
+        return GibberishAES.aesEncrypt(plain_text, key);
+    }
+
+    function AES_Decode(base64_text)
+    {
+        GibberishAES.size(256);
+        return GibberishAES.aesDecrypt(base64_text, key);
+    }
+    
+	function getParameterByName(name, url) { // url to param
+		if (!url) url = window.location.href;
+		name = name.replace(/[\[\]]/g, "\\$&");
+		var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+			results = regex.exec(url);
+		if (!results) return null;
+		if (!results[2]) return '';
+		return decodeURIComponent(results[2].replace(/\+/g, " "));
+	}
+    
+    
+    var url_string = window.location.href;
+    /* 
+    var url = new URL(url_string);//rsg20171012 IE 오류로 인한 수정
+    */
+    
+    var id = getParameterByName( "id", url_string );
+    var name = getParameterByName( "name", url_string );
+
+    var loginUrl = "https://kocca.selfview.co.kr/ajax/loginAndJoin.ajax.php";
+    var data = {userid : AES_Encode(id), name:name};
+    //var loginUrl = "/edu/job/cultureMain/interviewLogin.do";
+    //var data = {userid : "koccatest", name:"한콘테스트"};
+    // 로그인 부분
+    
+    window.onload = function(){
+    	var f = document.ajaxlogin;
+    	
+    	if( data.userid && data.name ){
+	    	f.userid.value = data.userid;
+	    	f.name.value = data.name;
+	    	f.submit();
+    	}
+    	
+    }
+
+
+</script>
+
+
+</head>
+<body>
+<form name="ajaxlogin" action="https://kocca.selfview.co.kr/ajax/loginAndJoin.ajax.php" method="POST" enctype="application/x-www-form-urlencoded">
+	<input type="hidden" name="userid">
+	<input type="hidden" name="name">
+</form>
+</body>
+</html>

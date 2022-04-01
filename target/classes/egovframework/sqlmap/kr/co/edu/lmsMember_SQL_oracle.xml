@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="lmsMember">
+
+	<typeAlias alias="zvl" type="kr.co.unp.util.ZValue" />
+
+	<!-- LMS회원 등록(이메일, 휴대폰 암호화 추가 - INSERT crypto.enc('normal', '문자열')) -->
+	<insert id="lmsMemberDAO.insert" parameterClass="zvl" >
+		<![CDATA[
+ 			INSERT INTO TZ_MEMBER (
+ 				GRCODE,USERID,NAME,EMAIL,PWD,HANDPHONE,ISMAILING,ISOPENING,MEMBERGUBUN,REGISTGUBUN,
+ 				STATE,VALIDATION, INDATE,LDATE,ISSMS,SEX,MEMBERYEAR,MEMBERMONTH,MEMBERDAY,MOBILE_USERID,CERTI_TYPE
+ 			)
+			VALUES (
+				'N000001', #userId#, #userNm#, crypto.enc('normal', #email#), #password#, crypto.enc('normal', #mbtlnum#), #emailAt#, 'N', 'P', 'KICPA',
+				'Y', 0, TO_CHAR(sysdate,'YYYYMMDDHH24MISS'), TO_CHAR(sysdate,'YYYYMMDDHH24MISS'), #smsAt#, #sex#, #memberyear#, #membermonth#, #memberday#, #userId#, #authSe#
+			)
+		]]>
+	</insert>
+
+	<!-- LMS회원 탈퇴 -->
+	<update id="lmsMemberDAO.updateSecsn" parameterClass="zvl">
+		<![CDATA[
+			UPDATE TZ_MEMBER
+			SET
+			       NAME = '',
+			       ENG_NAME = '',
+			       EMAIL = '',
+			       RESNO = '',
+			       PWD = '',
+			       POST1 = '',
+			       POST2 = '',
+			       ADDR = '',
+			       ADDR2 = '',
+			       HOMETEL = '',
+			       HANDPHONE = '',
+			       STATE = 'N',
+			       LDATE = sysdate,
+			       LEAVE_DATE = sysdate,
+			       RESNO1 = '',
+			       RESNO2 = '',
+			       LEAVE_REASON = '',
+			       DUPINFO = ''
+			WHERE USERID = #userId#
+		]]>
+	</update>
+
+
+	<!-- LMS회원 탈퇴 -->
+	<update id="lmsMemberDAO.updatePwd" parameterClass="zvl">
+		<![CDATA[
+			UPDATE TZ_MEMBER
+			SET
+			       PWD = #password#,
+			       LDATE = TO_CHAR(sysdate,'YYYYMMDDHH24MISS')
+
+			WHERE USERID = #userId#
+		]]>
+	</update>
+	
+	<!-- LMS회원정보 수정 -->
+	<update id="lmsMemberDAO.updateMember" parameterClass="zvl">
+		<![CDATA[
+			UPDATE TZ_MEMBER
+			SET
+			       EMAIL = crypto.enc('normal', #email#),
+			       HANDPHONE = crypto.enc('normal', #mbtlnum#),
+			       ISMAILING = #emailAt#,
+			       ISSMS = #smsAt#,
+			       LDATE = TO_CHAR(sysdate,'YYYYMMDDHH24MISS')
+
+			WHERE USERID = (SELECT USER_ID
+				              FROM CKL_TREE.TM_USER
+				             WHERE USER_SN = #userSn#)
+		]]>
+	</update>
+
+</sqlMap>
+

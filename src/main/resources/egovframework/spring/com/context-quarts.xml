@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+
+	<bean id="searchTask" class="kr.co.unp.batch.task.SearchServiceTask" />
+	<bean id="eduTask" class="kr.co.edu.batch.EduQuartzJob" />
+
+	<bean name="searchJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="searchTask" />
+  		<property name="targetMethod" value="doTaskProc" />
+	</bean>
+	
+	<!-- 이메일수신거부 -->
+	<!-- 
+	<bean name="eduQuartzJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="eduTask" />
+  		<property name="targetMethod" value="doTaskProc" />
+	</bean>
+	 -->
+
+	<!--
+	<bean id="sendSmsTask" class="kr.co.edu.batch.ManageUserStudyEncourage" />
+
+	<bean name="sendSmsJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="sendSmsTask" />
+  		<property name="targetMethod" value="doTaskProc" />
+	</bean>
+
+	<bean id="genBannerTask" class="kr.co.edu.batch.BannerAdminScheduler" />
+
+	<bean name="genBannerJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="genBannerTask" />
+  		<property name="targetMethod" value="doTaskProc" />
+	</bean>
+	 -->
+	
+	<bean id="searchTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	    <property name="jobDetail" ref="searchJob"></property>
+	    <property name="cronExpression" value="0 30 1 * * ?"></property>
+	</bean>
+	
+	<!-- 이메일수신거부 -->
+	<!-- 
+	<bean id="eduTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	    <property name="jobDetail" ref="eduQuartzJob"></property>
+	    <property name="cronExpression" value="0 0 1 * * ?"></property>
+	</bean>
+	 -->
+
+	<!--
+	<bean id="sendSmsTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	    <property name="jobDetail" ref="sendSmsJob"></property>
+	    <property name="cronExpression" value="0 0 11 * * ?"></property>
+	</bean>
+
+	<bean id="genBannerTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	    <property name="jobDetail" ref="genBannerJob"></property>
+	    <property name="cronExpression" value="0 3 0 * * ?"></property>
+	</bean>
+	-->
+
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+	    <property name="jobDetails">
+	        <list>
+	            <ref bean="searchJob"/>
+	            <!--
+	            <ref bean="eduQuartzJob"/>
+	            <ref bean="sendSmsJob"/>
+	            <ref bean="genBannerJob"/>
+	            -->
+	        </list>
+	    </property>
+	    <property name="triggers">
+	        <list>
+	            <ref bean="searchTrigger" />
+	            <!--
+	            <ref bean="eduTrigger" />
+	            <ref bean="sendSmsTrigger" />
+	            <ref bean="genBannerTrigger" />
+	            -->
+	        </list>
+	    </property>
+	</bean>
+
+
+</beans>

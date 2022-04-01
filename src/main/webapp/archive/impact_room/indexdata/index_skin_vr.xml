@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<krpano version="1.20.8">
+
+    
+
+
+  <style name="Iconmove"
+         url="%FIRSTXML%/spots/arrow-button-7_user_defaultpoint67.png"
+         visible="false"
+         edge="center"
+         alpha="0.8"
+         onloaded="showPermanentTooltip(all);"
+         onhover="onhoverIconmove"
+         onover="onoverIconmove"
+         onout="onoutIconmove"
+
+
+         width="40"
+         height="prop"
+         />
+  <action name="onhoverIconmove">
+    showtooltip('hotspot');
+  </action>
+  <action name="onoverIconmove">
+tween(scale, 1.2);
+tween(alpha, 1);
+pauseautorotation(forcehotspot);
+
+  </action>
+  <action name="onoutIconmove">
+    hideTooltip();
+    tween(scale, 1);
+    tween(alpha, 0.8);
+resumeautorotation(forcehotspot);
+
+  </action>
+
+
+
+    
+
+
+  <style name="Iconplay1"
+         url="%FIRSTXML%/spots/_0154532471965122953944_4826053948_user_defaultpoint5.png"
+         visible="false"
+         edge="center"
+         onhover="onhoverIconplay1"
+         onover="onoverIconplay1"
+         onout="onoutIconplay1"
+
+
+         />
+  <action name="onhoverIconplay1">
+    showtooltip('hotspot');
+  </action>
+  <action name="onoverIconplay1">
+
+
+pauseautorotation(forcehotspot);
+
+  </action>
+  <action name="onoutIconplay1">
+    hideTooltip();
+
+
+resumeautorotation(forcehotspot);
+
+  </action>
+
+
+
+    
+
+
+  <style name="Iconplay2"
+         url="%FIRSTXML%/spots/_0254532471965122953944_4826053948_user_defaultpoint6.png"
+         visible="false"
+         edge="center"
+         onhover="onhoverIconplay2"
+         onover="onoverIconplay2"
+         onout="onoutIconplay2"
+
+
+         />
+  <action name="onhoverIconplay2">
+    showtooltip('hotspot');
+  </action>
+  <action name="onoverIconplay2">
+
+
+pauseautorotation(forcehotspot);
+
+  </action>
+  <action name="onoutIconplay2">
+    hideTooltip();
+
+
+resumeautorotation(forcehotspot);
+
+  </action>
+
+
+
+    
+
+
+  <style name="Iconplay0"
+         url="%FIRSTXML%/spots/_0054532471965122953944_4826053948_user_defaultpoint8.png"
+         visible="false"
+         edge="center"
+         onhover="onhoverIconplay0"
+         onover="onoverIconplay0"
+         onout="onoutIconplay0"
+
+
+         />
+  <action name="onhoverIconplay0">
+    showtooltip('hotspot');
+  </action>
+  <action name="onoverIconplay0">
+
+
+pauseautorotation(forcehotspot);
+
+  </action>
+  <action name="onoutIconplay0">
+    hideTooltip();
+
+
+resumeautorotation(forcehotspot);
+
+  </action>
+
+
+
+
+
+
+
+
+  <action name="hideTourControls">set(tour_displaycontrols, false);events.dispatch(hidetourcontrols);</action>
+  <action name="showTourControls">set(tour_displaycontrols, true); events.dispatch(showtourcontrols);</action>
+
+
+<action name="viewControlZoomIn">
+	if(%1,
+		if(%2,
+			if(%2 LT view.fovmin,
+				zoomto(get(view.fovmin));
+			,
+				if(%2 LT view.fov,
+					zoomto(%2);
+				);
+			);
+		,
+			set(fov_moveforce, -1);
+			delayedcall(0.1, viewControlZoomStop());
+		);
+	,
+		set(fov_moveforce, -1);
+	);
+</action>
+<action name="viewControlZoomOut">
+	if(%1,
+		if(%2,
+			if(%2 GT view.fovmax,
+				zoomto(get(view.fovmax));
+			,
+				if(%2 GT view.fov,
+					zoomto(%2);
+				);
+			);
+		,
+			set(fov_moveforce, +1);
+			delayedcall(0.1, viewControlZoomStop());
+		);
+	,
+		set(fov_moveforce, +1);
+	);
+</action>
+<action name="viewControlZoomStop">
+	set(fov_moveforce, 0);
+</action>
+
+  <action name="exitFullScreen" devices="fullscreensupport">set(tour_fullscreen,false);js(setFullscreen(false));</action>
+  <action name="enterFullScreen" devices="fullscreensupport">set(tour_fullscreen,true);js(setFullscreen(true));</action>
+  <action name="switchFullScreen">if(tour_fullscreen,exitFullScreen();,enterFullScreen(););</action>
+
+  
+  <events name="krpanoExitFullscreenEvent"
+    onexitfullscreen="if(tour_fullscreen,exitFullScreenChangeEvent(););"
+    keep="true" />
+
+  <action name="exitFullScreenChangeEvent" devices="fullscreensupport">set(tour_fullscreen,false);events.dispatch(onexitfullscreen);</action>
+  <action name="enterFullScreenChangeEvent" devices="fullscreensupport">set(tour_fullscreen,true);events.dispatch(onenterfullscreen);</action>
+  <action name="exitFullScreenFallback">set(fullscreen,false);</action>
+  <action name="enterFullScreenFallback">set(fullscreen,true);</action>
+  
+  <action name="resizeFullScreenEvent">delayedcall(0,updatescreen(););</action>
+
+  <action name="hideFloorplan">set(tour_displayfloorplan, false);events.dispatch(onhidetourfloorplan);</action>
+  <action name="showFloorplan">set(tour_displayfloorplan, true); events.dispatch(onshowtourfloorplan);</action>
+
+
+</krpano>

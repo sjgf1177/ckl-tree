@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="popularSrchwrd">
+
+	<typeAlias  alias="zvl" type="kr.co.unp.util.ZValue"/>
+
+	<sql id="popularSrchwrdDAO.list-where">
+		<isNotEmpty prepend="AND" property="frstRegistPnttm">
+			<![CDATA[	FRST_REGIST_PNTTM = #frstRegistPnttm#	]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="srchwrdData">
+					SRCHWRD IN
+			<iterate conjunction="," open="(" close=")" property="srchwrdData">
+				#srchwrdData[]#
+			</iterate>
+		</isNotEmpty>
+	</sql>
+
+	<select id="popularSrchwrdDAO.list" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[  
+			select
+				a1.SRCHWRD,
+				floor(b1.RNUMB - a1.RNUMA) as diff,
+				abs(b1.RNUMB - a1.RNUMA) as val
+	        from (
+	            select @ROWNUMA:=@ROWNUMA+1 AS RNUMA, 
+	                SRCHWRD
+	            from (
+					select 
+						SRCHWRD,
+						sum(CNT) as cnt
+					from TS_POPULAR_SRCHWRD a1
+					group by a1.SRCHWRD
+					order by cnt desc, FRST_REGIST_PNTTM desc
+				) a,
+				(SELECT @ROWNUMA := 0) R
+			) a1
+			left outer join (
+	            select @ROWNUMB:=@ROWNUMB+1 AS RNUMB, 
+	                SRCHWRD
+	            from (
+					select 
+						SRCHWRD,
+						sum(CNT) as cnt
+					from TS_POPULAR_SRCHWRD a1
+					where FRST_REGIST_PNTTM < DATE_FORMAT(now(), '%Y%m%d')
+					group by a1.SRCHWRD
+					order by cnt desc, FRST_REGIST_PNTTM desc
+				) a,
+				(SELECT @ROWNUMB := 0) R
+			) b1 on b1.SRCHWRD = a1.SRCHWRD
+			 limit 0,10	
+			 
+		]]>
+	</select>
+
+	<insert id="popularSrchwrdDAO.insert" parameterClass="zvl" >
+		<![CDATA[
+			INSERT INTO TS_POPULAR_SRCHWRD (SRCHWRD,CNT,FRST_REGIST_PNTTM)
+			VALUES ( #srchwrd#, 1, DATE_FORMAT(now(), '%Y%m%d') );
+		]]>
+	</insert>
+
+	<select id="popularSrchwrdDAO.selectCnt" parameterClass="zvl" resultClass="int">
+		<![CDATA[
+			select 
+				count(*)
+			from TS_POPULAR_SRCHWRD
+			where SRCHWRD = #srchwrd# and FRST_REGIST_PNTTM = #frstRegistPnttm#
+		]]>
+	</select>
+
+	<update id="popularSrchwrdDAO.update" parameterClass="zvl" >
+		<![CDATA[
+			update TS_POPULAR_SRCHWRD
+			set cnt = cnt + 1
+			where SRCHWRD = #srchwrd# and FRST_REGIST_PNTTM = #frstRegistPnttm#
+		]]>
+	</update>
+
+	<delete id="popularSrchwrdDAO.delete" parameterClass="zvl" >
+		<![CDATA[
+			DELETE FROM TS_POPULAR_SRCHWRD
+			WHERE ps_id = #psId#
+		]]>
+	</delete>
+
+</sqlMap>

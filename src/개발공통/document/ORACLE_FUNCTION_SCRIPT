@@ -1,0 +1,97 @@
+/**
+* 코드명 RETURN (복수 값 들어올시 복수값 코드명 RETURN)
+*/
+CREATE OR REPLACE FUNCTION CKL_TREE.FN_CMMNCODE_NM(p_codeId IN VARCHAR2, p_code IN VARCHAR2, p_delimter  VARCHAR2 := ',')
+
+RETURN varchar2
+IS
+ v_result VARCHAR2(1000);
+ v_tmp_str VARCHAR2(1000);
+ i BINARY_INTEGER := 0;
+BEGIN
+
+
+  	IF INSTR(p_code, p_delimter) > 0 THEN
+		FOR token IN (SELECT * from TABLE(FN_STRSPLIT_CONVERT(p_code,p_delimter))) LOOP
+        	SELECT CODE_NM INTO v_tmp_str FROM TC_CMMNCODE_DETAIL WHERE CODE_ID = p_codeId AND CODE = token.COLUMN_VALUE;
+            IF i = 0 THEN
+            	v_result := v_tmp_str;
+            ELSE
+            	v_result := v_result || ',' || v_tmp_str;
+            END IF;
+            i := i+1;
+      	END LOOP;
+    ELSE
+    	SELECT CODE_NM INTO v_result FROM TC_CMMNCODE_DETAIL WHERE CODE_ID = p_codeId AND CODE = p_code;
+    END IF;
+
+	RETURN (v_result);
+END FN_CMMNCODE_NM;
+
+
+
+DROP TYPE ARR_TYPE;
+CREATE TYPE ARR_TYPE AS TABLE OF VARCHAR2(4000);
+
+/*
+* STR => 배열로 CONVERT
+*/
+CREATE OR REPLACE FUNCTION FN_STRSPLIT_CONVERT(p_list IN VARCHAR2, p_delimter IN VARCHAR2)
+RETURN ARR_TYPE
+AS
+l_string       VARCHAR2(32767) := p_list || p_delimter;
+l_comma_index  PLS_INTEGER;
+l_index        PLS_INTEGER := 1;
+l_tab          ARR_TYPE := ARR_TYPE();
+BEGIN
+LOOP
+	l_comma_index := INSTR(l_string, p_delimter, l_index);
+	EXIT WHEN l_comma_index = 0;
+	l_tab.EXTEND;
+	l_tab(l_tab.COUNT) := SUBSTR(l_string, l_index, l_comma_index - l_index);
+	l_index := l_comma_index + 1;
+	END LOOP;
+	RETURN l_tab;
+END FN_STRSPLIT_CONVERT;
+
+
+
+/**
+* 프로그램 속성값 표시
+**/
+CREATE OR REPLACE FUNCTION CKL_TREE.FN_PRG_ATTRB_VAL(p_attrb IN VARCHAR2, p_attrb_data_cn IN VARCHAR2, p_iem_code_id IN VARCHAR2)
+RETURN varchar2
+IS
+ v_result VARCHAR2(4000);
+ v_file_nm VARCHAR2(200);
+ v_file_link VARCHAR2(255);
+BEGIN
+	/* 일자 */
+	IF p_attrb = '05' THEN v_result := REPLACE(p_attrb_data_cn,'|',' ~ ');
+    /* 목록선택 */
+    ELSIF  p_attrb = '06' THEN v_result := FN_CMMNCODE_NM(p_iem_code_id, p_attrb_data_cn);
+    /* 단일선택 */
+    ELSIF  p_attrb = '08' THEN v_result := FN_CMMNCODE_NM(p_iem_code_id, p_attrb_data_cn);
+    /* 다중선택 */
+    ELSIF  p_attrb = '07' THEN v_result := FN_CMMNCODE_NM(p_iem_code_id, p_attrb_data_cn,'|');
+    /* 계층형선택 */
+    ELSIF  p_attrb = '09' THEN v_result := FN_CMMNCODE_NM(p_iem_code_id, p_attrb_data_cn,'|');
+    /* 첨부파일 선택 */
+    ELSIF  p_attrb = '15' THEN
+    	/*
+    	SELECT substr( xmlagg(xmlelement(nm,',', ORIGNL_FILE_NM)).extract('//text()'),2) INTO v_file_nm FROM TC_COMMNFILE_DETAIL WHERE ATCH_FILE_ID = p_attrb_data_cn;
+        SELECT substr(xmlagg(xmlelement(
+        					nm,',/public/cmm/fms/FileDown.do?atchFileId=' || ATCH_FILE_ID || '&fileSn=' || FILE_SN
+		)).extract('//text()'),2) INTO v_file_link FROM TC_COMMNFILE_DETAIL WHERE ATCH_FILE_ID = p_attrb_data_cn;
+        */
+    	SELECT ORIGNL_FILE_NM INTO v_file_nm FROM TC_COMMNFILE_DETAIL WHERE FILE_SN = 1 AND ATCH_FILE_ID = p_attrb_data_cn;
+        SELECT '/public/cmm/fms/FileDown.do?atchFileId=' || ATCH_FILE_ID || '&fileSn=' || FILE_SN INTO v_file_link
+        FROM TC_COMMNFILE_DETAIL WHERE FILE_SN = 1 AND ATCH_FILE_ID = p_attrb_data_cn;
+		v_result := v_file_nm || '|' || v_file_link;
+    ELSE v_result := p_attrb_data_cn;
+    END IF;
+
+	RETURN (v_result);
+END FN_PRG_ATTRB_VAL;
+
+

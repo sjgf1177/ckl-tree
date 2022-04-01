@@ -1,0 +1,15 @@
+
+.hearderOpen#header .headerCts{background:#fff;}
+.memberLogin .col-md-6{width:50%;float:left;}
+
+
+
+.hearderOpen#header .headerCts{background:#fff;}
+.memberLogin .col-md-6{width:50%;float:left;}
+
+@media (max-width:1379px) {
+	#content, .contentSet{max-width:1190px}
+}
+
+@media (min-width:1380px) {
+}

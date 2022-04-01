@@ -1,0 +1,683 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="progrmApplcnt">
+
+	<typeAlias  alias="zvl" type="kr.co.unp.util.ZValue"/>
+
+	<sql id="progrmApplcntDAO.list-where">
+		<isNotEmpty prepend="AND" property="userSn">
+			<![CDATA[	A.USER_SN = #userSn#   /*번호*/]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="userId">
+			<![CDATA[	B.USER_ID = #userId#   /*ID*/]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="nm">
+			<![CDATA[	A.NM LIKE '%' || #nm# || '%'   /*이름*/]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="confmSttus">
+			<![CDATA[	A.CONFM_STTUS = #confmSttus#   /*승인상태*/]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="rceptSttus">
+			<![CDATA[	A.RCEPT_STTUS = #rceptSttus#   /*접수상태*/]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="rceptStDt">
+			<![CDATA[	RCEPT_DT >= TO_DATE(#rceptStDt#, 'YYYY-MM-DD')   /*접수 시작일자*/]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="rceptEdDt">
+			<![CDATA[	RCEPT_DT <= TO_DATE(#rceptEdDt#, 'YYYY-MM-DD')   /*접수 종료일자*/]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="sex">
+			<isEqual property="sex" compareValue="M">
+				<![CDATA[	A.SEX = 'M'   /*성별(남)*/]]>
+			</isEqual>
+			<isEqual property="sex" compareValue="W">
+				<![CDATA[	A.SEX != 'M'   /*성별(여)*/]]>
+			</isEqual>
+		</isNotEmpty>	
+		<isNotEmpty prepend="AND" property="partcptnComptAt">
+			<isEqual property="partcptnComptAt" compareValue="01">
+				<![CDATA[ 	A.PARTCPTN_COMPT_AT = '01'   /*참여여부(참여)*/]]>
+			</isEqual>
+			<isEqual property="partcptnComptAt" compareValue="02">
+				<![CDATA[	A.PARTCPTN_COMPT_AT != '01'   /*참여여부(미참여)*/]]>
+			</isEqual>			
+		</isNotEmpty>					
+	</sql>
+
+	<select id="progrmApplcntDAO.listCnt" parameterClass="zvl" resultClass="int" >
+		<![CDATA[
+			SELECT COUNT(*) FROM TN_REQUEST_INDVDLINFO A
+			LEFT OUTER JOIN TM_USER B ON A.USER_SN = B.USER_SN
+			WHERE DELETE_AT = '0' AND PRG_SN = #prgSn#
+		]]>
+		<include refid="progrmApplcntDAO.list-where" />
+	</select>
+
+	<select id="progrmApplcntDAO.list" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		SELECT * FROM
+		( SELECT a.*, rownum+rnum-1 as TOTAL_ROWS
+		   FROM ( SELECT a.*, rownum rnum
+				FROM (
+					SELECT
+					   A.NM,
+				       A.BRTHDY,
+				       A.SEX,
+				       crypto.dec('normal', A.EMAIL) AS EMAIL,
+				       crypto.dec('normal', A.ADD_EMAIL) AS ADD_EMAIL,
+				       crypto.dec('normal', A.OWNHOM_TELNO) AS OWNHOM_TELNO,
+				       crypto.dec('normal', A.MBTLNUM) AS MBTLNUM,
+				       crypto.dec('normal', A.CMPNY_TELNO) AS CMPNY_TELNO,
+				       crypto.dec('normal', A.TELNO) AS TELNO,
+				       A.ADRES,
+				       A.RESDNC,
+				       A.JOB,
+				       A.PSITN,
+				       A.CONFM_STTUS,
+				       A.USER_SN,
+				       A.PRG_SN,
+				       A.RCEPT_STTUS,
+				       A.RCEPT_DT,
+				       A.CANCL_DT,
+					   TO_CHAR(A.RCEPT_DT, 'yyyy-mm-dd hh24:mi') as R_DT,
+					   TO_CHAR(A.CANCL_DT, 'yyyy-mm-dd hh24:mi') as C_DT,
+				       A.PARTCPTN_COMPT_AT,
+				       A.CTFHV_ISSU_DT,
+				       A.WAIT_REQST_DT,
+				       A.UPDDE,
+				       A.DELETE_AT,
+				       A.CONFM_DT,
+				       A.RESVE_NO,
+				       A.REQST_SN,
+				       B.USER_ID
+					FROM TN_REQUEST_INDVDLINFO A
+					LEFT OUTER JOIN TM_USER B ON A.USER_SN = B.USER_SN
+					WHERE A.DELETE_AT = '0'
+		]]>
+		<isNotEmpty prepend="AND" property="prgSn">
+			<![CDATA[	A.PRG_SN = #prgSn#   /*프로그램번호*/]]>
+		</isNotEmpty>
+	
+		<include refid="progrmApplcntDAO.list-where" />
+		
+		<isNotEmpty property="pCol">
+			<![CDATA[	ORDER BY $pCol$ $pSortTp$]]>
+		</isNotEmpty>
+		
+		<isEmpty property="pCol">
+			<![CDATA[	ORDER BY RCEPT_DT DESC]]>
+		</isEmpty>		
+		
+	    <![CDATA[
+		            ) a
+		          ORDER BY rnum DESC ) a
+		  ORDER BY rnum )
+		WHERE rnum BETWEEN #firstIndex# + 1 AND #lastIndex#
+		]]>
+	</select>
+
+	<select id="progrmApplcntDAO.listMypageCnt" parameterClass="zvl" resultClass="int" >
+		<![CDATA[
+			SELECT COUNT(*) FROM TN_REQUEST_INDVDLINFO A
+            LEFT OUTER JOIN TN_PROGRAM B ON A.PRG_SN = B.PRG_SN
+			WHERE A.DELETE_AT = '0' AND B.SITE_SE = #siteName#
+		]]>
+		<include refid="progrmApplcntDAO.list-where" />
+	</select>
+
+	<select id="progrmApplcntDAO.listMypage" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		SELECT * FROM
+		( SELECT a.*, rownum+rnum-1 as TOTAL_ROWS
+		   FROM ( SELECT a.*, rownum rnum
+				FROM (
+					SELECT
+                       B.PRG_SE,
+			   		   FN_CMMNCODE_NM('COM050', B.PRG_SE) AS PRG_SE_NM,
+			   		   FN_CMMNCODE_NM('COM050', B.PRG_CL) AS PRG_CL_NM,
+                       B.PRG_NM,
+                       B.REQST_MTHD,
+                       B.PSNCPA,
+                       B.CTFHV_ISSU_USE_AT,
+                       B.REQST_END_DT,
+					   /*CASE WHEN SYSTIMESTAMP > REQST_END_DT THEN 'F'
+					   END AS PROGRS_STTUS_END_DT,   신청기간 종료*/
+					   CASE WHEN SYSTIMESTAMP > PRG_ENDDE THEN 'F'
+					   END AS PRG_ENDDE_END_DT,   /*교육기간 종료*/
+				       A.CONFM_STTUS,
+				       A.USER_SN,
+				       A.PRG_SN,
+				       A.RCEPT_STTUS,
+				       A.RCEPT_DT,
+				       A.CANCL_DT,
+					   TO_CHAR(A.RCEPT_DT, 'yyyy-mm-dd hh24:mi') as R_DT,
+					   TO_CHAR(A.CANCL_DT, 'yyyy-mm-dd hh24:mi') as C_DT,
+				       A.PARTCPTN_COMPT_AT,
+				       A.CTFHV_ISSU_DT,
+				       A.WAIT_REQST_DT,
+				       A.UPDDE,
+				       A.DELETE_AT,
+				       A.CONFM_DT,
+				       A.RESVE_NO,
+				       A.REQST_SN
+					FROM TN_REQUEST_INDVDLINFO A
+                    LEFT OUTER JOIN TN_PROGRAM B ON A.PRG_SN = B.PRG_SN
+					WHERE A.DELETE_AT = '0' AND B.SITE_SE = #siteName#
+		]]>
+		<include refid="progrmApplcntDAO.list-where" />
+	    <![CDATA[
+	    		ORDER BY RCEPT_DT DESC
+		            ) a
+		          ORDER BY rnum DESC ) a
+		  ORDER BY rnum )
+		WHERE rnum BETWEEN #firstIndex# + 1 AND #lastIndex#
+		]]>
+	</select>
+
+	<select id="progrmApplcntDAO.view" parameterClass="zvl" resultClass="zvl" >
+		<![CDATA[
+			SELECT
+			   A.NM,
+		       A.BRTHDY,
+		       A.SEX,
+   		       FN_CMMNCODE_NM('COM079', A.SEX) AS SEX_NM,
+		       crypto.dec('normal', A.EMAIL) AS EMAIL,
+		       crypto.dec('normal', A.ADD_EMAIL) AS ADD_EMAIL,
+		       crypto.dec('normal', A.OWNHOM_TELNO) AS OWNHOM_TELNO,
+		       crypto.dec('normal', A.MBTLNUM) AS MBTLNUM,
+		       crypto.dec('normal', A.CMPNY_TELNO) AS CMPNY_TELNO,
+		       crypto.dec('normal', A.TELNO) AS TELNO,
+		       A.ADRES,
+		       A.RESDNC,
+		       A.JOB,
+   		   	   FN_CMMNCODE_NM('COM056', A.JOB) AS JOB_NM,
+		       A.PSITN,
+		       A.CONFM_STTUS,
+		       A.USER_SN,
+		       A.PRG_SN,
+		       A.RCEPT_STTUS,
+		       A.RCEPT_DT,
+		       A.CANCL_DT,
+			   TO_CHAR(A.RCEPT_DT, 'yyyy-mm-dd hh24:mi') as R_DT,
+			   TO_CHAR(A.CANCL_DT, 'yyyy-mm-dd hh24:mi') as C_DT,
+		       A.PARTCPTN_COMPT_AT,
+		       A.CTFHV_ISSU_DT,
+		       A.WAIT_REQST_DT,
+			   TO_CHAR(A.WAIT_REQST_DT, 'yyyy-mm-dd hh24:mi') as W_DT,
+		       A.UPDDE,
+		       A.DELETE_AT,
+		       A.CONFM_DT,
+		       A.RESVE_NO,
+		       A.REQST_SN,
+		       B.USER_ID,
+		       B.MBTLNUM AS TEL_NO,
+		       B.AUTH_SE,
+			   C.NM_USE_AT,
+		       C.BRTHDY_USE_AT,
+		       C.SEX_USE_AT,
+		       C.EMAIL_USE_AT,
+		       C.ADD_EMAIL_USE_AT,
+		       C.OWNHOM_TELNO_USE_AT,
+		       C.MBTLNUM_USE_AT,
+		       C.CMPNY_TELNO_USE_AT,
+		       C.TELNO_USE_AT,
+		       C.ADRES_USE_AT,
+		       C.RESDNC_USE_AT,
+		       C.JOB_USE_AT,
+		       C.PSITN_USE_AT,
+		       C.NM_SORT_ORDR,
+		       C.BRTHDY_SORT_ORDR,
+		       C.SEX_SORT_ORDR,
+		       C.EMAIL_SORT_ORDR,
+		       C.ADD_EMAIL_SORT_ORDR,
+		       C.OWNHOM_TELNO_SORT_ORDR,
+		       C.MBTLNUM_SORT_ORDR,
+		       C.CMPNY_TELNO_SORT_ORDR,
+		       C.TELNO_SORT_ORDR,
+		       C.ADRES_SORT_ORDR,
+		       C.RESDNC_SORT_ORDR,
+		       C.JOB_SORT_ORDR,
+		       C.PSITN_SORT_ORDR
+			FROM TN_REQUEST_INDVDLINFO A
+			LEFT OUTER JOIN TM_USER B ON A.USER_SN = B.USER_SN
+			LEFT OUTER JOIN TN_INDVDLINFO_IEM C ON A.PRG_SN = C.PRG_SN
+			WHERE A.PRG_SN = #prgSn#
+		]]>
+		<isEmpty property="userSnList">
+			<isNotEmpty prepend="AND" property="reqstSn">
+				<![CDATA[	A.REQST_SN = #reqstSn#   ]]>
+			</isNotEmpty>
+		</isEmpty>
+		<isNotEmpty property="userSnList">
+			<iterate prepend="AND A.REQST_SN IN" conjunction="," open="(" close=")" property="userSnList">
+				#userSnList[]#
+			</iterate>
+		</isNotEmpty>
+
+	</select>
+
+	<!-- 개인정보 등록 -->
+	<insert id="progrmApplcntDAO.insertInfo" parameterClass="zvl" >
+		<selectKey resultClass="java.lang.Long" keyProperty="reqstSn">
+			SELECT NVL(MAX(REQST_SN),0)+1 AS REQST_SN FROM TN_REQUEST_INDVDLINFO
+		</selectKey>
+		<![CDATA[
+			INSERT INTO TN_REQUEST_INDVDLINFO (
+				REQST_SN,NM,BRTHDY,SEX,
+				EMAIL,ADD_EMAIL,OWNHOM_TELNO,MBTLNUM,CMPNY_TELNO,TELNO,
+				ADRES,RESDNC,JOB,PSITN,	CONFM_STTUS,USER_SN,PRG_SN,RCEPT_STTUS,PARTCPTN_COMPT_AT,DELETE_AT,
+				RESVE_NO,UPDDE,RCEPT_DT
+		]]>
+		<isNotEmpty property="rceptSttus">
+			<isEqual property="rceptSttus" compareValue="01">
+				<![CDATA[	,WAIT_REQST_DT  ]]>
+			</isEqual>
+		</isNotEmpty>
+		<![CDATA[
+			)
+			VALUES (
+				#reqstSn#,#nm#,#brthdy#,#sex#,
+				crypto.enc('normal', #email#),crypto.enc('normal', #addEmail#),crypto.enc('normal', #ownhomTelno#),crypto.enc('normal', #mbtlnum#),crypto.enc('normal', #cmpnyTelno#),crypto.enc('normal', #telno#),
+				#adres#,#resdnc#,#job#,#psitn#,	#confmSttus#,#userSn#,#prgSn#,#rceptSttus#,'N',#deleteAt#,
+				(SELECT NVL(MAX(RESVE_NO),0)+1 AS RESVE_NO FROM TN_REQUEST_INDVDLINFO WHERE PRG_SN = #prgSn#),SYSDATE,SYSDATE
+		]]>
+		<isNotEmpty property="rceptSttus">
+			<isEqual property="rceptSttus" compareValue="01">
+				<![CDATA[	,SYSDATE  ]]>
+			</isEqual>
+		</isNotEmpty>
+		<![CDATA[
+			)
+		]]>
+	</insert>
+
+	<!-- 신청부가정보 등록 -->
+	<insert id="progrmApplcntDAO.insertAddinfo" parameterClass="zvl" >
+		<![CDATA[
+			INSERT INTO TN_REQUEST_ADDINFO (
+				ADDINFO_SN,ATTRB_DATA_CN,PRG_SN,FRST_REGIST_PNTTM,FRST_REGISTER_ID,LAST_UPDT_PNTTM,LAST_UPDUSR_ID,DELETE_AT,REQST_SN,ATTRB_DATA_ETC
+			)
+			VALUES (
+				#addinfoSn#,#attrbDataCn#,#prgSn#,SYSDATE,#frstRegisterId#,SYSDATE,#lastUpdusrId#,#deleteAt#,#reqstSn#,#attrbDataEtc#
+			)
+		]]>
+	</insert>
+
+	<!-- 개인정보 수정 -->
+	<update id="progrmApplcntDAO.updateInfo" parameterClass="zvl">
+		<![CDATA[
+			UPDATE TN_REQUEST_INDVDLINFO
+			SET
+				NM = #nm#,
+				BRTHDY = #brthdy#,
+				SEX = #sex#,
+				EMAIL = crypto.enc('normal', #email#),
+				ADD_EMAIL = crypto.enc('normal', #addEmail#),
+				OWNHOM_TELNO = crypto.enc('normal', #ownhomTelno#),
+				MBTLNUM = crypto.enc('normal', #mbtlnum#),
+				CMPNY_TELNO = crypto.enc('normal', #cmpnyTelno#),
+				TELNO = crypto.enc('normal', #telno#),
+				ADRES = #adres#,
+				RESDNC = #resdnc#,
+				JOB = #job#,
+				PSITN = #psitn#,
+				UPDDE = SYSDATE
+			WHERE REQST_SN = #reqstSn#
+		]]>
+	</update>
+
+	<!-- 신청부가정보 수정 -->
+	<update id="progrmApplcntDAO.updateAddinfo" parameterClass="zvl">
+		<![CDATA[
+			UPDATE TN_REQUEST_ADDINFO
+			SET
+				ATTRB_DATA_CN = #attrbDataCn#,
+				LAST_UPDT_PNTTM = SYSDATE,
+				LAST_UPDUSR_ID = #userSn#
+			WHERE REQST_SN = #reqstSn# AND ADDINFO_SN = #addinfoSn#
+		]]>
+	</update>
+
+	<select id="progrmApplcntDAO.viewIndvdlinfoIem" parameterClass="zvl" resultClass="zvl" >
+		<![CDATA[
+			SELECT
+			   A.NM_USE_AT,
+		       A.BRTHDY_USE_AT,
+		       A.SEX_USE_AT,
+		       A.EMAIL_USE_AT,
+		       A.ADD_EMAIL_USE_AT,
+		       A.OWNHOM_TELNO_USE_AT,
+		       A.MBTLNUM_USE_AT,
+		       A.CMPNY_TELNO_USE_AT,
+		       A.TELNO_USE_AT,
+		       A.ADRES_USE_AT,
+		       A.RESDNC_USE_AT,
+		       A.JOB_USE_AT,
+		       A.PSITN_USE_AT,
+		       A.PRG_SN,
+		       A.NM_SORT_ORDR,
+		       A.BRTHDY_SORT_ORDR,
+		       A.SEX_SORT_ORDR,
+		       A.EMAIL_SORT_ORDR,
+		       A.ADD_EMAIL_SORT_ORDR,
+		       A.OWNHOM_TELNO_SORT_ORDR,
+		       A.MBTLNUM_SORT_ORDR,
+		       A.CMPNY_TELNO_SORT_ORDR,
+		       A.TELNO_SORT_ORDR,
+		       A.ADRES_SORT_ORDR,
+		       A.RESDNC_SORT_ORDR,
+		       A.JOB_SORT_ORDR,
+		       A.PSITN_SORT_ORDR,
+		       A.FRST_REGIST_PNTTM,
+		       A.FRST_REGISTER_ID,
+		       A.LAST_UPDT_PNTTM,
+		       A.LAST_UPDUSR_ID,
+		       A.DELETE_AT,
+		       A.NM_ESSNTL_AT,
+		       A.BRTHDY_ESSNTL_AT,
+		       A.SEX_ESSNTL_AT,
+		       A.EMAIL_ESSNTL_AT,
+		       A.ADD_EMAIL_ESSNTL_AT,
+		       A.OWNHOM_TELNO_ESSNTL_AT,
+		       A.MBTLNUM_ESSNTL_AT,
+		       A.CMPNY_TELNO_ESSNTL_AT,
+		       A.TELNO_ESSNTL_AT,
+		       A.ADRES_ESSNTL_AT,
+		       A.RESDNC_ESSNTL_AT,
+		       A.JOB_ESSNTL_AT,
+		       A.PSITN_ESSNTL_AT,
+		       A.GUDANCE_WORDS
+			FROM TN_INDVDLINFO_IEM A
+			WHERE A.PRG_SN = #prgSn#
+		]]>
+	</select>
+
+	<!-- 신청부가정보 -->
+	<select id="progrmApplcntDAO.addInfo" parameterClass="zvl" resultClass="zvl" >
+		<![CDATA[
+			SELECT
+			   A.ADDINFO_SN,
+			   A.IEM_NM,
+			   A.ATTRB,
+			   A.IEM_CODE_ID,
+			   A.ESSNTL_AT,
+			   A.SORT_ORDR,
+			   A.PRG_SN,
+			   A.FRST_REGIST_PNTTM,
+			   A.DELETE_AT,
+			   FN_CMMNCODE_NM('COM057', A.ATTRB) AS ATTRB_NM,
+			   C.ATTRB_DATA_CN ATTRB_DATA_CN_ORG,
+			   CASE 
+			   		WHEN C.ATTRB_DATA_CN = 'RE' THEN '(기타)' 
+			   		WHEN instr(C.ATTRB_DATA_CN, '|CE') > 0 THEN FN_PRG_ATTRB_VAL(A.ATTRB, SUBSTR(C.ATTRB_DATA_CN, 0, INSTR(C.ATTRB_DATA_CN, '|CE') -1), A.IEM_CODE_ID)
+			   		ELSE FN_PRG_ATTRB_VAL(A.ATTRB, C.ATTRB_DATA_CN, A.IEM_CODE_ID) 
+			   END AS ATTRB_DATA_CN,
+			   DECODE(A.ATTRB, '15', C.ATTRB_DATA_CN, '') AS ATCH_FILE_ID,
+			   C.REQST_SN,
+			   C.ATTRB_DATA_ETC 
+			FROM TN_ADDINFO_IEM A
+			LEFT OUTER JOIN TN_REQUEST_ADDINFO C ON A.ADDINFO_SN = C.ADDINFO_SN AND C.REQST_SN = #reqstSn#
+			WHERE A.PRG_SN = #prgSn# AND A.DELETE_AT = '0'
+			ORDER BY A.SORT_ORDR
+		]]>
+	</select>
+
+	<!-- 승인상태변경 -->
+	<update id="progrmApplcntDAO.confmSttusChange" parameterClass="zvl">
+		<![CDATA[
+			UPDATE TN_REQUEST_INDVDLINFO
+			SET
+				CONFM_STTUS = #confmSttus#,
+				CONFM_DT = SYSDATE
+			WHERE REQST_SN = #reqstSn#
+		]]>
+	</update>
+
+	<!-- 참여여부변경 -->
+	<update id="progrmApplcntDAO.partcptnComptChange" parameterClass="zvl">
+		<![CDATA[
+			UPDATE TN_REQUEST_INDVDLINFO
+			SET
+				PARTCPTN_COMPT_AT = #partcptnComptAt#
+			WHERE REQST_SN = #reqstSn#
+		]]>
+	</update>
+
+	<!-- 접수상태변경 -->
+	<update id="progrmApplcntDAO.rceptSttusChange" parameterClass="zvl">
+		<![CDATA[
+			UPDATE TN_REQUEST_INDVDLINFO
+			SET
+				RCEPT_STTUS = #rceptSttus#
+		]]>
+		<isEqual property="rceptSttus" compareValue="03">
+			<![CDATA[	,CANCL_DT = SYSDATE   ]]>
+		</isEqual>
+		<![CDATA[
+			WHERE REQST_SN = #reqstSn#
+		]]>
+	</update>
+
+	<!-- 프로그램 사용자 신청정보 엑셀다운로드 -->
+	<select id="progrmApplcntDAO.listExcel" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		SELECT
+		   E.SITE_SE,
+		   FN_CMMNCODE_NM('COM050',E.PRG_SE) AS PRG_SE_NM,
+		   FN_CMMNCODE_NM('COM050',E.PRG_CL) AS PRG_CL,
+		   E.PRG_NM,
+		   F.USER_ID,
+		   FN_CMMNCODE_NM('COM055',A.RCEPT_STTUS) AS RCEPT_STTUS,
+		   TO_CHAR(A.RCEPT_DT, 'YYYY-MM-DD HH24:MI:SS') as RCEPT_DT,
+		   TO_CHAR(A.CANCL_DT, 'YYYY-MM-DD HH24:MI:SS') as CANCL_DT,
+		   FN_CMMNCODE_NM('COM054',A.CONFM_STTUS) AS CONFM_STTUS,
+		   TO_CHAR(A.CONFM_DT, 'YYYY-MM-DD HH24:MI:SS') AS CONFM_DT,
+		   A.RESVE_NO,
+		   A.REQST_SN,
+		   A.NM,
+		   A.BRTHDY,
+   		   FN_CMMNCODE_NM('COM079', A.SEX) AS SEX,
+		   A.SEX,
+	       crypto.dec('normal', A.EMAIL) AS EMAIL,
+	       crypto.dec('normal', A.ADD_EMAIL) AS ADD_EMAIL,
+	       crypto.dec('normal', A.OWNHOM_TELNO) AS OWNHOM_TELNO,
+	       crypto.dec('normal', A.MBTLNUM) AS MBTLNUM,
+	       crypto.dec('normal', A.CMPNY_TELNO) AS CMPNY_TELNO,
+	       crypto.dec('normal', A.TELNO) AS TELNO,
+		   A.ADRES,
+           FN_CMMNCODE_NM('COM063',SUBSTR(A.RESDNC,0,5)) || ' ' || FN_CMMNCODE_NM('COM063',SUBSTR(A.RESDNC,7,11)) AS RESDNC,
+   		   FN_CMMNCODE_NM('COM056', A.JOB) AS JOB,
+		   A.PSITN,
+		   A.USER_SN AS USER_SN,
+		   A.PRG_SN AS PRG_SN,
+		   A.PARTCPTN_COMPT_AT,
+		   A.CTFHV_ISSU_DT,
+		   A.WAIT_REQST_DT,
+		   A.UPDDE,
+		   A.DELETE_AT,
+		   B.ADDINFO_SN,
+		   B.IEM_NM,
+		   B.SORT_ORDR,
+		   FN_PRG_ATTRB_VAL(B.ATTRB, C.ATTRB_DATA_CN, B.IEM_CODE_ID) AS ATTRB_DATA_CN
+		FROM TN_REQUEST_INDVDLINFO A
+		INNER JOIN TN_PROGRAM E ON A.PRG_SN = E.PRG_SN
+		INNER JOIN TN_INDVDLINFO_IEM D ON A.PRG_SN = D.PRG_SN
+		LEFT OUTER JOIN (
+		    SELECT ADDINFO_SN, PRG_SN, IEM_NM, SORT_ORDR, IEM_CODE_ID, ATTRB
+		    FROM TN_ADDINFO_IEM
+		    WHERE PRG_SN = #prgSn#
+		    AND DELETE_AT = '0'
+		    ORDER BY SORT_ORDR
+		) B ON A.PRG_SN = B.PRG_SN
+		LEFT OUTER JOIN TN_REQUEST_ADDINFO C ON A.REQST_SN = C.REQST_SN AND B.ADDINFO_SN = C.ADDINFO_SN
+		LEFT OUTER JOIN TM_USER F ON A.USER_SN = F.USER_SN
+		WHERE A.DELETE_AT = '0' AND A.PRG_SN = #prgSn#
+		]]>
+		<isNotEmpty property="userSnList">
+		<iterate prepend="AND A.REQST_SN IN" conjunction="," open="(" close=")" property="userSnList">
+			#userSnList[]#
+		</iterate>
+		</isNotEmpty>
+
+		<![CDATA[
+		ORDER BY RCEPT_DT DESC, B.SORT_ORDR ASC
+		]]>
+	</select>
+
+	<!-- 프로그램 사용자 신청정보 첨부파일 다운로드 목록 -->
+	<select id="progrmApplcntDAO.listAtchFile" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		SELECT
+		    A.PRG_SN,
+		    D.PRG_NM,
+		    C.ATCH_FILE_ID,
+		    C.FILE_STRE_COURS,
+		    C.STRE_FILE_NM,
+		    C.ORIGNL_FILE_NM,
+		    E.USER_SN,
+		    E.USER_NM,
+		    F.RESVE_NO,
+		    C.FILE_SN
+		FROM TN_ADDINFO_IEM A
+		INNER JOIN TN_REQUEST_INDVDLINFO F ON A.PRG_SN = F.PRG_SN
+		INNER JOIN TN_REQUEST_ADDINFO B ON A.PRG_SN = B.PRG_SN AND F.REQST_SN = B.REQST_SN AND A.ADDINFO_SN = B.ADDINFO_SN
+		INNER JOIN TN_PROGRAM D ON A.PRG_SN = D.PRG_SN
+		INNER JOIN TM_USER E  ON E.USER_SN = F.USER_SN
+		INNER JOIN TC_COMMNFILE_DETAIL C ON B.ATTRB_DATA_CN = C.ATCH_FILE_ID
+		WHERE A.DELETE_AT = '0'
+		AND A.ATTRB = '15'
+		]]>
+		<isNotEmpty prepend="AND" property="prgSn">
+			A.PRG_SN = #prgSn#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="siteSe">
+			D.SITE_SE = #siteSe#
+		</isNotEmpty>
+		<isNotEmpty property="userSnList">
+		<iterate prepend="AND B.REQST_SN IN" conjunction="," open="(" close=")" property="userSnList">
+			#userSnList[]#
+		</iterate>
+		</isNotEmpty>
+	</select>
+
+	<!-- 프로그램 신청여부 -->
+	<select id="progrmApplcntDAO.appRsct" parameterClass="zvl" resultClass="int" >
+		<![CDATA[
+			SELECT COUNT(*) FROM TN_REQUEST_INDVDLINFO
+			WHERE PRG_SN = #prgSn# AND USER_SN = #userSn# AND RCEPT_STTUS != '03' AND DELETE_AT = '0'
+		]]>
+	</select>
+
+	<select id="progrmApplcntDAO.access" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+			SELECT
+			    PRG_SN,
+			    USER_SN AS USER_IDX
+			FROM TN_REQUEST_INDVDLINFO
+			WHERE PRG_SN = #prgSn# AND USER_SN = #userSn# AND REQST_SN = #reqstSn# AND DELETE_AT = '0'
+		]]>
+	</select>
+
+	<!-- 신청 개인정보 삭제 -->
+	<update id="progrmApplcntDAO.deleteInfo" parameterClass="zvl">
+		<![CDATA[
+			UPDATE TN_REQUEST_INDVDLINFO SET
+				DELETE_AT = '1'
+			WHERE PRG_SN = #prgSn#
+		]]>
+	</update>
+
+	<!-- 신청 부가정보 삭제 -->
+	<update id="progrmApplcntDAO.deleteAddinfo" parameterClass="zvl">
+		<![CDATA[
+			UPDATE TN_REQUEST_ADDINFO SET
+				DELETE_AT = '1'
+			WHERE PRG_SN = #prgSn#
+		]]>
+	</update>
+	
+	<!-- 신청자 엑셀 목록 리스트 -->
+	<select id="progrmApplcntDAO.excelUserList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+			SELECT	A.RESVE_NO,
+					B.USER_ID,
+					A.NM,
+					CASE A.SEX WHEN 'M' THEN '남' ELSE '여' END SEX,
+		       		A.BRTHDY,
+		       		TO_CHAR(A.RCEPT_DT, 'yyyy-mm-dd hh24:mi') as R_DT,
+		       		FN_CMMNCODE_NM('COM055', A.RCEPT_STTUS) AS RCEPT_STTUS_NM,
+		       		TO_CHAR(A.CANCL_DT, 'yyyy-mm-dd hh24:mi') as C_DT,
+		       		CASE A.PARTCPTN_COMPT_AT WHEN '01' THEN '●' ELSE 'X' END PARTCPTN_COMPT_AT
+			FROM 	TN_REQUEST_INDVDLINFO A
+			LEFT OUTER JOIN TM_USER B ON A.USER_SN = B.USER_SN
+			WHERE 	A.DELETE_AT = '0'
+			AND 	A.PRG_SN 	= #prgSn#   
+			ORDER BY RCEPT_DT DESC
+		]]>
+	</select>	
+	
+	<!-- 수강생 일괄 등록 -->
+	<insert id="progrmApplcntDAO.excelInsert" parameterClass="zvl" >
+		<selectKey resultClass="java.lang.Long" keyProperty="reqstSn">
+			SELECT NVL(MAX(REQST_SN),0)+1 AS REQST_SN FROM TN_REQUEST_INDVDLINFO
+		</selectKey>
+		<![CDATA[
+			INSERT INTO TN_REQUEST_INDVDLINFO (
+				REQST_SN,
+				NM,
+				BRTHDY,
+				SEX,
+				EMAIL,
+				MBTLNUM,
+				CONFM_STTUS,
+				USER_SN,
+				PRG_SN,
+				RCEPT_STTUS,
+				PARTCPTN_COMPT_AT,
+				DELETE_AT,
+				RESVE_NO,
+				TEAM_NM,
+				PROJECT_NM,
+				TEAM_LEADER,
+				UPDDE,
+				RCEPT_DT
+		]]>
+		<![CDATA[
+			)
+			SELECT	#reqstSn#,
+					A.USER_NM,
+					TO_CHAR(A.BRTHDY, 'YYYY-MM-DD'),
+					A.SEX,
+					A.EMAIL,
+					A.MBTLNUM,
+					'01',
+					A.USER_SN,
+					#prgSn#,
+					'02',
+					'N',
+					'0',
+					(SELECT NVL(MAX(RESVE_NO),0)+1 AS RESVE_NO FROM TN_REQUEST_INDVDLINFO WHERE PRG_SN = #prgSn#),
+					#teamNm#,
+					#projectNm#,
+					#teamLeader#,
+					SYSDATE,
+					SYSDATE
+			FROM 	TM_USER A
+			WHERE 	A.USER_SN = #userSn# 
+			AND		A.USER_ID = #userId#
+		]]>
+	</insert>	
+	
+	<!-- 팀명 중복 체크 -->
+	<select id="progrmApplcntDAO.checkDupTeamNm" parameterClass="zvl" resultClass="java.lang.Integer">
+		<![CDATA[
+			SELECT 	COUNT(*) AS CNT 
+			FROM 	TN_REQUEST_INDVDLINFO A
+			WHERE 	A.DELETE_AT = '0'
+			AND 	A.PRG_SN 	= #prgSn# 
+			AND 	A.TEAM_NM	= #teamNm#
+		]]>
+	</select>
+	
+</sqlMap>

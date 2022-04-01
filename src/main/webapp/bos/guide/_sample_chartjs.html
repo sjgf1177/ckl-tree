@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="ThemeBucket">
+  <link rel="shortcut icon" href="#" type="image/png">
+
+  <title>Chartjs</title>
+
+<link rel="stylesheet" type="text/css" href="../../js/bootstrap/css/bootstrap.min.css" />
+<link href="/bos/css/bos.css" rel="stylesheet">
+<style type="text/css">
+body { background:#424f63; font-family:'Open Sans', sans-serif; color:#7a7676; line-height:20px; overflow-x:hidden; font-size:14px; }
+</style>
+
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]><script type="text/javascript" src="../../js/html5shiv.js"></script><script type="text/javascript" src="js/respond.min.js"></script><![endif]-->
+</head>
+
+<body class="sticky-header">
+
+<section>
+	<!-- gnb -->
+
+	<!-- //gnb -->
+    <!-- left side -->
+
+    <!-- left side end-->
+
+    <!-- main content start-->
+    <div class="main-content" >
+
+        <!-- header section start-->
+        <div class="header-section">
+
+        <!--toggle button start-->
+        <a class="toggle-btn"><i class="fa fa-bars"></i></a>
+        <!--toggle button end-->
+
+        <!--search start-->
+        <form class="searchform" action="index.html" method="post">
+            <input type="text" class="form-control" name="keyword" placeholder="Search here..." />
+        </form>
+        <!--search end-->
+
+        <!--notification menu start -->
+        <div class="menu-right">
+
+        </div>
+        <!--notification menu end -->
+
+        </div>
+        <!-- header section end-->
+
+        <!-- page heading start-->
+        <div class="page-heading">
+            <h3>
+                Chartjs
+            </h3>
+            <ul class="breadcrumb">
+                <li>
+                    <a href="#">Charts</a>
+                </li>
+                <li class="active"> Chartjs </li>
+            </ul>
+        </div>
+        <!-- page heading end-->
+
+        <!-- body wrapper -->
+        <div class="wrapper">
+            <div class="row">
+                <div class="col-sm-6">
+                    <section class="panel">
+                        <header class="panel-heading">
+                            Pie Chart
+                        <span class="tools pull-right">
+                            <a href="javascript:;" class="fa fa-chevron-down"></a>
+                            <a href="javascript:;" class="fa fa-times"></a>
+                         </span>
+                        </header>
+                        <div class="panel-body">
+                            <div class="chartJS">
+                                <canvas id="pie-chart-js" height="250" width="800" ></canvas>
+                            </div>
+
+                        </div>
+                    </section>
+                </div>
+                <div class="col-sm-6">
+                    <section class="panel">
+                        <header class="panel-heading">
+                            Donut Chart
+                         <span class="tools pull-right">
+                            <a href="javascript:;" class="fa fa-chevron-down"></a>
+                            <a href="javascript:;" class="fa fa-times"></a>
+                         </span>
+                        </header>
+                        <div class="panel-body">
+                            <div class="chartJS">
+                                <canvas id="donut-chart-js" height="250" width="800" ></canvas>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <section class="panel">
+                        <header class="panel-heading">
+                            Bar Chart
+                         <span class="tools pull-right">
+                            <a href="javascript:;" class="fa fa-chevron-down"></a>
+                            <a href="javascript:;" class="fa fa-times"></a>
+                         </span>
+                        </header>
+                        <div class="panel-body">
+                            <div class="chartJS">
+                                <canvas id="bar-chart-js" height="250" width="800" ></canvas>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <section class="panel">
+                        <header class="panel-heading">
+                            Area Chart
+                        <span class="tools pull-right">
+                            <a href="javascript:;" class="fa fa-chevron-down"></a>
+                            <a href="javascript:;" class="fa fa-times"></a>
+                         </span>
+                        </header>
+                        <div class="panel-body">
+                            <div class="chartJS">
+                                <canvas id="line-chart-js" height="250" width="800" ></canvas>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+        <!-- //body wrapper -->
+
+        <!-- footer section -->
+        <footer>
+	<div id="footer">
+		<p><span class="bold">코스콤</span>&nbsp;&nbsp;&nbsp;
+		서울시 영등포구 여의나루로 76(150-010),
+		&nbsp;&nbsp;&nbsp;  <span class="bold">전화번호</span>: 02)767-7114 </p>
+		<em>Copyright ⓒ 2012 KOSCOM Corp. All Rights reserved.</em>
+	</div>
+
+        </footer>
+        <!--footer section end-->
+
+
+    </div>
+    <!-- main content end-->
+</section>
+
+<!-- Placed js at the end of the document so the pages load faster -->
+<script src="../../js/jquery-1.10.2.min.js"></script>
+<script src="../../js/jquery-ui-1.9.2.custom.min.js"></script>
+<script src="../../js/jquery-migrate-1.2.1.min.js"></script>
+<script src="../../js/bootstrap/bootstrap.min.js"></script>
+<script src="../../js/modernizr.min.js"></script>
+<script src="../../js/jquery.nicescroll.js"></script>
+
+<!--Chart JS-->
+<script src="../../js/chart-js/Chart.js"></script>
+<!-- <script src="../../js/chart-js/chartjs.init.js"></script> -->
+<script>
+/**
+ * Created by westilian on 1/19/14.
+ */
+
+(function(){
+    var t;
+    function size(animate){
+        if (animate == undefined){
+            animate = false;
+        }
+        clearTimeout(t);
+        t = setTimeout(function(){
+            $("canvas").each(function(i,el){
+                $(el).attr({
+                    "width":$(el).parent().width(),
+                    "height":$(el).parent().outerHeight()
+                });
+            });
+            redraw(animate);
+            var m = 0;
+            $(".chartJS").height("");
+            $(".chartJS").each(function(i,el){ m = Math.max(m,$(el).height()); });
+            $(".chartJS").height(m);
+        }, 30);
+    }
+    $(window).on('resize', function(){ size(false); });
+
+
+    function redraw(animation){
+        var options = {};
+        if (!animation){
+            options.animation = false;
+        } else {
+            options.animation = true;
+        }
+
+
+        var barChartData = {
+            labels : ['남','여'],
+            datasets : [
+                {
+                    fillColor : "#2a323f",
+                    strokeColor : "#2a323f",
+                    data : [50,35]
+                }
+            ]
+
+        }
+
+        var myLine = new Chart(document.getElementById("bar-chart-js").getContext("2d")).Bar(barChartData);
+
+
+        var Linedata = {
+            labels : ["January","February","March","April","May","June","July"],
+            datasets : [
+                {
+                    fillColor : "#2a323f",
+                    strokeColor : "#2a323f",
+                    pointColor : "#2a323f",
+                    pointStrokeColor : "#fff",
+                    data : [100,159,190,281,156,155,140]
+                },
+                {
+                    fillColor : "#6dc5a3",
+                    strokeColor : "#6dc5a3",
+                    pointColor : "#6dc5a3",
+                    pointStrokeColor : "#fff",
+                    data : [65,59,90,181,56,55,40]
+                },
+                {
+                    fillColor : "#5f728f",
+                    strokeColor : "#5f728f",
+                    pointColor : "#5f728f",
+                    pointStrokeColor : "#fff",
+                    data : [28,48,40,19,96,27,100]
+                }
+
+            ]
+        }
+        var myLineChart = new Chart(document.getElementById("line-chart-js").getContext("2d")).Line(Linedata);
+
+
+        var pieData = [
+            {
+                value: 30,
+                color:"#2a323f"
+            },
+            {
+                value : 50,
+                color : "#5f728f"
+            },
+            {
+                value : 100,
+                color : "#6dc5a3"
+            }
+
+        ];
+
+        var myPie = new Chart(document.getElementById("pie-chart-js").getContext("2d")).Pie(pieData);
+
+
+
+        var donutData = [
+            {
+                value: 30,
+                color:"#2a323f"
+            },
+            {
+                value : 50,
+                color : "#5f728f"
+            },
+            {
+                value : 100,
+                color : "#6dc5a3"
+            },
+            {
+                value : 40,
+                color : "#95D7BB"
+            },
+            {
+                value : 120,
+                color : "#b8d3f5"
+            }
+
+        ]
+        var myDonut = new Chart(document.getElementById("donut-chart-js").getContext("2d")).Doughnut(donutData);
+    }
+
+
+
+
+    size(true);
+
+}());
+
+</script>
+
+
+<!--[if lte IE 7]>
+<script type="text/javascript">
+//<![CDATA[
+	$('*').each(function(index) {
+		if ($(this).css("overflow")=="hidden"){ $(this).css("zoom",1)}
+		if ($(this).css("display")=="inline-block"){ $(this).css("display",'inline'); $(this).css("zoom",1)}
+	});
+//]]>
+</script>
+<![endif]-->
+
+</body>
+</html>

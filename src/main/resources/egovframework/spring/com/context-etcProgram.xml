@@ -1,0 +1,690 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context" xmlns:util="http://www.springframework.org/schema/util" xmlns:cps="http://www.unpl.co.kr/schema/cmm-program-service" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+			http://www.unpl.co.kr/schema/cmm-program-service http://www.unpl.co.kr/schema/cmm-program-service-1.0.xsd">
+
+
+	<!-- 공통이 아닌 개별프로그램 혹은 개별프로그램에 속하는 공통코드 일 겨우 여기에 정의하면 됩니다.(공통기능(페이징, 리스트. 상세, 등록, 수정, 삭제)을 상속하실려면 xml에 service를 등록해야함 ) -->
+
+
+	<!-- 시설예약 시설관리 서비스 -->
+	<cps:cps id="fcltyService" class="kr.co.ckl.fcltyResve.service.FcltyService">
+		<cps:listeners>
+			<cps:listener target-methods="list,forInsert,forUpdate" ref="COM059CmmCodeViewListener" />
+		</cps:listeners>
+	</cps:cps>
+
+	<!-- 시설예약 장비관리 서비스 -->
+	<cps:cps id="eqpmnService" class="kr.co.ckl.fcltyResve.service.EqpmnService">
+		<cps:listeners>
+			<cps:listener target-methods="list,forInsert,forUpdate" ref="COM098CmmCodeViewListener" />
+		</cps:listeners>
+	</cps:cps>
+
+	<!-- 시설예약 휴일관리 서비스 -->
+	<cps:cps id="hldyService" class="kr.co.ckl.fcltyResve.service.HldyService" />
+
+	<!-- 행사일정관리 서비스 -->
+	<cps:cps id="schdulService" class="kr.co.ckl.fcltyResve.service.SchdulService" />
+
+	<!-- 열린강좌 서비스 -->
+	<cps:cps id="openLectureService" class="kr.co.edu.onlineEdu.service.OpenLectureService" />
+	
+	<!-- 테마강좌 서비스 -->
+	<cps:cps id="themeLectureService" class="kr.co.edu.onlineEdu.service.ThemeLectureService" />
+
+
+
+	<!-- 취업사전 서비스 -->
+	<cps:cps id="dicaryService" class="kr.co.edu.job.service.DicaryService">
+		<cps:listeners>
+			<cps:listener ref="COM083CmmCodeViewListener" />
+		</cps:listeners>
+	</cps:cps>
+
+	<!-- 멘토관리 관리 서비스 -->
+	<cps:cps id="mentorManageService" class="kr.co.edu.dream.service.MentorManageService" />
+
+	<!-- 주요 성과 관리 서비스 -->
+	<cps:cps id="mainRsltManageService" class="kr.co.edu.dream.service.MainRsltManageService">
+		<cps:listeners>
+			<cps:listener ref="COM085CmmCodeViewListener" />
+			<cps:listener ref="COM087CmmCodeViewListener" />
+		</cps:listeners>
+	</cps:cps>
+
+	<!-- 시설예약 예약현황 서비스 -->
+	<cps:cps id="resveSttusService" class="kr.co.ckl.fcltyResve.service.ResveSttusService">
+		<cps:listeners>
+			<cps:listener target-methods="list,resveStep1,step2" ref="COM059CmmCodeViewListener" />
+			<cps:listener target-methods="resveStep2,step3" ref="COM056CmmCodeViewListener" />
+			<cps:listener target-methods="resveStep2,step3" ref="COM063CmmCodeViewListener" />
+			<cps:listener target-methods="list,listMypage" ref="COM071CmmCodeViewListener" />
+			<cps:listener target-methods="list,resveStep1,step2" ref="COM073CmmCodeViewListener" />
+			<cps:listener target-methods="resveStep2,step3" ref="COM064CmmCodeViewListener" />
+			<cps:listener target-methods="resveStep2,step3" ref="COM065CmmCodeViewListener" />
+			<cps:listener target-methods="resveStep2,step3" ref="COM081CmmCodeViewListener" />
+
+			<cps:listener target-methods="list,view,resveSave" ref="FcltyResveAccessLogCmmProgramListener" />
+
+
+		</cps:listeners>
+	</cps:cps>
+
+	<!-- 시설예약 통계 서비스 -->
+	<cps:cps id="statsService" class="kr.co.ckl.fcltyResve.service.StatsService">
+		<cps:listeners>
+			<cps:listener target-methods="statsFclty" ref="COM059CmmCodeViewListener" />
+			<cps:listener target-methods="statsFclty" ref="COM056CmmCodeViewListener" />
+			<cps:listener target-methods="statsFclty" ref="COM063CmmCodeViewListener" />
+			<cps:listener target-methods="statsFclty" ref="COM081CmmCodeViewListener" />
+			<cps:listener target-methods="statsUsePurps" ref="COM064CmmCodeViewListener" />
+		</cps:listeners>
+	</cps:cps>
+
+	<!-- 취업컨설팅 -->
+	<cps:cps id="empymnCnslService" class="kr.co.edu.job.service.EmpymnCnslService">
+		<cps:listeners>
+			<cps:listener ref="COM063CmmCodeViewListener" />
+			<cps:listener ref="COM070CmmCodeViewListener" />
+			<cps:listener ref="COM079CmmCodeViewListener" />
+			<cps:listener ref="COM080CmmCodeViewListener" />
+		</cps:listeners>
+	</cps:cps>
+
+	<!-- 취업컨설팅리스트 -->
+	<cps:cps id="empymnCnslListService" class="kr.co.edu.job.service.EmpymnCnslListService">
+		<cps:listeners>
+			<cps:listener ref="COM070CmmCodeViewListener" />
+			<cps:listener ref="COM079CmmCodeViewListener" />
+			<cps:listener ref="COM080CmmCodeViewListener" />
+			<cps:listener ref="COM082CmmCodeViewListener" />
+		</cps:listeners>
+	</cps:cps>
+
+
+	<!-- 프로그램 관리 -->
+	<cps:cps id="progrmMasterService" class="kr.co.ckl.progrm.service.ProgrmMasterService" pageQuery="progrmPageQuery">
+		<cps:listeners>
+			<!-- <cps:listener target-methods="list,view,forInsert,forUpdate,statsList" ref="COM050CmmCodeViewListener"/> -->
+			<cps:listener target-methods="list,view" ref="COM052CmmCodeViewListener" />
+			<cps:listener target-methods="list,view" ref="COM053CmmCodeViewListener" />
+			<cps:listener target-methods="regTmplat" ref="COM057CmmCodeViewListener" />
+		</cps:listeners>
+	</cps:cps>
+
+	<bean id="progrmApplcntArticleAccessor" class="kr.co.ckl.progrm.service.ProgrmApplicntArticleAccessor">
+		<property name="queryId" value="progrmApplcntDAO.access" />
+	</bean>
+
+	<!-- 프로그램 신청 -->
+	<cps:cps id="progrmApplcntService" class="kr.co.ckl.progrm.service.ProgrmApplcntService" pageQuery="progrmApplcntPageQuery" accessor="progrmApplcntArticleAccessor" scope="prototype">
+		<cps:listeners>
+			<cps:listener target-methods="list,listMypage" ref="COM052CmmCodeViewListener" />
+			<cps:listener target-methods="list,listMypage" ref="COM053CmmCodeViewListener" />
+			<cps:listener target-methods="list,view,listPrintPopup" ref="COM054CmmCodeViewListener" />
+			<cps:listener target-methods="list,listPopup,view,listPrintPopup,listMypage" ref="COM055CmmCodeViewListener" />
+			<cps:listener target-methods="list,view" ref="ProgrmMemberAccessLogCmmProgramListener" />
+		</cps:listeners>
+	</cps:cps>
+
+	<!-- 프로그램 강사 -->
+	<cps:cps id="progrmInstrctrService" class="kr.co.ckl.progrm.service.ProgrmInstrctrService" pageQuery="progrmPageQuery">
+		<cps:listeners>
+			<cps:listener ref="COM076CmmCodeViewListener" />
+			<cps:listener target-methods="list" ref="COM076CmmCodeViewListener" />
+		</cps:listeners>
+	</cps:cps>
+
+
+	<!-- 인재관리 - 융합아카데미 -->
+	<cps:cps id="ablmanAcademyService" class="kr.co.edu.ablman.service.AblmanAcademyService" pageQuery="academyPageQuery">
+		<cps:listeners>
+			<cps:listener target-methods="list" ref="COM079CmmCodeViewListener" />
+			<cps:listener target-methods="list,chghstPopup" ref="COM080CmmCodeViewListener" />
+			<cps:listener target-methods="list,chghstPopup" ref="COM082CmmCodeViewListener" />
+		</cps:listeners>
+	</cps:cps>
+
+	<!-- 플랫폼 기관관리 서비스 -->
+	<cps:cps id="pltfomListService" class="kr.co.edu.dream.service.PltfomListService">
+		<cps:listeners>
+			<cps:listener ref="COM084CmmCodeViewListener" />
+		</cps:listeners>
+	</cps:cps>
+
+
+	<!-- 채용정보 서비스 -->
+	<cps:cps id="empmnInfoService" class="kr.co.edu.job.service.EmpmnInfoService">
+		<cps:listeners>
+			<cps:listener target-methods="list" ref="COM063CmmCodeViewListener" />
+		</cps:listeners>
+	</cps:cps>
+
+	<!-- 채용공고 서비스 (EDU) 관리 -->
+	<cps:cps id="empmnPblancService" class="kr.co.edu.job.service.EmpmnPblancService">
+		<cps:listeners>
+			<cps:listener ref="COM093CmmCodeViewListener" />
+			<cps:listener ref="COM079CmmCodeViewListener" />
+			<cps:listener ref="COM094CmmCodeViewListener" />
+			<cps:listener ref="COM096CmmCodeViewListener" />
+			<cps:listener ref="COM097CmmCodeViewListener" />
+			<cps:listener ref="COM099CmmCodeViewListener" />
+			<cps:listener ref="COM100CmmCodeViewListener" />
+		</cps:listeners>
+	</cps:cps>
+
+	<!-- start-up 서비스 (EDU) 관리 -->
+	<cps:cps id="empmnStupService" class="kr.co.edu.job.service.EmpmnStupService">
+		<cps:listeners>
+			<cps:listener ref="COM093CmmCodeViewListener" />
+			<cps:listener ref="COM079CmmCodeViewListener" />
+			<cps:listener ref="COM094CmmCodeViewListener" />
+			<cps:listener ref="COM096CmmCodeViewListener" />
+			<cps:listener ref="COM097CmmCodeViewListener" />
+			<cps:listener ref="COM099CmmCodeViewListener" />
+			<cps:listener ref="COM100CmmCodeViewListener" />
+		</cps:listeners>
+	</cps:cps>
+
+	<cps:cps id="entrprsManageService" class="kr.co.edu.job.service.EntrprsManageService">
+		<cps:listeners>
+			<cps:listener ref="COM099CmmCodeViewListener" />
+		</cps:listeners>
+	</cps:cps>
+
+	<!-- 홈 서브 메인 -->
+	<cps:cps id="homeMainService" class="kr.co.edu.home.service.HomeMainService" />
+	
+	<!-- 오프라인교육 서브 메인 -->
+	<cps:cps id="offlineMainService" class="kr.co.edu.offline.service.OfflineMainService" />
+	
+	<!-- 창의동반 서브 메인 -->
+	<cps:cps id="dreamMainService" class="kr.co.edu.dream.service.DreamMainService" />
+
+	<!-- 컬쳐리스트 서브 메인 -->
+	<cps:cps id="cultureMainService" class="kr.co.edu.job.service.CultureMainService" />
+	
+	<!-- 콘텐츠 시연장  -->
+	<cps:cps id="concertUserService" class="kr.co.testbed.concert.service.ConcertUserService" />
+	<cps:cps id="concertMngService" class="kr.co.testbed.concert.service.ConcertMngService" />
+	<cps:cps id="concertTimeService" class="kr.co.testbed.concert.service.ConcertTimeService" />
+	<cps:cps id="concertReservService" class="kr.co.testbed.concert.service.ConcertReservService" />
+	
+	<!-- 프로그램(구분) -->
+	<bean id="COM050CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewDepthListener">
+		<constructor-arg index="0" value="COM050" />
+		<constructor-arg index="1" value="prgSe" />
+		<constructor-arg index="2" value="prgSeNm" />
+	</bean>
+
+	<!-- 프로그램(진행상태) -->
+	<bean id="COM052CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewDepthListener">
+		<constructor-arg index="0" value="COM052" />
+		<constructor-arg index="1" value="progrsSttus" />
+		<constructor-arg index="2" value="progrsSttusNm" />
+	</bean>
+
+	<!-- 프로그램(신청방식) -->
+	<bean id="COM053CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewDepthListener">
+		<constructor-arg index="0" value="COM053" />
+		<constructor-arg index="1" value="reqstMthd" />
+		<constructor-arg index="2" value="reqstMthdNm" />
+	</bean>
+
+	<!-- 프로그램(승인상태) -->
+	<bean id="COM054CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewDepthListener">
+		<constructor-arg index="0" value="COM054" />
+		<constructor-arg index="1" value="confmSttus" />
+		<constructor-arg index="2" value="confmSttusNm" />
+	</bean>
+
+	<!-- 프로그램(접수상태) -->
+	<bean id="COM055CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewDepthListener">
+		<constructor-arg index="0" value="COM055" />
+		<constructor-arg index="1" value="rceptSttus" />
+		<constructor-arg index="2" value="rceptSttusNm" />
+	</bean>
+
+	<!-- 공통(직업) -->
+	<bean id="COM056CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewDepthListener">
+		<constructor-arg index="0" value="COM056" />
+		<constructor-arg index="1" value="job" />
+		<constructor-arg index="2" value="jobNm" />
+	</bean>
+
+	<!-- 시설예약(지역구분) -->
+	<bean id="COM059CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewDepthListener">
+		<constructor-arg index="0" value="COM059" />
+		<constructor-arg index="1" value="areaSe" />
+		<constructor-arg index="2" value="areaSe1Nm" />
+	</bean>
+
+
+	<!-- 시설예약(사용목적구분) -->
+	<bean id="COM064CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewDepthListener">
+		<constructor-arg index="0" value="COM064" />
+		<constructor-arg index="1" value="usePurposeSe" />
+		<constructor-arg index="2" value="usePurposeSeNm" />
+	</bean>
+
+	<!-- 시설예약(예약수신구분) -->
+	<bean id="COM065CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewDepthListener">
+		<constructor-arg index="0" value="COM065" />
+		<constructor-arg index="1" value="resveRecptnSe" />
+		<constructor-arg index="2" value="resveRecptnSeNm" />
+	</bean>
+
+
+	<!-- 취업자료실(구분) -->
+	<bean id="COM069CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewDepthListener">
+		<constructor-arg index="0" value="COM069" />
+		<constructor-arg index="1" value="option5" />
+		<constructor-arg index="2" value="option5Nm" />
+	</bean>
+
+	<!-- 시설예약(예약상태) -->
+	<bean id="COM071CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewDepthListener">
+		<constructor-arg index="0" value="COM071" />
+		<constructor-arg index="1" value="resveSttus" />
+		<constructor-arg index="2" value="resveSttusNm" />
+	</bean>
+
+	<!-- 프로그램(강사분류) -->
+	<bean id="COM076CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewDepthListener">
+		<constructor-arg index="0" value="COM076" />
+		<constructor-arg index="1" value="realm" />
+		<constructor-arg index="2" value="realmNm" />
+	</bean>
+
+	<!-- 프로그램(템플릿속성) -->
+	<bean id="COM057CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewDepthListener">
+		<constructor-arg index="0" value="COM057" />
+		<constructor-arg index="1" value="attrb" />
+		<constructor-arg index="2" value="attrbNm" />
+	</bean>
+
+
+	<!-- 공통(거주지구분) -->
+	<bean id="COM063CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewDepthListener">
+		<constructor-arg index="0" value="COM063" />
+		<constructor-arg index="1" value="resdncSe" />
+		<constructor-arg index="2" value="resdncSeNm" />
+	</bean>
+
+	<!-- 시설예약(사용여부) -->
+	<bean id="COM073CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewDepthListener">
+		<constructor-arg index="0" value="COM073" />
+		<constructor-arg index="1" value="useAt" />
+		<constructor-arg index="2" value="useAtNm" />
+	</bean>
+
+	<!-- 공통(성별) -->
+	<bean id="COM079CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewDepthListener">
+		<constructor-arg index="0" value="COM079" />
+		<constructor-arg index="1" value="sex" />
+		<constructor-arg index="2" value="sexNm" />
+	</bean>
+
+	<!-- 인재관리(취업상태 구분) -->
+	<bean id="COM080CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewDepthListener">
+		<constructor-arg index="0" value="COM080" />
+		<constructor-arg index="1" value="ablmanSttus" />
+		<constructor-arg index="2" value="ablmanSttusNm" />
+	</bean>
+
+	<!-- 공통(연령구분) -->
+	<bean id="COM081CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewDepthListener">
+		<constructor-arg index="0" value="COM081" />
+		<constructor-arg index="1" value="age" />
+		<constructor-arg index="2" value="ageNm" />
+	</bean>
+
+	<!-- 취업컨설팅(회사구분) -->
+	<bean id="COM082CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewDepthListener">
+		<constructor-arg index="0" value="COM082" />
+		<constructor-arg index="1" value="copnySe" />
+		<constructor-arg index="2" value="copnySeNm" />
+	</bean>
+
+	<!-- 직업사전(직업구분) -->
+	<bean id="COM083CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewListener">
+		<constructor-arg index="0" value="COM083" />
+		<constructor-arg index="1" value="ctgrySe1" />
+		<constructor-arg index="2" value="ctgrySe1Nm" />
+	</bean>
+
+	<!-- 플랫폼 리스트 기관관리 리스트 년도 -->
+	<bean id="COM084CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewDepthListener">
+		<constructor-arg index="0" value="COM084" />
+		<constructor-arg index="1" value="year" />
+		<constructor-arg index="2" value="yearNm" />
+	</bean>
+	<!-- 주요성과 등록 구분 -->
+	<bean id="COM085CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewDepthListener">
+		<constructor-arg index="0" value="COM085" />
+		<constructor-arg index="1" value="rsltSe" />
+		<constructor-arg index="2" value="rsltSeNm" />
+	</bean>
+
+	<!-- 주요성과 년도 구분 -->
+	<bean id="COM087CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewDepthListener">
+		<constructor-arg index="0" value="COM087" />
+		<constructor-arg index="1" value="year" />
+		<constructor-arg index="2" value="yearNm" />
+	</bean>
+
+	<!-- 채용정보&기업관리 (분야) -->
+	<bean id="COM093CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewDepthListener">
+		<constructor-arg index="0" value="COM093" />
+		<constructor-arg index="1" value="entrprsStle" />
+		<constructor-arg index="2" value="entrprsStleNm" />
+	</bean>
+
+
+	<!-- 채용정보 (근무지) -->
+	<bean id="COM094CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewDepthListener">
+		<constructor-arg index="0" value="COM094" />
+		<constructor-arg index="1" value="wrkprc" />
+		<constructor-arg index="2" value="wrkprcNm" />
+	</bean>
+
+	<!-- 채용정보 (학력) -->
+	<bean id="COM096CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewDepthListener">
+		<constructor-arg index="0" value="COM096" />
+		<constructor-arg index="1" value="acdmcrSe" />
+		<constructor-arg index="2" value="acdmcrSeNm" />
+	</bean>
+
+	<!-- 채용정보 (근무형태) -->
+	<bean id="COM097CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewDepthListener">
+		<constructor-arg index="0" value="COM097" />
+		<constructor-arg index="1" value="workStle" />
+		<constructor-arg index="2" value="workStleNm" />
+	</bean>
+
+	<!-- 시설장비관리 (장비구분) -->
+	<bean id="COM098CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewDepthListener">
+		<constructor-arg index="0" value="COM098" />
+		<constructor-arg index="1" value="eqpmnSe" />
+		<constructor-arg index="2" value="eqpmnSeNm" />
+	</bean>
+
+	<!-- 취업사전  (담당업무) -->
+	<bean id="COM099CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewDepthListener">
+		<constructor-arg index="0" value="COM099" />
+		<constructor-arg index="1" value="chrgJob" />
+		<constructor-arg index="2" value="chrgJobNm" />
+	</bean>
+
+	<!-- 취업사전  (담당업무) -->
+	<bean id="COM100CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewDepthListener">
+		<constructor-arg index="0" value="COM100" />
+		<constructor-arg index="1" value="careerSe" />
+		<constructor-arg index="2" value="careerSeNm" />
+	</bean>
+
+
+	<!-- 회원 접근로그 -->
+	<bean id="MemberAccessLogCmmProgramListener" class="kr.co.unp.cmm.crud.listener.AccessLogCmmProgramListener">
+		<property name="cateTp" value="01" />
+	</bean>
+
+	<!-- 프로그램 접근로그 -->
+	<bean id="ProgrmMemberAccessLogCmmProgramListener" class="kr.co.unp.cmm.crud.listener.AccessLogCmmProgramListener">
+		<property name="cateTp" value="02" />
+	</bean>
+
+	<!-- 시설예약 접근로그 -->
+	<bean id="FcltyResveAccessLogCmmProgramListener" class="kr.co.unp.cmm.crud.listener.AccessLogCmmProgramListener">
+		<property name="cateTp" value="03" />
+	</bean>
+
+	<!-- 권한 접근로그 -->
+	<bean id="AuthAccessLogCmmProgramListener" class="kr.co.unp.cmm.crud.listener.AccessLogCmmProgramListener">
+		<property name="cateTp" value="04" />
+	</bean>
+
+
+
+	<!-- 온라인교육 메인화면 -->
+	<cps:cps id="edumainService" class="kr.co.edu.onlineEdu.service.EduMainService" scope="prototype" />
+	<!-- 온라인교육 분야별 목록 서비스 -->
+	<cps:cps id="realmService" class="kr.co.edu.onlineEdu.service.RealmService" scope="prototype" />
+	<!-- 온라인교육 직업별 목록 서비스 -->
+	<cps:cps id="occpService" class="kr.co.edu.onlineEdu.service.OccpService" scope="prototype" />
+	<!-- 온라인교육 교육체계도 서비스 -->
+	<cps:cps id="edcsystmService" class="kr.co.edu.onlineEdu.service.EdcSystmService" scope="prototype" />
+	<!-- 온라인교육 나의강의실 서비스 -->
+	<cps:cps id="mylctrumService" class="kr.co.edu.onlineEdu.service.MyLctrumService" scope="prototype" />
+
+	<!-- ////////////////////////////// -->
+
+	<!-- 시설예약(지역구분) -->
+	<bean id="COM144CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewDepthListener">
+		<constructor-arg index="0" value="COM144" />
+		<constructor-arg index="1" value="areaSe" />
+		<constructor-arg index="2" value="areaSe1Nm" />
+	</bean>
+
+
+	<!-- 시설예약(사용목적구분) -->
+	<bean id="COM145CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewDepthListener">
+		<constructor-arg index="0" value="COM145" />
+		<constructor-arg index="1" value="usePurposeSe" />
+		<constructor-arg index="2" value="usePurposeSeNm" />
+	</bean>
+	
+	<!-- 시설예약(예약수신구분) -->
+	<bean id="COM146CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewDepthListener">
+		<constructor-arg index="0" value="COM146" />
+		<constructor-arg index="1" value="resveRecptnSe" />
+		<constructor-arg index="2" value="resveRecptnSeNm" />
+	</bean>
+	
+	<!-- 시설장비관리 (장비구분) -->
+	<bean id="COM147CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewDepthListener">
+		<constructor-arg index="0" value="COM147" />
+		<constructor-arg index="1" value="eqpmnSe" />
+		<constructor-arg index="2" value="eqpmnSeNm" />
+	</bean>
+	
+	<!-- 문화광장 시설예약(지역구분) -->
+	<bean id="COM172CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewDepthListener">
+		<constructor-arg index="0" value="COM172" />
+		<constructor-arg index="1" value="areaSe" />
+		<constructor-arg index="2" value="areaSe1Nm" />
+	</bean>
+	
+	<!-- 문화광장 시설예약(사용목적구분) -->
+	<bean id="COM173CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewDepthListener">
+		<constructor-arg index="0" value="COM173" />
+		<constructor-arg index="1" value="usePurposeSe" />
+		<constructor-arg index="2" value="usePurposeSeNm" />
+	</bean>
+
+	<!-- 시설예약 시설관리 서비스 -->
+	<cps:cps id="hkFcltyService" class="kr.co.edu.hkFcltyResve.service.FcltyService">
+		<cps:listeners>
+			<cps:listener target-methods="list,forInsert,forUpdate" ref="COM144CmmCodeViewListener" />
+		</cps:listeners>
+	</cps:cps>
+	
+	<!-- 문화광장 시설예약 시설관리 서비스 -->
+	<cps:cps id="hkCultureService" class="kr.co.edu.hkCultureResve.service.CultureService">
+		<cps:listeners>
+			<cps:listener target-methods="list,forInsert,forUpdate" ref="COM172CmmCodeViewListener" />
+		</cps:listeners>
+	</cps:cps>	
+	
+	<!-- 시설예약 장비관리 서비스 -->
+	<cps:cps id="hkEqpmnService" class="kr.co.edu.hkFcltyResve.service.EqpmnService">
+		<cps:listeners>
+			<cps:listener target-methods="list,forInsert,forUpdate" ref="COM147CmmCodeViewListener" />
+		</cps:listeners>
+	</cps:cps>
+
+	<!-- 시설예약 휴일관리 서비스 -->
+	<cps:cps id="hkHldyService" class="kr.co.edu.hkFcltyResve.service.HldyService" />
+
+	<!-- 행사일정관리 서비스 -->
+	<cps:cps id="hkSchdulService" class="kr.co.edu.hkFcltyResve.service.SchdulService" />
+	
+	<!-- 시설예약 예약현황 서비스 -->
+	<cps:cps id="hkResveSttusService" class="kr.co.edu.hkFcltyResve.service.ResveSttusService">
+		<cps:listeners>
+			<cps:listener target-methods="list,resveStep1,step2" ref="COM144CmmCodeViewListener" />
+			<cps:listener target-methods="resveStep2,step3" ref="COM056CmmCodeViewListener" />
+			<cps:listener target-methods="resveStep2,step3" ref="COM063CmmCodeViewListener" />
+			<cps:listener target-methods="list,listMypage" ref="COM071CmmCodeViewListener" />
+			<cps:listener target-methods="list,resveStep1,step2" ref="COM073CmmCodeViewListener" />
+			<cps:listener target-methods="resveStep2,step3" ref="COM145CmmCodeViewListener" />
+			<cps:listener target-methods="resveStep2,step3" ref="COM146CmmCodeViewListener" />
+			<cps:listener target-methods="resveStep2,step3" ref="COM081CmmCodeViewListener" />
+			<cps:listener target-methods="list,view,resveSave" ref="FcltyResveAccessLogCmmProgramListener" />
+
+		</cps:listeners>
+	</cps:cps>
+	
+	<!-- 문화광장 시설예약 예약현황 서비스 -->
+	<cps:cps id="hkCultureResveSttusService" class="kr.co.edu.hkCultureResve.service.CultureResveSttusService">
+		<cps:listeners>
+			<cps:listener target-methods="list,resveStep1,step2" ref="COM172CmmCodeViewListener" />
+			<cps:listener target-methods="resveStep2,step3" ref="COM056CmmCodeViewListener" />
+			<cps:listener target-methods="resveStep2,step3" ref="COM063CmmCodeViewListener" />
+			<cps:listener target-methods="list,listMypage" ref="COM071CmmCodeViewListener" />
+			<cps:listener target-methods="list,resveStep1,step2" ref="COM073CmmCodeViewListener" />
+			<cps:listener target-methods="resveStep2,step3" ref="COM173CmmCodeViewListener" />
+			<cps:listener target-methods="resveStep2,step3" ref="COM146CmmCodeViewListener" />
+			<cps:listener target-methods="resveStep2,step3" ref="COM081CmmCodeViewListener" />
+			<cps:listener target-methods="list,view,resveSave" ref="FcltyResveAccessLogCmmProgramListener" />
+
+		</cps:listeners>
+	</cps:cps>	
+	
+	<!-- 시설예약 통계 서비스 -->
+	<cps:cps id="hkStatsService" class="kr.co.edu.hkFcltyResve.service.StatsService">
+		<cps:listeners>
+			<cps:listener target-methods="statsFclty" ref="COM144CmmCodeViewListener" />
+			<cps:listener target-methods="statsFclty" ref="COM056CmmCodeViewListener" />
+			<cps:listener target-methods="statsFclty" ref="COM063CmmCodeViewListener" />
+			<cps:listener target-methods="statsFclty" ref="COM081CmmCodeViewListener" />
+			<cps:listener target-methods="statsUsePurps" ref="COM145CmmCodeViewListener" />
+		</cps:listeners>
+	</cps:cps>
+	
+	<!-- 문화광장 시설예약 통계 서비스 -->
+	<cps:cps id="hkCultureStatsService" class="kr.co.edu.hkCultureResve.service.CultureStatsService">
+		<cps:listeners>
+			<cps:listener target-methods="statsFclty" ref="COM172CmmCodeViewListener" />
+			<cps:listener target-methods="statsFclty" ref="COM056CmmCodeViewListener" />
+			<cps:listener target-methods="statsFclty" ref="COM063CmmCodeViewListener" />
+			<cps:listener target-methods="statsFclty" ref="COM081CmmCodeViewListener" />
+			<cps:listener target-methods="statsUsePurps" ref="COM173CmmCodeViewListener" />
+		</cps:listeners>
+	</cps:cps>	
+	<!-- ////////////////////////////// -->
+	<!-- 시설예약(사용목적구분) -->
+	<bean id="COM149CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewDepthListener">
+		<constructor-arg index="0" value="COM149" />
+		<constructor-arg index="1" value="usePurposeSe" />
+		<constructor-arg index="2" value="usePurposeSeNm" />
+	</bean>
+	<!-- 시설장비관리 (장비구분) -->
+	<bean id="COM148CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewDepthListener">
+		<constructor-arg index="0" value="COM148" />
+		<constructor-arg index="1" value="eqpmnSe" />
+		<constructor-arg index="2" value="eqpmnSeNm" />
+	</bean>
+	<!-- 시설예약 장비관리 서비스 -->
+	<cps:cps id="hkEtcEqpmnService" class="kr.co.edu.hkEtcResve.service.EqpmnService">
+		<cps:listeners>
+			<cps:listener target-methods="list,forInsert,forUpdate" ref="COM148CmmCodeViewListener" />
+		</cps:listeners>
+	</cps:cps>
+	<!-- 시설예약 예약현황 서비스 -->
+	<cps:cps id="hkEtcResveSttusService" class="kr.co.edu.hkEtcResve.service.ResveSttusService">
+		<cps:listeners>
+			<cps:listener target-methods="list,resveStep1,step2" ref="COM144CmmCodeViewListener" />
+			<cps:listener target-methods="resveStep2,step3" ref="COM056CmmCodeViewListener" />
+			<cps:listener target-methods="resveStep2,step3" ref="COM063CmmCodeViewListener" />
+			<cps:listener target-methods="list,listMypage" ref="COM071CmmCodeViewListener" />
+			<cps:listener target-methods="list,resveStep1,step2" ref="COM073CmmCodeViewListener" />
+			<cps:listener target-methods="resveStep2,step3" ref="COM149CmmCodeViewListener" />
+			<cps:listener target-methods="resveStep2,step3" ref="COM146CmmCodeViewListener" />
+			<cps:listener target-methods="resveStep2,step3" ref="COM081CmmCodeViewListener" />
+			<cps:listener target-methods="list,view,resveSave" ref="FcltyResveAccessLogCmmProgramListener" />
+
+		</cps:listeners>
+	</cps:cps>
+	
+	<!-- 경력관리시스템 교육사업관리 서비스 -->
+	<cps:cps id="eduMngService" class="kr.co.edu.careerManage.service.EduMngService" />
+
+	<!-- 경력관리시스템 수강생 관심분야 구분 -->
+	<bean id="COM162CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewDepthListener">
+		<constructor-arg index="0" value="COM162" />
+		<constructor-arg index="1" value="interField" />
+		<constructor-arg index="2" value="interFieldNm" />
+	</bean>
+	
+	<!-- 경력관리시스템 수강생 관심직업형태 구분 -->
+	<bean id="COM163CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewDepthListener">
+		<constructor-arg index="0" value="COM163" />
+		<constructor-arg index="1" value="interJob" />
+		<constructor-arg index="2" value="interJobNm" />
+	</bean>
+	
+	<!-- 경력관리시스템 수강생 경력 직급 구분 -->
+	<bean id="COM164CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewDepthListener">
+		<constructor-arg index="0" value="COM164" />
+		<constructor-arg index="1" value="rank" />
+		<constructor-arg index="2" value="rankNm" />
+	</bean>
+	
+	<!-- 경력관리시스템 수강생 학력 학교구분 -->
+	<bean id="COM165CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewDepthListener">
+		<constructor-arg index="0" value="COM165" />
+		<constructor-arg index="1" value="schGubun" />
+		<constructor-arg index="2" value="schGubunNm" />
+	</bean>
+	
+	<!-- 경력관리시스템 수강생 학력 전공계열구분 -->
+	<bean id="COM166CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewDepthListener">
+		<constructor-arg index="0" value="COM166" />
+		<constructor-arg index="1" value="major" />
+		<constructor-arg index="2" value="majorNm" />
+	</bean>
+	
+	<!-- 경력관리시스템 수강생 학력 작품경력 활동기간 -->
+	<bean id="COM167CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewDepthListener">
+		<constructor-arg index="0" value="COM167" />
+		<constructor-arg index="1" value="fieldCreatePeriod" />
+		<constructor-arg index="2" value="fieldCreatePeriodNm" />
+	</bean>
+	<!-- 경력관리시스템 교육생경력관리 서비스 -->
+	<cps:cps id="stuCareerMngService" class="kr.co.edu.careerManage.service.StuCareerMngService">
+		<cps:listeners>
+			<cps:listener target-methods="list,view,forInsert,joinEduView,careerView" ref="COM162CmmCodeViewListener"/>
+			<cps:listener target-methods="list,view,forInsert,joinEduView,careerView" ref="COM163CmmCodeViewListener"/>
+			<cps:listener target-methods="list,view,forInsert,joinEduView,careerView" ref="COM164CmmCodeViewListener"/>
+			<cps:listener target-methods="list,view,forInsert,joinEduView,careerView" ref="COM165CmmCodeViewListener"/>
+			<cps:listener target-methods="list,view,forInsert,joinEduView,careerView" ref="COM166CmmCodeViewListener"/>
+			<cps:listener target-methods="createView" ref="COM167CmmCodeViewListener"/>
+		</cps:listeners>
+	</cps:cps>
+	
+	<cps:cps id="statisticsMngService" class="kr.co.edu.careerManage.service.StatisticsMngService">
+		<cps:listeners>
+			<cps:listener target-methods="list" ref="COM162CmmCodeViewListener"/>
+			<cps:listener target-methods="list" ref="COM163CmmCodeViewListener"/>
+			<cps:listener target-methods="list" ref="COM164CmmCodeViewListener"/>
+			<cps:listener target-methods="list" ref="COM165CmmCodeViewListener"/>
+			<cps:listener target-methods="list" ref="COM166CmmCodeViewListener"/>
+		</cps:listeners>
+	</cps:cps>
+	
+
+</beans>

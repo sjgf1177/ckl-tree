@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN"
+    "http://www.ibatis.com/dtd/sql-map-config-2.dtd">
+
+<sqlMapConfig>
+	<sqlMap resource="egovframework/sqlmap/kr/co/edu/empymnCnsl_SQL_oracle.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/edu/empymnCnslList_SQL_oracle.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/edu/dicary_SQL_oracle.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/edu/ablmanAcademy_SQL_oracle.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/edu/pltfomInstt_SQL_oracle.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/edu/mentorManage_SQL_oracle.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/edu/mainRsltManage_SQL_oracle.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/edu/ems_SQL_oracle.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/edu/empmnPblanc_SQL_oracle.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/edu/empmnStup_SQL_oracle.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/edu/entrprsManage_SQL_oracle.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/edu/jobfair_SQL_oracle.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/edu/hkFcltyResve_SQL_oracle.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/edu/hkEtcResve_SQL_oracle.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/edu/hkHldy_SQL_oracle.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/edu/careerManage_SQL_oracle.xml"/>
+<sqlMap resource="egovframework/sqlmap/kr/co/edu/hkCultureResve_SQL_oracle.xml"></sqlMap></sqlMapConfig>

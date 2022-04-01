@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="pltfomInstt">
+
+	<typeAlias alias="zvl" type="kr.co.unp.util.ZValue" />
+
+	<sql id="pltfomInsttDAO.selectPltFomInsttList-where">
+		<isNotEmpty prepend="AND" property="year">
+				<![CDATA[	a.YEAR LIKE  #year# 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="insttNm">
+				<![CDATA[	UPPER(a.INSTT_NM) LIKE UPPER('%' || #insttNm# || '%') 		]]>
+		</isNotEmpty>
+	</sql>
+
+
+
+	<select id="pltfomInsttDAO.selectPltFomInsttCnt" resultClass="int">
+		<![CDATA[
+		/* pltfomInsttDAO.selectPltFomInsttCnt */
+			SELECT COUNT(*)
+			  FROM TN_PLTFOM_INSTT a
+				          WHERE 1=1 and a.DELETE_AT = 'N'
+
+		]]>
+		<include refid="pltfomInsttDAO.selectPltFomInsttList-where" />
+	</select>
+
+	<select id="pltfomInsttDAO.mentorListCnt" resultClass="int">
+		<![CDATA[
+		/* pltfomInsttDAO.mentorListCnt */
+			SELECT COUNT(*)
+			  FROM TN_MENTO a
+				          WHERE 1=1
+
+		]]>
+	</select>
+
+
+		<!--CLOB 타입을 위한 리절트맵 -->
+	<resultMap id="pltfomInsttDAO.selectMentorManageListMap" class="zvl">
+		<result property="mentoSn" column="MENTO_SN" />
+		<result property="insttSn" column="INSTT_SN" />
+		<result property="nm" column="NM" />
+		<result property="psitn" column="PSITN" />
+		<result property="histSe" column="HIST_SE" />
+		<result property="histCn" column="HIST_CN" jdbcType="CLOB" javaType="java.lang.String" />
+		<result property="mentoNm" column="MENTO_NM" />
+		<result property="sortOrdr" column="SORT_ORDR" />
+		<result property="frstRegistPnttm" column="FRST_REGIST_PNTTM" />
+		<result property="frstRegisterId" column="FRST_REGISTER_ID" />
+		<result property="lastUpdtPnttm" column="LAST_UPDT_PNTTM" />
+		<result property="lastUpdusrId" column="LAST_UPDUSR_ID" />
+		<result property="deleteAt" column="DELETE_AT" />
+		<result property="atchFileId" column="ATCH_FILE_ID" />
+	</resultMap>
+
+
+	<select id="pltfomInsttDAO.selectMentorManageList" parameterClass="zvl" resultMap="pltfomInsttDAO.selectMentorManageListMap">
+		<![CDATA[
+		/* mentorManageDAO.selectMentorManageList */
+			SELECT *
+			  FROM
+			       (
+			       SELECT ROWNUM RNUM,
+			              ALL_LIST.*
+			         FROM
+			         (
+					SELECT A.MENTO_SN,
+					       A.INSTT_SN,
+					       A.NM,
+					       A.PSITN,
+					       A.HIST_SE,
+					       A.HIST_CN,
+					       A.MENTO_NM,
+					       A.SORT_ORDR,
+					       A.FRST_REGIST_PNTTM,
+					       A.FRST_REGISTER_ID,
+					       A.LAST_UPDT_PNTTM,
+					       A.LAST_UPDUSR_ID,
+					       A.DELETE_AT,
+					       A.ATCH_FILE_ID
+					  FROM TN_MENTO A
+					  WHERE a.INSTT_SN = #insttSn#
+					  AND DELETE_AT = 'N'
+					  ORDER BY a.SORT_ORDR ASC,
+           					a.FRST_REGIST_PNTTM DESC
+			              ) ALL_LIST
+			       )
+			 WHERE  RNUM  > #firstIndex#
+			   AND  RNUM <= #firstIndex# + #recordCountPerPage#
+		]]>
+</select>
+
+
+
+
+
+
+
+
+	<!--CLOB 타입을 위한 리절트맵 -->
+	<resultMap id="pltfomInsttDAO.selectPltFomInsttListMap" class="zvl">
+		<result property="insttSn" column="INSTT_SN" />
+		<result property="year" column="YEAR" jdbcType="NUMBER" javaType="java.lang.String" />
+		<result property="yearNm" column="YEAR_NM" />
+		<result property="insttNm" column="INSTT_NM" />
+		<result property="mainSvc" column="MAIN_SVC" />
+		<result property="detailCn" column="DETAIL_CN" jdbcType="CLOB" javaType="java.lang.String" />
+		<result property="themaColor" column="THEMA_COLOR" />
+		<result property="sortOrdr" column="SORT_ORDR" />
+		<result property="mentoCo" column="MENTO_CO" />
+		<result property="mentiCo" column="MENTI_CO" />
+		<result property="frstRegistPnttm" column="FRST_REGIST_PNTTM" />
+		<result property="frstRegisterId" column="FRST_REGISTER_ID" />
+		<result property="lastUpdtPnttm" column="LAST_UPDT_PNTTM" />
+		<result property="lastUpdusrId" column="LAST_UPDUSR_ID" />
+		<result property="deleteAt" column="DELETE_AT" />
+		<result property="atchFileId" column="ATCH_FILE_ID" />
+		<result property="useAt" column="USE_AT" />
+	</resultMap>
+
+
+	<select id="pltfomInsttDAO.selectPltFomInsttList" parameterClass="zvl" resultMap="pltfomInsttDAO.selectPltFomInsttListMap">
+		<![CDATA[
+		/* pltfomInsttDAO.selectPltFomInsttList */
+
+			SELECT *
+			  FROM
+			       (
+			       SELECT ROWNUM RNUM,
+			              ALL_LIST.*
+			         FROM
+			         (
+			       SELECT  a.INSTT_SN,
+			       		   a.YEAR,
+					       FN_CMMNCODE_NM('COM084', a.YEAR) AS YEAR_NM,
+					       a.INSTT_NM,
+					       a.MAIN_SVC,
+					       a.DETAIL_CN,
+					       a.THEMA_COLOR,
+					       a.SORT_ORDR,
+					       a.MENTO_CO,
+					       a.MENTI_CO,
+					       a.FRST_REGIST_PNTTM,
+					       a.FRST_REGISTER_ID,
+					       a.LAST_UPDT_PNTTM,
+					       a.LAST_UPDUSR_ID,
+					       a.DELETE_AT,
+					       a.ATCH_FILE_ID,
+					       a.USE_AT
+					  FROM TN_PLTFOM_INSTT A
+					  WHERE DELETE_AT = 'N' 
+					]]>
+					<isEqual prepend="AND" property="siteName"  compareValue="edu">
+						<![CDATA[ a.USE_AT = 'Y']]>
+					</isEqual>
+					<include refid="pltfomInsttDAO.selectPltFomInsttList-where" />
+					  <![CDATA[
+					  ORDER BY a.SORT_ORDR ASC,
+           					a.FRST_REGIST_PNTTM DESC
+			              ) ALL_LIST
+			       )
+			       ]]>
+	    <isEqual property="siteName"  compareValue="bos"  >
+					  <![CDATA[
+						 WHERE  RNUM  > #firstIndex#
+						   AND  RNUM <= #firstIndex# + #recordCountPerPage#
+					   ]]>
+		</isEqual>
+	</select>
+
+	<insert id="pltfomInsttDAO.pltfomInsttInsert" parameterClass="zvl">
+		<selectKey resultClass="java.lang.Long" keyProperty="insttSn">
+			SELECT NVL(MAX(INSTT_SN),0)+1 AS INSTT_SN FROM TN_PLTFOM_INSTT
+		</selectKey>
+ 	 <![CDATA[
+		/* pltfomInsttDAO.pltfomInsttInsert */
+
+		INSERT INTO TN_PLTFOM_INSTT
+       (
+           INSTT_SN,
+           YEAR,
+           INSTT_NM,
+           MAIN_SVC,
+           DETAIL_CN,
+           THEMA_COLOR,
+           SORT_ORDR,
+           MENTO_CO,
+           MENTI_CO,
+           FRST_REGIST_PNTTM,
+           FRST_REGISTER_ID,
+           DELETE_AT,
+           ATCH_FILE_ID,
+           USE_AT
+       )
+       VALUES
+       (
+           #insttSn#,
+           #year#,
+           #insttNm#,
+           #mainSvc#,
+           #detailCn:CLOB#,
+           #themaColor#,
+           #sortOrdr#,
+           #mentoCo#,
+           #mentiCo#,
+           sysdate,
+           #frstRegistPnttm#,
+           NVL(#deleteAt#,'N'),
+           #atchFileId#,
+           #useAt#
+       )
+
+			]]>
+	</insert>
+<!--CLOB 타입을 위한 리절트맵 -->
+	<resultMap id="pltfomInsttDAO.selectpltfomInsttMap" class="zvl">
+		<result property="insttSn" column="INSTT_SN" />
+		<result property="year" column="YEAR" jdbcType="NUMBER" javaType="java.lang.String" />
+		<result property="yearNm" column="YEAR_NM" />
+		<result property="insttNm" column="INSTT_NM" />
+		<result property="mainSvc" column="MAIN_SVC" />
+		<result property="detailCn" column="DETAIL_CN" jdbcType="CLOB" javaType="java.lang.String" />
+		<result property="themaColor" column="THEMA_COLOR" />
+		<result property="sortOrdr" column="SORT_ORDR" />
+		<result property="mentoCo" column="MENTO_CO" />
+		<result property="mentiCo" column="MENTI_CO" />
+		<result property="frstRegistPnttm" column="FRST_REGIST_PNTTM" />
+		<result property="frstRegisterId" column="FRST_REGISTER_ID" />
+		<result property="lastUpdtPnttm" column="LAST_UPDT_PNTTM" />
+		<result property="lastUpdusrId" column="LAST_UPDUSR_ID" />
+		<result property="deleteAt" column="DELETE_AT" />
+		<result property="atchFileId" column="ATCH_FILE_ID" />
+		<result property="useAt" column="USE_AT" />
+	</resultMap>
+
+	<select id="pltfomInsttDAO.selectpltfomInstt" parameterClass="zvl" resultMap="pltfomInsttDAO.selectpltfomInsttMap"  >
+				SELECT a.INSTT_SN,
+				   a.YEAR,
+			       FN_CMMNCODE_NM('COM084', a.YEAR) AS YEAR_NM,
+			       a.INSTT_NM,
+			       a.MAIN_SVC,
+			       a.DETAIL_CN,
+			       a.THEMA_COLOR,
+			       a.SORT_ORDR,
+			       a.MENTO_CO,
+			       a.MENTI_CO,
+			       a.FRST_REGIST_PNTTM,
+			       a.FRST_REGISTER_ID,
+			       a.LAST_UPDT_PNTTM,
+			       a.LAST_UPDUSR_ID,
+			       a.DELETE_AT,
+		           a.ATCH_FILE_ID,
+		           a.USE_AT
+			  FROM TN_PLTFOM_INSTT A
+			WHERE a.INSTT_SN = #insttSn#
+	</select>
+
+	<update id="pltfomInsttDAO.updatePltfomInstt" parameterClass="zvl">
+ 		<![CDATA[
+ 		/* pltfomInsttDAO.updatePltfomInstt*/
+			UPDATE TN_PLTFOM_INSTT
+			       SET
+			       YEAR = #year#,
+			       INSTT_NM = #insttNm#,
+			       MAIN_SVC = #mainSvc#,
+			       DETAIL_CN = #detailCn:CLOB#,
+			       THEMA_COLOR = #themaColor#,
+			       SORT_ORDR = #sortOrdr#,
+			       MENTO_CO = #mentoCo#,
+			       MENTI_CO = #mentiCo#,
+			       LAST_UPDT_PNTTM = sysdate,
+			       LAST_UPDUSR_ID = #lastUpdusrId#,
+			       ATCH_FILE_ID = #atchFileId#,
+			       USE_AT = #useAt#
+			 WHERE INSTT_SN = #insttSn#
+
+ 		]]>
+	</update>
+
+
+		<update id="pltfomInsttDAO.deletePltfomInstt" parameterClass="zvl" >
+		/* empymnCnslListDAO.deletePltfomInstt*/
+		<![CDATA[
+		UPDATE TN_PLTFOM_INSTT
+	       SET
+		       LAST_UPDT_PNTTM = SYSDATE,
+		       LAST_UPDUSR_ID = #lastUpdusrId#,
+		       DELETE_AT = 'Y'
+			WHERE INSTT_SN = #insttSn#
+		]]>
+		</update>
+
+
+</sqlMap>
+

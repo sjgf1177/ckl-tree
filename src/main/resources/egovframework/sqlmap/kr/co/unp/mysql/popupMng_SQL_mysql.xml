@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="popupMng">
+
+	<typeAlias  alias="zvl" type="kr.co.unp.util.ZValue"/>
+
+	<sql id="popupMngDAO.selectPopupList-where">
+		<isNotEmpty property="siteId" prepend="AND">
+			<![CDATA[	SITE_ID LIKE CONCAT('%',trim(#siteId#), '%')  		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="sdate">
+			<![CDATA[	DATE_FORMAT(NOW(), '%Y%m%d') >= REPLACE(#sdate#,'-','') 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="edate">
+			<![CDATA[	DATE_FORMAT(NOW(), '%Y%m%d') <= REPLACE(#edate#,'-','') 		]]>
+		</isNotEmpty>
+		<isNotEmpty property="searchTxt">
+			<isEqual prepend="AND" property="searchType" compareValue="1">
+				<![CDATA[	TITLE LIKE CONCAT('%',trim(#searchTxt#), '%')   		]]>
+			</isEqual>
+			<isEqual prepend="AND" property="searchType" compareValue="2">
+				<![CDATA[	CONTENT LIKE CONCAT('%',trim(#searchTxt#), '%')    	]]>
+			</isEqual>
+		</isNotEmpty>
+	</sql>
+
+	<select id="popupMngDAO.selectPopupListCnt" parameterClass="zvl" resultClass="int">
+		<![CDATA[
+			SELECT COUNT(*)
+			FROM TB_POPUP_MNG a
+			WHERE 1=1
+		 ]]>
+		<include refid="popupMngDAO.selectPopupList-where" />
+	</select>
+
+	<select id="popupMngDAO.selectPopupList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+
+		SELECT  *
+		  FROM  (
+		SELECT @RN:=@RN+1 AS RNUM, ALL_LIST.*
+		  FROM  (
+
+			SELECT
+			   PNO,TITLE,CONTENT,SDATE,EDATE,WIDTH,HEIGHT,ATCH_FILE_ID,DATE_FORMAT(a.REG_DATE, '%Y-%m-%d %H:%i:%s') AS REG_DATE,
+			   SITE_ID,CLOSE_USE_YN,USEFLAG,PLEFT,TOP,LINK,LINKADDRESS,MAP,SCROLL
+		  FROM TB_POPUP_MNG a
+		  WHERE 1=1
+		]]>
+		<include refid="popupMngDAO.selectPopupList-where" />
+		<![CDATA[
+			ORDER BY REG_DATE DESC
+
+				    ) ALL_LIST
+			    ) ALL_LIST
+			limit #firstIndex#, #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="popupMngDAO.selectPubPopupList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+			SELECT
+			   PNO,TITLE,CONTENT,SDATE,EDATE,WIDTH,HEIGHT,ATCH_FILE_ID,DATE_FORMAT(REG_DATE, '%Y-%m-%d HH:mm:ss') AS REG_DATE,
+			   SITE_ID, CLOSE_USE_YN, USEFLAG, PLEFT, TOP, LINK, LINKADDRESS, MAP, SCROLL
+		  FROM TB_POPUP_MNG a
+		  where REPLACE(a.SDATE,'-','') <= DATE_FORMAT(NOW(), '%Y%m%d') AND REPLACE(a.EDATE,'-','') >= DATE_FORMAT(NOW(), '%Y%m%d') AND a.USEFLAG = 'Y'
+		]]>
+		<include refid="popupMngDAO.selectPopupList-where" />
+		  order by reg_date desc
+	</select>
+
+	<insert id="popupMngDAO.addPopup" parameterClass="zvl">
+		<selectKey resultClass="java.lang.Long" keyProperty="pno">
+			SELECT IFNULL(MAX(PNO),0)+1 AS NTT_ID  FROM TB_POPUP_MNG
+		</selectKey>
+		<![CDATA[
+		     INSERT INTO TB_POPUP_MNG ( PNO,TITLE,CONTENT,SDATE,EDATE,WIDTH,HEIGHT,ATCH_FILE_ID,REG_DATE,SITE_ID,CLOSE_USE_YN, USEFLAG, PLEFT, TOP, LINK, LINKADDRESS, MAP, SCROLL )
+			VALUES (#pno#, #title#,#content:CLOB#,#sdate#,#edate#,#width#,#height#,#atchFileId#,NOW(),#siteId#,#closeUseYn#,#useflag#,#pleft#,#top#,#link#,#linkaddress#,#map#,#scroll#)
+		]]>
+	</insert>
+
+	<update id="popupMngDAO.updatePopup" parameterClass="zvl">
+		<![CDATA[
+		    UPDATE TB_POPUP_MNG
+			SET TITLE = #title#, CONTENT = #content:CLOB#, SDATE = #sdate#, EDATE = #edate#,
+				WIDTH = #width#, HEIGHT = #height#, ATCH_FILE_ID = #atchFileId#, SITE_ID = #siteId#,
+				CLOSE_USE_YN = #closeUseYn#, USEFLAG = #useflag#, PLEFT = #pleft#, TOP = #top#, LINK = #link#,
+				LINKADDRESS = #linkaddress#, MAP = #map#, SCROLL = #scroll#
+			WHERE PNO = #pno#
+		]]>
+	</update>
+
+	<delete id="popupMngDAO.delPopup" parameterClass="zvl">
+		<![CDATA[
+		     DELETE TB_POPUP_MNG
+			 WHERE PNO = #pno#
+		]]>
+	</delete>
+
+	<select id="popupMngDAO.selectPopup" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+			SELECT PNO,TITLE,CONTENT,SDATE,EDATE,WIDTH,HEIGHT,ATCH_FILE_ID,DATE_FORMAT(REG_DATE, '%Y-%m-%d %H:%i:%s') AS REG_DATE,
+			SITE_ID, CLOSE_USE_YN, USEFLAG, PLEFT, TOP, LINK, LINKADDRESS, MAP, SCROLL
+			FROM TB_POPUP_MNG
+			WHERE PNO = #pno#
+		 ]]>
+	</select>
+</sqlMap>

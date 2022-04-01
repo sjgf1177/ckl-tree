@@ -1,0 +1,1821 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="concert">
+
+	<typeAlias alias="zvl" type="kr.co.unp.util.ZValue" />
+
+
+	
+	<sql id="concertDAO.selectConcertList-where">
+					AND DEL_DATE IS NULL
+		<isNotEmpty prepend="AND" property="concertType">
+			<![CDATA[	CONCERT_TYPE LIKE '%' || #concertType# || '%' 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="concertTitle">
+			<![CDATA[	CONCERT_TITLE LIKE '%' || #concertTitle# || '%' 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="concertExplain">
+			<![CDATA[	CONCERT_EXPLAIN LIKE '%' || #concertExplain# || '%' 		]]>
+		</isNotEmpty>
+		<!-- <isNotEmpty prepend="AND" property="searchWrd">
+			<isEqual property="searchCnd" compareValue="1">
+				<![CDATA[	A.USER_ID  LIKE '%' || #searchWrd# || '%'		]]>
+			</isEqual>
+			<isEqual property="searchCnd" compareValue="3">
+				<![CDATA[	C.DEPT_NM_KOR LIKE '%' || #searchWrd# || '%' 	]]>
+			</isEqual>
+			<isEqual property="searchCnd" compareValue="4">
+				<![CDATA[	A.USER_NM LIKE '%' || #searchWrd# || '%' 		]]>
+			</isEqual>
+		</isNotEmpty> -->
+	</sql>
+
+
+
+	
+	<select id="concertDAO.selectConcertTempReservList" resultClass="zvl" parameterClass="zvl" >
+		<![CDATA[
+			SELECT
+			    TEMP_RESERV_SEQ,
+			    USER_ID,
+			    MEMBER_NAME,
+			    MEMBER_TEL,
+			    REG_DATE,
+			    CONCERT_ID,
+			    CONCERT_TIME_ID,
+			    to_char(REG_DATE, 'yyyy-mm-dd hh24:mi') AS REG_DATE_STR
+			FROM TN_CONCERT_RESERV_TEMP
+			WHERE CONCERT_TIME_ID = #concertTimeId# AND CONCERT_ID = #concertId# ORDER BY TEMP_RESERV_SEQ DESC
+		]]>
+	</select>
+
+	
+	<select id="concertDAO.selectConcertTempReservListCnt" resultClass="int" parameterClass="zvl" >
+		<![CDATA[
+			SELECT count(*) FROM TN_CONCERT_RESERV_TEMP WHERE CONCERT_TIME_ID = #concertTimeId# AND CONCERT_ID = #concertId#
+		]]>
+	</select>
+	
+	<select id="concertDAO.selectConcertList" resultClass="zvl" parameterClass="zvl" >
+	<![CDATA[
+	SELECT *
+  	FROM (
+    SELECT ROWNUM RNUM, ALL_LIST.*
+    FROM (
+	]]>
+		<![CDATA[
+			SELECT * FROM (
+			SELECT
+				CONCERT.*
+				, TO_CHAR( (SELECT MIN(START_TIME)
+		          FROM TN_CONCERT_TIME
+		          WHERE CONCERT_ID = CONCERT.CONCERT_ID AND DEL_DATE IS NULL), 'yyyy-mm-dd' ) AS CONCERT_START_DATE
+		        ,  TO_CHAR( (SELECT MAX(END_TIME)
+		          FROM TN_CONCERT_TIME
+		          WHERE CONCERT_ID = CONCERT.CONCERT_ID AND DEL_DATE IS NULL), 'yyyy-mm-dd' ) AS CONCERT_END_DATE
+			FROM (
+					SELECT
+					  *
+					FROM TN_CONCERT
+					WHERE 1=1
+		]]>
+		<include refid="concertDAO.selectConcertList-where" />
+		<![CDATA[
+					ORDER BY REG_DATE DESC
+				) CONCERT
+			)
+			WHERE 1=1
+		]]>
+		<isNotEmpty prepend="AND" property="sdate">
+			<![CDATA[	CONCERT_START_DATE >= #sdate# 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="edate">
+			<![CDATA[	RESERV_END_TIME <= #edate# 		]]>
+		</isNotEmpty>
+		<![CDATA[
+		) ALL_LIST
+       	)
+	 	WHERE  RNUM  > #firstIndex#
+	   		AND  RNUM <= #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+	
+	
+	
+	<select id="concertDAO.selectConcertListCnt" resultClass="int" parameterClass="zvl" >
+		<![CDATA[
+			SELECT count( * ) FROM (
+			SELECT
+				CONCERT.*
+				, TO_CHAR( (SELECT MIN(START_TIME)
+		          FROM TN_CONCERT_TIME
+		          WHERE CONCERT_ID = CONCERT.CONCERT_ID AND DEL_DATE IS NULL), 'yyyy-mm-dd' ) AS CONCERT_START_DATE
+		        ,  TO_CHAR( (SELECT MAX(END_TIME)
+		          FROM TN_CONCERT_TIME
+		          WHERE CONCERT_ID = CONCERT.CONCERT_ID AND DEL_DATE IS NULL), 'yyyy-mm-dd' ) AS CONCERT_END_DATE
+			FROM (
+					SELECT
+					  *
+					FROM TN_CONCERT
+					WHERE 1=1
+		]]>
+		<include refid="concertDAO.selectConcertList-where" />
+		<![CDATA[
+				) CONCERT
+			)
+			WHERE 1=1
+		]]>
+		<isNotEmpty prepend="AND" property="sdate">
+			<![CDATA[	CONCERT_START_DATE >= #sdate# 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="edate">
+			<![CDATA[	RESERV_END_TIME <= #edate# 		]]>
+		</isNotEmpty>
+	</select>
+	
+	
+	
+	<select id="concertDAO.selectConcertFrontListCnt" resultClass="int" parameterClass="zvl" >
+		<![CDATA[
+				SELECT COUNT( * ) 
+				FROM (
+					SELECT CONCERT_ID
+					  FROM (
+					    SELECT
+					      TN_CONCERT_TIME.CONCERT_ID,
+					      EXTRACT(YEAR FROM TN_CONCERT_TIME.START_TIME)  AS CONCERT_YEAR,
+					      EXTRACT(MONTH FROM TN_CONCERT_TIME.START_TIME) AS CONCERT_MONTH,
+					      EXTRACT(DAY FROM TN_CONCERT_TIME.START_TIME)   AS CONCERT_DATE,
+					      TN_CONCERT.CONCERT_TITLE
+					    FROM TN_CONCERT_TIME
+					    LEFT JOIN TN_CONCERT ON TN_CONCERT.CONCERT_ID = TN_CONCERT_TIME.CONCERT_ID
+					    WHERE TN_CONCERT_TIME.DEL_DATE IS NULL
+					  )
+					  WHERE 1=1
+					  ]]> 
+					  <isNotEmpty prepend="AND" property="selectedYear">
+						CONCERT_YEAR = #selectedYear#
+					  </isNotEmpty>
+					  <isNotEmpty prepend="AND" property="selectedMonth">
+						CONCERT_MONTH = #selectedMonth#
+					  </isNotEmpty>
+					  <isNotEmpty prepend="AND" property="selectedDate">
+						CONCERT_DATE = #selectedDate#
+					  </isNotEmpty>
+					  <isNotEmpty prepend="AND" property="searchKeyword">
+						CONCERT_TITLE LIKE '%'||#searchKeyword#||'%'
+					  </isNotEmpty>
+					  <![CDATA[
+					  GROUP BY CONCERT_ID 
+				  )
+		]]>
+	</select>
+
+
+
+ 	<delete id="concertDAO.deleteConcert" parameterClass="zvl">
+ 		<![CDATA[
+			DELETE TN_CONCERT
+			WHERE CONCERT_ID = #concertId#
+ 		]]>
+ 	</delete>
+ 	
+	<select id="concertDAO.selectConcertFrontList" resultClass="zvl" parameterClass="zvl" >
+	<![CDATA[
+	SELECT *
+			  FROM
+			       (
+			       SELECT ROWNUM RNUM,
+			              ALL_LIST.*
+			         FROM
+			         (
+	]]>
+		<![CDATA[
+				SELECT
+				  TO_CHAR(CONCERT_START_DATE, 'yyyy-mm-dd') AS CONCERT_START_DATE,
+				  TO_CHAR(CONCERT_END_DATE, 'yyyy-mm-dd')   AS CONCERT_END_DATE,
+				  TO_CHAR(CONCERT_START_DATE, 'DY')         AS START_DY,
+				  TO_CHAR(CONCERT_END_DATE, 'DY')           AS END_DY,
+				  CONCERT_ID,
+				  CONCERT_TYPE,
+				  CONCERT_TITLE,
+				  CONCERT_EXPLAIN,
+				  DEL_DATE,
+				  ATCH_FILE_ID
+				FROM (SELECT
+				        (SELECT MIN(START_TIME)
+				         FROM TN_CONCERT_TIME
+				         WHERE CONCERT_ID = TN_CONCERT.CONCERT_ID AND DEL_DATE IS NULL) AS CONCERT_START_DATE,
+				        (SELECT MAX(END_TIME)
+				         FROM TN_CONCERT_TIME
+				         WHERE CONCERT_ID = TN_CONCERT.CONCERT_ID AND DEL_DATE IS NULL) AS CONCERT_END_DATE,
+				        TN_CONCERT.CONCERT_TITLE,
+				        TN_CONCERT.CONCERT_ID,
+				        TN_CONCERT.CONCERT_TYPE,
+				        TN_CONCERT.CONCERT_EXPLAIN,
+				        TN_CONCERT.ATCH_FILE_ID,
+				        TN_CONCERT.DEL_DATE
+				      FROM TN_CONCERT
+				      WHERE TN_CONCERT.DEL_DATE IS NULL) TB
+				WHERE 1 = 1 AND CONCERT_ID IN (
+				  SELECT CONCERT_ID
+				  FROM (
+				    SELECT
+				      CONCERT_ID,
+				      EXTRACT(YEAR FROM START_TIME)  AS CONCERT_YEAR,
+				      EXTRACT(MONTH FROM START_TIME) AS CONCERT_MONTH,
+				      EXTRACT(DAY FROM START_TIME)   AS CONCERT_DATE
+				    FROM TN_CONCERT_TIME
+				    WHERE DEL_DATE IS NULL
+				  )
+				  WHERE 1=1
+				  ]]> 
+				  <isNotEmpty prepend="AND" property="selectedYear">
+					CONCERT_YEAR = #selectedYear#
+				  </isNotEmpty>
+				  <isNotEmpty prepend="AND" property="selectedMonth">
+					CONCERT_MONTH = #selectedMonth#
+				  </isNotEmpty>
+				  <isNotEmpty prepend="AND" property="selectedDate">
+					CONCERT_DATE = #selectedDate#
+				  </isNotEmpty>
+				  <isNotEmpty prepend="AND" property="searchKeyword">
+					CONCERT_TITLE LIKE '%'||#searchKeyword#||'%'
+				  </isNotEmpty>
+				<include refid="concertDAO.selectConcertList-where" />
+			<![CDATA[
+			GROUP BY CONCERT_ID )
+			ORDER BY CONCERT_START_DATE DESC , CONCERT_ID DESC
+			) ALL_LIST
+			       )
+			 WHERE  RNUM  > #firstIndex#
+			   AND  RNUM <= #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+	
+ 	
+	<select id="concertDAO.selectConcertFrontMonthlyList" resultClass="zvl" parameterClass="zvl" >
+			<![CDATA[
+				SELECT
+				    TN_CONCERT_TIME.YYYY,
+				    TN_CONCERT_TIME.MM,
+				    TN_CONCERT_TIME.DD,
+				    TN_CONCERT_TIME.CONCERT_ID,
+				    TN_CONCERT.CONCERT_TITLE
+				FROM (SELECT
+				          YYYY,
+				          MM,
+				          DD,
+				          CONCERT_ID
+				      FROM (
+				          SELECT
+				              TO_CHAR(TN_CONCERT_TIME.START_TIME, 'yyyy') AS YYYY,
+				              TO_CHAR(TN_CONCERT_TIME.START_TIME, 'mm') AS MM,
+				              TO_CHAR(TN_CONCERT_TIME.START_TIME, 'dd') AS DD,
+				              CONCERT_ID
+				          FROM TN_CONCERT_TIME
+				      )
+				      GROUP BY YYYY, MM, DD, CONCERT_ID) TN_CONCERT_TIME
+			    LEFT JOIN TN_CONCERT ON TN_CONCERT.CONCERT_ID = TN_CONCERT_TIME.CONCERT_ID
+			    WHERE 1=1
+			    ]]> 
+			    <isNotEmpty prepend="AND" property="selectedYear">
+					TN_CONCERT_TIME.YYYY = #selectedYear#
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="searchKeyword">
+					CONCERT_TITLE LIKE '%'||#searchKeyword#||'%'
+				  </isNotEmpty>
+				<![CDATA[
+				ORDER BY MM ASC , DD ASC, TN_CONCERT.CONCERT_TITLE ASC
+				]]>    
+	</select>
+ 	
+	<select id="concertDAO.selectConcertFrontMonthlyListCnt" resultClass="int" parameterClass="zvl" >
+			<![CDATA[
+				SELECT COUNT(*)
+				FROM (
+				    SELECT CONCERT_ID
+				    FROM (
+				        SELECT
+				            TO_CHAR(TN_CONCERT_TIME.START_TIME, 'yyyy') AS YYYY,
+				            TO_CHAR(TN_CONCERT_TIME.START_TIME, 'mm')   AS MM,
+				            TO_CHAR(TN_CONCERT_TIME.START_TIME, 'dd')   AS DD,
+				            TN_CONCERT_TIME.CONCERT_ID
+				        FROM TN_CONCERT_TIME
+				        	LEFT JOIN TN_CONCERT ON TN_CONCERT.CONCERT_ID = TN_CONCERT_TIME.CONCERT_ID
+				        WHERE 1=1
+				        ]]>
+				        <isNotEmpty prepend="AND" property="searchKeyword">
+			  		    TN_CONCERT.CONCERT_TITLE LIKE '%'||#searchKeyword#||'%'
+				    	</isNotEmpty>
+				        <![CDATA[
+				    )
+				    WHERE 1=1 
+				    ]]>
+			        <isNotEmpty prepend="AND" property="selectedYear">
+						YYYY = #selectedYear#
+					</isNotEmpty>
+				<![CDATA[	        
+				    GROUP BY YYYY, MM, DD, CONCERT_ID
+				)
+			   ]]>
+	</select>
+	
+	
+	
+	
+	<resultMap id="concertDAO.concertInfoMap" class="zvl">
+	    <result property="concertId" column="CONCERT_ID"/>
+		<result property="userId" column="USER_ID"/>
+		<result property="concertName" column="CONCERT_NAME"/>
+		<result property="atchFileId" column="ATCH_FILE_ID"/>
+		<result property="concertTitle" column="CONCERT_TITLE"/>
+		<result property="concertType" column="CONCERT_TYPE"/>
+		<result property="concertPlace" column="CONCERT_PLACE"/>
+		<result property="concertTime" column="CONCERT_TIME"/>
+		<result property="runningTime" column="RUNNING_TIME"/>
+		<result property="helpCall" column="HELP_CALL"/>
+		<result property="commentMsg" column="COMMENT_MSG"/>
+		<result property="concertExplain" column="CONCERT_EXPLAIN" jdbcType="CLOB" javaType="java.lang.String"/>
+		<result property="additionalTitle1" column="ADDITIONAL_TITLE_1"/>
+		<result property="additionalTitle2" column="ADDITIONAL_TITLE_2"/>
+		<result property="additionalTitle3" column="ADDITIONAL_TITLE_3"/>
+		<result property="additionalTitle4" column="ADDITIONAL_TITLE_4"/>
+		<result property="additionalTitle5" column="ADDITIONAL_TITLE_5"/>
+		<result property="additionalContent1" column="ADDITIONAL_CONTENT_1"/>
+		<result property="additionalContent2" column="ADDITIONAL_CONTENT_2"/>
+		<result property="additionalContent3" column="ADDITIONAL_CONTENT_3"/>
+		<result property="additionalContent4" column="ADDITIONAL_CONTENT_4"/>
+		<result property="additionalContent5" column="ADDITIONAL_CONTENT_5"/>
+		<result property="mainDisplay" column="MAIN_DISPLAY"/>
+		<result property="useReserv" column="USE_RESERV"/>
+		<result property="concertStartDate" column="CONCERT_START_DATE"/>
+		<result property="concertEndDate" column="CONCERT_END_DATE"/>
+		<result property="reservEndTime" column="RESERV_END_TIME"/>
+		<result property="reservEndTimeHh" column="RESERV_END_TIME_HH"/>
+		<result property="reservEndTimeMi" column="RESERV_END_TIME_MI"/>
+		<result property="reservLimitCnt" column="RESERV_LIMIT_CNT"/>
+		<result property="isFree" column="IS_FREE"/>
+		<result property="reservUrl" column="RESERV_URL"/>
+		<result property="reservSitFix" column="RESERV_SIT_FIX"/>
+		<result property="reservOnlineSitNum" column="RESERV_ONLINE_SIT_NUM"/>
+		<result property="reservCallSitNum" column="RESERV_CALL_SIT_NUM"/>
+		<result property="reservFrontSitNum" column="RESERV_FRONT_SIT_NUM"/>
+		<result property="regDate" column="REG_DATE"/>
+		<result property="reservStartTime" column="RESERV_START_TIME"/>
+		<result property="reservStartTimeHh" column="RESERV_START_TIME_HH"/>
+		<result property="reservStartTimeMi" column="RESERV_START_TIME_MI"/>
+		<result property="modDate" column="MOD_DATE"/>
+		<result property="delDate" column="DEL_DATE"/>
+		<result property="regMember" column="REG_MEMBER"/>
+		<result property="canReservNow" column="CAN_RESERV_NOW"/>
+		<result property="vimeoUrl" column="VIMEO_URL"/>
+	</resultMap>
+	
+	
+	<select id="concertDAO.getCntCanReservTime" resultClass="int" parameterClass="zvl">
+	<![CDATA[
+		SELECT COUNT( * )
+			FROM (
+			    SELECT to_char(TN_CONCERT_TIME.START_TIME - 1, 'YYYYMMDD') ||
+			           to_char(TN_CONCERT.RESERV_END_TIME, 'HH24MI') AS RESERV_LIMIT_TIME
+			    FROM TN_CONCERT_TIME
+			        LEFT JOIN TN_CONCERT ON TN_CONCERT.CONCERT_ID = TN_CONCERT_TIME.CONCERT_ID
+			    WHERE TN_CONCERT_TIME.CONCERT_ID = #concertId#
+			) TB WHERE 1=1 AND TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI') < TB.RESERV_LIMIT_TIME
+	]]>
+	</select>
+	
+	
+	<select id="concertDAO.selectConcertDetail" resultClass="zvl" resultMap="concertDAO.concertInfoMap" parameterClass="zvl" >
+		<![CDATA[
+				SELECT
+				  cc.CONCERT_ID,
+				  adm.USER_ID,
+				  CASE WHEN ( cc.RESERV_START_TIME < sysdate ) THEN 1
+			        ELSE 0
+		            END AS CAN_RESERV_NOW,
+				  cc.CONCERT_NAME,
+				  cc.ATCH_FILE_ID,
+				  cc.CONCERT_TITLE,
+				  cc.CONCERT_TYPE,
+				  cc.CONCERT_PLACE,
+				  cc.CONCERT_TIME,
+				  cc.RUNNING_TIME,
+				  cc.HELP_CALL,
+				  cc.COMMENT_MSG,
+				  cc.CONCERT_EXPLAIN,
+				  cc.ADDITIONAL_TITLE_1,
+				  cc.ADDITIONAL_TITLE_2,
+				  cc.ADDITIONAL_TITLE_3,
+				  cc.ADDITIONAL_TITLE_4,
+				  cc.ADDITIONAL_TITLE_5,
+				  cc.ADDITIONAL_CONTENT_1,
+				  cc.ADDITIONAL_CONTENT_2,
+				  cc.ADDITIONAL_CONTENT_3,
+				  cc.ADDITIONAL_CONTENT_4,
+				  cc.ADDITIONAL_CONTENT_5,
+				  cc.MAIN_DISPLAY,
+				  cc.USE_RESERV,
+				  TO_CHAR( (SELECT MIN(START_TIME)
+				          FROM TN_CONCERT_TIME
+				          WHERE CONCERT_ID = cc.CONCERT_ID AND DEL_DATE IS NULL), 'yyyy-mm-dd' ) AS CONCERT_START_DATE,
+		          TO_CHAR( (SELECT MAX(END_TIME)
+				          FROM TN_CONCERT_TIME
+				          WHERE CONCERT_ID = cc.CONCERT_ID AND DEL_DATE IS NULL), 'yyyy-mm-dd' ) AS CONCERT_END_DATE,
+				  cc.RESERV_END_TIME,
+				  to_char(cc.RESERV_END_TIME,'hh24') as RESERV_END_TIME_HH,
+				  to_char(cc.RESERV_END_TIME,'mi') as RESERV_END_TIME_MI,
+				  cc.RESERV_LIMIT_CNT,
+				  cc.IS_FREE,
+				  cc.RESERV_URL,
+				  cc.VIMEO_URL,
+				  cc.RESERV_SIT_FIX,
+				  cc.RESERV_ONLINE_SIT_NUM,
+				  cc.RESERV_CALL_SIT_NUM,
+				  cc.RESERV_FRONT_SIT_NUM,
+				  cc.REG_DATE,
+				  cc.RESERV_START_TIME,
+				  to_char(cc.RESERV_START_TIME,'hh24') as RESERV_START_TIME_HH,
+				  to_char(cc.RESERV_START_TIME,'mi') as RESERV_START_TIME_MI,
+				  cc.MOD_DATE,
+				  cc.DEL_DATE,
+				  cc.REG_MEMBER
+				FROM TN_CONCERT cc
+				LEFT JOIN TM_ADMIN adm ON adm.USER_IDX = cc.REG_MEMBER
+				WHERE cc.CONCERT_ID = #concertId#
+		]]>
+	</select>
+	
+	<insert id="concertDAO.insertConcert" parameterClass="zvl" >
+		<selectKey resultClass="java.lang.Long" keyProperty="concertId">
+			<![CDATA[	SELECT NVL(MAX(CONCERT_ID),0)+1 AS concertId  FROM TN_CONCERT ]]>
+		</selectKey>
+		<![CDATA[
+		INSERT INTO TN_CONCERT
+	       (
+	           CONCERT_ID, --일련번호
+	           MAIN_DISPLAY, --일련번호
+	           CONCERT_TITLE, --공연명
+	           CONCERT_TYPE, --공연구분
+	           CONCERT_PLACE, --공연장소
+	           CONCERT_TIME, --공연시간
+	           HELP_CALL, --문의연락처
+	           COMMENT_MSG, --비고
+	           CONCERT_EXPLAIN,
+	           ADDITIONAL_TITLE_1, --추가필드타이틀1
+	           ADDITIONAL_TITLE_2, --추가필드타이틀2
+	           ADDITIONAL_TITLE_3, --추가필드타이틀3
+	           ADDITIONAL_TITLE_4, --추가필드타이틀4
+	           ADDITIONAL_TITLE_5, --추가필드타이틀5
+	           ADDITIONAL_CONTENT_1, --추가필드 내용1
+	           ADDITIONAL_CONTENT_2, --추가필드 내용2
+	           ADDITIONAL_CONTENT_3, --추가필드 내용3
+	           ADDITIONAL_CONTENT_4, --추가필드 내용4
+	           ADDITIONAL_CONTENT_5, --추가필드 내용5
+	           USE_RESERV, --예약버튼
+	           RESERV_END_TIME, --예약 종료시간
+	           RESERV_LIMIT_CNT, --1인최대 예매
+	           IS_FREE, --금액
+	           RESERV_URL, --예약 가능한 외부 URL, 있을 경우 무조건 URL 로 이동됨
+	           VIMEO_URL, --동영상 vimeoURL 입력
+	           RESERV_SIT_FIX, --예약좌석 설정
+	           RESERV_ONLINE_SIT_NUM, --온라인 좌석 예약 가능 수
+	           RESERV_START_TIME, --예약 시작시간
+	           ATCH_FILE_ID, --첨부파일 아이디
+	           REG_MEMBER
+	       )
+	       VALUES
+	       (
+	           #concertId#, --일련번호
+	           #mainDisplay#, --일련번호
+	           #concertTitle#, --공연명
+	           #concertType#, --공연구분
+	           #concertPlace#, --공연장소
+	           #concertTime#, --공연시간
+	           #helpCall#, --문의연락처
+	           #commentMsg#, --비고
+	           #concertExplain#,
+	           #additionalTitle1#, --추가필드타이틀1
+	           #additionalTitle2#, --추가필드타이틀2
+	           #additionalTitle3#, --추가필드타이틀3
+	           #additionalTitle4#, --추가필드타이틀4
+	           #additionalTitle5#, --추가필드타이틀5
+	           #additionalContent1#, --추가필드 내용1
+	           #additionalContent2#, --추가필드 내용2
+	           #additionalContent3#, --추가필드 내용3
+	           #additionalContent4#, --추가필드 내용4
+	           #additionalContent5#, --추가필드 내용5
+	           #useReserv#, --예약버튼
+	           to_date(to_char(sysdate,'yyyymmdd')||#reservEndTime#,'yyyymmdd hh24mi'), --예약 종료시간 
+	           #reservLimitCnt#, --1인최대 예매
+	           #isFree#, --금액
+	           #reservUrl#, --예약 가능한 외부 URL, 있을 경우 무조건 URL 로 이동됨
+	           #vimeoUrl#, --동영상 vimeoURL 입력
+	           #reservSitFix#, --예약좌석 설정
+	           #reservOnlineSitNum#, --온라인 좌석 예약 가능 수
+	           to_date(#reservStartTime#,'yyyy-mm-dd hh24'), --예약 시작시간
+	           #atchFileId#, --첨부파일 아이디
+	           #userId# --등록자
+	       )
+		]]>
+	</insert>
+	
+	<update id="concertDAO.updateConcert" parameterClass="zvl" >
+		<![CDATA[
+			UPDATE TN_CONCERT
+			SET
+			  MAIN_DISPLAY = #mainDisplay# --일련번호
+			  ,CONCERT_TITLE = #concertTitle# --공연명
+			  ,CONCERT_TYPE = #concertType# --공연구분
+			  ,CONCERT_PLACE = #concertPlace# --공연장소
+			  ,CONCERT_TIME = #concertTime# --공연장소
+			  ,HELP_CALL = #helpCall# --문의연락처
+			  ,COMMENT_MSG = #commentMsg# --비고
+			  ,CONCERT_EXPLAIN = #concertExplain# 
+			  ,ADDITIONAL_TITLE_1 = #additionalTitle1# --추가필드타이틀1
+			  ,ADDITIONAL_TITLE_2 = #additionalTitle2# --추가필드타이틀2
+			  ,ADDITIONAL_TITLE_3 = #additionalTitle3# --추가필드타이틀3
+			  ,ADDITIONAL_TITLE_4 = #additionalTitle4# --추가필드타이틀4
+			  ,ADDITIONAL_TITLE_5 = #additionalTitle5# --추가필드타이틀5
+			  ,ADDITIONAL_CONTENT_1 = #additionalContent1# --추가필드 내용1
+			  ,ADDITIONAL_CONTENT_2 = #additionalContent2# --추가필드 내용2
+			  ,ADDITIONAL_CONTENT_3 = #additionalContent3# --추가필드 내용3
+			  ,ADDITIONAL_CONTENT_4 = #additionalContent4# --추가필드 내용4
+			  ,ADDITIONAL_CONTENT_5 = #additionalContent5# --추가필드 내용5
+			  ,USE_RESERV = #useReserv# --예약가능여부 
+			  ,VIMEO_URL = #vimeoUrl# --예약 가능한 외부 URL 있을 경우 무조건 URL 로 이동됨
+	      	]]>
+			<isNotEmpty prepend="," property="reservStartTime">
+				<![CDATA[	RESERV_START_TIME = to_date(#reservStartTime#,'yyyy-mm-dd hh24')  	]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="reservEndTime">
+				<![CDATA[	RESERV_END_TIME = to_date(to_char(sysdate,'yyyymmdd')||#reservEndTime#,'yyyymmdd hh24mi') 	]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="reservLimitCnt">
+				<![CDATA[	RESERV_LIMIT_CNT = #reservLimitCnt# 	]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="isFree">
+				<![CDATA[	IS_FREE = #isFree# 	]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="reservUrl">
+				<![CDATA[	RESERV_URL = #reservUrl# 	]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="reservSitFix">
+				<![CDATA[	RESERV_SIT_FIX = #reservSitFix#  	]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="reservOnlineSitNum">
+				<![CDATA[	RESERV_ONLINE_SIT_NUM = #reservOnlineSitNum#  	]]>
+			</isNotEmpty>
+			<![CDATA[
+			  ,MOD_DATE = SYSDATE
+			  ,ATCH_FILE_ID = #atchFileId# 
+			WHERE CONCERT_ID = #concertId#
+
+		]]>
+	</update>
+	
+	
+	
+	
+	
+	<!-- ========== 공연일정 =========== -->
+	<sql id="concertDAO.selectConcertTimeList-where">
+		<isNotEmpty prepend="AND" property="concertId">
+			<![CDATA[	CONCERT_ID = #concertId# 		]]>
+		</isNotEmpty>
+	</sql>
+	
+	<select id="concertDAO.selectConcertTimeListCnt" resultClass="int" parameterClass="zvl" >
+		<![CDATA[
+				SELECT count( * ) 
+				FROM TN_CONCERT_TIME
+				WHERE DEL_DATE IS NULL
+		]]>
+		<include refid="concertDAO.selectConcertTimeList-where" />
+		<![CDATA[
+				ORDER BY START_TIME ASC
+		]]>
+	</select>
+	
+	<!-- <select id="empmnPblanc.selectConcertList" remapResults="true" parameterClass="zvl"  resultMap="concert.selectConcertMap"> -->
+	<select id="concertDAO.selectConcertTimeList" resultClass="zvl" parameterClass="zvl" >
+		<![CDATA[
+		SELECT ROWNUM RNUM, ALL_LIST.*
+		  FROM  (
+		  
+	          	SELECT 
+		            tb.*
+		          , tb.RESERV_ONLINE_SIT_NUM - tb.RESERVED_CNT  AS REMAIN_CNT
+		          FROM(
+			          SELECT
+			          
+			            	ct.CONCERT_TIME_ID
+							,ct.CONCERT_ID
+							,to_char(ct.START_TIME,'yyyy-MM-DD') CONCERT_DT
+							,CASE WHEN to_char(ct.START_TIME,'d') = '1' THEN '일'
+				                  WHEN to_char(ct.START_TIME,'d') = '2' THEN '월'
+				                  WHEN to_char(ct.START_TIME,'d') = '3' THEN '화'
+				                  WHEN to_char(ct.START_TIME,'d') = '4' THEN '수'
+				                  WHEN to_char(ct.START_TIME,'d') = '5' THEN '목'
+				                  WHEN to_char(ct.START_TIME,'d') = '6' THEN '금'
+				                  WHEN to_char(ct.START_TIME,'d') = '7' THEN '토'
+				            	END AS CONCERT_DAY
+							,to_char(ct.START_TIME,'hh24:mi') START_TIME
+							,to_char(ct.END_TIME,'hh24:mi') END_TIME
+							,ct.COMMENT_MSG
+							,cc.RESERV_ONLINE_SIT_NUM
+							,ct.OFF_RESERV
+			          		, ( SELECT COUNT(*) AS RESERVED_CNT FROM TN_CONCERT_SIT cs LEFT JOIN TN_CONCERT_RESERV_MASTER rm ON rm.RESERV_MASTER_CODE = cs.RESERV_MASTER_CODE  WHERE cs.CONCERT_TIME_ID = ct.CONCERT_TIME_ID AND rm.RESERV_STATUS != 0 )  AS RESERVED_CNT
+			          FROM TN_CONCERT_TIME ct 
+			          LEFT JOIN TN_CONCERT cc ON cc.CONCERT_ID = ct.CONCERT_ID
+			          WHERE ct.CONCERT_ID = #concertId# AND ct.DEL_DATE IS NULL
+		          ) tb
+		          ORDER BY CONCERT_DT DESC, START_TIME DESC, END_TIME ASC
+		          
+	    ) ALL_LIST
+		]]>
+	</select>
+	
+	<select id="concertDAO.selectTimeDetail" resultClass="zvl" parameterClass="zvl" >
+		<![CDATA[
+				SELECT
+				  	CONCERT_TIME_ID
+					,CONCERT_ID
+					,to_char(START_TIME,'yyyy-MM-DD') CONCERT_DT
+					,to_char(START_TIME,'hh24:mi') START_TIME
+					,to_char(END_TIME,'hh24:mi') END_TIME
+					,COMMENT_MSG
+					,OFF_RESERV
+				FROM TN_CONCERT_TIME 
+				WHERE CONCERT_TIME_ID = #concertTimeId# 
+					AND DEL_DATE IS NULL
+		]]>
+	</select>
+	
+	<insert id="concertDAO.insertConcertTime" parameterClass="zvl" >
+		<selectKey resultClass="java.lang.Long" keyProperty="concertTimeId">
+			<![CDATA[	SELECT NVL(MAX(CONCERT_TIME_ID),0)+1 AS concertTimeId  FROM TN_CONCERT_TIME ]]>
+		</selectKey>
+		<![CDATA[
+		INSERT INTO TN_CONCERT_TIME
+	       (
+	           CONCERT_TIME_ID --일련번호
+				,	CONCERT_ID --공연일련번호
+				,	START_TIME --시작시간
+				,	END_TIME --종료시간
+				,	COMMENT_MSG --비고
+				,	REG_DATE --최초등록일
+				,	DEL_DATE --최종삭제일
+	       )
+	       VALUES
+	       (
+	           #concertTimeId# --일련번호
+				,	#concertId# --공연일련번호
+				,	to_date(#startTime#,'yyyy-mm-dd hh24mi') --시작시간
+				,	to_date(#endTime#,'yyyy-mm-dd hh24mi') --종료시간
+				,	#commentMsg# --비고
+				,	SYSDATE --최초등록일
+				,	NULL --최종삭제일
+	       )
+		]]>
+	</insert>
+	
+	<update id="concertDAO.updateConcertTimeOff" parameterClass="zvl" >
+		<![CDATA[
+			UPDATE TN_CONCERT_TIME
+			SET
+				OFF_RESERV = #statusOff# --종료시간
+			WHERE CONCERT_TIME_ID = #concertTimeId#
+		]]>
+	</update>
+
+ 	<update id="concertDAO.deleteConcertTime" parameterClass="zvl">
+ 		<![CDATA[
+			UPDATE TN_CONCERT_TIME
+			SET
+	           DEL_DATE = SYSDATE --최종삭제시간
+			WHERE CONCERT_TIME_ID = #concertTimeId#
+ 		]]>
+ 	</update>
+	<!-- ========== //공연일정 =========== -->
+
+ 	<update id="concertDAO.cancelReservStatus" parameterClass="zvl">
+ 		<![CDATA[
+			UPDATE TN_CONCERT_RESERV_MASTER
+			SET
+	           CANCEL_DATE = SYSDATE,
+	           RESERV_STATUS = 0
+			WHERE RESERV_MASTER_CODE = #reservMasterCode#
+ 		]]>
+ 	</update>
+
+ 	<delete id="concertDAO.deleteSitInfo" parameterClass="zvl">
+ 		<![CDATA[
+			DELETE TN_CONCERT_SIT
+			WHERE RESERV_MASTER_CODE = #reservMasterCode#
+ 		]]>
+ 	</delete>
+	<!-- ========== //공연일정 =========== -->
+	
+	
+	<sql id="concertDAO.selectConcertReservList-where">
+		AND CANCEL_DATE IS NULL
+		<isNotEmpty prepend="AND" property="concertTimeId">
+			<![CDATA[	CONCERT_TIME_ID = #concertTimeId# 		]]>
+		</isNotEmpty>
+		<isNotEmpty property="searchTxt">
+			<isEqual prepend="AND" property="searchType" compareValue="userId">
+				<!-- <![CDATA[	mem.USER_ID LIKE CONCAT('%',trim(#searchTxt#), '%')   		]]> -->
+				<![CDATA[	USER_ID LIKE '%' || #searchTxt# || '%'   		]]>
+			</isEqual>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="mbtlnum">
+			<![CDATA[	REPLACE(MEMBER_TEL, '-', '') LIKE REPLACE('%' || #mbtlnum# || '%', '-', '') 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="reservPath" >
+			<![CDATA[	RESERV_PATH = #reservPath# 		]]>
+		</isNotEmpty>
+		<!-- <isNotEmpty prepend="AND" property="searchWrd">
+			<isEqual property="searchCnd" compareValue="1">
+				<![CDATA[	A.USER_ID  LIKE '%' || #searchWrd# || '%'		]]>
+			</isEqual>
+			<isEqual property="searchCnd" compareValue="3">
+				<![CDATA[	C.DEPT_NM_KOR LIKE '%' || #searchWrd# || '%' 	]]>
+			</isEqual>
+			<isEqual property="searchCnd" compareValue="4">
+				<![CDATA[	A.USER_NM LIKE '%' || #searchWrd# || '%' 		]]>
+			</isEqual>
+		</isNotEmpty> -->
+	</sql>
+	
+	<select id="concertDAO.selectConcertReservListCnt" resultClass="int" parameterClass="zvl" >
+		<![CDATA[
+				SELECT count( * ) 
+				FROM TN_CONCERT_RESERV_MASTER
+				WHERE CANCEL_DATE IS NULL
+		]]>
+		<include refid="concertDAO.selectConcertReservList-where" />
+	</select>
+	
+	<select id="concertDAO.selectConcertReservList" resultClass="zvl" parameterClass="zvl" >
+		<![CDATA[
+		SELECT  *
+		  FROM  (
+		SELECT ROWNUM RNUM, ALL_LIST.*
+		  FROM  (
+				SELECT
+					RESERV_MASTER.*
+					, ( SELECT LISTAGG(SIT_ID, ',') 
+					WITHIN GROUP ( ORDER BY RESERV_MASTER_CODE ) 
+					FROM TN_CONCERT_SIT WHERE RESERV_MASTER_CODE = RESERV_MASTER.RESERV_MASTER_CODE
+					GROUP BY RESERV_MASTER_CODE) SIT_ID_LIST
+				FROM (
+						SELECT
+							RESERV_MASTER_CODE
+							,	USER_SN
+							,	crypto.dec('normal', MEMBER_TEL) AS MEMBER_TEL
+							,	USER_ID
+							,	MEMBER_NAME
+							,	HOME_AREA
+							,	JOB
+							,	DEPT
+							,	AGREE_EMAIL
+							,	AGREE_SMS
+							,	SEX
+							,	crypto.dec('normal', MEMBER_EMAIL) AS MEMBER_EMAIL
+							,	BIRTHDAY
+							,	RESERV_STATUS
+							,	REG_DATE
+							,	CANCEL_DATE
+							,	RESERV_PATH
+							,	BARCODE_PATH
+							,	CONCERT_ID
+							,	CONCERT_TIME_ID
+							,	JOIN_STATUS
+						FROM TN_CONCERT_RESERV_MASTER
+						WHERE CANCEL_DATE IS NULL
+				]]>
+				<include refid="concertDAO.selectConcertReservList-where" />
+				<![CDATA[
+				) RESERV_MASTER
+	    ) ALL_LIST
+	    )
+		 WHERE  RNUM  > #firstIndex#
+		   AND  RNUM <= #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+	
+	<select id="concertDAO.selectConcertReservExcelList" resultClass="zvl" parameterClass="zvl" >
+		<![CDATA[
+		SELECT
+			RESERV_MASTER.RESERV_MASTER_CODE,
+			CASE WHEN RESERV_MASTER.USER_ID IS NULL THEN '없음'
+				ELSE RESERV_MASTER.USER_ID END AS USER_ID,
+			RESERV_MASTER.MEMBER_NAME,
+			RESERV_MASTER.MEMBER_TEL,
+			( SELECT LISTAGG(SIT_ID, ',') 
+			WITHIN GROUP ( ORDER BY RESERV_MASTER_CODE ) 
+			FROM TN_CONCERT_SIT WHERE RESERV_MASTER_CODE = RESERV_MASTER.RESERV_MASTER_CODE
+			GROUP BY RESERV_MASTER_CODE) SIT_ID_LIST,
+			CASE WHEN RESERV_MASTER.RESERV_PATH = '0' THEN '온라인'
+				 WHEN RESERV_MASTER.RESERV_PATH = '1' THEN '현장'
+				 WHEN RESERV_MASTER.RESERV_PATH = '2' THEN '전화'
+		    END AS RESERV_PATH,
+			CASE WHEN RESERV_MASTER.JOIN_STATUS = '0' THEN 'X'
+				 WHEN RESERV_MASTER.JOIN_STATUS = '1' THEN '0' END AS JOIN_STATUS
+		FROM (
+				SELECT
+					RESERV_MASTER_CODE
+					,	USER_SN
+					,	crypto.dec('normal', MEMBER_TEL) AS MEMBER_TEL
+					,	USER_ID
+					,	MEMBER_NAME
+					,	HOME_AREA
+					,	JOB
+					,	DEPT
+					,	AGREE_EMAIL
+					,	AGREE_SMS
+					,	SEX
+					,	crypto.dec('normal', MEMBER_EMAIL) AS MEMBER_EMAIL
+					,	BIRTHDAY
+					,	RESERV_STATUS
+					,	REG_DATE
+					,	CANCEL_DATE
+					,	RESERV_PATH
+					,	BARCODE_PATH
+					,	CONCERT_ID
+					,	CONCERT_TIME_ID
+					,	JOIN_STATUS
+				FROM TN_CONCERT_RESERV_MASTER
+				WHERE CANCEL_DATE IS NULL
+		]]>
+		<include refid="concertDAO.selectConcertReservList-where" />
+		<![CDATA[
+		) RESERV_MASTER
+		]]>
+	</select>
+	
+	<select id="concertDAO.selectConcertReservDetail" resultClass="zvl" parameterClass="zvl" >
+		<![CDATA[
+		
+		SELECT
+					crypto.dec('normal', MEMBER_TEL) AS MEMBER_TEL
+					,	RESERV_MASTER_CODE
+					,	MEMBER_NAME
+					,	HOME_AREA
+					,	JOB
+					,	DEPT
+					,	AGREE_EMAIL
+					,	AGREE_SMS
+					,	SEX
+					,	crypto.dec('normal', MEMBER_EMAIL) AS MEMBER_EMAIL
+					,	BIRTHDAY
+					,	RESERV_STATUS
+					,	CANCEL_DATE
+					,	RESERV_PATH
+					,	BARCODE_PATH
+					,	JOIN_STATUS
+					,( SELECT count(*)
+		     			FROM TN_CONCERT_SIT
+	     				WHERE RESERV_MASTER_CODE = TN_CONCERT_RESERV_MASTER.RESERV_MASTER_CODE ) AS SIT_COUNT
+					, ( SELECT LISTAGG(SIT_ID, ',') 
+					  WITHIN GROUP ( ORDER BY RESERV_MASTER_CODE ) 
+					  FROM TN_CONCERT_SIT WHERE RESERV_MASTER_CODE = TN_CONCERT_RESERV_MASTER.RESERV_MASTER_CODE 
+					  GROUP BY RESERV_MASTER_CODE) SIT_ID_LIST
+				FROM TN_CONCERT_RESERV_MASTER
+				WHERE RESERV_MASTER_CODE = #reservMasterCode#
+		]]>
+	</select>
+		
+	<select id="concertDAO.selectReservMasterInfo" resultClass="zvl" parameterClass="zvl" >
+		<![CDATA[
+		
+		SELECT
+		    TN_CONCERT_RESERV_MASTER.RESERV_MASTER_CODE,
+		    TN_CONCERT_RESERV_MASTER.USER_SN,
+		    crypto.dec('normal', TN_CONCERT_RESERV_MASTER.MEMBER_TEL)                           AS MEMBER_TEL,
+		    TN_CONCERT_RESERV_MASTER.USER_ID,
+		    TN_CONCERT_RESERV_MASTER.MEMBER_NAME,
+		    TN_CONCERT_RESERV_MASTER.HOME_AREA,
+		    TN_CONCERT_RESERV_MASTER.JOB,
+		    TN_CONCERT_RESERV_MASTER.DEPT,
+		    TN_CONCERT_RESERV_MASTER.AGREE_EMAIL,
+		    TN_CONCERT_RESERV_MASTER.AGREE_SMS,
+		    TN_CONCERT_RESERV_MASTER.SEX,
+		    crypto.dec('normal', TN_CONCERT_RESERV_MASTER.MEMBER_EMAIL)                         AS MEMBER_EMAIL,
+		    TN_CONCERT_RESERV_MASTER.BIRTHDAY,
+		    TN_CONCERT_RESERV_MASTER.RESERV_STATUS,
+		    TN_CONCERT_RESERV_MASTER.REG_DATE,
+		    TO_CHAR(TN_CONCERT_RESERV_MASTER.REG_DATE, 'YYYY-MM-DD HH12:MI')         AS REG_DATE_TO_CHAR,
+		    TN_CONCERT_RESERV_MASTER.CANCEL_DATE,
+		    TN_CONCERT_RESERV_MASTER.RESERV_PATH,
+		    TN_CONCERT_RESERV_MASTER.BARCODE_PATH,
+		    TN_CONCERT_RESERV_MASTER.CONCERT_ID,
+		    TN_CONCERT_RESERV_MASTER.CONCERT_TIME_ID,
+		    TN_CONCERT_RESERV_MASTER.JOIN_STATUS,
+		    TO_CHAR(TN_CONCERT_TIME.START_TIME, 'day') AS START_DAY,
+		    TO_CHAR(TN_CONCERT_TIME.START_TIME, 'yyyy-mm-dd') AS START_DATE,
+		    TO_CHAR(TN_CONCERT_TIME.START_TIME, 'HH12:MI') AS START_TIME,
+		    TO_CHAR(TN_CONCERT_TIME.END_TIME, 'HH12:MI')   AS END_TIME,
+		    ( SELECT count(*)
+		     FROM TN_CONCERT_SIT
+		     WHERE RESERV_MASTER_CODE = TN_CONCERT_RESERV_MASTER.RESERV_MASTER_CODE ) AS SIT_COUNT,
+		     NVL((SELECT LISTAGG(SIT_ID, ', ')
+						                WITHIN GROUP (
+						                    ORDER BY SIT_ID) AS SIT_INFO
+						         FROM TN_CONCERT_SIT
+						         WHERE RESERV_MASTER_CODE = TN_CONCERT_RESERV_MASTER.RESERV_MASTER_CODE), '비지정좌석') AS SIT_INFO,
+		     TN_CONCERT.CONCERT_PLACE
+		FROM TN_CONCERT_RESERV_MASTER
+		    LEFT JOIN TN_CONCERT ON TN_CONCERT.CONCERT_ID = TN_CONCERT_RESERV_MASTER.CONCERT_ID
+		    LEFT JOIN TN_CONCERT_TIME ON TN_CONCERT_TIME.CONCERT_TIME_ID = TN_CONCERT_RESERV_MASTER.CONCERT_TIME_ID
+		WHERE 1 = 1
+		      AND TN_CONCERT_RESERV_MASTER.RESERV_MASTER_CODE = #reservMasterCode#
+		]]>
+	</select>
+		
+	<insert id="concertDAO.insertConcertReserv" parameterClass="zvl" >
+		<selectKey resultClass="java.lang.Long" keyProperty="reservMasterCode">
+			<![CDATA[ SELECT ( ( SELECT to_char(START_TIME, 'YYMMDD')
+				        FROM TN_CONCERT_TIME
+				        WHERE CONCERT_TIME_ID = #concertTimeId#) 
+				        	|| lpad( to_number(substr(to_char(#concertTimeId#),-2)), 2 , '0' ) 
+				        	|| lpad( nvl( substr( ( SELECT MAX(RESERV_MASTER_CODE) FROM TN_CONCERT_RESERV_MASTER WHERE CONCERT_TIME_ID = #concertTimeId# ) , 9) , 0 ) + 1 , 3, '0' ) ) AS RESERV_MASTER_CODE
+						FROM dual
+			]]>
+		</selectKey>
+		<![CDATA[
+		INSERT INTO TN_CONCERT_RESERV_MASTER
+	       (
+				RESERV_MASTER_CODE  --예약코드
+				,	USER_SN  --회원 일련번호
+				,	USER_ID  --회원아이디
+				,	MEMBER_EMAIL  --이메일
+				,	AGREE_EMAIL  --이메일 수신여부 0 : 미수신, 1 : 수신
+				,	MEMBER_TEL  --연락처
+				,	MEMBER_NAME  --이름
+				,	HOME_AREA  --거주지역
+				,	JOB  --직업
+				,	DEPT  --소속
+				,	AGREE_SMS  --SMS 수신여부 0 : 미수신, 1 : 수신
+				,	SEX  --0 : 여자, 1 : 남자
+				,	BIRTHDAY  --생년월일
+				,	REG_DATE  --예약일시
+				,	CANCEL_DATE  --취소일시
+				,	RESERV_PATH  --0 : 온라인 , 1 : 현장 , 2 : 전화
+				,	BARCODE_PATH  --바코드 이미지 경로
+				,	CONCERT_ID  --공연 일련번호
+				,	CONCERT_TIME_ID  --공연일정 일련번호
+				,	JOIN_STATUS  --0 : 미참석, 1 : 참석
+				,	DEL_DATE  --최종삭제일시
+	       )
+	       VALUES
+	       (
+	           #reservMasterCode#  --예약코드
+				,	#userSn#  --회원 일련번호
+				,	#userId#  --회원아이디
+				,	crypto.enc('normal', #memberEmail#)  --이메일
+				,	#agreeEmail#  --이메일 수신여부 0 : 미수신, 1 : 수신
+				,	crypto.enc('normal', #memberTel#)  --연락처
+				,	#memberName#  --이름
+				,	#homeArea#  --거주지역
+				,	#job#  --직업
+				,	#debp#  --소속
+				,	#agreeSms#  --SMS 수신여부 0 : 미수신, 1 : 수신
+				,	#sex#  --0 : 여자, 1 : 남자
+				,	#brthDay#  --생년월일
+				,	SYSDATE  --예약일시
+				,	NULL  --취소일시
+				,	#reservPath#  --0 : 온라인 , 1 : 현장 , 2 : 전화
+				,	#barcodePath#  --바코드 이미지 경로
+				,	#concertId#  --공연 일련번호
+				,	#concertTimeId#  --공연일정 일련번호
+				,	0  --0 : 미참석, 1 : 참석
+				,	NULL
+	       )
+		]]>
+	</insert>
+
+	<update id="concertDAO.updateConcertReservStatus" parameterClass="zvl" >
+		<![CDATA[
+		UPDATE TN_CONCERT_RESERV_MASTER
+		SET
+		]]>
+		<isEqual property="statusType" compareValue="reserv">
+			<![CDATA[	
+						RESERV_STATUS = #status# --0 : 취소, 1 : 예약  
+						, CANCEL_DATE = SYSDATE		
+			]]>
+		</isEqual>
+		<isEqual property="statusType" compareValue="join">
+			<![CDATA[	JOIN_STATUS = #status# --0 : 미참석, 1 : 참석   		]]>
+		</isEqual>
+		<![CDATA[
+			
+		WHERE RESERV_MASTER_CODE = #reservMasterCode# --예약코드
+		]]>
+	</update>
+	
+	<update id="concertDAO.updateConcertReserv" parameterClass="zvl" >
+		<![CDATA[
+			UPDATE TN_CONCERT_RESERV_MASTER
+			SET
+				MEMBER_TEL = crypto.enc('normal', #memberTel#) --연락처
+				,	MEMBER_NAME = #memberName# --이메일
+		]]>
+		<isNotEmpty property="homeArea"> <![CDATA[ 		,	HOME_AREA = #homeArea# --거주지역 ]]> </isNotEmpty>
+		<isNotEmpty property="job"> <![CDATA[ 		,	JOB = #job# --직업 ]]> </isNotEmpty>
+		<isNotEmpty property="dept"> <![CDATA[ 		,	DEPT = #dept# --소속 ]]> </isNotEmpty>
+		<isNotEmpty property="agreeSms"> <![CDATA[ 		,	AGREE_SMS = #agreeSms# --SMS 수신여부 0 : 미수신, 1 : 수신 ]]> </isNotEmpty>
+		<isNotEmpty property="sex"> <![CDATA[ 		,	SEX = #sex# --0 : 여자, 1 : 남자 ]]> </isNotEmpty>
+		<isNotEmpty property="memberEmail"> <![CDATA[ 		,	MEMBER_EMAIL = #memberEmail# --이메일 ]]> </isNotEmpty>
+		<isNotEmpty property="birthDay"> <![CDATA[ 		,	BIRTHDAY = #birthDay# --생년월일 ]]> </isNotEmpty>
+		<isNotEmpty property="reservStatus"> <![CDATA[ 		,	RESERV_STATUS = #reservStatus# --1 : 예약, 0 : 취소 ]]> </isNotEmpty>
+		<isNotEmpty property="reservPath"> <![CDATA[ 		,	RESERV_PATH = #reservPath# --0 : 온라인 , 1 : 현장 , 2 : 전화 ]]> </isNotEmpty>
+		<isNotEmpty property="barcodePath"> <![CDATA[ 		,	BARCODE_PATH = #barcodePath# --바코드 이미지 경로 ]]> </isNotEmpty>
+		<isNotEmpty property="concertId"> <![CDATA[ 		,	CONCERT_ID = #concertId# --공연 일련번호 ]]> </isNotEmpty>
+		<isNotEmpty property="concertTimeId"> <![CDATA[ 		,	CONCERT_TIME_ID = #concertTimeId# --공연일정 일련번호 ]]> </isNotEmpty>
+		<isNotEmpty property="jobStatus"> <![CDATA[ 		,	JOIN_STATUS = #jobStatus# --0 : 미참석, 1 : 참석 ]]> </isNotEmpty>
+		<isNotEmpty property="memberEmail"> <![CDATA[ ,	MEMBER_EMAIL = #memberEmail# --이메일 ]]> </isNotEmpty>
+		<isNotEmpty property="agreeEmail"> <![CDATA[ ,	AGREE_EMAIL = #agreeEmail# --이메일 수신여부 0 : 미수신, 1 : 수신 ]]> </isNotEmpty>
+		
+		<![CDATA[
+			WHERE RESERV_MASTER_CODE = #reservMasterCode# --예약코드
+		]]>
+	</update>
+
+ 	<delete id="concertDAO.deleteConcertReserv" parameterClass="zvl">
+ 		<![CDATA[
+			UPDATE TN_CONCERT_RESERV_MASTER
+			SET
+	           DEL_DATE = SYSDATE --최종삭제시간
+			WHERE RESERV_CODE = #reservCode# --예약코드
+ 		]]>
+ 	</delete>
+
+
+	<select id="concertDAO.getTimeListAtDate" resultClass="zvl" parameterClass="zvl" >
+		<![CDATA[
+			SELECT
+			    TB.*,
+			    CASE
+			    WHEN OFF_RESERV = 1
+                    THEN 'RN'
+			    WHEN RESERV_ONLINE_SIT_NUM >= RESERVED_SIT_COUNT
+			        THEN 'RY'
+			    ELSE 'RN'
+			    END AS CAN_RESERV,
+			    CASE
+			    WHEN (SELECT COUNT(*)
+			          FROM TN_CONCERT_RESERV_MASTER
+			          WHERE CONCERT_TIME_ID = TB.CONCERT_TIME_ID AND USER_SN = #userSn# AND CONCERT_ID = TB.CONCERT_ID  AND CANCEL_DATE IS NULL AND RESERV_STATUS != 0 ) > 0
+			        THEN '1'
+			    ELSE '0'
+			    END AS HAS_RESERV_HISTORY
+			FROM (
+			         SELECT
+			         TN_CONCERT_TIME.OFF_RESERV,
+			             TN_CONCERT_TIME.CONCERT_TIME_ID,
+			             TN_CONCERT_TIME.CONCERT_ID,
+			             (SELECT COUNT(*)
+			              FROM TN_CONCERT_SIT
+			              WHERE CONCERT_TIME_ID = TN_CONCERT_TIME.CONCERT_TIME_ID) AS RESERVED_SIT_COUNT,
+			             to_char(TN_CONCERT_TIME.START_TIME, 'PM hh12:mi')         AS START_TIME,
+			             to_char(TN_CONCERT_TIME.END_TIME, 'PM hh12:mi')           AS END_TIME,
+			             TN_CONCERT.RESERV_ONLINE_SIT_NUM
+			         FROM TN_CONCERT_TIME
+			             LEFT JOIN TN_CONCERT ON TN_CONCERT.CONCERT_ID = TN_CONCERT_TIME.CONCERT_ID
+			         WHERE TN_CONCERT_TIME.CONCERT_ID = #concertId# AND #selectedDate# = to_char(TN_CONCERT_TIME.START_TIME, 'yyyymmdd') AND
+			               TN_CONCERT_TIME.DEL_DATE IS NULL
+			     ) TB
+			
+		]]>
+	</select>
+
+	<select id="concertDAO.getSitData" resultClass="zvl" parameterClass="zvl" >
+		<![CDATA[
+			SELECT * FROM TN_CONCERT_SIT WHERE CONCERT_TIME_ID = #concertTimeId#
+		]]>
+	</select>
+
+	<select id="concertDAO.getReservStatus" resultClass="zvl" parameterClass="zvl" >
+		<![CDATA[
+		SELECT
+		  TB.*,
+		  (RESERV_ONLINE_SIT_NUM - RESERVED_CNT) AS REMAIN_CNT
+		FROM (
+		       SELECT
+		         TN_CONCERT.RESERV_ONLINE_SIT_NUM,
+		         ( SELECT COUNT(*) AS RESERVED_CNT FROM TN_CONCERT_SIT cs LEFT JOIN TN_CONCERT_RESERV_MASTER rm ON rm.RESERV_MASTER_CODE = cs.RESERV_MASTER_CODE  WHERE cs.CONCERT_TIME_ID = TN_CONCERT_TIME.CONCERT_TIME_ID AND rm.RESERV_STATUS != 0 ) AS RESERVED_CNT
+		       FROM TN_CONCERT_TIME
+		         LEFT JOIN TN_CONCERT ON TN_CONCERT.CONCERT_ID = TN_CONCERT_TIME.CONCERT_ID
+		       WHERE TN_CONCERT_TIME.CONCERT_TIME_ID = #concertTimeId# AND TN_CONCERT_TIME.DEL_DATE IS NULL
+		     ) TB
+		]]>
+	</select>
+
+	<select id="concertDAO.getConcertDate" resultClass="zvl" parameterClass="zvl" >
+		<![CDATA[
+		SELECT CONCERT_DATE FROM (
+		  SELECT to_char(TN_CONCERT_TIME.START_TIME, 'yyyy-mm-dd') AS CONCERT_DATE
+		  FROM TN_CONCERT_TIME
+		  WHERE CONCERT_ID = #concertId#
+		  AND DEL_DATE IS NULL
+		  AND TN_CONCERT_TIME.END_TIME >= SYSDATE
+		) TB
+		GROUP BY CONCERT_DATE
+		ORDER BY CONCERT_DATE ASC
+		]]>
+	</select>
+	
+
+	<select id="concertDAO.getReservMasterCode" resultClass="zvl" parameterClass="zvl" >
+		<![CDATA[
+		SELECT ( ( SELECT to_char(START_TIME, 'YYMMDD')
+        FROM TN_CONCERT_TIME
+        WHERE CONCERT_TIME_ID = #concertTimeId#) 
+        	|| lpad( to_number(substr(to_char(#concertTimeId#),-2)), 2 , '0' ) 
+        	|| lpad( nvl( substr( ( SELECT MAX(RESERV_MASTER_CODE) FROM TN_CONCERT_RESERV_MASTER WHERE CONCERT_TIME_ID = #concertTimeId# ) , 9) , 0 ) + 1 , 3, '0' ) ) AS RESERV_MASTER_CODE
+		FROM dual
+		]]>
+	</select>
+	
+	<!-- 
+	
+	 -->	
+	
+	
+	<insert id="concertDAO.insertReservData" parameterClass="zvl" >
+		<![CDATA[
+			INSERT INTO TN_CONCERT_RESERV_MASTER
+			(
+				RESERV_MASTER_CODE, 
+				USER_SN, 
+				MEMBER_TEL, 
+				USER_ID, 
+				MEMBER_NAME, 
+				HOME_AREA, 
+				JOB, 
+				DEPT, 
+				AGREE_EMAIL, 
+				AGREE_SMS, 
+				SEX, 
+				MEMBER_EMAIL, 
+				BIRTHDAY, 
+				REG_DATE, 
+				RESERV_PATH,
+				CONCERT_ID, 
+				CONCERT_TIME_ID
+			) VALUES (
+				#reservMasterCode#, 
+				#userSn#, 
+				#memberTel#, 
+				#userId#, 
+				#memberName#, 
+				#homeArea#, 
+				#job#, 
+				#dept#, 
+				#agreeEmail#, 
+				#agreeSms#, 
+				#sex#, 
+				#memberEmail#, 
+				#birthday#, 
+				sysdate, 
+				#reservPath#,
+				#concertId#, 
+				#concertTimeId#
+			)
+		]]>
+	</insert>
+	
+	
+	
+	<insert id="concertDAO.insertReservTempData" parameterClass="zvl" >
+		<selectKey resultClass="java.lang.Long" keyProperty="tempReservSeq">
+			<![CDATA[	SELECT NVL(MAX(TEMP_RESERV_SEQ),0)+1 AS tempReservSeq  FROM TN_CONCERT_RESERV_TEMP ]]>
+		</selectKey>
+		
+		<![CDATA[
+			INSERT INTO TN_CONCERT_RESERV_TEMP
+			(
+				TEMP_RESERV_SEQ,
+				USER_ID,
+				MEMBER_NAME,
+				MEMBER_TEL,
+				REG_DATE,
+				CONCERT_ID,
+				CONCERT_TIME_ID
+			) VALUES (
+				#tempReservSeq#, 
+				#userId#, 
+				#memberName#,
+				#memberTel#, 
+				sysdate, 
+				#concertId#, 
+				#concertTimeId#
+			)
+		]]>
+	</insert>
+	
+	
+	<insert id="concertDAO.insertReservSitData" parameterClass="zvl" >
+		<selectKey resultClass="java.lang.Long" keyProperty="sitSeq">
+			<![CDATA[	SELECT NVL(MAX(SIT_SEQ),0)+1 AS sitSeq  FROM TN_CONCERT_SIT ]]>
+		</selectKey>
+		<![CDATA[
+		INSERT INTO TN_CONCERT_SIT ( SIT_SEQ, SIT_ID, RESERV_MASTER_CODE, CONCERT_TIME_ID ) VALUES ( #sitSeq#, #sitId#, #reservMasterCode#, #concertTimeId# )
+		]]>
+	</insert>
+	
+	<update id="concertDAO.updateMessageAgreeStatus" parameterClass="zvl" >
+		<![CDATA[
+		UPDATE TN_CONCERT_RESERV_MASTER SET AGREE_EMAIL = #agreeEmail# , AGREE_SMS = #agreeSms# WHERE RESERV_MASTER_CODE = #reservMasterCode#
+		]]>
+	</update>
+
+
+
+	<select id="concertDAO.selectReservHistory" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		SELECT *
+			  FROM
+			       (
+			       SELECT ROWNUM RNUM,
+			              ALL_LIST.*
+			         FROM
+			         (
+						SELECT
+							RESERV_MASTER.RESERV_MASTER_CODE,
+						    RESERV_MASTER.REG_DATE,
+						    TN_CONCERT.CONCERT_TITLE,
+						    RESERV_MASTER.CONCERT_ID,
+						    RESERV_MASTER.CONCERT_TIME_ID,
+						    TN_CONCERT.CONCERT_PLACE,
+						    TN_CONCERT_TIME.START_TIME,
+						    to_char(TN_CONCERT_TIME.START_TIME,'yyyy-MM-DD') AS START_TIME_STR,
+						    RESERV_MASTER.RESERV_STATUS,
+						    RESERV_MASTER.JOIN_STATUS,
+						    CASE WHEN TN_CONCERT_TIME.START_TIME < SYSDATE
+						        THEN 0
+						    ELSE 1
+						    END                                                                        AS CAN_CANCEL,
+						    NVL((SELECT LISTAGG(SIT_ID, ', ')
+						                WITHIN GROUP (
+						                    ORDER BY SIT_ID) AS SIT_INFO
+						         FROM TN_CONCERT_SIT
+						         WHERE RESERV_MASTER_CODE = RESERV_MASTER.RESERV_MASTER_CODE), '비지정좌석') AS SIT_INFO
+						FROM TN_CONCERT_RESERV_MASTER RESERV_MASTER
+						    LEFT JOIN TN_CONCERT ON TN_CONCERT.CONCERT_ID = RESERV_MASTER.CONCERT_ID
+						    LEFT JOIN TN_CONCERT_TIME ON TN_CONCERT_TIME.CONCERT_TIME_ID = RESERV_MASTER.CONCERT_TIME_ID
+						WHERE 1 = 1
+				      	]]>
+						<isNotEmpty prepend="AND" property="userSn">
+							<![CDATA[	RESERV_MASTER.USER_SN = #userSn# 	]]>
+						</isNotEmpty>
+						<isNotEmpty prepend="AND" property="periodSelectDate">
+							<![CDATA[	RESERV_MASTER.REG_DATE > SYSDATE-#periodSelectDate# ]]>
+						</isNotEmpty>
+						<isEqual property="searchCnd" compareValue="joinDate">
+							<![CDATA[	AND ( to_char(TN_CONCERT_TIME.START_TIME,'yyyy-MM-DD') BETWEEN #sdate# AND #edate# ) 	]]>
+						</isEqual>
+						<isEqual property="searchCnd" compareValue="regDate">
+							<![CDATA[	AND ( to_char(RESERV_MASTER.REG_DATE,'yyyy-MM-DD') BETWEEN #sdate# AND #edate# ) ]]>
+						</isEqual>
+		<![CDATA[
+						ORDER BY RESERV_MASTER.REG_DATE DESC
+			) ALL_LIST
+			       )
+			 WHERE  RNUM  > #firstIndex#
+			   AND  RNUM <= #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="concertDAO.selectReservHistoryCnt" parameterClass="zvl" resultClass="int">
+		<![CDATA[
+		SELECT COUNT( * ) FROM (
+			SELECT
+			    RESERV_MASTER.REG_DATE,
+			    TN_CONCERT_TIME.START_TIME,
+			    RESERV_MASTER.JOIN_STATUS
+			FROM TN_CONCERT_RESERV_MASTER RESERV_MASTER
+			    LEFT JOIN TN_CONCERT_TIME ON TN_CONCERT_TIME.CONCERT_TIME_ID = RESERV_MASTER.CONCERT_TIME_ID
+			WHERE 1 = 1
+			]]>
+			<isNotEmpty prepend="AND" property="userSn">
+				<![CDATA[	RESERV_MASTER.USER_SN = #userSn# 	]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="periodSelectDate">
+				<![CDATA[	RESERV_MASTER.REG_DATE > SYSDATE-#periodSelectDate# ]]>
+			</isNotEmpty>
+			<isEqual property="searchCnd" compareValue="joinDate">
+				<![CDATA[	AND ( to_char(TN_CONCERT_TIME.START_TIME,'yyyy-MM-DD') BETWEEN #sdate# AND #edate# ) 	]]>
+			</isEqual>
+			<isEqual property="searchCnd" compareValue="regDate">
+				<![CDATA[	AND ( to_char(RESERV_MASTER.REG_DATE,'yyyy-MM-DD') BETWEEN #sdate# AND #edate# )  ]]>
+			</isEqual>
+		<![CDATA[ 
+			)  
+		]]>
+	</select>
+	
+	
+	
+	
+	<select id="concertDAO.selectDuplicateSitCnt" parameterClass="zvl" resultClass="int">
+		<![CDATA[
+		SELECT count(*) FROM TN_CONCERT_SIT WHERE 
+			CONCERT_TIME_ID = #concertTimeId# 
+		]]>
+			<iterate prepend="AND SIT_ID IN " property="sitListCollection" open="(" close=") " conjunction=",">
+				#sitListCollection[]# 
+			</iterate>
+	</select>
+
+	
+	
+	
+	<select id="concertDAO.selectDuplicateTempReservCnt" parameterClass="zvl" resultClass="int">
+		<![CDATA[
+		SELECT count(*) FROM TN_CONCERT_RESERV_TEMP WHERE 
+			CONCERT_TIME_ID = #concertTimeId# AND USER_ID = #userId#
+		]]>
+	</select>
+
+	
+	
+	<select id="concertDAO.selectMainDisplayList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		SELECT *
+		FROM (
+		    SELECT
+		        CONCERT.CONCERT_ID,
+		        CONCERT.CONCERT_TITLE,
+		        CONCERT.ATCH_FILE_ID,
+		        TO_CHAR((SELECT MIN(START_TIME)
+		                 FROM TN_CONCERT_TIME
+		                 WHERE CONCERT_ID = CONCERT.CONCERT_ID AND DEL_DATE IS NULL), 'yyyy-mm-dd') AS CONCERT_START_DATE,
+		        TO_CHAR((SELECT MAX(END_TIME)
+		                 FROM TN_CONCERT_TIME
+		                 WHERE CONCERT_ID = CONCERT.CONCERT_ID AND DEL_DATE IS NULL), 'yyyy-mm-dd') AS CONCERT_END_DATE
+		    FROM (
+		             SELECT *
+		             FROM TN_CONCERT
+		             WHERE 1 = 1
+		                 AND MAIN_DISPLAY = 1
+		             ORDER BY REG_DATE DESC
+		         ) CONCERT
+		)
+		]]>
+	</select>
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+	<!-- 현황 통계 조회 -->
+	<select id="concertDAO.selectStatsList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		SELECT *
+			  FROM
+			       (
+			       SELECT ROWNUM RNUM,
+			              ALL_LIST.*
+			         FROM
+			         (
+        ]]>
+        
+        <![CDATA[
+						SELECT
+						    RESERV_STATUS_TBL.CONCERT_TITLE,
+						    TO_CHAR( RESERV_STATUS_TBL.START_TIME, 'yyyy-mm-dd') as START_TIME,
+						    TO_CHAR( RESERV_STATUS_TBL.START_TIME, 'hh:mi') as START_TIMESTAMP,
+						    RESERV_STATUS_TBL.CONCERT_TIME_ID,
+						    RESERV_STATUS_TBL.RESERV_ONLINE_SIT_NUM,
+						    RESERV_STATUS_TBL.ONLINE_VALUE,
+						    RESERV_STATUS_TBL.OFFLINE_VALUE,
+						    RESERV_STATUS_TBL.TEL_VALUE,
+						    ( RESERV_STATUS_TBL.RESERV_ONLINE_SIT_NUM - RESERV_STATUS_TBL.ONLINE_VALUE - RESERV_STATUS_TBL.OFFLINE_VALUE - RESERV_STATUS_TBL.TEL_VALUE ) AS REMAIN_SIT_NUM,
+						    ( ( (RESERV_STATUS_TBL.ONLINE_VALUE + RESERV_STATUS_TBL.OFFLINE_VALUE + RESERV_STATUS_TBL.TEL_VALUE) / RESERV_STATUS_TBL.RESERV_ONLINE_SIT_NUM ) * 100 ) AS RESERV_RATE,
+						    GENDER_STATUS_TBL.MEN,
+						    GENDER_STATUS_TBL.WOMEN,
+						    AGE_STATUS_TBL.AGE10,
+						    AGE_STATUS_TBL.AGE20,
+						    AGE_STATUS_TBL.AGE30,
+						    AGE_STATUS_TBL.AGE40,
+						    AGE_STATUS_TBL.AGE50,
+						    AGE_STATUS_TBL.AGE60
+						FROM (
+						         SELECT *
+						         FROM (
+						                  SELECT
+						                      TN_CONCERT.CONCERT_TITLE,
+						                      TN_CONCERT_TIME.START_TIME,
+						                      TN_CONCERT_TIME.CONCERT_TIME_ID,
+						                      TN_CONCERT.RESERV_ONLINE_SIT_NUM,
+						                      TN_CONCERT_RESERV_MASTER.RESERV_PATH
+						                  FROM TN_CONCERT_TIME
+						                      INNER JOIN TN_CONCERT ON TN_CONCERT.CONCERT_ID = TN_CONCERT_TIME.CONCERT_ID
+						                      -- 없는 타이틀 정보도 가져오므로 INNER JOIN 으로 변경
+						                      LEFT JOIN TN_CONCERT_RESERV_MASTER
+						                          ON TN_CONCERT_RESERV_MASTER.CONCERT_ID = TN_CONCERT_TIME.CONCERT_ID AND
+						                             TN_CONCERT_RESERV_MASTER.CONCERT_TIME_ID = TN_CONCERT_TIME.CONCERT_TIME_ID
+						                  ORDER BY TN_CONCERT_TIME.CONCERT_TIME_ID ASC, TN_CONCERT_RESERV_MASTER.RESERV_PATH ASC
+						              ) TEMP_TBL
+						         PIVOT(
+						                COUNT(RESERV_PATH) FOR RESERV_PATH IN ( 0 ONLINE_VALUE, 1 OFFLINE_VALUE, 2 TEL_VALUE )
+						              )
+						     ) RESERV_STATUS_TBL
+						    LEFT JOIN (
+						                  -- 성별 테이블 가져와서 조인 필요함
+						                  SELECT
+						                      CONCERT_TIME_ID,
+						                      WOMEN,
+						                      MEN
+						                  FROM (
+						                      SELECT
+						                          TN_CONCERT_TIME.CONCERT_TIME_ID,
+						                          TN_CONCERT_RESERV_MASTER.SEX
+						                      FROM TN_CONCERT_TIME
+						                          INNER JOIN TN_CONCERT ON TN_CONCERT.CONCERT_ID = TN_CONCERT_TIME.CONCERT_ID
+						                          LEFT JOIN TN_CONCERT_RESERV_MASTER
+						                              ON TN_CONCERT_RESERV_MASTER.CONCERT_ID = TN_CONCERT_TIME.CONCERT_ID AND
+						                                 TN_CONCERT_RESERV_MASTER.CONCERT_TIME_ID = TN_CONCERT_TIME.CONCERT_TIME_ID
+						                  )
+						                      PIVOT (
+						                          COUNT(SEX)
+						                          FOR SEX
+						                          IN ('W' WOMEN, 'M' MEN)
+						                      )
+						              ) GENDER_STATUS_TBL ON RESERV_STATUS_TBL.CONCERT_TIME_ID = GENDER_STATUS_TBL.CONCERT_TIME_ID
+						    LEFT JOIN (
+						                  SELECT 
+						                    * 
+						                  FROM (
+						                   SELECT
+						                        TN_CONCERT_TIME.CONCERT_TIME_ID,
+						                        CASE  WHEN TN_CONCERT_RESERV_MASTER.BIRTHDAY IS NULL THEN '-1'
+						                              WHEN EXTRACT(YEAR FROM NUMTOYMINTERVAL(MONTHS_BETWEEN(TRUNC(SYSDATE), TN_CONCERT_RESERV_MASTER.BIRTHDAY),'MONTH')) > 59 THEN '6'
+						                              ELSE SUBSTR( TO_CHAR(EXTRACT(YEAR FROM NUMTOYMINTERVAL(MONTHS_BETWEEN(TRUNC(SYSDATE), TN_CONCERT_RESERV_MASTER.BIRTHDAY),'MONTH')) ), 0, 1 )
+						                        END AS AGE
+						                    FROM TN_CONCERT_TIME
+						                        INNER JOIN TN_CONCERT ON TN_CONCERT.CONCERT_ID = TN_CONCERT_TIME.CONCERT_ID
+						                        -- 없는 타이틀 정보도 가져오므로 INNER JOIN 으로 변경
+						                        LEFT JOIN TN_CONCERT_RESERV_MASTER
+						                            ON TN_CONCERT_RESERV_MASTER.CONCERT_ID = TN_CONCERT_TIME.CONCERT_ID AND
+						                               TN_CONCERT_RESERV_MASTER.CONCERT_TIME_ID = TN_CONCERT_TIME.CONCERT_TIME_ID
+						                    ORDER BY TN_CONCERT_TIME.CONCERT_TIME_ID ASC, TN_CONCERT_RESERV_MASTER.RESERV_PATH ASC
+						                  ) AGE_TBL
+						                  PIVOT(
+						                    COUNT(AGE) FOR AGE IN ( '1' AGE10, '2' AGE20, '3' AGE30, '4' AGE40, '5' AGE50, '6' AGE60 )
+						                  )
+						              ) AGE_STATUS_TBL ON RESERV_STATUS_TBL.CONCERT_TIME_ID = AGE_STATUS_TBL.CONCERT_TIME_ID              
+						ORDER BY RESERV_STATUS_TBL.START_TIME, RESERV_STATUS_TBL.CONCERT_TIME_ID ASC
+				      	]]>
+
+
+
+
+		<![CDATA[
+			) ALL_LIST
+			       )
+			 WHERE  RNUM  > #firstIndex#
+			   AND  RNUM <= #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+	
+	
+	
+	<!-- 통계 cnt -->
+	<select id="concertDAO.selectStatsListCnt" parameterClass="zvl" resultClass="int">
+		<![CDATA[
+		SELECT COUNT( * ) FROM (
+			SELECT
+                TN_CONCERT_TIME.CONCERT_TIME_ID,
+                COUNT( TN_CONCERT.CONCERT_TITLE ) AS CNT
+            FROM TN_CONCERT_TIME
+                INNER JOIN TN_CONCERT ON TN_CONCERT.CONCERT_ID = TN_CONCERT_TIME.CONCERT_ID
+                LEFT JOIN TN_CONCERT_RESERV_MASTER
+                    ON TN_CONCERT_RESERV_MASTER.CONCERT_ID = TN_CONCERT_TIME.CONCERT_ID AND
+                       TN_CONCERT_RESERV_MASTER.CONCERT_TIME_ID = TN_CONCERT_TIME.CONCERT_TIME_ID 
+    		GROUP BY TN_CONCERT_TIME.CONCERT_TIME_ID 
+			]]>
+			<isNotEmpty prepend="AND" property="userSn">
+				<![CDATA[	RESERV_MASTER.USER_SN = #userSn# 	]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="periodSelectDate">
+				<![CDATA[	RESERV_MASTER.REG_DATE > SYSDATE-#periodSelectDate# ]]>
+			</isNotEmpty>
+			<isEqual property="searchCnd" compareValue="joinDate">
+				<![CDATA[	AND ( to_char(TN_CONCERT_TIME.START_TIME,'yyyy-MM-DD') BETWEEN #sdate# AND #edate# ) 	]]>
+			</isEqual>
+			<isEqual property="searchCnd" compareValue="regDate">
+				<![CDATA[	AND ( to_char(RESERV_MASTER.REG_DATE,'yyyy-MM-DD') BETWEEN #sdate# AND #edate# )  ]]>
+			</isEqual>
+		<![CDATA[ 
+			)  
+		]]>
+	</select>
+	
+	
+	<!-- 현황 통계 조회 -->
+	<select id="concertDAO.selectExcelStatsList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+	       SELECT ALL_LIST.*
+	         FROM
+	         (
+        ]]>
+        
+        <![CDATA[
+				SELECT
+				    RESERV_STATUS_TBL.CONCERT_TITLE,
+				    TO_CHAR( RESERV_STATUS_TBL.START_TIME, 'yyyy-mm-dd') as START_TIME,
+				    TO_CHAR( RESERV_STATUS_TBL.START_TIME, 'hh:mi') as START_TIMESTAMP,
+				    RESERV_STATUS_TBL.RESERV_ONLINE_SIT_NUM,
+				    RESERV_STATUS_TBL.ONLINE_VALUE,
+				    RESERV_STATUS_TBL.OFFLINE_VALUE,
+				    RESERV_STATUS_TBL.TEL_VALUE,
+				    ( RESERV_STATUS_TBL.RESERV_ONLINE_SIT_NUM - RESERV_STATUS_TBL.ONLINE_VALUE - RESERV_STATUS_TBL.OFFLINE_VALUE - RESERV_STATUS_TBL.TEL_VALUE ) AS REMAIN_SIT_NUM,
+				    ( ( (RESERV_STATUS_TBL.ONLINE_VALUE + RESERV_STATUS_TBL.OFFLINE_VALUE + RESERV_STATUS_TBL.TEL_VALUE) / RESERV_STATUS_TBL.RESERV_ONLINE_SIT_NUM ) * 100 ) AS RESERV_RATE,
+				    GENDER_STATUS_TBL.MEN,
+				    GENDER_STATUS_TBL.WOMEN,
+				    AGE_STATUS_TBL.AGE10,
+				    AGE_STATUS_TBL.AGE20,
+				    AGE_STATUS_TBL.AGE30,
+				    AGE_STATUS_TBL.AGE40,
+				    AGE_STATUS_TBL.AGE50,
+				    AGE_STATUS_TBL.AGE60
+				FROM (
+				         SELECT *
+				         FROM (
+				                  SELECT
+				                      TN_CONCERT.CONCERT_TITLE,
+				                      TN_CONCERT_TIME.START_TIME,
+				                      TN_CONCERT_TIME.CONCERT_TIME_ID,
+				                      TN_CONCERT.RESERV_ONLINE_SIT_NUM,
+				                      TN_CONCERT_RESERV_MASTER.RESERV_PATH
+				                  FROM TN_CONCERT_TIME
+				                      INNER JOIN TN_CONCERT ON TN_CONCERT.CONCERT_ID = TN_CONCERT_TIME.CONCERT_ID
+				                      -- 없는 타이틀 정보도 가져오므로 INNER JOIN 으로 변경
+				                      LEFT JOIN TN_CONCERT_RESERV_MASTER
+				                          ON TN_CONCERT_RESERV_MASTER.CONCERT_ID = TN_CONCERT_TIME.CONCERT_ID AND
+				                             TN_CONCERT_RESERV_MASTER.CONCERT_TIME_ID = TN_CONCERT_TIME.CONCERT_TIME_ID
+				                  ORDER BY TN_CONCERT_TIME.CONCERT_TIME_ID ASC, TN_CONCERT_RESERV_MASTER.RESERV_PATH ASC
+				              ) TEMP_TBL
+				         PIVOT(
+				                COUNT(RESERV_PATH) FOR RESERV_PATH IN ( 0 ONLINE_VALUE, 1 OFFLINE_VALUE, 2 TEL_VALUE )
+				              )
+				     ) RESERV_STATUS_TBL
+				    LEFT JOIN (
+				                  -- 성별 테이블 가져와서 조인 필요함
+				                  SELECT
+				                      CONCERT_TIME_ID,
+				                      WOMEN,
+				                      MEN
+				                  FROM (
+				                      SELECT
+				                          TN_CONCERT_TIME.CONCERT_TIME_ID,
+				                          TN_CONCERT_RESERV_MASTER.SEX
+				                      FROM TN_CONCERT_TIME
+				                          INNER JOIN TN_CONCERT ON TN_CONCERT.CONCERT_ID = TN_CONCERT_TIME.CONCERT_ID
+				                          LEFT JOIN TN_CONCERT_RESERV_MASTER
+				                              ON TN_CONCERT_RESERV_MASTER.CONCERT_ID = TN_CONCERT_TIME.CONCERT_ID AND
+				                                 TN_CONCERT_RESERV_MASTER.CONCERT_TIME_ID = TN_CONCERT_TIME.CONCERT_TIME_ID
+				                  )
+				                      PIVOT (
+				                          COUNT(SEX)
+				                          FOR SEX
+				                          IN ('W' WOMEN, 'M' MEN)
+				                      )
+				              ) GENDER_STATUS_TBL ON RESERV_STATUS_TBL.CONCERT_TIME_ID = GENDER_STATUS_TBL.CONCERT_TIME_ID
+				    LEFT JOIN (
+				                  SELECT 
+				                    * 
+				                  FROM (
+				                   SELECT
+				                        TN_CONCERT_TIME.CONCERT_TIME_ID,
+				                        CASE  WHEN TN_CONCERT_RESERV_MASTER.BIRTHDAY IS NULL THEN '-1'
+				                              WHEN EXTRACT(YEAR FROM NUMTOYMINTERVAL(MONTHS_BETWEEN(TRUNC(SYSDATE), TN_CONCERT_RESERV_MASTER.BIRTHDAY),'MONTH')) > 59 THEN '6'
+				                              ELSE SUBSTR( TO_CHAR(EXTRACT(YEAR FROM NUMTOYMINTERVAL(MONTHS_BETWEEN(TRUNC(SYSDATE), TN_CONCERT_RESERV_MASTER.BIRTHDAY),'MONTH')) ), 0, 1 )
+				                        END AS AGE
+				                    FROM TN_CONCERT_TIME
+				                        INNER JOIN TN_CONCERT ON TN_CONCERT.CONCERT_ID = TN_CONCERT_TIME.CONCERT_ID
+				                        -- 없는 타이틀 정보도 가져오므로 INNER JOIN 으로 변경
+				                        LEFT JOIN TN_CONCERT_RESERV_MASTER
+				                            ON TN_CONCERT_RESERV_MASTER.CONCERT_ID = TN_CONCERT_TIME.CONCERT_ID AND
+				                               TN_CONCERT_RESERV_MASTER.CONCERT_TIME_ID = TN_CONCERT_TIME.CONCERT_TIME_ID
+				                    ORDER BY TN_CONCERT_TIME.CONCERT_TIME_ID ASC, TN_CONCERT_RESERV_MASTER.RESERV_PATH ASC
+				                  ) AGE_TBL
+				                  PIVOT(
+				                    COUNT(AGE) FOR AGE IN ( '1' AGE10, '2' AGE20, '3' AGE30, '4' AGE40, '5' AGE50, '6' AGE60 )
+				                  )
+				              ) AGE_STATUS_TBL ON RESERV_STATUS_TBL.CONCERT_TIME_ID = AGE_STATUS_TBL.CONCERT_TIME_ID              
+				ORDER BY RESERV_STATUS_TBL.START_TIME, RESERV_STATUS_TBL.CONCERT_TIME_ID ASC
+	      	]]>
+
+		<![CDATA[
+			) ALL_LIST
+		]]>
+	</select>
+	
+	
+	<select id="concertDAO.selectConcertReservStatus" resultClass="zvl" parameterClass="zvl" >
+		<![CDATA[
+		
+		SELECT
+		    RESERV_STATUS_TBL.CONCERT_TIME_ID,
+		    RESERV_STATUS_TBL.RESERV_ONLINE_SIT_NUM,
+		    RESERV_STATUS_TBL.ONLINE_VALUE,
+		    RESERV_STATUS_TBL.OFFLINE_VALUE,
+		    RESERV_STATUS_TBL.TEL_VALUE,
+		    ( RESERV_STATUS_TBL.RESERV_ONLINE_SIT_NUM - RESERV_STATUS_TBL.ONLINE_VALUE - RESERV_STATUS_TBL.OFFLINE_VALUE - RESERV_STATUS_TBL.TEL_VALUE ) AS REMAIN_SIT_NUM,
+		    ( ( (RESERV_STATUS_TBL.ONLINE_VALUE + RESERV_STATUS_TBL.OFFLINE_VALUE + RESERV_STATUS_TBL.TEL_VALUE) / RESERV_STATUS_TBL.RESERV_ONLINE_SIT_NUM ) * 100 ) AS RESERV_RATE,
+		    GENDER_STATUS_TBL.MEN,
+		    GENDER_STATUS_TBL.WOMEN,
+		    AGE_STATUS_TBL.AGE10,
+		    AGE_STATUS_TBL.AGE20,
+		    AGE_STATUS_TBL.AGE30,
+		    AGE_STATUS_TBL.AGE40,
+		    AGE_STATUS_TBL.AGE50,
+		    AGE_STATUS_TBL.AGE60
+		FROM (
+		         SELECT *
+		         FROM (
+		                  SELECT
+		                      TN_CONCERT_SIT.CONCERT_TIME_ID,
+		                      TN_CONCERT.RESERV_ONLINE_SIT_NUM,
+		                      TN_CONCERT_RESERV_MASTER.RESERV_PATH
+		                  FROM TN_CONCERT_SIT
+		                      INNER JOIN TN_CONCERT_TIME ON TN_CONCERT_TIME.CONCERT_TIME_ID = TN_CONCERT_SIT.CONCERT_TIME_ID
+		                      INNER JOIN TN_CONCERT ON TN_CONCERT.CONCERT_ID = TN_CONCERT_TIME.CONCERT_ID
+		                      -- 없는 타이틀 정보도 가져오므로 INNER JOIN 으로 변경
+		                      LEFT JOIN TN_CONCERT_RESERV_MASTER
+		                          ON TN_CONCERT_RESERV_MASTER.CONCERT_TIME_ID = TN_CONCERT_SIT.CONCERT_TIME_ID
+		                  WHERE TN_CONCERT_TIME.CONCERT_TIME_ID=#concertTimeId# AND TN_CONCERT_RESERV_MASTER.RESERV_STATUS = 1
+		              ) TEMP_TBL
+		         PIVOT(
+		                COUNT(RESERV_PATH) FOR RESERV_PATH IN ( 0 ONLINE_VALUE, 1 OFFLINE_VALUE, 2 TEL_VALUE )
+		              )
+		     ) RESERV_STATUS_TBL
+		    LEFT JOIN (
+		                  -- 성별 테이블 가져와서 조인 필요함
+		                  SELECT
+		                      CONCERT_TIME_ID,
+		                      WOMEN,
+		                      MEN
+		                  FROM (
+		                      SELECT
+		                          TN_CONCERT_SIT.CONCERT_TIME_ID,
+		                          TN_CONCERT_RESERV_MASTER.SEX
+		                      FROM TN_CONCERT_SIT
+			                      INNER JOIN TN_CONCERT_TIME ON TN_CONCERT_TIME.CONCERT_TIME_ID = TN_CONCERT_SIT.CONCERT_TIME_ID
+			                      INNER JOIN TN_CONCERT ON TN_CONCERT.CONCERT_ID = TN_CONCERT_TIME.CONCERT_ID
+		                          LEFT JOIN TN_CONCERT_RESERV_MASTER
+		                              ON TN_CONCERT_RESERV_MASTER.CONCERT_TIME_ID = TN_CONCERT_SIT.CONCERT_TIME_ID
+		                          WHERE TN_CONCERT_TIME.CONCERT_TIME_ID=#concertTimeId# AND TN_CONCERT_RESERV_MASTER.RESERV_STATUS = 1
+		                  )
+		                      PIVOT (
+		                          COUNT(SEX)
+		                          FOR SEX
+		                          IN ('W' WOMEN, 'M' MEN)
+		                      )
+		              ) GENDER_STATUS_TBL ON RESERV_STATUS_TBL.CONCERT_TIME_ID = GENDER_STATUS_TBL.CONCERT_TIME_ID
+		    LEFT JOIN (
+		                  SELECT 
+		                    * 
+		                  FROM (
+		                   SELECT
+		                        TN_CONCERT_SIT.CONCERT_TIME_ID,
+		                        CASE  WHEN TN_CONCERT_RESERV_MASTER.BIRTHDAY IS NULL THEN '-1'
+		                              WHEN EXTRACT(YEAR FROM NUMTOYMINTERVAL(MONTHS_BETWEEN(TRUNC(SYSDATE), TN_CONCERT_RESERV_MASTER.BIRTHDAY),'MONTH')) > 59 THEN '6'
+		                              ELSE SUBSTR( TO_CHAR(EXTRACT(YEAR FROM NUMTOYMINTERVAL(MONTHS_BETWEEN(TRUNC(SYSDATE), TN_CONCERT_RESERV_MASTER.BIRTHDAY),'MONTH')) ), 0, 1 )
+		                        END AS AGE
+		                    FROM TN_CONCERT_SIT
+		                        INNER JOIN TN_CONCERT_TIME ON TN_CONCERT_TIME.CONCERT_TIME_ID = TN_CONCERT_SIT.CONCERT_TIME_ID
+		                        INNER JOIN TN_CONCERT ON TN_CONCERT.CONCERT_ID = TN_CONCERT_TIME.CONCERT_ID
+		                        -- 없는 타이틀 정보도 가져오므로 INNER JOIN 으로 변경
+		                        LEFT JOIN TN_CONCERT_RESERV_MASTER
+		                            ON TN_CONCERT_RESERV_MASTER.CONCERT_TIME_ID = TN_CONCERT_SIT.CONCERT_TIME_ID
+		                    WHERE TN_CONCERT_TIME.CONCERT_TIME_ID=#concertTimeId# AND TN_CONCERT_RESERV_MASTER.RESERV_STATUS = 1
+		                  ) AGE_TBL
+		                  PIVOT(
+		                    COUNT(AGE) FOR AGE IN ( '1' AGE10, '2' AGE20, '3' AGE30, '4' AGE40, '5' AGE50, '6' AGE60 )
+		                  )
+		              ) AGE_STATUS_TBL ON RESERV_STATUS_TBL.CONCERT_TIME_ID = AGE_STATUS_TBL.CONCERT_TIME_ID
+		]]>
+	</select>
+
+	<select id="concertDAO.selectConcertFrontMonthlyRentListCnt" resultClass="int" parameterClass="zvl" >
+		<![CDATA[
+			SELECT	COUNT(*)
+			FROM 	TN_CULT_FCLTY_RESVE A
+			WHERE 	A.DELETE_AT = 'N'
+		]]>
+		
+		<isNotEmpty prepend="AND" property="selectedMonth">
+			<![CDATA[	TO_CHAR(A.RESVE_DT,'YYYYMM') = #selectedYear# || LPAD(#selectedMonth#, 2, 0) ]]>
+		</isNotEmpty>
+		
+		<isEmpty prepend="AND" property="selectedMonth">
+			<![CDATA[	TO_CHAR(A.RESVE_DT,'YYYY') = #selectedYear# ]]>
+		</isEmpty>		
+		
+	</select>
+
+	<select id="concertDAO.selectConcertFrontMonthlyRentList" resultClass="zvl" parameterClass="zvl" >
+		<![CDATA[
+		SELECT 	*
+		FROM	(
+					SELECT	ROWNUM RNUM,
+			              	ALL_LIST.*
+					FROM	(
+        ]]>
+		<![CDATA[
+								SELECT 	FN_CMMNCODE_NM('COM172',LC_SE) || ' / ' || FN_CMMNCODE_NM('COM172',B.FCLTY_SE) AS FCLTY_SE_NM, 
+										TO_CHAR(A.RESVE_DT,'YYYY-MM-DD') || '(' || TO_CHAR(A.RESVE_DT,'DY') || ') ' || LPAD(A.RESVE_BEGIN_TIME, 2, '0') || ':00 ~ ' || LPAD(A.RESVE_END_TIME, 2, '0') || ':00' RESVE_DT,
+										SUBSTR(A.RESVE_NM,1,1) || LPAD('*',LENGTH(A.RESVE_NM)-1,'*') RESVE_NM,
+										CASE WHEN TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI') > TO_CHAR(A.RESVE_DT,'YYYYMMDD') || LPAD(A.RESVE_END_TIME, 2, '0') || '00' THEN '종료' ELSE '예약' END RSTS
+								FROM 	TN_CULT_FCLTY_RESVE A, TN_CULT_FCLTY B
+							 	WHERE 	A.DELETE_AT = 'N'
+							 	AND 	A.FCLTY_SN = B.FCLTY_SN(+)
+		]]>
+		
+		<isNotEmpty prepend="AND" property="selectedMonth">
+			<![CDATA[			TO_CHAR(A.RESVE_DT,'YYYYMM') = #selectedYear# || LPAD(#selectedMonth#, 2, 0) ]]>
+		</isNotEmpty>
+		
+		<isEmpty prepend="AND" property="selectedMonth">
+			<![CDATA[			TO_CHAR(A.RESVE_DT,'YYYY') = #selectedYear# ]]>
+		</isEmpty>	
+
+		<![CDATA[
+								ORDER BY A.RESVE_DT DESC, RESVE_END_TIME DESC
+		]]>    
+		
+		<![CDATA[
+					) ALL_LIST
+				)
+		WHERE	RNUM  > #firstIndex#
+		AND  	RNUM <= #firstIndex# + #recordCountPerPage#
+		]]>		
+	</select>
+	
+	<select id="concertDAO.selectConcertFrontRentListCnt" resultClass="int" parameterClass="zvl" >
+		<![CDATA[
+			SELECT	COUNT(*)
+			FROM 	TN_CULT_FCLTY_RESVE A
+			WHERE 	A.DELETE_AT = 'N'
+			AND		TO_CHAR(A.RESVE_DT,'YYYYMMDD') = #selectedYear# || LPAD(#selectedMonth#, 2, 0) || LPAD(#selectedDate#, 2, 0)
+		]]>	
+		
+	</select>
+
+	<select id="concertDAO.selectConcertFrontRentList" resultClass="zvl" parameterClass="zvl" >
+		<![CDATA[
+		SELECT 	*
+		FROM	(
+					SELECT	ROWNUM RNUM,
+			              	ALL_LIST.*
+					FROM	(
+        ]]>
+		<![CDATA[
+								SELECT 	FN_CMMNCODE_NM('COM172',LC_SE) || ' / ' || FN_CMMNCODE_NM('COM172',B.FCLTY_SE) AS FCLTY_SE_NM, 
+										TO_CHAR(A.RESVE_DT,'YYYY-MM-DD') || '(' || TO_CHAR(A.RESVE_DT,'DY') || ') ' || LPAD(A.RESVE_BEGIN_TIME, 2, '0') || ':00 ~ ' || LPAD(A.RESVE_END_TIME, 2, '0') || ':00' RESVE_DT,
+										SUBSTR(A.RESVE_NM,1,1) || LPAD('*',LENGTH(A.RESVE_NM)-1,'*') RESVE_NM,
+										CASE WHEN TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI') > TO_CHAR(A.RESVE_DT,'YYYYMMDD') || LPAD(A.RESVE_END_TIME, 2, '0') || '00' THEN '종료' ELSE '예약' END RSTS
+								FROM 	TN_CULT_FCLTY_RESVE A, TN_CULT_FCLTY B
+							 	WHERE 	A.DELETE_AT = 'N'
+							 	AND 	A.FCLTY_SN = B.FCLTY_SN(+)
+							 	AND		TO_CHAR(A.RESVE_DT,'YYYYMMDD') = #selectedYear# || LPAD(#selectedMonth#, 2, 0) || LPAD(#selectedDate#, 2, 0)
+								ORDER BY A.RESVE_DT DESC, RESVE_END_TIME DESC
+		]]>    
+		
+		<![CDATA[
+					) ALL_LIST
+				)
+		WHERE	RNUM  > #firstIndex#
+		AND  	RNUM <= #firstIndex# + #recordCountPerPage#
+		]]>		
+	</select>	
+
+	<select id="concertDAO.selectConcertDaysList" resultClass="zvl" parameterClass="zvl" >
+		<![CDATA[
+		SELECT DISTINCT LTRIM(TO_CHAR(A.RESVE_DT, 'DD'), '0') AS DAYS
+		  FROM TN_CULT_FCLTY_RESVE A
+		 WHERE A.DELETE_AT = 'N'
+		   AND TO_CHAR(A.RESVE_DT,'YYYYMM') = #selectedYear# || LPAD(#selectedMonth#, 2, 0)
+		 ORDER BY LTRIM(TO_CHAR(A.RESVE_DT, 'DD'), '0')
+		]]>		
+	</select>	
+</sqlMap>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=Edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<meta name="robots" content="all" />
+<link rel="stylesheet" type="text/css" href="/js/bootstrap/css/bootstrap.css" />
+<link rel="stylesheet" type="text/css" href="/js/bootstrap/css/bootstrap-theme.css" />
+<link rel="stylesheet" type="text/css" href="/js/jquery-ui/jquery-ui.css">
+<link rel="stylesheet" type="text/css" href="/portal/css/common.css" />
+<link rel="stylesheet" type="text/css" href="/bos/css/common.css" />
+<link rel="stylesheet" type="text/css" href="/bos/css/bosLayout.css" />
+
+<script type="text/javascript" src="/js/jquery.js"></script>
+<script type="text/javascript" src="/js/bootstrap/bootstrap.js"></script>
+<script type="text/javascript" src="/js/bootstrap/respond.min.js"></script>
+<script type="text/javascript" src="/js/jquery-ui/jquery-ui.js"></script>
+<script type="text/javascript" src="/js/jquery.highlight-4.js"></script>
+<script type="text/javascript" src="/js/miya_validator.js"></script>
+<script type="text/javascript" src="/bos/js/common.js"></script>
+
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+<script type="text/javascript" src="/js/html5shiv.js"></script><script type="text/javascript" src="js/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+<div id="wrap" class="popupWrap">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1>신청부가정보 속성 항목</h1>
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                        	<div style="width:95%;margin:0 auto;">
+
+								<h2>개인정보 수집 및 이용 (필수)</h2>
+								<div class="row">
+									<textarea name="TEXTA1" id="TEXTA1" cols="120" rows="12" class="col-md-12">개인정보 수집 및 이용 전문 표시</textarea>
+								</div>
+
+								<h2>개인정보 제3자 위탁제공 동의 (필수)</h2>
+								<div class="row">
+									<textarea name="TEXTA2" id="TEXTA2" cols="120" rows="12" class="col-md-12">개인정보 수집 및 이용 전문 표시</textarea>
+								</div>
+
+
+								<h2 class="clear ">개인정보</h2>
+								<div class="tbrinfo text-danger clear"><span class="hide_star"><span class="sr-only">(필수입력)</span></span> 표시 항목은 필수 입력 항목입니다.</div>
+								<div class="row">
+									<div class="bdView">
+										<table cellspacing="0" cellpadding="0" class="table table-bordered" summary=" ">
+											<caption>
+											</caption>
+											<colgroup>
+											<col  span="2" />
+											</colgroup>
+											<tbody>
+												<tr>
+													<th scope="row"><span class="hide_star"><span class="sr-only">(필수입력)</span></span> <label for="USRNM">이름</label></th>
+													<td><input type="text" name="USRNM" id="USRNM" value="" />
+													</td>
+												</tr>
+												<tr>
+													<th scope="row"><span class="hide_star"><span class="sr-only">(필수입력)</span></span> 생년월일</th>
+													<td><input type="text" id="sdate" name="sdate"  class="sdate" title="생년월일 입력" style="width:130px"value="" /></td>
+												</tr>
+												<tr>
+													<th scope="row"><span class="hide_star"><span class="sr-only">(필수입력)</span></span> 성별</th>
+													<td><label for="SEX1_0"><input type="radio" name="SEX1" value="라디오" id="SEX1_0" /> 남 </label>
+														<label for="SEX1_1"><input type="radio" name="SEX1" value="라디오" id="SEX1_1" /> 여 </label></td>
+												</tr>
+												<tr>
+													<th scope="row">이메일</th>
+													<td><input type="text" name="EMAILID" id="EMAILID" value="" title="이메일 아이디를 입력하세요." />
+													@ <input type="text" name="EMAILADDR" id="EMAILADDR" value="" title="이메일 도메인 주소를 입력하세요." />
+													<select name="EMILIN" id="EMILIN" title="이메일 도메인을 선택해 주세요.">
+													<option>직접입력</option>
+													</select></td>
+												</tr>
+												<tr>
+													<th scope="row"><span class="hide_star"><span class="sr-only">(필수입력)</span></span> 휴대폰</th>
+													<td><select name="MPHONES1" id="MPHONES1" title="이통사 번호를 선택해 주세요.">
+														<option>이통사 번호</option>
+													</select>
+													-
+													<input type="text" name="MPHONES2" id="MPHONES2" value="" title="휴대폰 중간자리를 입력하세요." />
+													-
+													<input type="text" name="MPHONES3" id="MPHONES3" value="" title="휴대폰 끝자리를 입력하세요." /></td>
+												</tr>
+											</tbody>
+										</table>
+
+									</div>
+								</div>
+
+								<h2>신청부가정보</h2>
+								<div class="alert alert-info">
+									세부계획서 파일을 다운로드 받아 작성 후 첨부파일로 등록하여 주시기 바랍니다.<br/>
+									신청 완료 후 개별연락을 통해 인터뷰 일정을 2015년 10월 1일부터 5일까지 안내할 예정입니다.</div>
+
+								<div class="tbrinfo text-danger clear m0"><span class="hide_star"><span class="sr-only">(필수입력)</span></span> 표시 항목은 필수 입력 항목입니다.</div>
+
+								<div class="row">
+									<div class="bdView">
+										<table cellspacing="0" cellpadding="0" class="table table-bordered" summary=" ">
+											<caption>
+											</caption>
+											<colgroup>
+											<col  span="2" />
+											</colgroup>
+											<tbody>
+												<tr>
+													<th scope="row"><span class="hide_star"><span class="sr-only">(필수입력)</span></span> 교육희망기간</th>
+													<td><input type="text" id="sdate" name="sdate"  class="sdate" title="기간 시작일 입력" style="width:130px"value="" /> ~
+														<input type="text" id="edate" name="edate"  class="edate" title="기간 종료일 입력" style="width:130px"value="" /></td>
+												</tr>
+												<tr>
+													<th scope="row">관심분야</th>
+													<td><label for="MUTICHKG_0"><input type="checkbox" name="MUTICHKG" value="0" id="MUTICHKG_0" />
+														광고</label>
+													<label for="MUTICHKG_1"><input type="checkbox" name="MUTICHKG" value="1" id="MUTICHKG_1" />
+														CF</label>
+													<label for="MUTICHKG_2"><input type="checkbox" name="MUTICHKG" value="2" id="MUTICHKG_2" />
+														디자인</label>
+													<label for="MUTICHKG_3"><input type="checkbox" name="MUTICHKG" value="3" id="MUTICHKG_3" />
+														기타</label>
+													</td>
+												</tr>
+												<tr>
+													<th scope="row"><label for="SCHL">최종학력</label></th>
+													<td><select name="SCHL" id="SCHL" title="최종학력을 선택해 주세요.">
+													<option>선택</option>
+													</select></td>
+												</tr>
+												<tr>
+													<th scope="row"><label for="REGON1">거주지역</label></th>
+													<td><select name="REGON1" id="REGON1" title="거주지역을 선택해 주세요.">
+													<option>선택</option>
+													</select></td>
+												</tr>
+												<tr>
+													<th scope="row"><span class="hide_star"><span class="sr-only">(필수입력)</span></span> 세부계획서</th>
+													<td><input type="file" name="FILE4" id="FILE4" title="첨부파일 등록" class="col-md-8" /></td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+
+								</div>
+							</div>
+
+							<div class="btnSet tac">
+								<a class="btn btn-primary" href="#self"><span>확인</span></a>
+							</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                        </div>
+                    </div>
+				</div>
+			</div>
+
+</div>
+<div id="footer">
+	<p><span class="bold">콘텐츠코리아랩</span>&nbsp;&nbsp;&nbsp;
+		서울시 영등포구 여의나루로 76(150-010),
+		&nbsp;&nbsp;&nbsp; <span class="bold">전화번호</span>: 02)767-7114 </p>
+	<em>Copyright ⓒ 2012 CKL Corp. All Rights reserved.</em> </div>
+
+<!--[if lte IE 7]>
+<script type="text/javascript">
+//<![CDATA[
+	$('*').each(function(index) {
+		if ($(this).css("overflow")=="hidden"){ $(this).css("zoom",1)}
+		if ($(this).css("display")=="inline-block"){ $(this).css("display",'inline'); $(this).css("zoom",1)}
+	});
+//]]>
+</script>
+<![endif]-->
+</div>
+</body>
+</html>

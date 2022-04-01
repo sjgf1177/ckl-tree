@@ -1,0 +1,1998 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="myLctrum">
+
+	<typeAlias alias="zvl" type="kr.co.unp.util.ZValue" />
+	
+	
+	<!-- 학습목록 -->
+	<select id="myLctrumDAO.eduList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/* myLctrumDAO.eduList 정규과정 학습목록 */
+		SELECT *
+ 		FROM
+       (SELECT ROWNUM RNUM,
+              ALL_LIST.*
+         FROM
+              (
+				SELECT
+				  RA.*
+				FROM
+				  (
+				  SELECT
+				    C.SUBJ,
+				    C.SUBJNM,
+				    C.ISUSE,
+				    C.EDUURL,
+				    C.CONTENTTYPE,
+				    A.YEAR,
+				    A.SUBJSEQ,
+				    A.PROPSTART,
+				    A.PROPEND,
+				    decode(nvl(d.edustart,''),'', ' ',substring(d.edustart,1,4) || '-' || substring(d.edustart,5,2) ||  '-' || substring(d.edustart,7,2) ) edustart, 
+				    decode(nvl(d.eduend,''),'', ' ',substring(d.eduend,1,4) || '-' || substring(d.eduend,5,2) ||  '-' || substring(d.eduend,7,2) ) eduend       ,
+				    A.REVIEWTYPE,
+				    A.ISABLEREVIEW,
+				    A.REVIEWDAYS,
+				    D.TSTEP,
+				    A.CPSUBJSEQ,
+				    C.CPSUBJ,
+				    B.COMP AS COMPANY,
+				    CASE
+				    WHEN ( A.EDUEND < '2010047' AND E.ISGRADUATED IS NULL ) THEN 'A'
+				      WHEN (E.ISGRADUATED IS NULL ) THEN 'B'
+				      ELSE D.ISGRADUATED
+				    END AS ISGRADUATED,
+				    CASE
+				    WHEN C.ISABLEREVIEW = 'Y' THEN
+				      CASE
+				      WHEN A.REVIEWTYPE = 'D' THEN
+				            CASE WHEN (TO_DATE(A.EDUEND, 'YYYYMMDDHH24') + TO_NUMBER(A.REVIEWDAYS) ) > SYSDATE THEN 'Y' ELSE 'N' END
+				          WHEN A.REVIEWTYPE = 'W' THEN
+				            CASE WHEN ( TO_DATE(A.EDUEND, 'YYYYMMDDHH24') + TO_NUMBER( A.REVIEWDAYS) * 7 ) > SYSDATE THEN 'Y' ELSE 'N' END
+				          WHEN A.REVIEWTYPE = 'M' THEN
+				            CASE WHEN ADD_MONTHS(TO_DATE(A.EDUEND, 'YYYYMMDDHH24'), A.REVIEWDAYS) > SYSDATE THEN 'Y' ELSE 'N' END
+				          WHEN A.REVIEWTYPE = 'Y' THEN
+				            CASE WHEN ADD_MONTHS(TO_DATE(A.EDUEND, 'YYYYMMDDHH24'), A.REVIEWDAYS * 12) > SYSDATE THEN 'Y' ELSE 'N' END
+				        END
+				    END AS ISPOSSIBLE_BY_DATE,
+				    (
+				    SELECT CLASSNAME
+				      FROM TZ_SUBJATT X
+				      WHERE
+				        X.UPPERCLASS = C.UPPERCLASS
+				        AND X.MIDDLECLASS = '000'
+				        AND X.LOWERCLASS = '000'
+				    ) AS UPPERCLASSNM,
+				    COUNT(C.SUBJ) OVER() AS TOT_CNT,
+				    (
+				    SELECT COUNT(TS.SUBJ)
+				      FROM TZ_SUBJSEQ TS
+				      WHERE
+				      TS.SUBJ = C.SUBJ
+				        AND TO_CHAR(SYSDATE, 'YYYYMMDDHH24') BETWEEN TS.EDUSTART AND TS.EDUEND
+				        AND TS.GRCODE IN ('N000001')
+				    ) AS POSSIBLE_CNT,
+				    C.INTRODUCEFILENAMENEW,
+				    C.INTRO,
+				    SUBSTRING(C.SPECIALS,1,1) AS ISNEW, 
+				    SUBSTRING(C.SPECIALS,2,1) AS ISHIT, 
+				    SUBSTRING(C.SPECIALS,3,1) AS ISRECOM,
+            		TRUNC(SYSDATE)  - TRUNC(TO_DATE(substring(CASE WHEN length(A.PROPSTART)<8 THEN  (SELECT TO_CHAR(TO_DATE(SUBSTR(NVL(MAX(PG.LDATE), D.LDATE), 1, 8), 'YYYYMMDD'), 'YYYYMMDD')  
+				      FROM TZ_PROGRESS PG 
+				      WHERE PG.SUBJ = A.SUBJ 
+				        AND PG.YEAR = A.YEAR 
+				        AND PG.SUBJSEQ = A.SUBJSEQ 
+				        AND PG.USERID = B.USERID) ELSE A.PROPSTART END,0,8), 'YYYYMMDD')) + 1 PROMOTION,
+				    (SELECT TO_CHAR(TO_DATE(SUBSTR(NVL(MAX(PG.LDATE), D.LDATE), 1, 8), 'YYYYMMDD'), 'YYYY-MM-DD')  
+				      FROM TZ_PROGRESS PG 
+				      WHERE PG.SUBJ = A.SUBJ 
+				        AND PG.YEAR = A.YEAR 
+				        AND PG.SUBJSEQ = A.SUBJSEQ 
+				        AND PG.USERID = B.USERID) AS LAST_STUDY
+				  FROM
+				    TZ_SUBJSEQ A INNER JOIN TZ_PROPOSE B ON A.SUBJ = B.SUBJ AND A.YEAR = B.YEAR AND A.SUBJSEQ = B.SUBJSEQ
+				    INNER JOIN TZ_SUBJ C ON B.SUBJ = C.SUBJ
+				    INNER JOIN TZ_STUDENT D ON B.SUBJ = D.SUBJ AND B.YEAR = D.YEAR AND B.SUBJSEQ = D.SUBJSEQ AND B.USERID = D.USERID
+				    LEFT OUTER JOIN TZ_STOLD E ON B.SUBJ = E.SUBJ AND B.YEAR = E.YEAR AND B.SUBJSEQ = E.SUBJSEQ AND B.USERID = E.USERID
+				  WHERE
+				    B.USERID IN (#userid#)
+				    AND A.GRCODE IN (#grcode#)
+				  UNION ALL
+				  SELECT
+				    A.COURSE_ID AS SUBJ
+				    , B.LECNM AS SUBJNM
+				    , B.USEYN AS ISUSE
+				    , '' AS EDUURL
+				    , 'GOLD' AS CONTENTTYPE
+				    , '9999' AS YEAR
+				    , '9999' AS SUBJSEQ
+				    , '9999123100' AS PROPSTART
+				    , '9999123123' AS PROPEND
+				    , TO_CHAR(TO_DATE(A.REG_DATE, 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD') AS EDUSTART
+				    , '9999-12-31' AS EDUEND
+				    , 'G' AS REVIEWTYPE
+				    , 'Y' AS ISABLEREVIEW
+				    , 99 AS REVIEWDAYS
+				    , 0 AS TSTEP
+				    , NULL AS CPSUBJSEQ
+				    , NULL AS CPSUBJ
+				    , NULL AS COMPANY
+				    , 'G' AS ISGRADUATED
+				    , 'Y' AS ISPOSSIBLE_BY_DATE
+				    , '열린' AS UPPERCLASSNM
+				    , 0 AS TOT_CNT
+				    , 1 AS POSSIBLE_CNT
+				    , B.VODIMG AS INTRODUCEFILENAMENEW
+				    , B.INTRO AS INTRO
+				    , 'N' AS ISNEW
+				    , 'N' AS ISHIT
+				    , 'N' AS ISRECOM
+				    , 1 AS PROMOTION
+				    , TO_CHAR(TO_DATE(A.REG_DATE, 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD') AS LAST_STUDY
+				  FROM
+				    TZ_MY_GOLDCLASS A
+				    LEFT JOIN TZ_GOLDCLASS B ON A.COURSE_ID = B.SEQ
+				  WHERE
+				    A.USER_ID IN (#userid#)
+				    AND A.GRCODE IN (#grcode#)
+				  ) RA
+				WHERE
+				  1=1
+				  AND TO_CHAR(SYSDATE, 'YYYY-MM-DD') >= nvl(RA.EDUSTART, substring(RA.EDUSTART,1,8)) 
+				  AND TO_CHAR(SYSDATE, 'YYYY-MM-DD') <= nvl(RA.EDUEND, substring(RA.EDUEND,1,8)) 
+				ORDER BY
+				  LAST_STUDY DESC, EDUSTART DESC, SUBJNM ASC
+				) ALL_LIST
+			)
+			 WHERE  RNUM  > #firstIndex#
+			   AND  RNUM <= #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+	
+	
+	<!-- 정규과정 학습목록 갯수 -->
+	<select id="myLctrumDAO.eduListCnt" parameterClass="zvl" resultClass="int">
+		<![CDATA[
+		/* myLctrumDAO.eduListCnt 정규과정 학습목록 갯수 */
+		SELECT
+		  ISNULL(COUNT(1), 0)
+		FROM
+		  (
+		  SELECT
+		    decode(nvl(d.edustart,''),'', ' ',substring(d.edustart,1,4) || '-' || substring(d.edustart,5,2) ||  '-' || substring(d.edustart,7,2) ) edustart,
+		    decode(nvl(d.eduend,''),'', ' ',substring(d.eduend,1,4) || '-' || substring(d.eduend,5,2) ||  '-' || substring(d.eduend,7,2) ) eduend
+		  FROM
+		    TZ_SUBJSEQ A INNER JOIN TZ_PROPOSE B ON A.SUBJ = B.SUBJ AND A.YEAR = B.YEAR AND A.SUBJSEQ = B.SUBJSEQ
+		    INNER JOIN TZ_SUBJ C ON B.SUBJ = C.SUBJ
+		    INNER JOIN TZ_STUDENT D ON B.SUBJ = D.SUBJ AND B.YEAR = D.YEAR AND B.SUBJSEQ = D.SUBJSEQ AND B.USERID = D.USERID
+		    LEFT OUTER JOIN TZ_STOLD E ON B.SUBJ = E.SUBJ AND B.YEAR = E.YEAR AND B.SUBJSEQ = E.SUBJSEQ AND B.USERID = E.USERID
+		  WHERE
+		    B.USERID IN (#userid#)
+		    AND A.GRCODE IN (#grcode#)
+		  UNION ALL
+		  SELECT
+		    TO_CHAR(TO_DATE(A.REG_DATE, 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD') AS EDUSTART
+         	, '9999-12-31' AS EDUEND
+		  FROM
+		    TZ_MY_GOLDCLASS A
+		    LEFT JOIN TZ_GOLDCLASS B ON A.COURSE_ID = B.SEQ
+		  WHERE
+		    A.USER_ID IN (#userid#)
+		    AND A.GRCODE IN (#grcode#)
+		  ) RA
+		WHERE
+		  1=1
+		  AND TO_CHAR(SYSDATE, 'YYYY-MM-DD') >= nvl(RA.EDUSTART, substring(RA.EDUSTART,1,8)) 
+		  AND TO_CHAR(SYSDATE, 'YYYY-MM-DD') <= nvl(RA.EDUEND, substring(RA.EDUEND,1,8)) 
+		]]>
+	</select>
+	
+	<!-- 과정 상세정보 -->
+	<select id="myLctrumDAO.view" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/* myLctrumDAO.view 과정 상세정보 */
+		SELECT
+		    (SELECT CLASSNAME FROM TZ_SUBJATT WHERE UPPERCLASS = A.UPPERCLASS AND MIDDLECLASS = '000' AND LOWERCLASS = '000') AS UPPERCLASSNM,
+		    (SELECT CLASSNAME FROM TZ_SUBJATT WHERE UPPERCLASS=A.UPPERCLASS AND MIDDLECLASS=A.MIDDLECLASS AND LOWERCLASS='000') AS MIDDLECLASSNM,
+		    (SELECT CLASSNAME FROM TZ_SUBJATT WHERE UPPERCLASS = A.UPPERCLASS AND MIDDLECLASS = A.MIDDLECLASS AND LOWERCLASS = A.LOWERCLASS) AS LOWERCLASSNM,
+		    
+		    A.SUBJ, A.SUBJNM, A.ISONOFF, A.SUBJCLASS, A.UPPERCLASS,
+		    A.MIDDLECLASS, A.LOWERCLASS, A.SPECIALS, A.CONTENTTYPE, A.MUSERID,   
+		    A.MUSERTEL, A.CUSERID, A.ISUSE, A.ISGOYONG, A.ISPROPOSE,  
+		    A.BIYONG, A.EDUDAYS, A.STUDENTLIMIT, A.USEBOOK, A.BOOKPRICE, 
+		    A.OWNER, A.PRODUCER, A.CRDATE, A.LANGUAGE, A.SERVER,
+		      
+		    A.DIR, A.EDUURL, A.VODURL, A.PREURL, A.RATEWBT,  
+		    A.RATEVOD, A.FRAMECNT, A.ENV, A.TUTOR, A.BOOKNAME,    
+		    A.SDESC, A.WARNDAYS, A.STOPDAYS, A.POINT, A.EDULIMIT,  
+		    A.GRADSCORE, A.GRADSTEP, A.WSTEP, A.WMTEST, A.WFTEST,  
+		    A.WREPORT, A.WACT, A.WETC1, A.WETC2, A.GOYONGPRICE,
+		    
+		    A.PLACE, A.PLACEJH, A.ISPROMOTION, A.ISESSENTIAL, A.SCORE,         
+		    A.EDUMANS AS SUBJTARGET, A.INUSERID, A.INDATE, A.LUSERID, A.LDATE,
+		    (SELECT NAME FROM TZ_MEMBER WHERE USERID=A.CUSERID) AS CUSERIDNM,
+		    (SELECT NAME FROM TZ_MEMBER WHERE USERID=A.MUSERID) AS MUSERIDNM,
+		    --ISNULL((SELECT BETACPNM FROM TZ_BETACPINFO WHERE BETACPNO = A.PRODUCER),(SELECT COMPANYNM FROM TZ_COMP WHERE COMP=A.PRODUCER)) AS PRODUCERNM,
+		    '' AS PRODUCERNM,
+		    
+		    ISNULL((SELECT CPNM FROM TZ_CPINFO WHERE CPSEQ = A.OWNER),(SELECT COMPANYNM FROM TZ_COMP WHERE COMP=A.OWNER )) AS OWNERNM,
+		    A.PROPOSETYPE, A.EDUMANS, A.EDUTIMES, A.EDUTYPE, A.INTRO,  
+		    A.EXPLAIN, A.WHTEST, A.GRADREPORT, A.GRADEXAM, A.GRADFTEST,
+		    A.GRADHTEST, A.ISABLEREVIEW, A.ISOUTSOURCING, A.CONTURL, A.ISAPPROVAL,
+		    BOOKFILENAMEREAL, BOOKFILENAMENEW,
+		    
+		    (SELECT COUNT(*) FROM TZ_SUBJSEQ WHERE SUBJ=A.SUBJ) AS SUBJSEQCOUNT,
+		    (SELECT COUNT(*) FROM TZ_SUBJOBJ WHERE SUBJ=A.SUBJ) AS SUBJOBJCOUNT,
+		    ISVISIBLE, ISALLEDU, A.ISINTRODUCTION, A.EDUPERIOD, A.GOYONGPRICEMAJOR,
+		    A.GOYONGPRICEMINOR, A.INTRODUCEFILENAMEREAL, A.INTRODUCEFILENAMENEW, A.INFORMATIONFILENAMEREAL, A.INFORMATIONFILENAMENEW,
+		    CONTENTGRADE, A.MEMO, A.ISORDINARY, A.ISWORKSHOP, A.ISUNIT, 
+		    
+		    SPHERE, PREWIDTH, PREHEIGHT, REVIEWDAYS, REVIEWTYPE,
+		    SUBJTYPE, AUTOCONFIRM, SURYOYN, SURYOTITLE, NEEDINPUT,
+		    A.SUBMAINFILENAMEREAL, A.SUBMAINFILENAMENEW, A.AREA, A.DEGREE, A.HITNUMBER, 
+		    A.SEARCH_NM, A.MOBILE_PREURL, A.BIZ_TYPE, NVL(A.MOBILE_USE_YN, 'N') AS MOBILE_USE_YN,
+		    A.SUBJSUMMARY, A.TAGS,
+		    SUBSTRING(A.SPECIALS,1,1) AS ISNEW, 
+	        SUBSTRING(A.SPECIALS,2,1) AS ISHIT, 
+	        SUBSTRING(A.SPECIALS,3,1) AS ISRECOM,
+	        DECODE((SELECT COUNT(USERID) FROM TZ_SUBJ_FAVOR WHERE SUBJ = A.SUBJ AND USERID = #userid#), 0, 'N', 'Y') AS FAVOR_YN
+		FROM
+			TZ_SUBJ A
+		WHERE
+			A.SUBJ IN (#p_subj#)
+
+		]]>
+	</select>
+	
+	
+	<!--CLOB 타입을 위한 리절트맵   -->
+	<resultMap id="myLctrumDAO.lessonViewMap" class="zvl">
+	    <result property="subj" column="SUBJ"/>
+	    <result property="module" column="MODULE"/>
+	    <result property="lesson" column="LESSON"/>
+		<result property="subtitle" column="SUBTITLE" jdbcType="CLOB" javaType="java.lang.String"/>
+	</resultMap>
+	
+	<!-- 과정 차시 상세정보 -->
+	<select id="myLctrumDAO.lessonView" parameterClass="zvl" resultMap="myLctrumDAO.lessonViewMap">
+		<![CDATA[
+		/* myLctrumDAO.lessonView 과정 차시 상세정보 */
+		SELECT 
+		    A.SUBJ,
+		    A.MODULE,
+		    A.LESSON,
+		    A.SUBTITLE
+		FROM TZ_SUBJLESSON A
+		WHERE
+		    A.SUBJ IN (#p_subj#) 
+		    AND A.MODULE IN ('01')
+		    AND A.LESSON IN (#s_lesson#)
+		]]>
+	</select>
+	
+	
+	
+	
+	<!-- 수료증 정보 -->
+	<select id="myLctrumDAO.ctfhvInfo1" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/* myLctrumDAO.ctfhvInfo1 수료증 정보 */
+		SELECT 
+			S.NAME,
+			S.USERID,
+			S.SUBJ, 
+			Q.SUBJNM,
+			S.SERNO, 
+			(SELECT ISNULL(COUNT(SUBJ), 0) FROM TZ_SUBJLESSON WHERE SUBJ = Q.SUBJ) AS GRSEQ,
+		]]>
+		
+			<isEqual property="pIsalways" compareValue="Y">
+			
+				<isEqual property="grcode" compareValue="N000001">
+					TO_CHAR(TO_DATE(SUBSTRING(S.EDUSTART, 1,8),'YYYYMMDD'), 'YY.MM.DD') AS EDUSTART,
+					TO_CHAR(TO_DATE(SUBSTRING(S.EDUEND, 1, 8),'YYYYMMDD'), 'YY.MM.DD') AS EDUEND,
+				</isEqual>
+				<isNotEqual property="grcode" compareValue="N000001">
+					TO_CHAR(TO_DATE(SUBSTRING(Q.EDUSTART, 1,8),'YYYYMMDD'), 'YY.MM.DD') AS EDUSTART,
+					TO_CHAR(TO_DATE(SUBSTRING(S.EDUEND, 1, 8),'YYYYMMDD'), 'YY.MM.DD') AS EDUEND,
+				</isNotEqual>
+			</isEqual>
+			
+			<isNotEqual property="pIsalways" compareValue="Y">
+				TO_CHAR(TO_DATE(SUBSTRING(Q.EDUSTART, 1,8),'YYYYMMDD'), 'YY.MM.DD') AS EDUSTART,
+				TO_CHAR(TO_DATE(SUBSTRING(Q.EDUEND, 1, 8),'YYYYMMDD'), 'YY.MM.DD') AS EDUEND,
+			</isNotEqual>
+			
+		<![CDATA[	 
+			SUBSTRING(M.RESNO, 1,6) ||' - '||	SUBSTRING(M.RESNO, 7,13) AS RESNO,
+			Z.ISUNIT, 
+			Z.DEGREE,
+			NVL(J.YEUNSUNO,'') AS YEUNSUNO 
+		FROM
+		]]>
+			<isEqual property="grcode" compareValue="N000001">
+				VZ_STOLD_BTOC S INNER JOIN TZ_SUBJSEQ Q 
+				ON S.SUBJ = Q.SUBJ
+				AND S.YEAR = Q.YEAR 
+				AND S.SUBJSEQ = Q.SUBJSEQ
+			</isEqual>
+			<isNotEqual property="grcode" compareValue="N000001">
+				VZ_STOLD S INNER JOIN TZ_SUBJSEQ Q 
+				ON S.SUBJ = Q.SUBJ
+				AND S.YEAR = Q.YEAR 
+				AND S.SUBJSEQ = Q.SUBJSEQ
+			</isNotEqual>
+		<![CDATA[
+			INNER JOIN TZ_MEMBER M
+			ON S.USERID = M.USERID
+			AND M.GRCODE = Q.GRCODE 
+			INNER JOIN TZ_SUBJ Z
+			ON Z.SUBJ = S.SUBJ 
+			LEFT JOIN TZ_PROPOSE_ADDINFO J
+			ON S.SUBJ = J.SUBJ 
+			AND S.YEAR = J.YEAR
+			AND S.SUBJSEQ = J.SUBJSEQ
+			AND S.USERID = J.USERID
+		WHERE
+			Q.GRCODE IN (#grcode#)
+			AND S.USERID IN (#userid#)
+			AND S.YEAR IN (#p_year#)
+			AND S.SUBJ IN (#p_subj#)
+			AND S.SUBJSEQ IN (#p_subjseq#)
+			AND S.SERNO IN (#p_serno#)
+		]]>
+	</select>
+	
+	<!-- 수료증 정보 -->
+	<select id="myLctrumDAO.ctfhvInfo2" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/* myLctrumDAO.ctfhvInfo2 수료증 정보 */
+		SELECT 
+			S.NAME,
+			S.USERID, 
+			S.SUBJ,
+			S.SUBJNM, 
+			S.SERNO, 
+			(SELECT COUNT(SUBJ) FROM TZ_SUBJLESSON WHERE SUBJ=Q.SUBJ) AS GRSEQ,
+			TO_CHAR(TO_DATE(SUBSTRING(S.EDUSTART, 1,8), 'YYYYMMDD'), 'YY.MM.DD') AS EDUSTART,
+			TO_CHAR(TO_DATE(SUBSTRING(S.EDUEND, 1, 8), 'YYYYMMDD'), 'YY.MM.DD') AS EDUEND, 
+			SUBSTRING(M.RESNO, 1,6) ||' - '||	SUBSTRING(M.RESNO, 7,13) AS RESNO 
+		FROM 
+			TZ_STOLDHST S inner JOIN TZ_MEMBER M 
+			ON S.USERID = M.USERID 
+		WHERE
+			S.GRCODE IN (#grcode#)
+			AND S.USERID IN (#userid#)
+			AND S.YEAR IN (#p_year#)
+			AND S.SUBJ IN (#p_subj#)
+			AND S.SUBJSEQ IN (#p_subjseq#)
+		]]>
+	</select>
+	
+	
+	<!-- 상세학습 여부 -->
+	<select id="myLctrumDAO.getIsalways" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/* myLctrumDAO.getIsalways 상세학습 여부 */
+		SELECT
+			NVL((SELECT ISALWAYS FROM TZ_GRSEQ WHERE GRCODE = A.GRCODE AND GYEAR = A.GYEAR AND GRSEQ = A.GRSEQ), 'N') AS ISALWAYS
+		FROM TZ_SUBJSEQ A
+		WHERE
+			A.SUBJ = #p_subj#
+			AND A.YEAR = #p_year#
+			AND A.SUBJSEQ = #p_subjseq#
+		]]>
+	</select>
+	
+	
+
+	<!-- 30번째 찜목록 삭제 -->
+ 	<delete id="myLctrumDAO.regSubjFavorLastDelete" parameterClass="zvl">
+		/* myLctrumDAO.regSubjFavorLastDelete 30번째 찜목록 삭제 */
+		DELETE TZ_SUBJ_FAVOR
+		WHERE
+			USERID IN (#userid#)
+			AND CLASS_TYPE IN (#p_classtype#)
+			AND SUBJ IN (
+		    				SELECT SUBJ
+							FROM (
+		                    		SELECT
+		                				USERID,
+		                        		SUBJ,
+		                        		RANK() OVER( ORDER BY REG_DT DESC) AS RNK
+									FROM TZ_SUBJ_FAVOR
+									WHERE
+		                            	USERID IN (#userid#)
+										AND CLASS_TYPE IN (#p_classtype#)
+							)
+							WHERE  RNK > 29
+			)
+ 	</delete>
+	
+	
+	<!-- 과정 찜하기 등록 -->
+	<insert id="myLctrumDAO.regSubjFavorInsert" parameterClass="zvl" >
+		/* myLctrumDAO.regSubjFavorInsert 과정 찜하기 등록 */
+		INSERT INTO TZ_SUBJ_FAVOR (
+			GRCODE,
+		    USERID,
+		    CLASS_TYPE,
+		    SUBJ,
+		    SUBJSEQ,
+		    YEAR,
+		    REG_DT,
+		    MOD_DT      
+		)               
+		VALUES (
+			#grcode#,
+		    #userid#,
+		    #p_classtype#,
+		    #p_subj#,
+		    #p_subjseq#,
+		    #p_year#,
+		    sysdate,
+		    sysdate
+		)
+	</insert>
+	
+	
+	<!-- 과정 찜하기 취소 -->
+	<delete id="myLctrumDAO.regSubjFavorDelete" parameterClass="zvl" >
+		/* myLctrumDAO.regSubjFavorDelete 과정 찜하기 취소 */
+		DELETE FROM TZ_SUBJ_FAVOR
+		WHERE
+			GRCODE IN (#grcode#)
+			AND USERID IN (#userid#)
+			AND CLASS_TYPE IN (#p_classtype#)
+			AND SUBJ IN (#p_subj#)
+	</delete>
+	
+	
+	<!-- 정규과정 찜목록 갯수 -->
+	<select id="myLctrumDAO.dibsListCnt" parameterClass="zvl" resultClass="int">
+		<![CDATA[
+		/* myLctrumDAO.dibsListCnt 정규과정 찜목록 갯수 */
+		SELECT
+			ISNULL(COUNT(*), 0)
+		FROM
+			TZ_SUBJ_FAVOR A INNER JOIN TZ_SUBJ B
+			ON A.SUBJ = B.SUBJ
+			INNER JOIN TZ_SUBJSEQ C
+			ON A.SUBJ = C.SUBJ
+			AND A.GRCODE = C.GRCODE
+		WHERE
+			A.GRCODE IN (#grcode#)
+			AND A.USERID IN (#userid#)
+			AND A.CLASS_TYPE IN ('01')
+			AND B.ISUSE IN ('Y')
+			AND TO_CHAR(SYSDATE, 'YYYYMMDDHH24') BETWEEN C.PROPSTART AND C.PROPEND
+		]]>
+	</select>
+	
+	
+	<!-- 정규과정 찜목록 -->
+	<select id="myLctrumDAO.dibsList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/* myLctrumDAO.dibsList 정규과정 찜목록 */
+		
+		SELECT *
+		FROM
+		(SELECT
+			ROWNUM RNUM,
+			ALL_LIST.*
+		FROM (
+		
+			SELECT
+				A.USERID,
+				B.SUBJNM,
+				B.SUBJ,
+				NVL(B.MOBILE_USE_YN, 'N') AS MOBILE_USE_YN,
+				C.YEAR,
+				C.SUBJSEQ,
+				TO_CHAR( TO_DATE( C.PROPSTART, 'YYYYMMDDHH24'), 'YYYY.MM.DD') AS PROPSTART,
+				TO_CHAR( TO_DATE( C.PROPEND, 'YYYYMMDDHH24'), 'YYYY.MM.DD') AS PROPEND,
+				TO_CHAR( TO_DATE( C.EDUSTART, 'YYYYMMDDHH24'), 'YYYY.MM.DD') AS EDUSTART,
+				TO_CHAR( TO_DATE( C.EDUEND, 'YYYYMMDDHH24'), 'YYYY.MM.DD') AS EDUEND,
+				(SELECT CLASSNAME
+				FROM TZ_SUBJATT
+				WHERE
+					UPPERCLASS = B.UPPERCLASS
+					AND MIDDLECLASS IN ('000')
+					AND LOWERCLASS IN ('000')
+				) AS CLASSNAME,
+				B.INTRODUCEFILENAMENEW,
+				B.INTRO,
+				SUBSTRING(B.SPECIALS,1,1) AS ISNEW, 
+	    		SUBSTRING(B.SPECIALS,2,1) AS ISHIT, 
+	    		SUBSTRING(B.SPECIALS,3,1) AS ISRECOM,
+	    		B.ISONOFF,
+			    B.UPPERCLASS,
+			    (SELECT CLASSNAME FROM TZ_SUBJATT X WHERE X.UPPERCLASS = B.UPPERCLASS AND X.MIDDLECLASS = '000' AND X.LOWERCLASS = '000' ) AS UCLASSNM,
+				(SELECT CLASSNAME FROM TZ_SUBJATT X WHERE X.UPPERCLASS = B.UPPERCLASS AND X.MIDDLECLASS = B.MIDDLECLASS AND X.LOWERCLASS = '000' ) AS MCLASSNM,
+				(SELECT CLASSNAME FROM TZ_SUBJATT X WHERE X.UPPERCLASS = B.UPPERCLASS AND X.MIDDLECLASS = B.MIDDLECLASS AND X.LOWERCLASS = B.LOWERCLASS ) AS LCLASSNM
+			FROM
+				TZ_SUBJ_FAVOR A INNER JOIN TZ_SUBJ B
+				ON A.SUBJ = B.SUBJ
+				INNER JOIN TZ_SUBJSEQ C
+				ON A.SUBJ = C.SUBJ
+				AND A.GRCODE = C.GRCODE
+			WHERE
+				A.GRCODE IN (#grcode#)
+				AND A.USERID IN (#userid#)
+				AND A.CLASS_TYPE IN ('01')
+				AND B.ISUSE IN ('Y')
+				AND TO_CHAR(SYSDATE, 'YYYYMMDDHH24') BETWEEN C.PROPSTART AND C.PROPEND
+				
+			) ALL_LIST
+		)
+		WHERE
+			RNUM > #firstIndex#
+			AND RNUM <= #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+	
+	
+	
+
+
+	<!-- 과정 설문 목록 -->
+	<select id="myLctrumDAO.subjQestnrList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/* myLctrumDAO.subjQestnrList 과정 설문 목록 */
+		SELECT
+			A.SUBJNM, 
+			A.GRCODE, 
+			A.EDUSTART,
+			A.EDUEND, 
+			A.SUBJ, 
+			A.YEAR,
+			A.SUBJSEQ,   
+			B.USERID,
+			B.TSTEP, 
+			A.SULPAPERNUM,
+			C.SULPAPERNM, 
+			C.PROGRESS,
+			C.SULNUMS, 
+			(SELECT COUNT(USERID) FROM TZ_SULEACH WHERE SUBJ = A.SUBJ AND YEAR = A.YEAR AND SUBJSEQ = A.SUBJSEQ AND SULPAPERNUM = A.SULPAPERNUM AND USERID=B.USERID) AS EACHCNT,
+			A.SULSTARTDATE1 AS SULSTARTDATE,
+			A.SULENDDATE1 AS SULENDDATE,      
+			CASE
+				WHEN A.SULSTARTDATE1 IS NULL OR A.SULSTARTDATE1 = '' OR (A.SULSTARTDATE1 IS NOT NULL AND TO_CHAR (SYSDATE, 'YYYY-MM-DD') BETWEEN A.SULSTARTDATE1 AND A.SULENDDATE1 ) THEN 'Y'
+				ELSE 'N'
+			END DISPYN
+		FROM
+			TZ_SUBJSEQ A INNER JOIN TZ_STUDENT B
+			ON A.SUBJ = B.SUBJ
+			AND A.YEAR = B.YEAR
+			AND A.SUBJSEQ = B.SUBJSEQ
+			INNER JOIN TZ_SULPAPER C
+			ON A.SULPAPERNUM = C.SULPAPERNUM
+		WHERE
+			B.USERID IN (#userid#)
+			AND C.SUBJ IN ('ALL')
+			AND C.GRCODE IN (#grcode#)   
+			--AND TO_CHAR(SYSDATE,'YYYYMMDDHH24') BETWEEN A.EDUSTART AND A.EDUEND  
+			AND A.SUBJ IN (#p_subj#)
+			AND A.YEAR IN (#p_year#)
+			AND A.SUBJSEQ IN (#p_subjseq#) 
+			--설문기간 제약
+			--AND (A.SULSTARTDATE1 IS NULL OR A.SULSTARTDATE1 = '' OR (A.SULSTARTDATE1 IS NOT NULL AND TO_CHAR(SYSDATE, 'YYYY-MM-DD') BETWEEN A.SULSTARTDATE1 AND A.SULENDDATE1)) 
+		UNION 
+		SELECT 
+			A.SUBJNM,
+			A.GRCODE,
+			A.EDUSTART, 
+			A.EDUEND, 
+			A.SUBJ, 
+			A.YEAR, 
+			A.SUBJSEQ,   
+			B.USERID, 
+			B.TSTEP, 
+			A.SULPAPERNUM2,
+			C.SULPAPERNM,
+			C.PROGRESS,
+			C.SULNUMS, 
+			(SELECT COUNT(USERID) FROM TZ_SULEACH WHERE SUBJ = A.SUBJ AND YEAR = A.YEAR AND SUBJSEQ = A.SUBJSEQ AND SULPAPERNUM = A.SULPAPERNUM2 AND USERID = B.USERID) AS EACHCNT,
+			A.SULSTARTDATE2 AS SULSTARTDATE,
+			A.SULENDDATE2 AS SULENDDATE,      
+			CASE
+				WHEN A.SULSTARTDATE2 IS NULL OR A.SULSTARTDATE2 = '' OR (A.SULSTARTDATE2 IS NOT NULL AND TO_CHAR (SYSDATE, 'YYYY-MM-DD') BETWEEN A.SULSTARTDATE2 AND A.SULENDDATE2) THEN 'Y'
+				ELSE 'N'
+			END DISPYN 
+		FROM 
+			TZ_SUBJSEQ A INNER JOIN TZ_STUDENT B
+			ON A.SUBJ = B.SUBJ 
+			AND A.YEAR = B.YEAR
+			AND A.SUBJSEQ = B.SUBJSEQ
+			INNER JOIN TZ_SULPAPER C
+			ON A.SULPAPERNUM2 = C.SULPAPERNUM      
+		WHERE
+			B.USERID IN (#userid#)
+			AND C.SUBJ IN ('ALL')
+			AND C.GRCODE IN (#grcode#)   
+			--AND TO_CHAR(SYSDATE,'YYYYMMDDHH24') BETWEEN A.EDUSTART AND A.EDUEND  
+			AND A.SUBJ IN (#p_subj#)
+			AND A.YEAR IN (#p_year#)
+			AND A.SUBJSEQ IN (#p_subjseq#)
+			--설문기간 제약
+			--AND (A.SULSTARTDATE2 IS NULL OR A.SULSTARTDATE2 = '' OR (A.SULSTARTDATE2 IS NOT NULL AND TO_CHAR(SYSDATE, 'YYYY-MM-DD') BETWEEN A.SULSTARTDATE2 AND A.SULENDDATE2))
+		ORDER BY SUBJ ASC, YEAR ASC, SUBJSEQ ASC, EDUSTART ASC, EDUEND ASC     
+		]]>
+	</select>
+	
+	
+	<!-- 일반 설문 목록 -->
+	<select id="myLctrumDAO.contentsQestnrList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/* myLctrumDAO.contentsQestnrList 일반 설문 목록 */
+		SELECT
+			(SELECT SA.CLASSNAME FROM TZ_SUBJATT SA inner join TZ_SUBJ S ON S.UPPERCLASS = SA.UPPERCLASS WHERE SA.MIDDLECLASS IN ('000') AND S.SUBJ = A.SUBJ) AS CLASSNAME,
+			A.SUBJNM,
+			A.GRCODE,
+			A.EDUSTART,
+			A.EDUEND, 
+			A.SUBJ, 
+			A.YEAR, 
+			A.SUBJSEQ,
+			C.USERID, 
+			B.SULPAPERNUM,
+			B.SULPAPERNM,
+			C.SULNUMS,   
+			(SELECT ISONOFF FROM TZ_SUBJ WHERE SUBJ=A.SUBJ) AS ISONOFF  
+		FROM
+			TZ_SUBJSEQ A INNER JOIN TZ_SULEACH C
+			ON A.GRCODE = C.GRCODE
+			AND A.SUBJ = C.SUBJ
+			AND A.YEAR = C.YEAR
+			AND A.SUBJSEQ = C.SUBJSEQ
+			INNER JOIN TZ_SULPAPER B
+			ON B.GRCODE = C.GRCODE
+			AND B.SUBJ = C.GUBUN
+			AND B.SULPAPERNUM = C.SULPAPERNUM
+			--AND B.YEAR = C.YEAR
+		WHERE 
+			B.SUBJ IN ('REGIST')  
+			AND C.GRCODE IN (#grcode#)
+			AND C.USERID IN (#userid#)
+		]]>
+	</select>
+	
+	
+	
+	<!-- 나의강의실 설문지 목록 -->
+	<select id="myLctrumDAO.qestnrList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/* myLctrumDAO.qestnrList 설문지 목록 */
+		SELECT
+			(SELECT SA.CLASSNAME
+			FROM
+				TZ_SUBJATT SA INNER JOIN TZ_SUBJ S
+				ON SA.UPPERCLASS = S.UPPERCLASS
+			WHERE
+				SA.MIDDLECLASS IN ('000')
+				AND S.SUBJ = A.SUBJ
+			) AS CLASSNAME,
+			A.SUBJNM,
+			A.GRCODE,
+			A.EDUSTART,
+			A.EDUEND,
+			A.SUBJ,
+			A.YEAR,
+			A.SUBJSEQ,
+			B.USERID,
+			B.TSTEP,
+			A.SULPAPERNUM,
+			C.SULPAPERNM,
+			C.PROGRESS,
+			C.SULNUMS,
+			(SELECT ISONOFF FROM TZ_SUBJ WHERE SUBJ = A.SUBJ) AS ISONOFF,
+			(SELECT COUNT(USERID) FROM TZ_SULEACH WHERE SUBJ = A.SUBJ AND YEAR = A.YEAR AND SUBJSEQ = A.SUBJSEQ AND SULPAPERNUM = A.SULPAPERNUM AND USERID = #userid#) AS EACHCNT
+		FROM
+			TZ_SUBJSEQ A INNER JOIN TZ_STUDENT B
+			ON A.SUBJ = B.SUBJ
+			AND A.YEAR = B.YEAR
+			AND A.SUBJSEQ = B.SUBJSEQ
+			INNER JOIN TZ_SULPAPER C
+			ON A.SULPAPERNUM = C.SULPAPERNUM
+			AND A.GRCODE = C.GRCODE
+		WHERE
+			B.USERID IN (#userid#)
+			AND C.SUBJ IN ('ALL')
+			AND A.GRCODE IN (#grcode#)
+			AND (
+				A.SULSTARTDATE1 IS NULL
+				OR A.SULSTARTDATE1 IN ('')
+				OR (A.SULSTARTDATE1 IS NOT NULL AND TO_CHAR(SYSDATE, 'YYYY-MM-DD') BETWEEN A.SULSTARTDATE1 AND A.SULENDDATE1)
+			)
+		UNION
+		SELECT
+			(SELECT SA.CLASSNAME
+			FROM
+				TZ_SUBJATT SA INNER JOIN TZ_SUBJ S
+				ON SA.UPPERCLASS = S.UPPERCLASS
+			WHERE
+				SA.MIDDLECLASS IN ('000')
+				AND S.SUBJ = A.SUBJ
+			) AS CLASSNAME,
+			A.SUBJNM, 
+			A.GRCODE,
+			A.EDUSTART,
+			A.EDUEND, 
+			A.SUBJ,
+			A.YEAR,
+			A.SUBJSEQ,
+			B.USERID,
+			B.TSTEP, 
+			A.SULPAPERNUM2,
+			C.SULPAPERNM,
+			C.PROGRESS,
+			C.SULNUMS,
+			(SELECT ISONOFF FROM TZ_SUBJ WHERE SUBJ = A.SUBJ) AS ISONOFF,
+			(SELECT COUNT(USERID) FROM TZ_SULEACH WHERE SUBJ = A.SUBJ AND YEAR = A.YEAR AND SUBJSEQ = A.SUBJSEQ AND SULPAPERNUM = A.SULPAPERNUM2 AND USERID = #userid#) AS EACHCNT
+		FROM
+			TZ_SUBJSEQ A INNER JOIN TZ_STUDENT B
+			ON A.SUBJ = B.SUBJ
+			AND A.YEAR = B.YEAR
+			AND A.SUBJSEQ = B.SUBJSEQ
+			INNER JOIN TZ_SULPAPER C
+			ON A.SULPAPERNUM2 = C.SULPAPERNUM
+			AND A.GRCODE = C.GRCODE
+		WHERE
+			B.USERID IN (#userid#)
+			AND C.SUBJ IN ('ALL')  
+			AND A.GRCODE IN (#grcode#)
+			AND (
+				A.SULSTARTDATE2 IS NULL 
+				OR A.SULSTARTDATE2 IN ('')
+				OR (A.SULSTARTDATE2 IS NOT NULL AND TO_CHAR(SYSDATE,'YYYY-MM-DD') BETWEEN A.SULSTARTDATE2 AND A.SULENDDATE2)    
+			)
+		ORDER BY SUBJ ASC,YEAR ASC,SUBJSEQ ASC
+		]]>
+	</select>
+
+
+
+	<!-- 설문지 번호 가져오기 -->
+	<select id="myLctrumDAO.getPapernumSeq" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/* myLctrumDAO.getPapernumSeq 설문지 번호 가져오기 */
+		SELECT
+			ISNULL(MAX(SULPAPERNUM), 0) AS MAXNO
+		FROM
+			TZ_SULPAPER
+		WHERE
+			SUBJ IN (#p_subj#)
+			AND GRCODE IN (#grcode#)
+		]]>
+	</select>
+	
+	
+	<!-- 설문지에 해당하는 설문번호 가져오기 -->
+	<select id="myLctrumDAO.getSulnums" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/* myLctrumDAO.getSulnums 설문지에 해당하는 설문번호 가져오기 */
+		SELECT SULNUMS
+		FROM TZ_SULPAPER
+		WHERE
+			GRCODE IN (#grcode#)
+		    AND SUBJ IN (#p_subj#)
+		    AND SULPAPERNUM IN (#p_sulpapernum#)
+		]]>
+	</select>
+	
+	
+	<!-- 설문번호에 해당하는 문제목록 -->
+	<select id="myLctrumDAO.getSelnums" parameterClass="zvl" resultClass="zvl" remapResults="true">
+		<![CDATA[
+		/* myLctrumDAO.getSelnums 설문번호에 해당하는 문제목록 */
+		SELECT
+			A.SUBJ,   
+			A.SULNUM,
+			A.SELCOUNT,
+			A.SELMAX,  
+			A.DISTCODE,
+			C.CODENM AS DISTCODENM, 
+			A.SULTYPE, 
+			D.CODENM AS SULTYPENM, 
+			A.SULTEXT,
+			B.SELNUM,
+			B.SELTEXT,
+			B.SELPOINT 
+		FROM 
+			TZ_SUL A LEFT OUTER JOIN TZ_SULSEL B
+			ON A.SUBJ = B.SUBJ
+			AND A.GRCODE = B.GRCODE
+			AND A.SULNUM = B.SULNUM
+			INNER JOIN  TZ_CODE C
+			ON A.DISTCODE = C.CODE 
+			INNER JOIN TZ_CODE D    
+			ON A.SULTYPE  = D.CODE
+		WHERE 
+			A.SUBJ IN (#p_subj#)
+			AND A.GRCODE IN (#grcode#)
+		]]>	
+			AND A.SULNUM IN 
+			<iterate property="sulnum" open="(" close=")" conjunction=",">
+				#sulnum[]#
+			</iterate>
+		<![CDATA[
+			AND C.GUBUN IN (#distcode#)
+			AND D.GUBUN IN (#sultype#)
+			AND D.LEVELS IN ('1') 
+		ORDER BY A.SUBJ ASC, A.SULNUM ASC, B.SELNUM ASC 
+		]]>
+	</select>
+
+
+
+	<!-- 문제당 분류코드 -->
+	<select id="myLctrumDAO.getSulGubun" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/* myLctrumDAO.getSulGubun 문제당 분류코드 */
+		SELECT
+			DISTCODE,
+			SULTYPE 
+		FROM
+			TZ_SUL
+		WHERE
+			SUBJ IN ('ALL') 
+			AND GRCODE IN (#grcode#) 
+			AND SULNUM IN (#sulnum#)
+		]]>
+	</select>
+	
+	<!-- 주관식 답 등록 여부 체크 -->
+	<select id="myLctrumDAO.getSulresultCheck" parameterClass="zvl" resultClass="int">
+		<![CDATA[
+		/* 주관식 답 등록 여부 체크 주관식 답 등록 여부 체크 */
+		SELECT ISNULL(COUNT(*), 0)
+		FROM TZ_SULRESULTP
+		WHERE
+			SUBJ IN (#s_subj#)
+		    AND GUBUN IN (#p_subj#)
+		    AND GRCODE IN (#grcode#)
+		    AND YEAR IN (#p_gyear#)
+		    AND SUBJSEQ IN (#p_subjseq#)
+		    AND SULPAPERNUM IN (#p_sulpapernum#)
+		    AND USERID IN (#userid#)
+		    AND SULNUM IN (#sulnum#)
+		]]>
+	</select>
+	
+	
+	<!-- 주관식 답 등록 -->
+	<insert id="myLctrumDAO.tzSulresultpInsert" parameterClass="zvl">
+		/* myLctrumDAO.tzSulresultpInsert 주관식 답 등록 */
+		INSERT INTO TZ_SULRESULTP (
+			SUBJ,
+			GUBUN,
+			GRCODE,
+			YEAR,
+			SUBJSEQ, 
+			SULPAPERNUM,
+			USERID, 
+			SULNUM, 
+			DISTCODE,
+			SULTYPE,
+			ANSWER, 
+			LUSERID,
+			LDATE
+		)       
+		VALUES(
+			#s_subj#,
+			#p_subj#,
+			#grcode#,
+			#p_gyear#,
+			#p_subjseq#,
+			#p_sulpapernum#,
+			#userid#,
+			#sulnum#,
+			#distcode#,
+			#sultype#,
+			#arrAnswers#,
+			#userid#,
+			TO_CHAR(SYSDATE, 'yyyyMMddhh24miss')
+		)  
+	</insert>
+	
+	<!-- 주관식 답 수정 -->
+	<update id="myLctrumDAO.tzSulresultpUpdate" parameterClass="zvl">
+		/* myLctrumDAO.tzSulresultpUpdate 주관식 답 수정 */
+		UPDATE TZ_SULRESULTP SET
+			ANSWER = #arrAnswers#,
+		    LUSERID = #userid#,
+		    LDATE = TO_CHAR(SYSDATE, 'yyyyMMddhh24miss')
+   		WHERE
+			SUBJ IN (#s_subj#)
+		    AND GUBUN IN (#p_subj#)
+		    AND GRCODE IN (#grcode#)
+		    AND YEAR IN (#p_gyear#)
+		    AND SUBJSEQ IN (#p_subjseq#)
+		    AND SULPAPERNUM IN (#p_sulpapernum#)
+		    AND USERID IN (#userid#)
+		    AND SULNUM IN (#sulnum#)
+	</update>
+
+
+	<!-- 문제 보기 점수 -->
+	<select id="myLctrumDAO.getSulselPoint" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/* myLctrumDAO.getSulselPoint 문제 보기 점수 */
+		SELECT SELPOINT
+		FROM TZ_SULSEL 
+		WHERE 
+			SUBJ IN ('ALL') 
+			AND GRCODE IN (#grcode#)
+			AND SULNUM IN (#sulnum#)
+			AND SELNUM IN (#arrAnswers#)
+		]]>
+	</select>
+	
+	
+	<!-- 과거에 등록된 아이디 존재 여부 체크 -->
+	<select id="myLctrumDAO.getSuleachCheck" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/* myLctrumDAO.getSuleachCheck 과거에 등록된 아이디 존재 여부 체크 */
+		SELECT USERID
+		FROM TZ_SULEACH
+		WHERE
+			SUBJ IN (#s_subj#)
+			AND GRCODE IN (#grcode#)
+			AND YEAR IN (#p_gyear#)
+			AND SUBJSEQ IN (#p_subjseq#)
+			AND SULPAPERNUM IN (#p_sulpapernum#)
+			AND USERID IN (#userid#)
+			AND GUBUN IN (#p_subj#)
+		]]>
+	</select>
+
+	<!-- 설문결과 등록 -->
+	<insert id="myLctrumDAO.sulResultInsert" parameterClass="zvl">
+		/* myLctrumDAO.sulResultInsert 설문결과 등록 */
+		INSERT INTO TZ_SULEACH(
+			SUBJ,
+			GRCODE, 
+			YEAR, 
+			SUBJSEQ, 
+			SULPAPERNUM, 
+			USERID, 
+			SULNUMS, 
+			ANSWERS, 
+			LUSERID, 
+			LDATE,   
+			GUBUN, 
+			DISTCODE1,
+			DISTCODE2, 
+			DISTCODE3,
+			DISTCODE4, 
+			DISTCODE5, 
+			DISTCODE6, 
+			DISTCODE7,  
+			DISTCODE1_AVG,
+			DISTCODE2_AVG, 
+			DISTCODE3_AVG,
+			DISTCODE4_AVG,
+			DISTCODE5_AVG, 
+			DISTCODE6_AVG,
+			DISTCODE7_AVG,
+			DISTCODE10 
+		)
+		VALUES(
+			#s_subj#,
+			#grcode#,
+			#p_gyear#,
+			#p_subjseq#,
+			#p_sulpapernum#,
+			#userid#,
+			#p_sulnums#,
+			#p_answers#,
+			#userid#,
+			TO_CHAR(SYSDATE, 'yyyyMMddhh24miss'),
+			#p_subj#,
+			#code1#,
+			#code2#,
+			#code3#,
+			#code4#,
+			#code5#,
+			#code6#,
+			#code7#,
+			#code1Avg#,
+			#code2Avg#,
+			#code3Avg#,
+			#code4Avg#,
+			#code5Avg#,
+			#code6Avg#,
+			#code7Avg#,
+			#distcode10#
+		) 
+	</insert>
+
+
+
+	<!-- 진도 목차 목록 -->
+	<select id="myLctrumDAO.eduLessonList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/* myLctrumDAO.eduLessonList 진도 목차 목록 */
+		SELECT
+			A.LESSON, 
+			A.SDESC,
+			A.MODULE,
+			A.ISBRANCH,
+			A.STARTING,
+			(SELECT SDESC FROM TZ_SUBJMODULE WHERE MODULE=A.MODULE AND SUBJ=A.SUBJ) AS MODULENM,
+			
+			(SELECT FIRST_EDU FROM TZ_PROGRESS WHERE SUBJ=A.SUBJ AND $pStr1$ AND LESSON=A.LESSON) AS FIRST_EDU,
+			(SELECT FIRST_END FROM TZ_PROGRESS WHERE SUBJ=A.SUBJ AND $pStr1$ AND LESSON=A.LESSON) AS FIRST_END,
+			(SELECT SESSION_TIME FROM TZ_PROGRESS WHERE SUBJ=A.SUBJ AND $pStr1$ AND LESSON=A.LESSON) AS SESSION_TIME,
+			(SELECT TOTAL_TIME FROM TZ_PROGRESS WHERE SUBJ=A.SUBJ AND $pStr1$ AND LESSON=A.LESSON) AS TOTAL_TIME,
+			(SELECT LESSON_COUNT FROM TZ_PROGRESS WHERE SUBJ=A.SUBJ AND $pStr1$ AND LESSON=A.LESSON) AS LESSON_COUNT,
+			(SELECT COUNT(ORDSEQ) FROM TZ_PROJORD WHERE SUBJ=A.SUBJ AND $pStr2$ AND LESSON=A.LESSON) AS CNTREPORT,
+			(SELECT SUBSTRING(NVL(EDUSTART,'00000000'),1,8) FROM TZ_SUBJSEQ WHERE SUBJ=A.SUBJ AND YEAR = #p_year# AND SUBJSEQ = #p_subjseq#) AS EDUSTART,
+			(SELECT LDATE FROM TZ_PROGRESS WHERE SUBJ=A.SUBJ AND $pStr1$ AND LESSON=A.LESSON) AS LDATE,
+			
+			(SELECT COUNT(SUBJ) CNT FROM TZ_EXAMPAPER WHERE SUBJ=A.SUBJ AND YEAR = '2006' AND SUBJSEQ = '0001' AND LESSON=A.LESSON) AS EXAMTYPECNT,
+			NVL(B.FROMDATE,0) FROMDATE, NVL(B.TODATE,0) AS TODATE
+		FROM
+			TZ_SUBJLESSON A LEFT OUTER JOIN TZ_SUBJLESSONDATE B
+			ON A.SUBJ = B.SUBJ
+			AND A.MODULE = B.MODULE
+			AND A.LESSON = B.LESSON
+		WHERE
+			A.SUBJ IN (#s_subj#)
+		ORDER BY A.LESSON ASC
+		]]>
+	</select>
+	
+	
+	
+	
+	
+	<!-- 회원정보 갱신 -->
+	<update id="myLctrumDAO.memberInfoUpdate" parameterClass="zvl">
+		/* myLctrumDAO.memberInfoUpdate 회원정보 갱신  */
+		UPDATE TZ_MEMBER SET
+			COMPTEXT = NVL(#pComptext#, COMPTEXT),
+			JIKCHAEKNM = NVL(#pJikchaeknm#, JIKCHAEKNM),
+			HANDPHONE = NVL(CRYPTO.ENC('NORMAL', #pHandphone#), HANDPHONE),
+			DEPTNAM = NVL(#pDeptnam#, DEPTNAM)
+		<isNotEmpty property="p_privateYn">
+			, PRIVATE_YESNO IN (#pPrivateYn#)
+		</isNotEmpty>
+		WHERE
+			USERID IN (#userid#)
+	</update>
+	
+	
+	<!-- 병역정보 삭제 -->
+	<delete id="myLctrumDAO.militaryDelete" parameterClass="zvl">
+		/* myLctrumDAO.militaryDelete 병역정보 삭제 */
+		DELETE TZ_MEMBER_MILITARY WHERE USERID IN (#userid#)
+ 	</delete>
+	
+
+	<!-- 병역정보 신규 등록 -->
+	<insert id="myLctrumDAO.militaryInsert" parameterClass="zvl" >
+		/* myLctrumDAO.militaryInsert 병역정보 신규 등록 */
+		INSERT INTO TZ_MEMBER_MILITARY (   
+			USERID,
+			MILITARYSTATUS,
+			MILITARYSTART,
+			MILITARYEND,
+			MILITARYMEMO    
+		) VALUES (
+			#userid#,
+			#pMilitarystatus#,
+			#pMilitarystart#,
+			#pMilitaryend#,
+			#pMilitarymemo#
+		)
+	</insert>	
+	
+	
+	<!-- 온라인과정 신청 추가 정보 삭제 -->
+	<delete id="myLctrumDAO.proposeInfoDelete" parameterClass="zvl">
+		/* myLctrumDAO.proposeInfoDelete 온라인과정 신청 추가 정보 삭제 */
+		DELETE TZ_PROPOSE_ADDINFO  
+		WHERE SUBJ IN (#s_subj#)
+		AND YEAR IN (#s_year#)
+		AND SUBJSEQ IN (#s_subjseq#) 
+		AND USERID IN (#userid#)        
+ 	</delete>
+ 	
+ 	
+	<!-- 오프라인과정 신청 추가 정보 삭제 -->
+	<delete id="myLctrumDAO.offProposeDelete" parameterClass="zvl">
+		/* myLctrumDAO.offProposeDelete 오프라인과정 신청 추가 정보 삭제 */
+		DELETE TZ_PROPOSE_ADDINFO  
+		WHERE SUBJ IN (#s_subj#)
+		AND YEAR IN (#s_year#)
+		AND SUBJSEQ IN (#s_subjseq#) 
+		AND USERID IN (#userid#)        
+ 	</delete>
+	
+	
+	
+	<!-- 온라인과정 신청 추가 정보 입력 -->
+	<insert id="myLctrumDAO.proposeInfoInsert" parameterClass="zvl" >
+		/* myLctrumDAO.proposeInfoInsert 온라인과정 신청 추가 정보 입력 */
+		INSERT INTO TZ_PROPOSE_ADDINFO (   
+			SUBJ, 
+			YEAR,
+			SUBJSEQ,
+			USERID
+		
+		<!-- 연수/자기소개 -->
+		<isNotEmpty property="p_yeunsuno">
+			, YEUNSUNO    
+			, YEONSUNM    
+		</isNotEmpty>
+		
+		<isNotEmpty property="p_intro">
+			, INTRO   
+			, VISION  
+			, ETC     
+			, MOTIVE  
+		</isNotEmpty>
+		
+		<isNotEmpty property="p_tcareeryear">
+			, TCAREERYEAR 
+		</isNotEmpty>
+		
+		<isNotEmpty property="p_tcareermonth">
+			, TCAREERMONTH    
+		</isNotEmpty>
+			, REG_DT  
+			, MOD_DT  
+			
+		) VALUES (
+			#s_subj#,
+			#s_year#,
+			#s_subjseq#,
+			#userid#
+			<isNotEmpty property="p_yeunsuno">
+				, #pYeunsuno#    
+				, #pYeonsunm#    
+			</isNotEmpty>
+			
+			<isNotEmpty property="p_intro">
+				, #pIntro#   
+				, #pVision# 
+				, #pEtc#
+				, #pMotive#
+			</isNotEmpty>
+			
+			<isNotEmpty property="p_tcareeryear">
+				, #pTcareeryear#
+			</isNotEmpty>
+			
+			<isNotEmpty property="p_tcareermonth">
+				, #pTcareermonth#
+			</isNotEmpty>
+			, SYSDATE  
+			, SYSDATE  
+		)  
+	</insert>
+	
+	
+		
+	<!-- 오프라인과정 신청 추가 정보 입력 -->
+	<insert id="myLctrumDAO.offProposeInfoInsert" parameterClass="zvl" >
+		/* myLctrumDAO.offProposeInfoInsert 오프라인과정 신청 추가 정보 입력 */
+		INSERT INTO TZ_OFFPROPOSE_ADDINFO (   
+			SUBJ, 
+			YEAR,
+			SUBJSEQ,
+			USERID
+		
+		<!-- 연수/자기소개 -->
+		<isNotEmpty property="p_yeunsuno">
+			, YEUNSUNO    
+			, YEONSUNM    
+		</isNotEmpty>
+		
+		<isNotEmpty property="p_intro">
+			, INTRO   
+			, VISION  
+			, ETC     
+			, MOTIVE  
+		</isNotEmpty>
+		
+		<isNotEmpty property="p_tcareeryear">
+			, TCAREERYEAR 
+		</isNotEmpty>
+		
+		<isNotEmpty property="p_tcareermonth">
+			, TCAREERMONTH    
+		</isNotEmpty>
+			, REG_DT  
+			, MOD_DT  
+			
+		) VALUES (
+			#s_subj#,
+			#s_year#,
+			#s_subjseq#,
+			#userid#
+			<isNotEmpty property="p_yeunsuno">
+				, #pYeunsuno#    
+				, #pYeonsunm#    
+			</isNotEmpty>
+			
+			<isNotEmpty property="p_intro">
+				, #pIntro#   
+				, #pVision# 
+				, #pEtc#
+				, #pMotive#
+			</isNotEmpty>
+			
+			<isNotEmpty property="p_tcareeryear">
+				, #pTcareeryear#
+			</isNotEmpty>
+			
+			<isNotEmpty property="p_tcareermonth">
+				, #pTcareermonth#
+			</isNotEmpty>
+			, SYSDATE  
+			, SYSDATE  
+		)  
+	</insert>	
+	
+	
+	
+	<!-- 학습중인지 체크 -->
+	<select id="myLctrumDAO.subjDuplCheck" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/* myLctrumDAO.subjDuplCheck 학습중인지 체크 */
+		SELECT ISNULL(COUNT(*), 0) AS CNT
+		FROM TZ_STUDENT     
+		WHERE
+			SUBJ IN (#s_subj#)
+			AND SUBJSEQ IN (#s_subjseq#)
+			AND YEAR IN (#s_year#)
+			AND USERID IN (#userid#)
+			AND EDUSTART <= TO_CHAR(SYSDATE, 'YYYYMMDD')
+      		AND EDUEND >= TO_CHAR(SYSDATE, 'YYYYMMDD')
+      		
+		]]>
+	</select>
+	
+	<!-- 수강신청 정보 등록_TZ_PROPOSE -->
+	<insert id="myLctrumDAO.proposeInsert" parameterClass="zvl" >
+		/* myLctrumDAO.proposeInsert 수강신청 정보 등록_TZ_PROPOSE */
+		INSERT INTO TZ_PROPOSE (
+			SUBJ,
+		    YEAR,
+		    SUBJSEQ,
+		    USERID,
+		    APPDATE,
+		    CHKFIRST,
+		    CHKFINAL,
+		    LUSERID,
+		    LDATE,
+		    ASP_GUBUN
+		) VALUES ( 
+			#s_subj#,
+			#s_year#,
+			#s_subjseq#,
+			#userid#,
+			TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS'),
+			'Y',
+			(SELECT
+				DECODE(NVL(TRIM(AUTOCONFIRM), 'N'), 'Y', 'Y', 'B')
+			FROM
+				TZ_SUBJSEQ  
+			WHERE
+				SUBJ IN (#s_subj#)
+				AND YEAR IN (#s_year#)
+				AND SUBJSEQ IN (#s_subjseq#)
+			),
+			#userid#,
+			TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS'),
+			#grcode#
+		)
+	</insert>
+	
+	
+	<!-- 수강신청 정보 등록_TZ_STUDENT -->
+	<insert id="myLctrumDAO.studentInsert" parameterClass="zvl" >
+		/* myLctrumDAO.studentInsert 수강신청 정보 등록_TZ_STUDENT */
+		INSERT INTO TZ_STUDENT  (
+		    SUBJ,
+		    YEAR,
+		    SUBJSEQ,
+		    USERID,
+		    CLASS,
+		    COMP,
+		    ISDINSERT,
+		    SCORE,
+		    TSTEP,
+		    MTEST,
+		    FTEST,
+		    REPORT,
+		    ACT,
+		    ETC1,
+		    ETC2,
+		    AVTSTEP,
+		    AVMTEST,
+		    AVFTEST,
+		    AVREPORT,
+		    AVACT,
+		    AVETC1,
+		    AVETC2,
+		    ISGRADUATED,
+		    ISRESTUDY,
+		    ISB2C,
+		    EDUSTART,
+		    EDUEND,
+		    BRANCH,
+		    CONFIRMDATE,
+		    EDUNO,
+		    LUSERID,
+		    LDATE,
+		    STUSTATUS 
+		) VALUES (
+			#s_subj#,
+			#s_year#,
+			#s_subjseq#,
+			#userid#,
+			'',
+			#grcode#,
+			'Y',
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			'N',
+			'N',
+			'N',
+			TO_CHAR(SYSDATE, 'YYYYMMDD'), 
+			#eduEnd# ,
+			99,
+			'',
+			0,
+			#userid#,
+			TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS'),
+			'Y'
+		)
+	</insert>
+	
+	
+	
+	<!-- 전화번호 가져오기 -->
+	<select id="myLctrumDAO.getNumber" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/* myLctrumDAO.getNumber 전화번호 가져오기 */
+		SELECT
+			CRYPTO.DEC('normal', HANDPHONE) AS HANDPHONE
+		FROM TZ_MEMBER     
+		WHERE
+			GRCODE IN (#grcode#)
+			AND USERID IN (#userid#)
+		]]>
+	</select>
+	
+	
+	
+	<!-- SMS 전송(DB 저장) -->
+	<insert id="myLctrumDAO.sendSMSMsg" parameterClass="zvl" >
+		/* myLctrumDAO.studentInsert SMS 전송(DB 저장) */
+		insert into em_smt_tran (
+			mt_pr, date_client_req, mt_refkey, content, callback, service_type, broadcast_yn, msg_status, recipient_num
+		) VALUES  (
+			SQ_EM_SMT_TRAN_01.NEXTVAL, SYSDATE, 'accademy', #msgStr#, #fromPhone#, '0', 'N', '1', #toPhone#
+		)
+	</insert>
+	
+	
+	<!-- 해당 아이디가 유효한 계정인지 체크 -->
+	<select id="myLctrumDAO.memberCheck" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/* myLctrumDAO.memberCheck 해당 아이디가 유효한 계정인지 체크 */
+		SELECT
+			ISNULL(COUNT(USERID), 0) AS MEMBERCNT
+		FROM TZ_MEMBER     
+		WHERE
+			GRCODE IN (#grcode#)
+			AND USERID IN (#userid#)
+		]]>
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<!-- OBC, SCORM 맛보기 목록 -->
+	<select id="myLctrumDAO.eduLessonOBCPreviewList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/* myLctrumDAO.eduLessonOBCPreviewList OBC, SCORM 맛보기 목록 */
+		SELECT
+			A.LESSON, 
+			A.SDESC,
+			A.MODULE,
+			A.ISBRANCH,
+			A.STARTING,
+			(SELECT SDESC FROM TZ_SUBJMODULE WHERE MODULE=A.MODULE AND SUBJ=A.SUBJ) AS MODULENM,
+			
+			(SELECT FIRST_EDU FROM TZ_PROGRESS WHERE SUBJ=A.SUBJ AND $pStr1$ AND LESSON=A.LESSON) AS FIRST_EDU,
+			(SELECT FIRST_END FROM TZ_PROGRESS WHERE SUBJ=A.SUBJ AND $pStr1$ AND LESSON=A.LESSON) AS FIRST_END,
+			(SELECT SESSION_TIME FROM TZ_PROGRESS WHERE SUBJ=A.SUBJ AND $pStr1$ AND LESSON=A.LESSON) AS SESSION_TIME,
+			(SELECT TOTAL_TIME FROM TZ_PROGRESS WHERE SUBJ=A.SUBJ AND $pStr1$ AND LESSON=A.LESSON) AS TOTAL_TIME,
+			(SELECT LESSON_COUNT FROM TZ_PROGRESS WHERE SUBJ=A.SUBJ AND $pStr1$ AND LESSON=A.LESSON) AS LESSON_COUNT,
+			(SELECT COUNT(ORDSEQ) FROM TZ_PROJORD WHERE SUBJ=A.SUBJ AND $pStr2$ AND LESSON=A.LESSON) AS CNTREPORT,
+			(SELECT SUBSTRING(NVL(EDUSTART,'00000000'),1,8) FROM TZ_SUBJSEQ WHERE SUBJ=A.SUBJ AND YEAR = #p_year# AND SUBJSEQ = #p_subjseq#) AS EDUSTART,
+			(SELECT LDATE FROM TZ_PROGRESS WHERE SUBJ=A.SUBJ AND $pStr1$ AND LESSON=A.LESSON) AS LDATE,
+			
+			(SELECT COUNT(SUBJ) CNT FROM TZ_EXAMPAPER WHERE SUBJ=A.SUBJ AND YEAR = '2006' AND SUBJSEQ = '0001' AND LESSON=A.LESSON) AS EXAMTYPECNT,
+			NVL(B.FROMDATE,0) FROMDATE, NVL(B.TODATE,0) AS TODATE
+		FROM
+			TZ_SUBJLESSON A LEFT OUTER JOIN TZ_SUBJLESSONDATE B
+			ON A.SUBJ = B.SUBJ
+			AND A.MODULE = B.MODULE
+			AND A.LESSON = B.LESSON
+		WHERE
+			A.SUBJ IN (#s_subj#)
+		ORDER BY A.LESSON ASC
+		]]>
+	</select>
+	
+	<!-- 나의 진도 정보 -->
+	<select id="myLctrumDAO.myProgress" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/* myLctrumDAO.myProgress 나의 진도 정보 */
+		SELECT TSTEP
+		FROM TZ_STUDENT
+		WHERE 
+			SUBJ IN (#s_subj#) 
+			AND YEAR IN (#s_year#) 
+			AND SUBJSEQ IN (#s_subjseq#) 
+			AND USERID IN (#userid#)
+		]]>
+	</select>
+	
+	<!-- 설문페이지 나의 진도 정보 -->
+	<select id="myLctrumDAO.sulMyProgress" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/* myLctrumDAO.sulMyProgress 설문페이지 나의 진도 정보 */
+		SELECT TSTEP
+		FROM TZ_STUDENT
+		WHERE 
+			SUBJ IN (#sSubj#) 
+			AND YEAR IN (#sYear#) 
+			AND SUBJSEQ IN (#sSubjseq#) 
+			AND USERID IN (#userid#)
+		]]>
+	</select>
+	
+	
+	<!-- 수료처리 완료여부, 학습중 검토 -->
+	<select id="myLctrumDAO.subjseqData" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/* myLctrumDAO.subjseqData 수료처리 완료여부, 학습중 검토 */
+		SELECT
+			B.ISGOYONG,
+			B.ISCLOSED,
+			B.EDUSTART,
+			B.EDUEND,
+			B.WSTEP,
+			B.WMTEST,
+			B.WFTEST,
+			B.WHTEST,
+			B.WREPORT,
+			B.WACT,
+			B.WETC1,
+			B.WETC2,
+			B.GRADSCORE,
+			B.GRADSTEP,
+			B.GRADEXAM,
+			B.GRADFTEST,
+			B.GRADHTEST,
+			B.GRADREPORT,
+			B.GRCODE,
+			B.GRSEQ,
+			B.GYEAR,
+			B.SUBJNM,
+			A.ISONOFF,
+			B.BIYONG,
+			NVL(B.GRADETC1,0) AS GRADETC1
+		FROM
+			TZ_SUBJ A LEFT OUTER JOIN TZ_SUBJSEQ B
+		    ON A.SUBJ = B.SUBJ
+		WHERE
+			B.SUBJ IN (#s_subj#)
+			AND B.YEAR IN (#s_year#)
+			AND B.SUBJSEQ IN (#s_subjseq#)
+		]]>
+	</select>
+	
+	<!-- 컨텐츠 유형 가져오기 -->
+	<select id="myLctrumDAO.getContenttype" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/* myLctrumDAO.getContenttype 컨텐츠 유형 가져오기 */
+		SELECT CONTENTTYPE FROM TZ_SUBJ WHERE SUBJ IN (#s_subj#)
+		]]>
+	</select>
+	
+	
+	
+	<!-- 대상 grcode 가져오기 -->
+	<select id="myLctrumDAO.getTargetGrcode" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/* myLctrumDAO.getTargetGrcode 대상 grcode 가져오기 */
+		SELECT GRCODE FROM TZ_SUBJSEQ WHERE SUBJ IN (#s_subj#) AND YEAR IN (#s_year#) AND SUBJSEQ IN (#s_subjseq#)
+		]]>
+	</select>
+	
+	
+	<!-- 학습자 커서 -->
+	<select id="myLctrumDAO.getFinishTargetStudent" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/* myLctrumDAO.getFinishTargetStudent 학습자 커서 */
+		SELECT
+		    A.SUBJ,
+		    A.YEAR,
+		    A.SUBJSEQ,
+		    A.USERID, 
+		    B.NAME,  
+		    B.COMP, 
+		    (SELECT LEGACYDEPT FROM TZ_COMP WHERE COMP = B.COMP) AS DEPT, 
+		    (SELECT DEPTNM FROM TZ_COMP WHERE COMP = B.COMP) AS DEPTNAME, 
+		    B.JIKWI, 
+		    A.ISB2C, 
+		    A.TSTEP,
+		    A.AVTSTEP,
+		    A.AVMTEST,
+		    A.AVFTEST, 
+		    A.AVHTEST, 
+		    A.AVREPORT, 
+		    A.AVACT, 
+		    A.AVETC1,
+		    A.AVETC2, 
+		    A.ISGOYONG,
+		    A.SAMTOTAL 
+		FROM
+			TZ_STUDENT A INNER JOIN TZ_MEMBER B
+		    ON A.USERID = B.USERID 
+		WHERE 
+			A.SUBJ IN (#s_subj#) 
+			AND A.YEAR IN (#s_year#) 
+			AND A.SUBJSEQ IN (#s_subjseq#) 
+			AND B.GRCODE IN (#s_grcode#)
+		]]>
+		<isNotEqual property="s_userid" compareValue="ALL">
+			<![CDATA[ AND A.USERID IN (#s_userid#) ]]>
+		</isNotEqual>
+	</select>
+	
+	
+	
+	<!-- 점수계산을 위한 컨텐츠 유형 가져오기 -->
+	<select id="myLctrumDAO.getCalcContenttype" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/* myLctrumDAO.getCalcContenttype 점수계산을 위한 컨텐츠 유형 가져오기 */
+		SELECT *
+		FROM (
+			SELECT
+				ROWNUM AS RNUM,
+				NVL(CONTENTTYPE,'N') AS CONTENTTYPE 
+			FROM
+				TZ_SUBJ  
+			WHERE
+				SUBJ IN (#s_subj#)
+		)
+		WHERE RNUM < 2 
+		]]>
+	</select>
+
+
+	<!-- 수강신청 정보 등록 -->
+	<insert id="myLctrumDAO.proposeHistoryInsert" parameterClass="zvl" >
+		INSERT INTO TZ_PROPOSE_HISTORY
+		SELECT A.SUBJ, A.YEAR, A.SUBJSEQ, A.USERID,  
+		    ( SELECT COUNT(*) FROM TZ_PROPOSE_HISTORY A
+		    WHERE YEAR = #s_year#
+		     AND SUBJ = #s_subj#
+		     AND USERID = #userid#
+		     AND SUBJSEQ = #s_subjseq# ) +1 LESSON_CNT,
+		     EDUSTART, EDUEND, TO_CHAR(SYSDATE,'YYYYMMDD') ,#userid# LUSERID
+		FROM TZ_PROPOSE A, TZ_STUDENT B
+		WHERE A.YEAR = B.YEAR
+	    AND A.SUBJ = B.SUBJ
+	    AND A.SUBJSEQ = B.SUBJSEQ
+	    AND A.USERID = B.USERID
+		AND A.SUBJ IN (#s_subj#)
+		AND A.YEAR IN (#s_year#)
+		AND A.SUBJSEQ IN (#s_subjseq#) 
+		AND A.USERID IN (#userid#)
+	</insert>
+	
+	<!-- 수료정보 등록 -->
+	<insert id="myLctrumDAO.lessonHistoryInsert" parameterClass="zvl" >
+		INSERT INTO TZ_LESSON_HISTORY
+		SELECT A.SUBJ, A.YEAR, A.SUBJSEQ, A.USERID,    
+		    ( SELECT COUNT(*) FROM TZ_LESSON_HISTORY A
+		    WHERE YEAR = #s_year#
+		     AND SUBJ = #s_subj#
+		     AND USERID = #userid#
+		     AND SUBJSEQ = #s_subjseq# ) +1 LESSON_CNT,
+		     DECODE(C.TSTEP, NULL, B.TSTEP), nvl(C.ISGRADUATED,'N') ISGRADUATED, nvl(C.SERNO,b.serno) SERNO, B.EDUSTART, B.EDUEND,
+   	         C.EDUEND GRADUTATEDdATE , TO_CHAR(SYSDATE,'YYYYMMDD') reAppyDate, TO_CHAR(SYSDATE,'YYYYMMDD') , #userid# LUSERID
+		FROM TZ_PROPOSE A, TZ_STUDENT B, TZ_STOLD C 
+		WHERE A.YEAR = B.YEAR
+	    AND A.SUBJ = B.SUBJ
+	    AND A.SUBJSEQ = B.SUBJSEQ
+	    AND A.USERID = B.USERID
+	    AND B.YEAR = C.YEAR (+)
+	    AND B.SUBJ = C.SUBJ(+)
+	    AND B.SUBJSEQ = C.SUBJSEQ(+)
+	    AND B.USERID = C.USERID(+)
+	    AND A.SUBJ IN (#s_subj#)
+		AND A.YEAR IN (#s_year#)
+		AND A.SUBJSEQ IN (#s_subjseq#) 
+		AND A.USERID IN (#userid#)
+	</insert>
+
+	<!-- 온라인과정 기존 학습 및 수료 정보 삭제 start -->
+	<delete id="myLctrumDAO.proposeDelete" parameterClass="zvl">
+		/* myLctrumDAO.proposeDelete 온라인과정 신청 추가 정보 삭제 */
+		DELETE TZ_PROPOSE
+		WHERE SUBJ IN (#s_subj#)
+		AND YEAR IN (#s_year#)
+		AND SUBJSEQ IN (#s_subjseq#) 
+		AND USERID IN (#userid#)        
+ 	</delete>
+
+	<delete id="myLctrumDAO.studentDelete" parameterClass="zvl">
+		/* myLctrumDAO.studentDelete 온라인과정 신청 추가 정보 삭제 */
+		DELETE TZ_STUDENT
+		WHERE SUBJ IN (#s_subj#)
+		AND YEAR IN (#s_year#)
+		AND SUBJSEQ IN (#s_subjseq#) 
+		AND USERID IN (#userid#)        
+ 	</delete>
+ 	
+ 	<delete id="myLctrumDAO.progressDelete" parameterClass="zvl">
+		/* myLctrumDAO.progressDelete 온라인과정 신청 추가 정보 삭제 */
+		DELETE TZ_PROGRESS
+		WHERE SUBJ IN (#s_subj#)
+		AND YEAR IN (#s_year#)
+		AND SUBJSEQ IN (#s_subjseq#) 
+		AND USERID IN (#userid#)        
+ 	</delete>
+ 	
+ 	<delete id="myLctrumDAO.stoldDelete" parameterClass="zvl">
+		/* myLctrumDAO.stoldDelete 온라인과정 신청 추가 정보 삭제 */
+		DELETE TZ_STOLD
+		WHERE SUBJ IN (#s_subj#)
+		AND YEAR IN (#s_year#)
+		AND SUBJSEQ IN (#s_subjseq#) 
+		AND USERID IN (#userid#)        
+ 	</delete>
+
+	<!-- 온라인과정 기존 학습 및 수료 정보 삭제 end -->
+
+
+	<!-- 학습이력조회 -->
+	<select id="myLctrumDAO.lessonHistoryList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/* myLctrumDAO.lessonHistoryList 학습이력 */
+		
+			select a.subj, a.year, a.subjseq, a.userid, a.lesson_cnt, A.Isgraduated, subjnm, edustart, eduend, serno
+			, rank() over(order by edustart desc, subj, lesson_cnt desc) num 
+			from (
+			      select a.subj, a.year, a.subjseq, a.userid, a.lesson_cnt, A.Isgraduated, subjnm, a.serno
+			             , decode(nvl(a.edustart,''),'', ' ',substring(a.edustart,1,4) || '-' || substring(a.edustart,5,2) ||  '-' || substring(a.edustart,7,2) ) edustart
+			             , decode(nvl(a.eduend,''),'', ' ',substring	(a.eduend,1,4) || '-' || substring(a.eduend,5,2) ||  '-' || substring(a.eduend,7,2) ) eduend
+			             , rank() over(order by substring(eduend,1,4) desc , subjnm) num
+			           from tz_lesson_history a, tz_subj b
+			          where a.subj = b.subj
+			            and userid = #userid#
+			      union all      
+			      select a.subj, a.year, a.subjseq, a.userid, '1' lesson_cnt, A.Isgraduated, subjnm, a.serno
+			             , decode(nvl(a.edustart,''),'', ' ',substring(a.edustart,1,4) || '-' || substring(a.edustart,5,2) ||  '-' || substring(a.edustart,7,2) ) edustart
+			             , decode(nvl(a.eduend,''),'', ' ',substring(a.eduend,1,4) || '-' || substring(a.eduend,5,2) ||  '-' || substring(a.eduend,7,2) ) eduend
+			             , rank() over(order by substring(eduend,1,4) desc , subjnm) num
+			           from tz_stold a, tz_subj b
+			          where a.subj = b.subj
+			            and userid = #userid#
+			            --and year = '2015'
+			    ) a            
+			where 1=1    
+		]]>
+		<isNotEmpty property="searchWrd">
+			<isEqual prepend="AND" property="searchCnd" compareValue="1">
+				<![CDATA[	substring(eduend,1,4) = #searchWrd# 		]]>
+			</isEqual>
+			<isEqual prepend="AND" property="searchCnd" compareValue="2">
+				<![CDATA[	a.subjnm like '%' || #searchWrd# || '%'	]]>
+			</isEqual>
+		</isNotEmpty>
+		
+		order by edustart desc, subj, lesson_cnt desc
+	</select>
+	
+	<!-- 학습이력조회결과 수 -->
+	<select id="myLctrumDAO.lessonHistoryListCnt" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/* myLctrumDAO.lessonHistoryList 학습이력 */
+		
+			select count(*) total
+			from (
+			      select a.subj, a.year, a.subjseq, a.userid, a.lesson_cnt, A.Isgraduated, subjnm
+			             , decode(nvl(a.edustart,''),'', ' ',substring(a.edustart,1,4) || '-' || substring(a.edustart,5,2) ||  '-' || substring(a.edustart,7,2) ) edustart
+			             , decode(nvl(a.eduend,''),'', ' ',substring(a.eduend,1,4) || '-' || substring(a.eduend,5,2) ||  '-' || substring(a.eduend,7,2) ) eduend
+			             , rank() over(order by substring(eduend,1,4) desc , subjnm) num
+			           from tz_lesson_history a, tz_subj b
+			          where a.subj = b.subj
+			            and userid = #userid#
+			      union all      
+			      select a.subj, a.year, a.subjseq, a.userid, '1' lesson_cnt, A.Isgraduated, subjnm
+			             , decode(nvl(a.edustart,''),'', ' ',substring(a.edustart,1,4) || '-' || substring(a.edustart,5,2) ||  '-' || substring(a.edustart,7,2) ) edustart
+			             , decode(nvl(a.eduend,''),'', ' ',substring(a.eduend,1,4) || '-' || substring(a.eduend,5,2) ||  '-' || substring(a.eduend,7,2) ) eduend
+			             , rank() over(order by substring(eduend,1,4) desc , subjnm) num
+			           from tz_stold a, tz_subj b
+			          where a.subj = b.subj
+			            and userid = #userid#
+			            --and year = '2015'
+			    ) a            
+			where 1=1    
+		]]>
+		<isNotEmpty property="searchWrd">
+			<isEqual prepend="AND" property="searchCnd" compareValue="1">
+				<![CDATA[	substring(eduend,1,4) = #searchWrd# 		]]>
+			</isEqual>
+			<isEqual prepend="AND" property="searchCnd" compareValue="2">
+				<![CDATA[	a.subjnm like '%' || #searchWrd# || '%'	]]>
+			</isEqual>
+		</isNotEmpty>
+	</select>
+
+	<select id="myLctrumDAO.selectMyStudyCount" parameterClass="zvl" resultClass="int">
+		SELECT COUNT(0) AS CNT
+		  FROM TZ_STUDENT
+		 WHERE USERID = #userid#
+		   AND COMP = #grcode# 
+		   AND TRUNC(SYSDATE) BETWEEN TO_DATE(EDUSTART, 'YYYYMMDD') AND TO_DATE(EDUEND, 'YYYYMMDD')
+	</select>
+	
+	
+	<select id="myLctrumDAO.eduOldList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		SELECT *
+ 		FROM
+       (SELECT ROWNUM RNUM,
+              ALL_LIST.*
+         FROM
+              (
+				SELECT
+				  RA.*
+				FROM
+				  (
+				  SELECT
+				    C.SUBJ,
+				    C.SUBJNM,
+				    C.ISUSE,
+				    C.EDUURL,
+				    C.CONTENTTYPE,
+				    A.YEAR,
+				    A.SUBJSEQ,
+				    A.PROPSTART,
+				    A.PROPEND,
+				    decode(nvl(d.edustart,''),'', ' ',substring(d.edustart,1,4) || '-' || substring(d.edustart,5,2) ||  '-' || substring(d.edustart,7,2) ) edustart, 
+				    decode(nvl(d.eduend,''),'', ' ',substring(d.eduend,1,4) || '-' || substring(d.eduend,5,2) ||  '-' || substring(d.eduend,7,2) ) eduend       ,
+				    A.REVIEWTYPE,
+				    A.ISABLEREVIEW,
+				    A.REVIEWDAYS,
+				    D.TSTEP,
+				    A.CPSUBJSEQ,
+				    C.CPSUBJ,
+				    B.COMP AS COMPANY,
+				    CASE
+				    WHEN ( A.EDUEND < '2010047' AND E.ISGRADUATED IS NULL ) THEN 'A'
+				      WHEN (E.ISGRADUATED IS NULL ) THEN 'B'
+				      ELSE D.ISGRADUATED
+				    END AS ISGRADUATED,
+				    CASE
+				    WHEN C.ISABLEREVIEW = 'Y' THEN
+				      CASE
+				      WHEN A.REVIEWTYPE = 'D' THEN
+				            CASE WHEN (TO_DATE(A.EDUEND, 'YYYYMMDDHH24') + TO_NUMBER(A.REVIEWDAYS) ) > SYSDATE THEN 'Y' ELSE 'N' END
+				          WHEN A.REVIEWTYPE = 'W' THEN
+				            CASE WHEN ( TO_DATE(A.EDUEND, 'YYYYMMDDHH24') + TO_NUMBER( A.REVIEWDAYS) * 7 ) > SYSDATE THEN 'Y' ELSE 'N' END
+				          WHEN A.REVIEWTYPE = 'M' THEN
+				            CASE WHEN ADD_MONTHS(TO_DATE(A.EDUEND, 'YYYYMMDDHH24'), A.REVIEWDAYS) > SYSDATE THEN 'Y' ELSE 'N' END
+				          WHEN A.REVIEWTYPE = 'Y' THEN
+				            CASE WHEN ADD_MONTHS(TO_DATE(A.EDUEND, 'YYYYMMDDHH24'), A.REVIEWDAYS * 12) > SYSDATE THEN 'Y' ELSE 'N' END
+				        END
+				    END AS ISPOSSIBLE_BY_DATE,
+				    (
+				    SELECT CLASSNAME
+				      FROM TZ_SUBJATT X
+				      WHERE
+				        X.UPPERCLASS = C.UPPERCLASS
+				        AND X.MIDDLECLASS = '000'
+				        AND X.LOWERCLASS = '000'
+				    ) AS UPPERCLASSNM,
+				    COUNT(C.SUBJ) OVER() AS TOT_CNT,
+				    (
+				    SELECT COUNT(TS.SUBJ)
+				      FROM TZ_SUBJSEQ TS
+				      WHERE
+				      TS.SUBJ = C.SUBJ
+				        AND TO_CHAR(SYSDATE, 'YYYYMMDDHH24') BETWEEN TS.EDUSTART AND TS.EDUEND
+				        AND TS.GRCODE IN ('N000001')
+				    ) AS POSSIBLE_CNT,
+				    C.INTRODUCEFILENAMENEW,
+				    C.INTRO,
+				    SUBSTRING(C.SPECIALS,1,1) AS ISNEW, 
+				    SUBSTRING(C.SPECIALS,2,1) AS ISHIT, 
+				    SUBSTRING(C.SPECIALS,3,1) AS ISRECOM,
+				    TRUNC(SYSDATE)  - TRUNC(TO_DATE(D.EDUSTART, 'YYYYMMDD')) + 1 AS PROMOTION,
+				    (SELECT TO_CHAR(TO_DATE(SUBSTR(NVL(MAX(PG.LDATE), D.LDATE), 1, 8), 'YYYYMMDD'), 'YYYY-MM-DD')  
+				      FROM TZ_PROGRESS PG 
+				      WHERE PG.SUBJ = A.SUBJ 
+				        AND PG.YEAR = A.YEAR 
+				        AND PG.SUBJSEQ = A.SUBJSEQ 
+				        AND PG.USERID = B.USERID) AS LAST_STUDY
+				  FROM
+				    TZ_SUBJSEQ A INNER JOIN TZ_PROPOSE B ON A.SUBJ = B.SUBJ AND A.YEAR = B.YEAR AND A.SUBJSEQ = B.SUBJSEQ
+				    INNER JOIN TZ_SUBJ C ON B.SUBJ = C.SUBJ
+				    INNER JOIN TZ_STUDENT D ON B.SUBJ = D.SUBJ AND B.YEAR = D.YEAR AND B.SUBJSEQ = D.SUBJSEQ AND B.USERID = D.USERID
+				    LEFT OUTER JOIN TZ_STOLD E ON B.SUBJ = E.SUBJ AND B.YEAR = E.YEAR AND B.SUBJSEQ = E.SUBJSEQ AND B.USERID = E.USERID
+				  WHERE
+				    B.USERID IN (#userid#)
+				    AND A.GRCODE IN (#grcode#)
+				  UNION ALL
+				  SELECT
+				    A.COURSE_ID AS SUBJ
+				    , B.LECNM AS SUBJNM
+				    , B.USEYN AS ISUSE
+				    , '' AS EDUURL
+				    , 'GOLD' AS CONTENTTYPE
+				    , '9999' AS YEAR
+				    , '9999' AS SUBJSEQ
+				    , '9999123100' AS PROPSTART
+				    , '9999123123' AS PROPEND
+				    , TO_CHAR(TO_DATE(A.REG_DATE, 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD') AS EDUSTART
+				    , '9999-12-31' AS EDUEND
+				    , 'G' AS REVIEWTYPE
+				    , 'Y' AS ISABLEREVIEW
+				    , 99 AS REVIEWDAYS
+				    , 0 AS TSTEP
+				    , NULL AS CPSUBJSEQ
+				    , NULL AS CPSUBJ
+				    , NULL AS COMPANY
+				    , 'G' AS ISGRADUATED
+				    , 'Y' AS ISPOSSIBLE_BY_DATE
+				    , '열린' AS UPPERCLASSNM
+				    , 0 AS TOT_CNT
+				    , 1 AS POSSIBLE_CNT
+				    , B.VODIMG AS INTRODUCEFILENAMENEW
+				    , B.INTRO AS INTRO
+				    , 'N' AS ISNEW
+				    , 'N' AS ISHIT
+				    , 'N' AS ISRECOM
+				    , 1 AS PROMOTION
+				    , TO_CHAR(TO_DATE(A.REG_DATE, 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD') AS LAST_STUDY
+				  FROM
+				    TZ_MY_GOLDCLASS A
+				    LEFT JOIN TZ_GOLDCLASS B ON A.COURSE_ID = B.SEQ
+				  WHERE
+				    A.USER_ID IN (#userid#)
+				    AND A.GRCODE IN (#grcode#)
+				  ) RA
+				WHERE
+				  1=1
+				  AND TO_CHAR(SYSDATE, 'YYYY-MM-DD') > nvl(RA.EDUEND, substring(RA.EDUEND,1,8)) 
+				ORDER BY
+				  EDUSTART DESC, SUBJNM ASC
+				) ALL_LIST
+			)
+			 WHERE  RNUM  > #firstIndex#
+			   AND  RNUM <= #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+	
+	
+	<!-- 지난과정 학습목록 갯수 -->
+	<select id="myLctrumDAO.eduOldListCnt" parameterClass="zvl" resultClass="int">
+		<![CDATA[
+		/* myLctrumDAO.eduListCnt 정규과정 학습목록 갯수 */
+		SELECT
+		  ISNULL(COUNT(1), 0)
+		FROM
+		  (
+		  SELECT
+		    decode(nvl(d.edustart,''),'', ' ',substring(d.edustart,1,4) || '-' || substring(d.edustart,5,2) ||  '-' || substring(d.edustart,7,2) ) edustart,
+		    decode(nvl(d.eduend,''),'', ' ',substring(d.eduend,1,4) || '-' || substring(d.eduend,5,2) ||  '-' || substring(d.eduend,7,2) ) eduend
+		  FROM
+		    TZ_SUBJSEQ A INNER JOIN TZ_PROPOSE B ON A.SUBJ = B.SUBJ AND A.YEAR = B.YEAR AND A.SUBJSEQ = B.SUBJSEQ
+		    INNER JOIN TZ_SUBJ C ON B.SUBJ = C.SUBJ
+		    INNER JOIN TZ_STUDENT D ON B.SUBJ = D.SUBJ AND B.YEAR = D.YEAR AND B.SUBJSEQ = D.SUBJSEQ AND B.USERID = D.USERID
+		    LEFT OUTER JOIN TZ_STOLD E ON B.SUBJ = E.SUBJ AND B.YEAR = E.YEAR AND B.SUBJSEQ = E.SUBJSEQ AND B.USERID = E.USERID
+		  WHERE
+		    B.USERID IN (#userid#)
+		    AND A.GRCODE IN (#grcode#)
+		  UNION ALL
+		  SELECT
+		    TO_CHAR(TO_DATE(A.REG_DATE, 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD') AS EDUSTART
+         	, '9999-12-31' AS EDUEND
+		  FROM
+		    TZ_MY_GOLDCLASS A
+		    LEFT JOIN TZ_GOLDCLASS B ON A.COURSE_ID = B.SEQ
+		  WHERE
+		    A.USER_ID IN (#userid#)
+		    AND A.GRCODE IN (#grcode#)
+		  ) RA
+		WHERE
+		  1=1
+		  AND TO_CHAR(SYSDATE, 'YYYY-MM-DD') > nvl(RA.EDUEND, substring(RA.EDUEND,1,8))
+		]]>
+	</select>
+</sqlMap>
+
+
+
+

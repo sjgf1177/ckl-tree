@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="MenuManage">
+
+	<typeAlias  alias="zvl" type="kr.co.unp.util.ZValue"/>
+	<typeAlias  alias="Integer" type="java.lang.Integer"/>
+    <typeAlias  alias="menuManageVO" type="kr.co.unp.mpm.vo.MenuManageVO"/>
+
+
+	<resultMap id="menuUserDetailMap" class="zvl">
+		<result property="menuNo" column="MENU_NO"/>
+		<result property="cvNo" column="CV_NO"/>
+		<result property="ph" column="PH"/>
+		<result property="cvCon" column="CV_CON" jdbcType="CLOB" javaType="java.lang.String"/>
+		<result property="useYn" column="USE_YN"/>
+		<result property="regId" column="REG_ID"/>
+		<result property="modiId" column="MODI_ID"/>
+		<result property="modiDate" column="MODI_DATE"/>
+		<result property="contentsPath" column="CONTENTS_PATH"/>
+		<result property="siteId" column="SITE_ID"/>
+	</resultMap>
+
+	<update id="commonContentsDAO.menuAllNo" parameterClass="menuManageVO">
+		<![CDATA[
+			update TC_CONTENTS set USE_AT='N' where MENU_NO=#menuNo#
+		]]>
+	</update >
+
+	<insert id="commonContentsDAO.modify" parameterClass="menuManageVO">
+		<selectKey resultClass="java.lang.Integer" keyProperty="cvNo">
+			select IFNULL(MAX(CNTNTS_NO),0)+1 as cvNo from TC_CONTENTS where MENU_NO=#menuNo#
+		</selectKey>
+		<![CDATA[
+			INSERT INTO TC_CONTENTS
+			(
+				MENU_NO, CNTNTS_NO, CNTNTS_CN, USE_AT, DELETE_AT, FRST_REGISTER_ID, FRST_REGIST_PNTTM
+          	)
+			VALUES (
+				#menuNo#, #cvNo#, #cvCon:CLOB# ,'Y', 'N', #userId#, NOW()
+           )
+		]]>
+	</insert>
+
+	<select id="commonContentsDAO.getMenuUserListTotCnt" parameterClass="zvl" resultClass="Integer">
+		<![CDATA[
+			SELECT count(*) as cnt
+	         FROM TC_MENUINFO
+	        WHERE  1 = 1
+			 AND LEAF_NODE_YN = 'Y'
+			       ]]>
+		<isNotEqual property="role" compareValue="ROLE_SUPER">
+			<![CDATA[ AND USER_ID=#userId# ]]>
+		</isNotEqual>
+		<isNotEmpty prepend="AND" property="sUseYn">
+			<![CDATA[ USE_AT=#sUseYn#  ]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="siteId">
+			<![CDATA[ SITE_ID=#siteId#  ]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchStr">
+			<![CDATA[	MENU_NM LIKE CONCAT('%',trim(#searchStr#), '%')	]]>
+		</isNotEmpty>
+	</select>
+
+	<select id="commonContentsDAO.getMenuUserList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/*commonContentsDAO.getMenuUserList*/
+			       SELECT
+			              MENU_NO,
+			              UPPER_MENU_NO,
+			              SITE_ID,
+			              MENU_NM,
+			              RELATE_MENU_NM_LIST AS PH,
+			              MENU_ORDR,
+			              POPUP_AT,
+			              USE_AT,
+			              USER_ID,
+			              DATE_FORMAT(LAST_UPDT_PNTTM,'%Y-%m-%d') MODIFY_DAY
+			         FROM TC_MENUINFO
+			        WHERE  1 = 1
+			        AND LEAF_NODE_YN = 'Y'
+			       ]]>
+					<isNotEqual property="role" compareValue="ROLE_SUPER">
+						<![CDATA[ AND USER_ID=#userId# ]]>
+					</isNotEqual>
+					<isNotEmpty prepend="AND" property="sUseYn">
+						<![CDATA[ USE_AT=#sUseYn#  ]]>
+					</isNotEmpty>
+					<isNotEmpty prepend="AND" property="siteId">
+						<![CDATA[ SITE_ID=#siteId#  ]]>
+					</isNotEmpty>
+					<isNotEmpty prepend="AND" property="searchStr">
+						<![CDATA[	MENU_NM LIKE CONCAT('%',trim(#searchStr#), '%')	]]>
+					</isNotEmpty>
+			       <![CDATA[
+			       ORDER BY MENU_NO
+			    ]]>
+				<![CDATA[
+				limit #firstIndex#, #recordCountPerPage#
+				]]>
+	</select>
+
+	<select id="commonContentsDAO.getMenuUserDetailListTotCnt" parameterClass="zvl" resultClass="Integer">
+		<![CDATA[
+			SELECT
+                    count(*) as cnt
+               FROM TC_CONTENTS a
+		  	   INNER JOIN TC_MENUINFO b ON a.MENU_NO = b.MENU_NO
+              WHERE a.MENU_NO=#sMenuNo# AND a.DELETE_AT='N'
+       ]]>
+	</select>
+
+	<select id="commonContentsDAO.getMenuUserDetailList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		SELECT a.MENU_NO,
+		       a.CNTNTS_NO	AS	CV_NO,
+		       b.RELATE_MENU_NM_LIST as PH,
+		       a.USE_AT	AS	USE_YN,
+		       DATE_FORMAT(a.LAST_UPDT_PNTTM,'%Y-%m-%d') MODI_DATE,
+			   c.USER_NM as NAME,
+			   b.SITE_ID
+		  FROM TC_CONTENTS a
+		  INNER JOIN TC_MENUINFO b ON a.MENU_NO = b.MENU_NO
+		  LEFT OUTER JOIN TM_USER c ON c.USER_ID = a.FRST_REGISTER_ID
+		 WHERE a.MENU_NO=#sMenuNo# AND DELETE_AT='N'
+
+		ORDER BY a.CNTNTS_NO desc
+
+		limit #firstIndex#, #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="commonContentsDAO.getMenuUserDetail" parameterClass="zvl" resultMap="menuUserDetailMap">
+		<![CDATA[
+		SELECT a.MENU_NO,
+		       CNTNTS_NO	AS	CV_NO,
+		       a.RELATE_MENU_NM_LIST AS PH,
+		       CNTNTS_CN	AS	CV_CON,
+		       b.USE_AT		AS	USE_YN,
+		       b.FRST_REGISTER_ID	AS	REG_ID,
+		       b.LAST_UPDUSR_ID	AS	MODI_ID,
+		       b.LAST_UPDT_PNTTM	AS	MODI_DATE,
+			   a.CNTNTS_FILE_PATH	AS	CONTENTS_PATH,
+        	   a.SITE_ID
+		  FROM TC_MENUINFO a
+		   LEFT OUTER JOIN
+		       (SELECT *
+		         FROM TC_CONTENTS
+		        WHERE DELETE_AT='N'
+			]]>
+				<isNotEmpty prepend="AND" property="sCvNo">
+					<![CDATA[	CNTNTS_NO=#sCvNo#	]]>
+				</isNotEmpty>
+				<isEmpty prepend="AND" property="sCvNo">
+					<![CDATA[	USE_AT='Y'	]]>
+				</isEmpty>
+			<![CDATA[
+		       ) b
+		       ON a.MENU_NO=b.MENU_NO
+		 WHERE a.menu_no=#sMenuNo#
+		 limit 1
+
+		]]>
+	</select>
+
+	<update id="commonContentsDAO.menuAllNoZvl" parameterClass="zvl">
+		<![CDATA[
+			update TC_CONTENTS set USE_AT='N' where MENU_NO=#sMenuNo#
+		]]>
+	</update >
+
+	<insert id="commonContentsDAO.modifyZvl" parameterClass="zvl">
+		<selectKey resultClass="java.lang.Integer" keyProperty="cvNo">
+			select IFNULL(MAX(CNTNTS_NO),0)+1 as cvNo from TC_CONTENTS where MENU_NO=#sMenuNo#
+		</selectKey>
+		<![CDATA[
+			INSERT INTO TC_CONTENTS
+			(
+				MENU_NO, CNTNTS_NO, CNTNTS_CN, USE_AT, DELETE_AT, FRST_REGISTER_ID, FRST_REGIST_PNTTM, LAST_UPDUSR_ID, LAST_UPDT_PNTTM
+          	)
+			VALUES (
+				#sMenuNo#, #cvNo#, #cvCon:CLOB# ,#useYn#,'N', #userId#, NOW(), #userId#, NOW()
+           )
+		]]>
+	</insert>
+
+	<select id="commonContentsDAO.lastUseCntntsNo" parameterClass="zvl" resultClass="Integer">
+		<![CDATA[
+		SELECT IFNULL(max(CNTNTS_NO),0) AS lastUseCntntsNo
+	        FROM TC_CONTENTS
+	    WHERE MENU_NO = #sMenuNo# AND CNTNTS_NO <> #sCvNo# AND DELETE_AT='N'
+        ]]>
+	</select>
+
+	<update id="commonContentsDAO.lastUseUpdate" parameterClass="zvl">
+		<![CDATA[
+		UPDATE TC_CONTENTS
+		       SET USE_AT = 'Y',
+		       LAST_UPDUSR_ID = #userId#,
+		       LAST_UPDT_PNTTM = NOW()
+		WHERE MENU_NO = #sMenuNo# AND CNTNTS_NO = #lastUseCntntsNo#
+		]]>
+	</update>
+
+	<update id="commonContentsDAO.deleteProc" parameterClass="zvl">
+		<![CDATA[
+			update TC_CONTENTS set DELETE_AT='Y', LAST_UPDUSR_ID=#userId# where MENU_NO=#sMenuNo# AND CNTNTS_NO=#sCvNo#
+		]]>
+	</update>
+
+	<update id="commonContentsDAO.assignContentsMenu" parameterClass="zvl">
+		<![CDATA[
+			update TC_MENUINFO set USER_ID = #userId#, DEPT_ID = #deptId#
+			WHERE MENU_NO = #menuNo#
+		]]>
+	</update>
+
+	<update id="commonContentsDAO.initContentsCIP" parameterClass="zvl">
+		<![CDATA[
+			update TC_MENUINFO set USER_ID = NULL, DEPT_ID = NULL
+			WHERE MENU_NO IN
+		]]>
+		<iterate conjunction="," open="(" close=")" property="menuNoData">
+			#menuNoData[]#
+		</iterate>
+	</update>
+
+	<!-- 컨텐츠 -->
+	<select id="commonContentsDAO.selectContentsPathByMenuNo" parameterClass="zvl" resultClass="zvl">
+	/* commonContentsDAO.selectContentsPathByMenuNo */
+		<![CDATA[
+		SELECT CNTNTS_FILE_PATH CONTENTS_PATH
+		FROM TC_MENUINFO
+		WHERE MENU_NO = #menuNo#
+		]]>
+	</select>
+
+</sqlMap>

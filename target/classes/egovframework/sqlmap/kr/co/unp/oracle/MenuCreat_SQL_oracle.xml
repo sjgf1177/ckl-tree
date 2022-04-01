@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="MenuCreat">
+
+	<typeAlias  alias="zvl" type="kr.co.unp.util.ZValue"/>
+	<typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+    <typeAlias  alias="menuCreatVO" type="kr.co.unp.mpm.vo.MenuCreatVO"/>
+	<typeAlias  alias="comDefaultVO" type="egovframework.com.cmm.ComDefaultVO"/>
+
+	<select id="menuManageDAO.selectMenuCreatManageList_D" parameterClass="comDefaultVO" resultClass="egovMap">
+		<![CDATA[
+                SELECT *
+                FROM
+                    (SELECT rownum rn, TB.*
+                     FROM
+			            (SELECT AUTHOR_CODE   AS "authorCode",
+								AUTHOR_NM     AS "authorNm",
+								AUTHOR_DC     AS "authorDc",
+								FRST_REGIST_PNTTM AS "authorCreatDe",
+							   (SELECT COUNT(B.AUTHOR_CODE)
+								FROM   TC_AUTHOR_MENU B
+								WHERE  B.AUTHOR_CODE = A.AUTHOR_CODE ) AS "chkYeoBu"
+						FROM    TC_AUTHORINFO A
+						WHERE   1=1
+        ]]>
+			<isNotEmpty property="searchKeyword">
+				<isEqual prepend="AND"  property="searchCondition" compareValue="1">
+					<![CDATA[	AUTHOR_CODE like '%'||#searchKeyword#||'%'		]]>
+				</isEqual>
+
+				<isEqual prepend="AND"  property="searchCondition" compareValue="2">
+					<![CDATA[	AUTHOR_NM like '%'||#searchKeyword#||'%'		]]>
+				</isEqual>
+
+			</isNotEmpty>
+		<![CDATA[
+						) TB
+                    )
+                WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+        ]]>
+	</select>
+
+	<select id="menuManageDAO.selectMenuCreatManageTotCnt_S" parameterClass="comDefaultVO" resultClass="int">
+		<![CDATA[
+			SELECT COUNT(AUTHOR_CODE) AS "totcnt"
+			  FROM TC_AUTHORINFO
+						WHERE   1=1
+        ]]>
+			<isNotEmpty property="searchKeyword">
+				<isEqual prepend="AND"  property="searchCondition" compareValue="1">
+					<![CDATA[	AUTHOR_CODE like '%'||#searchKeyword#||'%'		]]>
+				</isEqual>
+
+				<isEqual prepend="AND"  property="searchCondition" compareValue="2">
+					<![CDATA[	AUTHOR_NM like '%'||#searchKeyword#||'%'		]]>
+				</isEqual>
+
+			</isNotEmpty>
+	</select>
+
+	<select id="menuManageDAO.selectMenuCreatList_D" parameterClass="MenuCreatVO" resultClass="egovMap">
+		<![CDATA[
+			SELECT
+				  A.MENU_NO AS "menuNo"
+				, A.MENU_ORDR AS "menuOrdr"
+				, A.MENU_NM AS "menuNm"
+				, A.UPPER_MENU_NO AS "upperMenuId"
+			    , (SELECT count(B.MENU_NO)
+			         FROM TC_AUTHOR_MENU B
+			        WHERE B.MENU_NO  = A.MENU_NO
+			          AND B.AUTHOR_CODE = #authorCode#) AS "chkYeoBu"
+			FROM TC_MENUINFO A
+			WHERE A.MENU_NO > 0
+			ORDER BY A.MENU_ORDR
+		 ]]>
+	</select>
+
+
+	<insert id="menuManageDAO.insertMenuCreat_S">
+		<![CDATA[
+			INSERT INTO TC_AUTHOR_MENU ( AUTHOR_CODE ,MENU_NO, FRST_REGIST_PNTTM)
+			VALUES (  #authorCode#, #menuNo#, SYSDATE )
+		]]>
+	</insert>
+
+	<insert id="menuManageDAO.insertDeptMenuCreat_S" parameterClass="zvl">
+		<![CDATA[
+			INSERT INTO TC_AUTHOR_MENU ( AUTHOR_CODE ,MENU_NO, MAPCREAT_ID, FRST_REGIST_PNTTM)
+			VALUES (  #authorCode#, #menuNo#, #mapcreatId#, SYSDATE)
+		]]>
+	</insert>
+
+	<select id="menuManageDAO.selectMenuCreatCnt_S" parameterClass="MenuCreatVO" resultClass="int">
+		<![CDATA[
+			SELECT COUNT(AUTHOR_CODE) AS "totcnt"
+			  FROM TC_AUTHORINFO
+			 WHERE AUTHOR_CODE = #authorCode#
+		]]>
+	</select>
+
+	<delete id="menuManageDAO.updateMenuCreat_S">
+		<![CDATA[
+		    UPDATE TC_AUTHOR_MENU
+		       SET MAPCREAT_ID=#mapCreatId#
+		     WHERE AUTHOR_CODE=#authorCode#
+		]]>
+	</delete>
+
+	<delete id="menuManageDAO.deleteMenuCreat_S">
+		<![CDATA[
+			DELETE FROM TC_AUTHOR_MENU
+			 WHERE AUTHOR_CODE=#authorCode#
+		]]>
+	</delete>
+
+	<delete id="menuManageDAO.deleteDeptMenuCreat_S" parameterClass="zvl">
+		<![CDATA[
+			DELETE FROM TC_AUTHOR_MENU
+			 WHERE AUTHOR_CODE=#authorCode#
+			 AND MAPCREAT_ID = #mapcreatId#
+		]]>
+	</delete>
+
+	<select id="menuManageDAO.selectAuthorByUsr" parameterClass="comDefaultVO" resultClass="MenuCreatVO">
+		<![CDATA[
+		select AUTHOR_CODE AS "authorCode" from TC_USER_AUTHOR
+		where USER_ID =
+			(select UNIQ_ID from COMVNUSERMASTER
+			where user_id = #searchKeyword# )
+		]]>
+	</select>
+
+	<select id="menuManageDAO.selectUsrByPk" parameterClass="comDefaultVO" resultClass="int">
+		<![CDATA[
+		select count(AUTHOR_CODE) from TC_USER_AUTHOR
+		where USER_ID =
+			(select UNIQ_ID from COMVNUSERMASTER
+			where user_id = #searchKeyword# )
+		]]>
+	</select>
+
+</sqlMap>

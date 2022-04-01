@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="empmnStup">
+
+	<typeAlias alias="zvl" type="kr.co.unp.util.ZValue" />
+
+	<sql id="empmnStup.selectempmnStupList-where">
+
+			<isNotEmpty  prepend="and" property="acdmcrSeArr">
+				<iterate property="acdmcrSeArr" conjunction="," open="a.WORK_STLE IN (" close=")">
+				 	<![CDATA[	#acdmcrSeArr[]# ]]>
+				</iterate>
+			</isNotEmpty>
+
+			<isNotEmpty  prepend="and" property="workStleArr">
+				<iterate property="workStleArr" conjunction="," open="a.WRKPRC IN (" close=")">
+					<![CDATA[	#workStleArr[]# ]]>
+				</iterate>
+			</isNotEmpty>
+
+			<isNotEmpty  prepend="and" property="pblancNmArr">
+				<iterate property="pblancNmArr" conjunction="," open="a.PBLANC_NM IN (" close=")">
+					<![CDATA[	#pblancNmArr[]# ]]>
+				</iterate>
+			</isNotEmpty>
+
+			<isNotEmpty  prepend="and" property="acdmcrArr">
+				<iterate property="acdmcrArr" conjunction="," open="a.ACDMCR IN (" close=")">
+					<![CDATA[	#acdmcrArr[]# ]]>
+				</iterate>
+			</isNotEmpty>
+
+			<isNotEmpty  prepend="and" property="careerSeArr">
+				<iterate property="careerSeArr" conjunction="," open="a.CAREER_SE IN (" close=")">
+					<![CDATA[	#careerSeArr[]# ]]>
+				</iterate>
+			</isNotEmpty>
+
+
+			<isNotEmpty  prepend="and" property="pblancNm">
+				<![CDATA[	( a.PBLANC_NM LIKE '%' || #pblancNm# || '%' ) ]]>
+			</isNotEmpty>
+
+			<isNotEmpty  prepend="and" property="workStle">
+				<![CDATA[	( a.WORK_STLE LIKE '%' || #workStle# || '%' )	]]>
+			</isNotEmpty>
+
+			<isNotEmpty  prepend="and" property="acdmcr">
+				<![CDATA[	( a.ACDMCR LIKE '%' || #acdmcr# || '%' )	]]>
+			</isNotEmpty>
+
+			<isNotEmpty  prepend="and" property="acdmcrSe">
+				<![CDATA[	( a.ACDMCR_SE LIKE '%' || #acdmcrSe# || '%' )	]]>
+			</isNotEmpty>
+
+
+			<isNotEmpty  prepend="and" property="wrkprc">
+				<![CDATA[	( a.WRKPRC LIKE '%' || #wrkprc# || '%' )	]]>
+			</isNotEmpty>
+
+			<isNotEmpty  prepend="or" property="entrprsNm">
+				<![CDATA[	( b.ENTRPRS_NM LIKE '%' || #entrprsNm# || '%' )	]]>
+			</isNotEmpty>
+
+			<isNotEmpty  prepend="and" property="careerSe">
+				<![CDATA[	( a.CAREER_SE LIKE '%' || #careerSe# || '%' )	]]>
+			</isNotEmpty>
+			<isNotEmpty  prepend="and" property="careerMin">
+				<![CDATA[	a.CAREER >= #careerMin# 	]]>
+			</isNotEmpty>
+			<isNotEmpty  prepend="and" property="careerMax">
+				<![CDATA[	a.CAREER <= #careerMax# 	]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="useAt"   >
+				<![CDATA[	a.USE_AT LIKE #useAt# 	]]>
+			</isNotEmpty>
+	</sql>
+
+
+	<!-- 채용공고 리스트 -->
+	<resultMap id="empmnStup.selectempmnStupMap" class="zvl">
+		<result property="entrprsNm" column="ENTRPRS_NM"/>
+		<result property="charger" column="CHARGER"/>
+		<result property="telno" column="TELNO"/>
+		<result property="email" column="EMAIL"/>
+		<result property="pblancSn" column="PBLANC_SN"/>
+		<result property="entrprsSn" column="ENTRPRS_SN"/>
+		<result property="pblancNm" column="PBLANC_NM"/>
+		<result property="chrgJob" column="CHRG_JOB"/>
+		<result property="chrgJob2" column="CHRG_JOB2"/>
+		<result property="chrgJobNm" column="CHRG_JOB_NM"/>
+		<result property="chrgJob2Nm" column="CHRG_JOB2_NM"/>
+		<result property="kwrd" column="KWRD"/>
+		<result property="rcritRealm" column="RCRIT_REALM"/>
+		<result property="rcritRqisit" column="RCRIT_RQISIT"/>
+		<result property="rcritNmpr" column="RCRIT_NMPR"/>
+		<result property="wrkprc" column="WRKPRC"/>
+		<result property="workStle" column="WORK_STLE"/>
+		<result property="careerSe" column="CAREER_SE"/>
+		<result property="career" column="CAREER"/>
+		<result property="acdmcrSe" column="ACDMCR_SE"/>
+		<result property="acdmcr" column="ACDMCR"/>
+		<result property="sex" column="SEX"/>
+		<result property="ageSe" column="AGE_SE"/>
+		<result property="age" column="AGE"/>
+		<result property="salary" column="SALARY"/>
+		<result property="jobCn" column="JOB_CN" jdbcType="CLOB" javaType="java.lang.String"/> <!-- CLOB -->
+		<result property="presentnPapersCn" column="PRESENTN_PAPERS_CN" jdbcType="CLOB" javaType="java.lang.String"/> <!-- CLOB -->
+		<result property="slectnMthCn" column="SLECTN_MTH_CN" jdbcType="CLOB" javaType="java.lang.String"/>  <!-- CLOB -->
+		<result property="rceptBeginDt" column="RCEPT_BEGIN_DT"/>
+		<result property="rceptEndDt" column="RCEPT_END_DT"/>
+		<result property="rceptComptAt" column="RCEPT_COMPT_AT"/>
+		<result property="rceptMthCn" column="RCEPT_MTH_CN" jdbcType="CLOB" javaType="java.lang.String"/><!-- CLOB -->
+		<result property="atchFileId" column="ATCH_FILE_ID"/>
+		<result property="atchFileIdSe" column="ATCH_FILE_ID_SE"/>
+		<result property="useAt" column="USE_AT"/>
+		<result property="frstRegistPnttm" column="FRST_REGIST_PNTTM"/>
+		<result property="frstRegisterId" column="FRST_REGISTER_ID"/>
+		<result property="lastUpdtPnttm" column="LAST_UPDT_PNTTM"/>
+		<result property="lastUpdusrId" column="LAST_UPDUSR_ID"/>
+		<result property="realm" column="REALM"/>
+		<result property="capl" column="CAPL"/>
+		<result property="hmpg" column="HMPG"/>
+		<result property="rprsntv" column="RPRSNTV"/>
+		<result property="emplCo" column="EMPL_CO"/>
+		<result property="fondYear" column="FOND_YEAR"/>
+		<result property="entrprsStle" column="ENTRPRS_STLE"/>
+		<result property="entrprsStleNm" column="ENTRPRS_STLE_NM"/>
+		<result property="logoUrl" column="LOGO_URL"/>
+		<result property="lstAt" column="LST_AT"/>
+
+	</resultMap>
+
+
+
+
+	<select id="empmnStup.selectempmnStupListCnt" resultClass="int"  remapResults="true" parameterClass="zvl">
+		<![CDATA[
+		/* empmnStup.selectempmnStupListCnt */
+				SELECT COUNT(*)
+				  FROM TN_EMPMN_STUP a
+				  	INNER JOIN TN_ENTRPRS_INFO b
+			               ON a.ENTRPRS_SN =b.ENTRPRS_SN
+			           WHERE 1=1  AND a.DELETE_AT ='0'
+		]]>
+		 <include refid="empmnStup.selectempmnStupList-where" />
+	</select>
+
+
+	<select id="empmnStup.selectempmnStupList" parameterClass="zvl" resultClass="zvl" remapResults="true">
+
+		<![CDATA[
+		/* empmnStup.selectempmnStupList */
+			SELECT *
+			  FROM
+			       (SELECT ROWNUM RNUM,
+			              ALL_LIST.*
+			         FROM
+			              (SELECT a.PBLANC_SN, -- 일련번호
+			                     a.ENTRPRS_SN, -- 기업일련번호
+			                     b.ENTRPRS_NM, -- 기업명
+			                     b.ATCH_FILE_ID,
+			                     a.PBLANC_NM, -- 제목
+			                     a.WRKPRC, -- 근무지
+			                     a.CAREER_SE, -- 경력구분
+			                     a.CAREER, -- 경력
+			                     a.RCEPT_BEGIN_DT, -- 등록일
+								 TO_CHAR(a.RCEPT_BEGIN_DT, 'YYYY-MM-DD') as BEGIN_DT,
+			                     a.RCEPT_COMPT_AT, -- 접수마감
+			                     a.RCEPT_END_DT, -- 접수일
+								 TO_CHAR(a.RCEPT_END_DT, 'YYYY-MM-DD') as END_DT,
+			                     a.USE_AT,
+			                     a.RCRIT_RQISIT, -- 모집요강
+			                     a.FRST_REGIST_PNTTM -- 등록일
+			                FROM TN_EMPMN_STUP a
+			                 INNER JOIN TN_ENTRPRS_INFO b
+			                     ON a.ENTRPRS_SN =b.ENTRPRS_SN
+			               WHERE 1=1  AND a.DELETE_AT ='0'
+			               ]]>
+			       <include refid="empmnStup.selectempmnStupList-where" />
+			                <![CDATA[
+			            ORDER BY a.FRST_REGIST_PNTTM DESC
+			              ) ALL_LIST
+			       )
+			 WHERE RNUM > #firstIndex#
+			       AND RNUM <= #firstIndex# + #recordCountPerPage#
+
+		]]>
+	</select>
+
+
+	<insert id="empmnStup.insertempmnStup" parameterClass="zvl" >
+		<selectKey resultClass="java.lang.Long" keyProperty="pblancSn">
+			<![CDATA[	SELECT NVL(MAX(PBLANC_SN),0)+1 AS pblancSn  FROM TN_EMPMN_STUP ]]>
+		</selectKey>
+	<![CDATA[
+	INSERT INTO TN_EMPMN_STUP
+       (
+           PBLANC_SN, --일련번호
+           ENTRPRS_SN, --기업 일련번호
+           PBLANC_NM, --제목
+           CHRG_JOB, --담당업무
+           KWRD, --키워드
+           RCRIT_REALM, --모집분야
+           RCRIT_RQISIT, --모집 요강 및 자격 요건
+           RCRIT_NMPR, --모집인원
+           WRKPRC, --근무지
+           WORK_STLE, --근무형태
+           CAREER_SE, --경력 구분
+           CAREER, --경력
+           ACDMCR_SE, --학력 구분
+           ACDMCR, --학력
+           SEX, --성별
+           AGE_SE, --연령 구분
+           AGE, --연령
+           SALARY, --급여사항
+           JOB_CN, --주요 업무내용
+           PRESENTN_PAPERS_CN, --제출 서류 및 접수방법
+           SLECTN_MTH_CN, --전형방법
+           RCEPT_BEGIN_DT, --접수 시작일자
+           RCEPT_END_DT, --접수 마감일자
+           RCEPT_COMPT_AT, --채용시까지
+           RCEPT_MTH_CN, --접수방법
+           ATCH_FILE_ID, --첨부파일 아이디
+           USE_AT, --사용여부
+           FRST_REGIST_PNTTM, --최초등록일
+           FRST_REGISTER_ID, --최초등록자 아이디
+           LAST_UPDT_PNTTM, --최종수정일
+           LAST_UPDUSR_ID, --최종수정자 아이디
+           REALM, -- 분야
+           CHRG_JOB2, -- 담당업무2
+           DELETE_AT --삭제여부
+       )
+       VALUES
+       (
+           #pblancSn#, --일련번호
+           #entrprsSn#, --기업 일련번호
+           #pblancNm#, --제목
+           #chrgJob#, --담당업무
+           #kwrd#, --키워드
+           #rcritRealm#, --모집분야
+           #rcritRqisit#, --모집 요강 및 자격 요건
+           #rcritNmpr#, --모집인원
+           #wrkprc#, --근무지
+           #workStle#, --근무형태
+           #careerSe#, --경력 구분
+           #career#, --경력
+           #acdmcrSe#, --학력 구분
+           #acdmcr#, --학력
+           #sex#, --성별
+           #ageSe#, --연령 구분
+           #age#, --연령
+           #salary#, --급여사항
+           #jobCn:CLOB#, --주요 업무내용
+           #presentnPapersCn:CLOB#, --제출 서류 및 접수방법
+           #slectnMthCn:CLOB#, --전형방법
+           #rceptBeginDt#, --접수 시작일자
+           #rceptEndDt#, --접수 마감일자
+           #rceptComptAt#, --채용시까지
+           #rceptMthCn:CLOB#, --접수방법
+           #atchFileId#, --첨부파일 아이디
+           #useAt#, --사용여부
+           SYSDATE, --최초등록일
+           #frstRegisterId#, --최초등록자 아이디
+           SYSDATE, --최종수정일
+           #lastUpdusrId#, --최종수정자 아이디
+           #realm#, --분야
+           #chrgJob2#, --담당업무2
+           NVL(#deleteAt#, '0')
+       )
+	]]>
+	</insert>
+
+	<select id="empmnStup.selectempmnStup" parameterClass="zvl" resultMap="empmnStup.selectempmnStupMap" >
+	<![CDATA[
+			SELECT b.ENTRPRS_NM,
+			       b.CHARGER,
+			       b.TELNO,
+			       b.EMAIL,
+			       A.PBLANC_SN,
+			       A.ENTRPRS_SN,
+			       A.PBLANC_NM,
+			       A.CHRG_JOB,
+			       FN_CMMNCODE_NM('COM093',A.CHRG_JOB) AS CHRG_JOB_NM,
+			       A.CHRG_JOB2,
+			       FN_CMMNCODE_NM('COM093',A.CHRG_JOB2) AS CHRG_JOB2_NM,
+			       A.KWRD,
+			       A.RCRIT_REALM,
+			       A.RCRIT_RQISIT,
+			       A.RCRIT_NMPR,
+			       A.WRKPRC,
+			       A.WORK_STLE,
+			       A.CAREER_SE,
+			       A.CAREER,
+			       A.ACDMCR_SE,
+			       A.ACDMCR,
+			       A.SEX,
+			       A.AGE_SE,
+			       A.AGE,
+			       A.SALARY,
+			       A.JOB_CN,
+			       A.PRESENTN_PAPERS_CN,
+			       A.SLECTN_MTH_CN,
+			       A.RCEPT_BEGIN_DT,
+			       A.RCEPT_END_DT,
+			       A.RCEPT_COMPT_AT,
+			       A.RCEPT_MTH_CN,
+			       A.USE_AT,
+			       A.FRST_REGIST_PNTTM,
+			       A.FRST_REGISTER_ID,
+			       A.LAST_UPDT_PNTTM,
+			       A.LAST_UPDUSR_ID,
+			       A.REALM,
+			       A.ATCH_FILE_ID,
+			       b.CAPL,
+		           b.HMPG,
+		           b.RPRSNTV,
+		           b.EMPL_CO,
+		           b.FOND_YEAR,
+		           b.LST_AT,
+		           b.ENTRPRS_STLE,
+		           FN_CMMNCODE_NM('COM099', replace(b.ENTRPRS_STLE, ' ', '')) AS ENTRPRS_STLE_NM,
+		           b.LOGO_URL,
+	               b.ATCH_FILE_ID AS ATCH_FILE_ID_SE,
+			       A.DELETE_AT
+			  FROM TN_EMPMN_STUP A
+			   INNER JOIN TN_ENTRPRS_INFO b
+			       ON a.ENTRPRS_SN =b.ENTRPRS_SN
+			 WHERE A.PBLANC_SN = #pblancSn#
+	]]>
+	</select>
+ 	<update id="empmnStup.updateempmnStup" parameterClass="zvl">
+		<![CDATA[
+		UPDATE TN_EMPMN_STUP
+	       SET
+		       PBLANC_NM = #pblancNm#,
+		       CHRG_JOB = #chrgJob#,
+		       KWRD = #kwrd#,
+		       RCRIT_REALM = #rcritRealm#,
+		       RCRIT_RQISIT = #rcritRqisit#,
+		       RCRIT_NMPR = #rcritNmpr#,
+		       WRKPRC = #wrkprc#,
+		       WORK_STLE = #workStle#,
+		       CAREER_SE = #careerSe#,
+		       CAREER = #career#,
+		       ACDMCR_SE = #acdmcrSe#,
+		       ACDMCR = #acdmcr#,
+		       SEX = #sex#,
+		       AGE_SE = #ageSe#,
+		       AGE = #age#,
+		       SALARY = #salary#,
+		       JOB_CN = #jobCn:CLOB#,
+		       PRESENTN_PAPERS_CN = #presentnPapersCn:CLOB#,
+		       SLECTN_MTH_CN = #slectnMthCn:CLOB#,
+		       RCEPT_BEGIN_DT = TO_DATE(#rceptBeginDt#, 'YYYY-MM-DD'),
+		       RCEPT_END_DT = TO_DATE(#rceptEndDt#, 'YYYY-MM-DD'),
+		       RCEPT_COMPT_AT = #rceptComptAt#,
+		       RCEPT_MTH_CN = #rceptMthCn:CLOB#,
+		       ATCH_FILE_ID = #atchFileId#,
+		       USE_AT = #useAt#,
+		       LAST_UPDT_PNTTM = SYSDATE,
+		       LAST_UPDUSR_ID = #lastUpdusrId#,
+		       REALM = #realm#,
+		       CHRG_JOB2 = #chrgJob2#
+		 	WHERE PBLANC_SN = #pblancSn#
+ 		]]>
+	</update>
+
+	<update id="empmnStup.deleteempmnStup" parameterClass="zvl">
+		/* empmnStup.deleteempmnStup */
+		UPDATE TN_EMPMN_STUP a
+			       SET a.DELETE_AT = '1',
+	           a.LAST_UPDT_PNTTM = SYSDATE,
+	           a.LAST_UPDUSR_ID = #LAST_UPDUSR_ID#
+			 WHERE a.PBLANC_SN = #pblancSn#
+	</update>
+
+</sqlMap>
+
+
+
+

@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="edcSystm">
+
+	<typeAlias alias="zvl" type="kr.co.unp.util.ZValue" />
+	
+	<!-- 교육체계도 1 depth 목록 -->
+	<select id="edcSystmDAO.eduSystemAList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+			/* edcSystmDAO.eduSystemAList 교유체계도 1 depth 목록 */
+			SELECT 
+				A.CHARTCODE,
+				A.CHARTCODE,
+				A.CHARTNAME,
+				A.LUSERID,
+				A.LDATE,
+				A.UPPERCHARTCODE,
+				A.CHARTORDER,
+				A.USEYN,
+				A.MAXUPPERCHARTCODE,
+				A.LEVELS,
+				A.SUMMARY,
+				A.JOBAREA,
+				A.CAPACITY,
+				CASE
+					WHEN NOT EXISTS (SELECT * FROM TZ_EDUSYSTEMCHART WHERE LEVELS = '2' AND UPPERCHARTCODE = A.CHARTCODE) THEN 'Y'
+          			ELSE 'N' 
+          		END AS ISLAST
+			FROM
+				TZ_EDUSYSTEMCHART A
+			WHERE
+				A.USEYN = 'Y'
+				AND A.LEVELS = '1'
+			ORDER BY CHARTORDER ASC
+		]]>	
+	</select>
+	
+	<select id="edcSystmDAO.eduSystemBList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+			/* edcSystmDAO.eduSystemBList 교유체계도 2 depth 목록 */
+			SELECT 
+				CHARTCODE,
+				CHARTCODE,
+				CHARTNAME,
+				LUSERID,
+				LDATE,
+				UPPERCHARTCODE,
+				CHARTORDER,
+				USEYN,
+				MAXUPPERCHARTCODE,
+				LEVELS,
+				SUMMARY,
+				JOBAREA,
+				CAPACITY
+			FROM
+				TZ_EDUSYSTEMCHART
+			WHERE 
+				USEYN = 'Y'
+				AND LEVELS = '2'
+			ORDER BY CHARTORDER ASC
+		]]>	
+	</select>
+	
+	<select id="edcSystmDAO.eduSystemSubjList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+			SELECT 
+			  ROW_NUMBER() OVER(PARTITION BY C.CHARTCODE ORDER BY C.CHARTCODE) AS NO,
+			  C.*
+			FROM
+			  (SELECT 
+			    A.CHARTCODE
+			    , A.SUBJ
+			    , B.SUBJNM
+			    , B.YEAR
+			    , B.SUBJSEQ
+			  FROM 
+			    TZ_EDUSYSTEMCHARTSUBJ A
+			    , (SELECT S1.*
+			      FROM VZ_SCSUBJSEQIMGMOBILE S1
+			      WHERE S1.PROPSTART NOT IN (' ') AND TO_CHAR(SYSDATE,'YYYYMM') BETWEEN REPLACE(SUBSTR(S1.PROPSTART,1,6),'.','') AND REPLACE(SUBSTR(S1.PROPEND,1,6),'.','')) B
+			  WHERE
+			    A.SUBJ = B.SUBJ
+			    AND B.GRCODE = 'N000001'
+			    AND B.ISUSE = 'Y') C
+		]]>	
+	</select>
+	
+	<!-- 스크랩 취소 -->
+	<delete id="edcSystmDAO.eduSystmScrapDelete" parameterClass="zvl">
+		<![CDATA[
+		/* edcSystmDAO.eduSystmScrapDelete 스크랩 취소 */
+		DELETE FROM TZ_EDUSYSTEMSCRAP
+		WHERE INUSERID IN (#userid#) AND SEQ IN (#p_seq#)
+		]]>
+	</delete>
+	
+	
+	<!-- 스크랩 -->
+	<insert id="edcSystmDAO.eduSystmScrapInsert" parameterClass="zvl" >
+		<selectKey resultClass="int" keyProperty="seq">
+			<![CDATA[ SELECT NVL(MAX(SEQ), 0) + 1 AS SEQ FROM TZ_EDUSYSTEMSCRAP WHERE INUSERID IN (#userid#) ]]>
+		</selectKey>
+		<![CDATA[
+		/* edcSystmDAO.eduSystmScrapInsert 스크랩 */
+		INSERT INTO TZ_EDUSYSTEMSCRAP (
+			SEQ,
+			INDATE,
+			INUSERID,
+			CHARTCODE
+		)
+		VALUES (
+			#seq#,
+			TO_CHAR(SYSDATE, 'yyyyMMddhh24miss'),
+			#userid#,
+			#p_chartcode#
+		)
+		]]>
+	</insert>
+	
+	
+	<!-- 스크랩 정보 가져오기 -->
+	<select id="edcSystmDAO.getScrapInfo" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/* edcSystmDAO.getScrapInfo 스크랩 정보 가져오기 */
+		SELECT
+			A.SEQ,
+			A.INDATE,
+			A.INUSERID,
+			A.CHARTCODE
+		FROM
+			TZ_EDUSYSTEMSCRAP A
+		WHERE
+			A.INUSERID IN (#userid#)
+		    AND A.CHARTCODE IN (#p_chartcode#)
+		]]>
+	</select>
+	
+	
+	
+	
+	<!-- 스크랩한 교육체계도 목록 -->
+	<select id="edcSystmDAO.edcSystmList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/* edcSystmDAO.edcSystmList 스크랩한 교육체계도 목록 */
+		SELECT
+			A.SEQ,
+			A.INDATE,
+			A.INUSERID,
+			A.CHARTCODE,
+		    (SELECT CHARTNAME FROM TZ_EDUSYSTEMCHART WHERE CHARTCODE = B.MAXUPPERCHARTCODE) AS UPPERCHARTNAME,
+		    (SELECT CHARTNAME FROM TZ_EDUSYSTEMCHART WHERE CHARTCODE = (SELECT UPPERCHARTCODE FROM TZ_EDUSYSTEMCHART WHERE CHARTCODE = B.UPPERCHARTCODE)) AS MIDDLECHARTNAME,
+		    (SELECT CHARTNAME FROM TZ_EDUSYSTEMCHART WHERE CHARTCODE = B.UPPERCHARTCODE) AS LOWCHARTNAME,
+		    B.CHARTNAME
+		FROM
+			TZ_EDUSYSTEMSCRAP A INNER JOIN TZ_EDUSYSTEMCHART B
+		    ON A.CHARTCODE = B.CHARTCODE
+		WHERE
+			A.INUSERID IN (#userid#)
+		ORDER BY A.INDATE DESC
+		]]>
+	</select>
+	
+	
+	
+	<!-- 과정연결 교육체계도 목록 -->
+	<select id="edcSystmDAO.eduSystmList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/* edcSystmDAO.eduSystmList 과정연결 교육체계도 목록 */
+		SELECT
+		    T1.UPPERCHARTCODE AS UPPERCHARTCODE,
+		    (SELECT CHARTNAME FROM TZ_EDUSYSTEMCHART WHERE CHARTCODE = T1.UPPERCHARTCODE) AS UPPERCHARTNAME,
+		    T1.MIDDLECHARTCODE,
+		    (SELECT CHARTNAME FROM TZ_EDUSYSTEMCHART WHERE CHARTCODE = T1.MIDDLECHARTCODE) AS MIDDLECHARTNAME,
+		    T1.LOWCHARTCODE,
+		    (SELECT CHARTNAME FROM TZ_EDUSYSTEMCHART WHERE CHARTCODE = T1.LOWCHARTCODE) AS LOWCHARTNAME,
+		    T1.USEYN
+		FROM (
+		SELECT
+			A.UPPERCHARTCODE,
+		    (SELECT CHARTORDER FROM TZ_EDUSYSTEMCHART WHERE CHARTCODE = A.UPPERCHARTCODE) AS UPPERCHARTORDER,
+			A.CHARTCODE AS MIDDLECHARTCODE,
+		    A.CHARTNAME AS MIDDLECHARTNAME,
+		    A.CHARTORDER AS MIDDLECHARTORDER,
+		    C.CHARTCODE AS LOWCHARTCODE,
+		    C.CHARTNAME AS LOWCHARTNAME,
+		    C.CHARTORDER AS LOWCHARTORDER,
+		    (CASE
+		    	WHEN (SELECT NVL(COUNT(*), 0) FROM (SELECT CHARTCODE FROM TZ_EDUSYSTEMCHARTSUBJ WHERE SUBJ IN (#p_subj#)) WHERE CHARTCODE IN (C.CHARTCODE)) > 0 THEN 'Y'
+		        ELSE 'N'
+		        END
+		    ) AS USEYN
+		FROM
+			TZ_EDUSYSTEMCHART A LEFT OUTER JOIN TZ_EDUSYSTEMCHARTSUBJ B
+		    ON A.CHARTCODE = B.CHARTCODE
+		    INNER JOIN (
+		    	SELECT UPPERCHARTCODE, CHARTCODE, CHARTNAME, CHARTORDER
+		        FROM TZ_EDUSYSTEMCHART
+		    ) C
+		    ON A.CHARTCODE = C.UPPERCHARTCODE
+		WHERE
+			A.CHARTCODE IN (SELECT UPPERCHARTCODE FROM TZ_EDUSYSTEMCHART WHERE CHARTCODE IN (SELECT CHARTCODE FROM TZ_EDUSYSTEMCHARTSUBJ WHERE SUBJ IN (#p_subj#)))
+		) T1
+		ORDER BY T1.UPPERCHARTCODE ASC, T1.UPPERCHARTORDER ASC, T1.MIDDLECHARTCODE ASC, T1.MIDDLECHARTORDER ASC, T1.LOWCHARTORDER ASC
+		]]>
+	</select>
+	
+	
+	
+	<!-- 5depth 경로에 연결된 과정 목록 -->
+	<select id="edcSystmDAO.eduSystmSubjList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/* edcSystmDAO.eduSystmSubjList 5depth 경로에 연결된 과정 목록 */
+		SELECT  
+		    A.CHARTCODE,  
+		    A.SUBJ,
+		    C.YEAR,
+		    C.SUBJSEQ,
+		    B.SUBJNM,
+		    (SELECT CHARTNAME FROM TZ_EDUSYSTEMCHART WHERE CHARTCODE = A.CHARTCODE) AS CHARTNAME 
+		FROM
+			TZ_EDUSYSTEMCHARTSUBJ A INNER JOIN TZ_SUBJ B 
+			ON A.SUBJ = B.SUBJ
+		    INNER JOIN (
+		            SELECT
+		                S2.SUBJ,
+		                S2.YEAR,
+		                S2.SUBJSEQ
+		            FROM
+		                TZ_GRSEQ S1 INNER JOIN TZ_SUBJSEQ S2
+		                ON S1.GRCODE = S2.GRCODE
+		                AND S1.GYEAR = S2.GYEAR
+		                AND S1.GRSEQ = S2.GRSEQ
+		            WHERE
+		                S1.GRCODE IN ('N000001')
+		                AND S1.HOMEPAGEYN IN ('Y')
+		                AND S1.STAT IN ('Y')
+		                AND TO_CHAR(SYSDATE, 'YYYYMMDDHH24') BETWEEN S2.PROPSTART AND S2.PROPEND
+		    ) C
+		    ON A.SUBJ = C.SUBJ
+		WHERE   
+			A.CHARTCODE IN (#p_chartcode#)
+			AND B.ISUSE IN ('Y')
+		ORDER BY B.SUBJNM ASC, B.SUBJ ASC
+		]]>
+	</select>
+	
+
+</sqlMap>
+

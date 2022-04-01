@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>찾아오시는 길</title>
+<style type="text/css">
+/* NanumBarunGothic - 200, 300, 400, 700 */
+@import url(https://cdn.rawgit.com/openhiun/hangul/14c0f6faa2941116bb53001d6a7dcd5e82300c3f/nanumbarungothic.css);
+html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr,
+address, big, cite, code, del, dfn, em, font, img, ins,
+q, s, samp, small, strike, strong, sub, sup, tt, var, b,
+u, i, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {margin: 0; padding: 0; border: none 0;}
+caption {text-indent:-10000px;}
+html { font-size: 10px; }
+body{ font-size: 14px; font-size: 1.4rem; line-height: 2.2rem; }
+html, body {margin: 0; padding: 0; width: 100%; height: 100%;}
+body {background-color:#fff; color:#000; line-height: 1.2; font-weight: 300; font-family:"Nanum Barun Gothic", "돋움", Dotum, Verdana, Helvetica, Sans-serif;}
+/*body {background-color:#fff; color:#000; line-height: 1.2; font-weight: 200; font-family:"Nanum Square", "돋움", Dotum, Verdana, Helvetica, Sans-serif;}*/
+input, button, textarea {font-family: inherit; font-size:1.2rem; color:#000;}
+h1, h2, h3, h4, h5, h6 {letter-spacing: 0; font-weight:normal;}
+img, fieldset, iframe {border:0 none;}
+table {border-collapse: collapse;}
+select, textarea {font-family: inherit; border: 1px solid #B7B6B6; background: #FFFFFF; color: #7c7c7c; font-size: 12px; font-size: 1.2rem; vertical-align: middle;}
+textarea {overflow:auto;}
+select, input, img, li {vertical-align: middle; text-align:inherit;}
+address, caption, cite, code, dfn, em, strong, th, var {font-style : normal; font-weight : 900;}
+ul, li, ol {list-style-type: none;}
+legend,  caption {display: none;}
+hr {border-collapse:collapse; margin: 0; border: none;}
+a:link, a:visited {text-decoration:none; color: inherit;}
+a:hover {text-decoration:none;}
+input[type="button"] {-webkit-appearance: none;}
+i {line-height: 0.8em !important;}  /* 아이콘 vertical middle 위해 */
+h5{font-size:20px; line-height:24px; color:#313131; letter-spacing:-0.025em; margin-bottom:37px; font-weight:300;}
+html{overflow-y:auto;}
+body{overflow-y:auto;}
+.map_detail_wrap{ display: block; margin-top: 15px;}
+.map_detail_con{margin-bottom:40px;}
+.map_detail_wrap:first-child{ margin-top: 0;}
+.map_detail_img{ display: inline-block; vertical-align: middle; margin-right: 19px;}
+.map_detail_text{ display: inline-block; vertical-align: middle; }
+.map_detail_text > .text_title{ display: block; font-size: 16px; line-height: 22px; color:#313131; margin-bottom:  4px;}
+.map_detail_text > .text_contents{ display: block; font-size: 13px; line-height: 19px; letter-spacing: -0.025em; margin-bottom:  0;}
+.map_detail_text > .text_contents{ display: block; font-size: 13px; line-height: 19px; letter-spacing: -0.025em; margin-bottom:  0;}
+.direction_detail_con{}
+.direction_detail_con .direction_detail_wrap:last-child{margin-bottom: 0}
+.direction_detail_con .direction_detail_title{display: block; margin-right: 0; margin-bottom: 20px;}
+.direction_detail_con .direction_detail_title .direction_detail_img{display: block; margin-bottom: 16px;}
+.direction_detail_con .direction_detail_title h6{font-size: 18px; font-size: 1.8rem; line-height: 24px; line-height: 2.4rem; color: #6fb537; letter-spacing: -0.025em;}
+.direction_detail_con .direction_detail_title h6.blue{color: #3495ba;}
+.direction_detail_con .direction_detail_title h6.red{color: #ed484f;}
+.direction_detail_con .direction_detail_text{width: 100%; display: inline-block; vertical-align: top; margin-bottom: 47px; border-bottom: 1px solid #e5e5e5;}
+.direction_detail_con .direction_detail_text > ul {margin-bottom: 47px;}
+.direction_detail_con .direction_detail_text > ul br{display: none;}
+.direction_detail_con .direction_detail_text > ul > li{background: url("/edu/images/bm/list_style_3_line.jpg") no-repeat left top 10px; font-size: 14.5px; font-size: 1.45rem; line-height: 26px; line-height: 2.6rem; letter-spacing: -0.025em; color: #313131; margin-bottom: 33px; padding-left: 12px;}
+.direction_detail_con .direction_detail_text > ul.is_line > li:last-child {background: url("/edu/images/bm/list_style_3_star.jpg") no-repeat left top 10px; color: #e60012; margin-bottom: 0;}
+.direction_detail_con .direction_detail_text > ul.is_no_line > li{background: none; padding-left: 0;}
+.direction_detail_con .direction_detail_text > ul.is_no_line > li > .sub_title{display: block; font-weight: 400; margin-bottom: 6px;}
+.direction_detail_con .direction_detail_text > ul.is_no_line > li > .sub_text > span{ background: url("/edu/images/bm/list_style_3_arrow.png") no-repeat left center; padding-left: 12px; margin-left: 8px;}
+.direction_detail_con .direction_detail_text > ul.is_no_line > li > .sub_text > span:first-child{ background: none; padding-left: 0; margin-left: 0;}
+@media all and (min-width:768px){
+
+    /* 찾아오시는 길 */
+
+    .map_detail_wrap{ display: inline-block; margin-left: 72px;}
+    .map_detail_wrap:first-child{ margin-left: 0;}
+}
+@media all and (min-width:992px){
+/* 찾아오시는 길 */
+    .sub_section .sub_contents_body .direction_detail_con .direction_detail_title{display: inline-block; vertical-align: top; margin-right: 84px;}
+    .sub_section .sub_contents_body .direction_detail_con .direction_detail_text{width: calc(100% - 163px);}
+    .sub_section .sub_contents_body .direction_detail_con .direction_detail_text > ul br{display: block;}
+}
+</style>
+</head>
+<body>
+<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3161.48432305113!2d127.0424305157826!3d37.5907589797934!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357cbb61264c409d%3A0xac02be988c7c3220!2z7ISc7Jq47Yq567OE7IucIOuPmeuMgOusuOq1rCDtmozquLDroZwgNjY!5e0!3m2!1sko!2skr!4v1498556717742" width="100%" height="430" frameborder="0" style="border:0" allowfullscreen=""></iframe>
+<div>
+	<div style="padding-right:15px; padding-left:15px; padding-top:20px;">
+		<div class="map_detail_con">
+		    <div class="fontsize0 map_detail_wrap">
+		        <span class="map_detail_img"><img src="/edu/images/bm/sub_directions_location.png" alt="로케이션이미지"></span>
+		        <p class="map_detail_text">
+		            <span class="text_title">LOCATION</span>
+		            <span class="text_contents">[02456] 서울특별시 동대문구 회기로 66 [홍릉본원]</span>
+		        </p>
+		    </div>
+		    <div class="fontsize0 map_detail_wrap">
+		        <span class="map_detail_img"><img src="/edu/images/bm/sub_directions_phonenum.png" alt="전화번호이미지"></span>
+		        <p class="map_detail_text">
+		            <span class="text_title">GENARAL INFO</span>
+		            <span class="text_contents">온라인교육 02.6310.0770 / 현장교육 02.6310.0665 / 취업지원 02.6310.0766</span>
+		        </p>
+		    </div>
+		</div>
+		<h5>
+		    교통수단별 오시는 길 안내
+		</h5>
+		<div class="direction_detail_con">
+		    <div class="fontsize0 direction_detail_wrap">
+		        <div class="direction_detail_title">
+		            <span class="direction_detail_img"><img src="/edu/images/bm/sub_directions_owncar.png" alt="자가용차이미지"></span>
+		            <h6>자가운전자</h6>
+		        </div>
+		        <div class="direction_detail_text">
+		            <ul class="is_line">
+		                <li>동대문에서 청량리 방면으로 오다가 청량리역 교차로에서 좌회전, 국립산림과학원 앞 삼거리에서
+		                    세종대왕 기념관을 따라 우회전(경희대방향)하여 15m진입하면 우측으로 콘텐츠인재캠퍼스 건물이 보임. </li>
+		                <li>고대에서 미아리 방향으로 가다가 국립산림과학원 방향으로 우회전,
+		                    국립산림과학원을 지나 약15m앞에 우측으로 콘텐츠인재캠퍼스 건물이 보임.</li>
+		                <li>주차공간이 협소하오니 대중교통을 이용해 주시기 바랍니다.</li>
+		            </ul>
+		        </div>
+		    </div>
+		    <div class="fontsize0 direction_detail_wrap">
+		        <div class="direction_detail_title">
+		            <span class="direction_detail_img"><img src="/edu/images/bm/sub_directions_subway.png" alt="지하철이미지"></span>
+		            <h6 class="blue">지하철</h6>
+		        </div>
+		        <div class="direction_detail_text">
+		            <ul class="is_no_line">
+		                <li>
+		                    <span class="sub_title">1호선 청량리 하차</span>
+		                    <p class="sub_text">
+		                        <span>2번출구(청량리 우체국 방면)</span>
+		                        <span>현대코아 버스정류장까지 약 171m 걷기</span>
+		                        <span>파란색(간선)버스 201(현대코아) 승차 후, 세종대왕기념관 정류장에서 하차</span>
+		                        <span>세종기념관 앞에서 오른쪽 방향으로</span>
+		                        <span>약 87m 이동(회기로)</span>
+		                        <span>오른쪽 방향으로</span>
+		                        <span>한국과학기술정보연구원서울청사 방향으로 약 100m 이동</span>
+		                        <span>콘텐츠인재캠퍼스 도착</span>
+		                </li>
+		                <li>
+		                    <span class="sub_title">6호선 고려대(종암)역 하차</span>
+		                    <p class="sub_text">
+		                        <span>3번출구</span>
+		                        <span>하나쇼파까지 약 71m 이동(종암로)하나쇼파 앞에서 오른쪽 방향으로</span>
+		                        <span>세종회관 앞 횡단보도까지 약 486m 이동(회기로)</span>
+		                        <span>횡단보도를 이용하여 세종기념관 방면으로 횡단 </span>
+		                        <span>약 87m 이동(회기로)</span>
+		                        <span>오른쪽 방향으로</span>
+		                        <span>한국과학기술정보연구원서울청사 방향으로 약 100m 이동</span>
+		                        <span>콘텐츠인재캠퍼스 도착</span>
+		                    </p>
+		                </li>
+		            </ul>
+		        </div>
+		    </div>
+		    <div class="fontsize0 direction_detail_wrap">
+		        <div class="direction_detail_title">
+		            <span class="direction_detail_img"><img src="/edu/images/bm/sub_directions_bus.png" alt="버스이미지"></span>
+		            <h6 class="red">버스</h6>
+		        </div>
+		        <div class="direction_detail_text">
+		            <ul class="is_no_line">
+		                <li>
+		                    <span class="sub_title">파란(간선)버스 273</span>
+		                    <p class="sub_text">
+		                        <span>한국과학기술원.홍릉초등학교 정류장에서 하차</span>
+		                        <span>콘텐츠인재캠퍼스까지 약 384m 걷기(약 6분)</span>
+		                        <span>콘텐츠인재캠퍼스 도착</span>
+		                </li>
+		                <li>
+		                    <span class="sub_title">파란(간선)버스 201</span>
+		                    <p class="sub_text">
+		                        <span>세종대왕기념관 정류장에서 하차</span>
+		                        <span>콘텐츠인재캠퍼스까지 약 348m 걷기(약 5분)</span>
+		                        <span>콘텐츠인재캠퍼스 도착</span>
+		                    </p>
+		                </li>
+		                <li>
+		                    <span class="sub_title">초록(간선)버스 1226</span>
+		                    <p class="sub_text">
+		                        <span>세종대왕기념관 정류장에서 하차</span>
+		                        <span>콘텐츠인재캠퍼스까지 약 348m 걷기(약 5분)</span>
+		                        <span>콘텐츠인재캠퍼스 도착</span>
+		                    </p>
+		                </li>
+		            </ul>
+		        </div>
+		    </div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

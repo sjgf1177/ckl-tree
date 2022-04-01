@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE taglib
+        PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
+               "http://java.sun.com/j2ee/dtds/web-jsptaglibrary_1_2.dtd">
+<taglib>
+
+	<tlibversion>1.0</tlibversion>
+	<jspversion>1.2</jspversion>
+	<shortname>kocca</shortname>
+	<uri>http://edu.kocca.kr/fn</uri>
+  
+	<function>
+		<description>String Replace</description>
+		<name>maskingTag</name>
+		<function-class>kr.co.edu.util.StringUtil</function-class>
+		<function-signature>java.lang.String maskingTag(java.lang.String)</function-signature>
+		<example>
+			${kocca:maskingTag(str)}
+		</example>
+	</function>
+  
+</taglib>

@@ -1,0 +1,41 @@
+
+/* 게시물 업데이트 */
+
+
+SELECT REPLACE(NTT_CN,'https://dream.kocca.kr','') FROM TB_BBS_ESTN
+WHERE BBS_ID IN ('B0000041','B0000042','B0000044','B0000040');
+
+
+UPDATE  TB_BBS_ESTN SET
+ntt_cn = REPLACE(NTT_CN,'https://dream.kocca.kr','')
+WHERE BBS_ID IN ('B0000041','B0000042','B0000044','B0000040');
+UPDATE  TB_BBS_ESTN SET
+ntt_cn = REPLACE(NTT_CN,'http://dream.kocca.kr','')
+WHERE BBS_ID IN ('B0000041','B0000042','B0000044','B0000040');
+
+
+
+UPDATE  TC_COMMNFILE_DETAIL SET
+FILE_STRE_COURS = '/data/kocca/tmpupload/store/mentorstory/thurmb/'
+WHERE ATCH_FILE_ID IN (
+SELECT ATCH_FILE_ID FROM TB_BBS_ESTN
+WHERE BBS_ID = 'B0000042'
+) AND FILE_STRE_COURS = '/upload/dream/person/';
+
+UPDATE  TC_COMMNFILE_DETAIL SET
+FILE_STRE_COURS = '/data/kocca/tmpupload/store/board/'
+WHERE ATCH_FILE_ID IN (
+SELECT ATCH_FILE_ID FROM TB_BBS_ESTN
+WHERE BBS_ID IN ('B0000041', 'B0000044', 'B0000040')
+) AND FILE_STRE_COURS IN  ('/upload/dream/notice/','/upload/dream/project/','/upload/dream/story/');
+
+
+SELECT * FROM TC_COMMNFILE_DETAIL
+WHERE ATCH_FILE_ID IN (
+SELECT ATCH_FILE_ID FROM TB_BBS_ESTN
+WHERE BBS_ID IN ('B0000041', 'B0000044', 'B0000040')
+) AND FILE_STRE_COURS IN  ('/upload/dream/notice/','/upload/dream/project/','/upload/dream/story/');
+
+UPDATE TB_BBS_ESTN A SET
+ option1 = DECODE (option18, '2000','3','104600','1','104843','2','3000','4','120000','5','120260','7','120267','6','120262','8',null)
+WHERE BBS_ID IN ('B0000041', 'B0000042', 'B0000044')

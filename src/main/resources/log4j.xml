@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false">
+
+    <!-- console -->
+    <appender name="console" class="org.apache.log4j.ConsoleAppender">
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d %5p [%c] %m%n" />
+        </layout>
+    </appender>
+
+    <!-- log file  -->
+<!--     <appender name="DEBUG" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="c:/project/logs/unp.log" />
+		<param name="Encoding" value="UTF-8" />
+		<param name="log4j.appender.logfile.DatePattern" value="'.'yyyy-MM-dd" />
+		<param name="ImmediateFlush" value="true" />
+		<param name="Append" value="false" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d %5p [%c] %m%n" />
+        </layout>
+    </appender> -->
+
+    <!-- package -->
+    <logger name="egovframework" additivity="false">
+        <level value="DEBUG"/>
+        <!-- <appender-ref ref="DEBUG"/> -->
+        <appender-ref ref="console"/>
+    </logger>
+
+    <logger name="kr" additivity="false">
+        <level value="DEBUG"/>
+        <!-- <appender-ref ref="DEBUG"/> -->
+        <appender-ref ref="console"/>
+    </logger>
+
+	<!-- log SQL with timing information, post execution -->
+	<logger name="jdbc.sqltiming" additivity="false">
+		<level value="DEBUG" />
+		<!-- <appender-ref ref="DEBUG"/> -->
+		<appender-ref ref="console" />
+	</logger>
+
+
+	<logger name="org.springframework.web" additivity="false">
+		<level value="DEBUG" />
+		<!-- <appender-ref ref="DEBUG"/> -->
+		<appender-ref ref="console" />
+	</logger>
+
+	<logger name="org.springframework.jdb" additivity="false">
+		<level value="DEBUG" />
+		<!-- <appender-ref ref="DEBUG"/> -->
+		<appender-ref ref="console" />
+	</logger>
+
+	<logger name="org.springframework.security" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="DEBUG"/>
+		<appender-ref ref="console" />
+	</logger>
+
+	<!-- ehcahe --><!--
+	<logger name="net.sf.ehcache">
+		<level value="DEBUG" />
+		<appender-ref ref="DEBUG"/>
+		<appender-ref ref="console" />
+	</logger>
+	 -->
+
+	<!-- yoo pyong soo-->
+	<logger name="java.sql.Connection">
+	     <level value="DEBUG"/>
+	</logger>
+	<logger name="java.sql.Statement">
+	     <level value="DEBUG"/>
+	</logger>
+	<logger name="java.sql.PreparedStatement">
+	     <level value="DEBUG"/>
+	</logger>
+	<logger name="java.sql.ResultSet">
+	     <level value="DEBUG"/>
+	</logger>
+
+	<root>
+		<level value="DEBUG" />
+		<!-- <appender-ref ref="DEBUG"/> -->
+		<appender-ref ref="console" />
+	</root>
+
+</log4j:configuration>

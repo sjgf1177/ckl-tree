@@ -1,0 +1,1526 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=Edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<meta name="robots" content="all" />
+<link rel="stylesheet" type="text/css" href="/js/bootstrap/css/bootstrap.css" />
+<link rel="stylesheet" type="text/css" href="/js/bootstrap/css/bootstrap-theme.css" />
+<link rel="stylesheet" type="text/css" href="/js/jquery-ui/jquery-ui.css">
+<link rel="stylesheet" type="text/css" href="/portal/css/common.css" />
+<link rel="stylesheet" type="text/css" href="/bos/css/common.css" />
+<link rel="stylesheet" type="text/css" href="/bos/css/bosLayout.css" />
+<style>
+body{background-image: none;background-color: #fff;}
+#container{padding: 0;max-width:none;border: none;}
+.cateSet{position: static;text-align: right;}
+.cateSet:after{content: '';display: block;clear: both;height: 10px;}
+.eventList{clear: both;margin-top: 10px;}
+</style>
+<script type="text/javascript" src="/js/jquery.js"></script>
+<script type="text/javascript" src="/js/bootstrap/bootstrap.js"></script>
+<script type="text/javascript" src="/js/bootstrap/respond.min.js"></script>
+
+<script type="text/javascript" src="/js/jquery-ui/jquery-ui.js"></script>
+<script type="text/javascript" src="/js/jquery.highlight-4.js"></script>
+<script type="text/javascript" src="/js/base64.js"></script>
+<script type="text/javascript" src="/js/miya_validator.js"></script>
+<script type="text/javascript" src="/bos/js/common.js"></script>
+
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+<script type="text/javascript" src="/js/html5shiv.js"></script><script type="text/javascript" src="js/respond.min.js"></script>
+<![endif]-->
+
+<script type="text/javascript">
+	$(function(){
+		$("#search").click(function(){
+			search();
+		});
+		$("#searchTxt").bind("keyup", function(event){
+			search();
+		});
+	});
+	function search(){
+		var searchTxt = $("#searchTxt").val();
+		if(searchTxt)
+		{
+			$("#lnb ul li").each(function(){
+				var text = $(this).text();
+				var showMenu = (text.indexOf(searchTxt) != -1) || (cho_hangul(text).indexOf(searchTxt) != -1);
+				if( showMenu ){
+					$(this).show();
+				} else {
+					if($(this).parent())
+						$(this).hide();
+				}
+			});
+		} else {
+			$("#lnb ul li").show();
+		}
+	}
+
+	function cho_hangul(str) {
+	  cho = ["ㄱ","ㄲ","ㄴ","ㄷ","ㄸ","ㄹ","ㅁ","ㅂ","ㅃ","ㅅ","ㅆ","ㅇ","ㅈ","ㅉ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"];
+	  result = "";
+	  for(i=0;i<str.length;i++) {
+	    code = str.charCodeAt(i)-44032;
+	    if(code>-1 && code<11172) result += cho[Math.floor(code/588)];
+	  }
+	  return result;
+	}
+
+	function pagePrint(Obj) {
+		alert(Obj);
+	    var W = Obj.offsetWidth;        //screen.availWidth;
+	    var H = Obj.offsetHeight;        //screen.availHeight;
+	    var features
+	= "menubar=no,toolbar=no,location=no,directories=no,status=no,scrollbars=yes,resizable=yes,width=" + W
+	+ ",height=" + H + ",left=0,top=0";
+	    var PrintPage = window.open("about:blank",Obj.id,features);
+	    PrintPage.document.open();
+	    PrintPage.document.write("\n\n" + Obj.innerHTML + "\n");
+	    PrintPage.document.close();
+	    PrintPage.document.title = document.domain;
+	    PrintPage.print(PrintPage.location.reload());
+	}
+
+	//pagePrint(document.getElementById('content'));
+	 function print_area()
+	 {
+		  var W=document.documentElement.clientWidth; if(!W){W=document.body.clientWidth;}
+		  var H=document.documentElement.clientHeight; if(!H){H=document.body.clientHeight;}
+		  var features = "menubar=no,toolbar=no,location=no,directories=no,status=no,scrollbars=yes,resizable=yes,width=" + W + ",height=" + H + ",left=0,top=0";
+		  var PrintPage = window.open("about:blank","tmp_print",features);
+		  PrintPage.document.open();
+		  PrintPage.document.write("<html><head><title></title></head><body>" + document.getElementById('content').innerHTML + "</body></html>");
+		  PrintPage.document.close();
+		  PrintPage.print();
+		  PrintPage.close();
+	 }
+
+	 function printf(){
+		 document.frames['contentFrame'].focus();
+		 document.frames['contentFrame'].print();
+		 //document.frames['contentFrame'].contentWindow.location.href="/bos/forprint.jsp";
+	 }
+
+	 function println(){
+		 window.open('/bos/forprint.jsp', 'popwin', 'left=20,top=20,width=616,height=700');
+		 document.frames['contentFrame'].focus();
+		 //document.frames['contentFrame'].print();
+	 }
+
+	function openPopup()
+	{
+		url = "/bos/member/forUpdateMy.do?viewType=BODY";
+		window.open(url, "deptName", "resizable=no, status=no, scrollbars=no, toolbar=no, menubar=no, width=1000, height=700");
+	}
+</script>
+</head>
+<body>
+	<div id="wrap">
+
+		<div id="header_wrap">
+			<div class="header">
+				<h1><a href="/bos/main/main.do"><img src="/images/common/logo.png" alt="콘텐츠코리아랩" /></a></h1>
+				<p class="user bold"><span class="color1">[]CKL관리자(ckladmin)</span>님 로그인 접속IP:192.168.0.1</p>
+				
+				
+				
+				
+				
+
+				<div class="util btn-group">
+					
+						
+							
+							
+							
+							
+			 			
+			 			
+							<a href="/bos/member/list.do?menuNo=100045" class="btn btn-primary"><i class="fa fa-cogs"></i> 관리자</a>
+			 			
+						
+							
+							
+							
+							
+			 			
+			 			
+							<a href="/bos/mpm/commonContents/list.do?siteId=2&menuNo=100046" class="btn btn-primary"><i class="fa fa-search"></i> 콘텐츠코리아랩</a>
+			 			
+						
+							
+							
+							
+							
+			 			
+			 			
+							<a href="?menuNo=100047" class="btn btn-primary"><i class="fa fa-search"></i> 콘텐츠아카데미</a>
+			 			
+						
+						<a href="javascript:openPopup();"class="btn btn-success"><i class="fa fa-power-off"></i>내정보수정</a>
+						<a href="/bos/member/logout.do" class="btn btn-info"><i class="fa fa-power-off"></i> 로그아웃</a>
+					
+				</div>
+			</div>
+
+			<div id="gnb">
+			
+				<ul class="gnb_width">
+		 	
+				
+	 			
+	 			
+	 			
+	 			
+	 			<li >
+		 			
+		 			
+						<a href="?menuNo=100052" >콘텐츠관리</a>
+		 			
+		 		</li>
+			
+				
+	 			
+	 			
+	 			
+	 			
+	 			<li >
+		 			
+		 			
+						<a href="?menuNo=100054" >게시물관리</a>
+		 			
+		 		</li>
+			
+				
+	 			
+	 			
+	 			
+	 			
+	 			<li class='on'>
+		 			
+		 			
+						<a href="/bos/fcltyResve/resveSttus/listDaly.do?menuNo=100055" >시설/장비</a>
+		 			
+		 		</li>
+			
+				
+	 			
+	 			
+	 			
+	 			
+	 			<li >
+		 			
+		 			
+						<a href="/bos/progrm/master/list.do?menuNo=100056" >프로그램</a>
+		 			
+		 		</li>
+			
+				
+	 			
+	 			
+	 			
+	 			
+	 			<li >
+		 			
+		 			
+						<a href="?menuNo=100057" >창작지원</a>
+		 			
+		 		</li>
+			
+				
+	 			
+	 			
+	 			
+	 			
+	 			<li class='pr0'>
+		 			
+		 			
+						<a href="/bos/userMember/list.do?menuNo=100058" >회원관리</a>
+		 			
+		 		</li>
+			
+				</ul>
+			
+			</div>
+
+			
+		</div>
+
+		<div id="container" class="clearfix" >
+			<div id="lnb">
+
+				<h2>시설/장비</h2>
+				<!-- <p><input type="text" name="searchTxt" id="searchTxt" value="" /> <label for="search"><a id="search" href="#search">조회</a></label></p> -->
+
+		
+		
+		
+				<ul>
+		 	
+				
+				
+	 			
+	 			
+	 			
+				<li>
+		 			
+		 			
+						<a href="/bos/fcltyResve/resveSttus/listDaly.do?menuNo=100064" title="/bos/fcltyResve/resveSttus/listDaly.do" >일별예약현황</a>
+		 			
+				
+				
+				
+					</li>
+				
+				
+				
+	 			
+	 			
+	 			
+				<li>
+		 			
+		 			
+						<a href="/bos/fcltyResve/resveSttus/list.do?menuNo=100065" title="/bos/fcltyResve/resveSttus/list.do" >예약현황</a>
+		 			
+				
+				
+				
+					</li>
+				
+				
+				
+	 			
+	 			
+	 			
+				<li>
+		 			
+		 			
+						<a href="/bos/fcltyResve/fclty/list.do?menuNo=100066" title="/bos/fcltyResve/fclty/list.do" >시설관리</a>
+		 			
+				
+				
+				
+					</li>
+				
+				
+				
+	 			
+	 			
+	 			
+				<li>
+		 			
+		 			
+						<a href="/bos/fcltyResve/eqpmn/list.do?menuNo=100067" title="/bos/fcltyResve/eqpmn/list.do" >장비관리</a>
+		 			
+				
+				
+				
+					</li>
+				
+				
+				
+	 			
+	 			
+	 			
+				<li>
+		 			
+		 			
+						<a href="/bos/fcltyResve/hldy/list.do?menuNo=100068" title="/bos/fcltyResve/hldy/list.do" >휴일관리</a>
+		 			
+				
+				
+				
+					</li>
+				
+				
+				
+	 			
+	 			
+	 			
+				<li>
+		 			
+		 			
+						<a href="?menuNo=100069" title="" >시설예약 통계</a>
+		 			
+				
+				
+				
+						<ol>
+		 		
+				
+						
+			 			
+			 			
+			 			
+							<li>
+				 			
+				 			
+								<a href="/bos/fcltyResve/stats/statsFclty.do?menuNo=100070" title="/bos/fcltyResve/stats/statsFclty.do" >시설/공간</a>
+				 			
+							
+							
+							
+							</li>
+					
+				
+						
+			 			
+			 			
+			 			
+							<li>
+				 			
+				 			
+								<a href="/bos/fcltyResve/stats/statsEqpmn.do?menuNo=100071" title="/bos/fcltyResve/stats/statsEqpmn.do" >장비</a>
+				 			
+							
+							
+							
+							</li>
+					
+				
+						
+			 			
+			 			
+			 			
+							<li>
+				 			
+				 			
+								<a href="/bos/fcltyResve/stats/statsUsePurps.do?menuNo=100072" title="/bos/fcltyResve/stats/statsUsePurps.do" >사용목적</a>
+				 			
+							
+							
+							
+							</li>
+					
+				
+						
+			 			
+			 			
+			 			
+							<li>
+				 			
+				 			
+								<a href="/bos/fcltyResve/stats/statsVisit.do?menuNo=100073" title="/bos/fcltyResve/stats/statsVisit.do" >열린공간 방문</a>
+				 			
+							
+							
+							
+							</li>
+					
+						</ol>
+				
+					</li>
+				
+				</ul>
+		
+
+			</div>
+			<div id="content">
+
+				<div class="hgroup clearfix">
+					<h3 class="fl">예약현황</h3>
+					<div class="fr">
+						<a class="btn btn-sm btn-success" href="/bos/forprint.jsp" id="print" title="새창" onclick="window.open(this.href, 'printPage', 'width=800,height=550,scrollbars,toolbar,status');return false;" alt="인쇄하기 (자바스크립트 미지원시 브라우저은 인쇄기능을 이용하세요)"><i class="fa fa-hover fa-print"></i><span >인쇄하기</span></a>
+					</div>
+				</div>
+
+				
+				
+				
+					
+					
+						
+						
+						
+					
+					
+						
+
+
+
+
+
+
+
+
+	
+	
+
+
+
+<script type="text/javascript">
+//<![CDATA[
+var codeIdVal = "COM059";
+var areaSeVal = "";
+var lcSeVal = "";
+var fcltySeVal = "";
+var spceNmVal = "";
+var todayYY = "2015";
+var todayMM = "09";
+
+$(function() {
+	var spceViewPopup = $("#spceViewPopup").dialog({
+		autoOpen: false,
+	  	height: "auto",
+	  	width: "900",
+	  	modal: true,
+	  	position : {
+				my : "center center",
+				at : "center center",
+				of : $("body"),
+				within : $("body")
+			}
+	  //position : [80,0]
+	});
+
+
+	fnAreaSeList($("#areaSeDiv"), codeIdVal,0);  //COM059
+
+	//지역 정보 클릭 event
+	$("#areaSeDiv").delegate("a","click",function() {
+		$("#areaSeDiv").find("a").removeClass("on");
+		$(this).addClass("on");
+		fnLcSeList($("#lcSeDiv"), codeIdVal, $(this).attr("data-value"), 2);
+		fnResetStep(2);
+		return false;
+	});
+
+	//지역 정보2 클릭 event
+	$("#lcSeDiv").delegate(".fcltySeDiv a","click",function() {
+		$(".fcltySeDiv").find("a").removeClass("on");
+		$(this).addClass("on");
+		var areaSe = $("#areaSeDiv").find("a").filter(".on").attr("data-value");
+		var lcSe = $(".fcltySeDiv").find("a").filter(".on").closest("ul").parent().children("a").attr("data-value");
+		var fcltySe = $(".fcltySeDiv").find("a").filter(".on").attr("data-value");
+		//alert(areaSe + " , "+ lcSe + " , " + fcltySe);
+		fnSpceNmList($("#spceNmDiv"), areaSe, lcSe, fcltySe);
+		fnResetStep(3);
+		return false;
+	});
+	//공간정보 클릭 event
+	$("#spceNmDiv").delegate(".spceSelctBtn","click",function() {
+
+		var fcltySn = $(this).attr("data-value");
+		$("#spceNmDiv").find(".spceSelctBtn").removeClass("on");
+		$(this).addClass("on");
+		//달력 활설화
+		$(".headStep3").show();
+		$(".headStep3_ico").show();
+
+		fnLoadCanlendar($("#calendarDiv"),fcltySn);
+		fnResetStep(4);
+		return false;
+	});
+
+	//공간보기 event
+	$("#spceNmDiv").delegate(".spceViewBtn","click",function() {
+		var params = {viewType : "CONTBODY", fcltySn : $(this).attr("data-value")};
+	  	$("#spceViewPopupCont").load("/bos/fcltyResve/fclty/view.do", params, function() {
+	  		spceViewPopup.dialog("open");
+	  		$(this).find(".btnSet").hide();
+	  	});
+		return false;
+	});
+
+
+	//달력 이전 달 가기 event
+	$(".headStep3").find(".prevMonth").click(function() {
+
+		var yearMonth = $(this).attr("data-value");
+		var date = yearMonth.split("-");
+		if (Number(todayYY+todayMM) > Number(yearMonth.replace("-",""))) {
+			alert("지난 달은 조회 할 수 없습니다.");
+			return false;
+		}
+		var fcltySn = $("#spceNmDiv").find(".spceSelctBtn").filter(".on").attr("data-value");
+		var year = Number(date[0]);
+		var month = Number(date[1]);
+
+
+		fnLoadCanlendar($("#calendarDiv"), fcltySn, year, month);
+		fnResetStep(4);
+		return false;
+	});
+
+	//달력 다음 달 가기 event
+	$(".headStep3").find(".nextMonth").click(function() {
+		var yearMonth = $(this).attr("data-value");
+		var date = yearMonth.split("-");
+		var fcltySn = $("#spceNmDiv").find(".spceSelctBtn").filter(".on").attr("data-value");
+		var year = Number(date[0]);
+		var month = Number(date[1]);
+		var chkSum = $("#chkSum").val();
+		fnLoadCanlendar($("#calendarDiv"), fcltySn, year, month, chkSum);
+		fnResetStep(4);
+		return false;
+	});
+
+
+	//달력 이후일짜 클릭시 event
+	$("#calendarDiv").delegate(".cal_none a","click",function() {
+		alert("오늘 이후 일자 입니다. 예약 할 수 없습니다.");
+		return false;
+	});
+
+	//달력 공백 클릭시 event
+	$("#calendarDiv").delegate(".cal_blank a","click",function() {
+		return false;
+	});
+
+	//달력 예약불가 클릭시 event
+	$("#calendarDiv").delegate(".cal_reserv_end a","click",function() {
+		alert("예약이 불가능한 일자입니다.");
+		return false;
+	});
+
+	//달력 대기예약 클릭시 event
+	$("#calendarDiv").delegate(".cal_reserv_wait a","click",function() {
+		$("#calendarDiv").find("td").removeClass("on");
+		$(this).addClass("on");
+
+		var day = $(this).attr("data-value");
+		fnLoadTimes($("#timeDiv"), day,  "resve_wait");
+		fnResetStep(5);
+		return false;
+	});
+
+	//달력 대기예약 클릭시 event
+	$("#calendarDiv").delegate(".cal_reserv_ok a","click",function() {
+		$("#calendarDiv").find("td").removeClass("on");
+		$(this).addClass("on");
+
+		var day = $(this).attr("data-value");
+		fnLoadTimes($("#timeDiv"), day,  "resve_wait");
+		fnResetStep(5);
+		return false;
+	});
+
+
+	//시간 선택 클릭시 event
+	$("#timeDiv").delegate(".timeTable td","click",function() {
+
+
+		var findex = $(".timeTable").find("td.time_first").index();
+		var lindex = $(".timeTable").find("td.time_last").index();
+		var curindex = $(this).index();
+
+		if ($(".timeTable").find("td.on").size() == 0) {
+
+			if ($(this).hasClass("resve_end")) {
+				//예약완료,승인,대기 상태를 포함하면 대기예약으로 예약할수있음
+			}
+			$(this).addClass("on").addClass("time_first");
+
+		}
+		else {
+			if ($(this).hasClass("time_first")) {
+				$(".timeTable").find("td.on").removeClass("on");
+				$(this).removeClass("time_first");
+				$(".timeTable").find("td.time_last").addClass("on").removeClass("time_last").addClass("time_first");
+			}
+			else if ($(this).hasClass("time_last")) {
+				$(".timeTable").find("td.on").removeClass("on");
+				$(this).removeClass("time_last");
+				$(".timeTable").find("td.time_first").addClass("on");
+			}
+			else {
+
+				if (curindex > findex && curindex < lindex) {
+					$(".timeTable").find("td.on").removeClass("on").removeClass("time_last");
+					$(this).addClass("time_last").addClass("on");
+					$(".timeTable").find("td.time_first").addClass("on").nextUntil($(this)).addClass("on");
+				}
+
+				else if (curindex < findex && lindex != -1) {
+					$(".timeTable").find("td.on").removeClass("on").removeClass("time_first");
+					$(this).addClass("time_first").addClass("on");
+					$(this).nextUntil($(".timeTable").find("td.time_last").addClass("on")).addClass("on");
+				}
+				else if (curindex > lindex && lindex != -1) {
+					$(".timeTable").find("td.on").removeClass("on").removeClass("time_last");
+					$(this).addClass("time_last").addClass("on");;
+					$(".timeTable").find("td.time_first").addClass("on").nextUntil($(this)).addClass("on");
+				}
+				else {
+					if (curindex < findex) {
+						$(".timeTable").find("td.time_first").addClass("time_last");
+						$(".timeTable").find("td.on").removeClass("on").removeClass("time_first");
+						$(this).addClass("time_first").addClass("on");
+						$(this).nextUntil($(".timeTable").find("td.time_last").addClass("on")).addClass("on");
+					}
+					else if (curindex > findex) {
+						$(this).addClass("time_last").addClass("on");
+						$(".timeTable").find("td.time_first").addClass("on").nextUntil($(this)).addClass("on");
+					}
+				}
+
+			}
+		}
+
+		fnResetStep(5);
+		return false;
+
+	});
+
+	//시간 선택 장비조회 클릭시 event
+	$("#timeDiv").delegate("#eqpmnSrchBtn","click",function() {
+		if ($("#timeDiv").find(".timeTable").find("td.time_first").size() ==  0) {
+			alert("예약시간을 선택해 주세요.");
+			return false;
+		}
+
+		var waitTp = $("#calendarDiv").find("td a.on").closest("td").hasClass("cal_reserv_wait");
+		if (waitTp) {
+			$("#resveBtn").hide();
+			$("#waitBtn").show();
+		}
+		else {
+			$("#timeDiv").find(".timeTable").find("td.on").each(function(n) {
+				if ($(this).hasClass("resve_end")) {
+					waitTp == true;
+					return false;
+				}
+			});
+			if (waitTp) {
+				$("#resveBtn").hide();
+				$("#waitBtn").show();
+			}
+			else {
+				$("#resveBtn").show();
+				$("#waitBtn").hide();
+			}
+		}
+
+		fnLoadEqpmnList($("#eqpmnDiv"));
+		$("#resveBtnDiv").show();
+		return false;
+	});
+
+
+	// 장비이용안함 event
+	$("#eqpmnDiv").delegate("#noEqpnm", "click", function() {
+		if ($(this).filter(":checked").val() == 'N') $("#eqpmnList").hide();
+		else  $("#eqpmnList").show();
+	});
+
+	// 장비선택 event
+	$("#eqpmnDiv").delegate("input[name=eqpmnSn]","click",function() {
+		if ($(this).filter(":checked").val() == 'N') $(this).closest("li").find("select[name=inputEqpmnQy]").hide();
+		else $(this).closest("li").find("select[name=inputEqpmnQy]").show();
+		return true;
+	});
+
+
+	// 예약하기 버튼 event
+	$("#resveBtn").click(function() {
+		fnResveSave("ok");
+		return false;
+	});
+});
+
+
+
+// step reset 처리
+function fnResetStep(stepNum) {
+	if (stepNum == 2) {
+		var $li = $("<li>").attr("class","bgn").text("◀ STEP 1 시설정보를 선택하여 주세요.");
+		$li.appendTo($("#spceNmDiv").empty());
+		fnResetStep(3);
+	}
+	else if (stepNum == 3) {
+		$(".headStep3").hide();
+		$(".headStep3_ico").hide();
+		$("#calendarDiv").text("◀ STEP 2 공간정보를 선택하여 주세요.");
+		fnResetStep(4);
+	}
+	else if (stepNum == 4) {
+		$("#timeDiv").text("◀ STEP 3 예약일자를 선택하여 주세요.");
+		fnResetStep(5);
+	}
+	else if (stepNum == 5) {
+		$("#eqpmnDiv").text("◀ STEP 4 예약시간을 선택하여 주세요.");
+		$("#resveBtnDiv").hide();
+	}
+}
+
+function fnAreaSeList(obj, codeId, upperCode) {
+	var $obj = obj;
+	var url = "/cmmn/cmmncode/codeListJson.do";
+	var params = {
+		codeId : codeId,
+		upperCode : upperCode
+	};
+
+	$obj.empty();
+
+	$.get(url, params, function(data) {
+		if (data) {
+			$.each(data.list, function(key,item) {
+				var $codeItem = $("<a>").attr({'class':'btn btn-sm btn-default', 'data-value' : item.code, 'href': '#self'}).text(item.codeNm);
+				$codeItem.appendTo($obj);
+			});
+		}
+	},"json");
+}
+
+
+function fnLcSeList(obj, codeId, upperCode, depth) {
+	var $obj = obj;
+	var url = "/cmmn/cmmncode/codeListJson.do";
+	var params = {
+		codeId : codeId,
+		upperCode : upperCode
+	};
+
+	$obj.empty();
+
+	$.get(url, params, function(data) {
+		if (data) {
+
+			if (depth == 3 && data.list.length == 0) {
+				var $li = $("<li>").attr("class","bgn").text("※ 예약 가능한 공간이 없습니다.");
+				$obj.closest("li").after($li);
+			}
+
+			var $subUl = "";
+			$.each(data.list, function(key,item) {
+				var $codeItem = $("<a>").attr({'data-value' : item.code, 'href': '#self'}).text(item.codeNm);
+				var $li = $("<li>");
+				$codeItem.appendTo($li);
+				if (depth == 2) {
+					$subUl = $("<ul>").attr({"class": "fcltySeDiv"});
+					$subUl.appendTo($li);
+				}
+				$li.appendTo($obj);
+
+				if (depth == 2) fnLcSeList($subUl, codeId, item.code, 3);
+			});
+		}
+	},"json");
+}
+
+function fnSpceNmList(obj, pAreaSe, pLcSe, pFcltySe) {
+	var $obj = obj;
+	var url = "/bos/fcltyResve/resveSttus/listFcltySpceNm.json";
+	var params = {
+		areaSe : pAreaSe,
+		lcSe : pLcSe,
+		fcltySe : pFcltySe
+	};
+
+	$obj.empty();
+
+	$.get(url, params, function(data) {
+		if (data) {
+
+			if (data.resultList.length == 0 ) {
+				 var $li = $("<li>").text("※ 이용 가능한 공간이 없습니다.");
+				 $li.appendTo($obj);
+			 }
+
+			$.each(data.resultList, function(key,item) {
+				var $codeItem = $("<a>").attr({'class':'spceSelctBtn', 'data-value' : item.fcltySn, 'href': '#self'}).text(item.spceNm);
+				var $btnItem = $("<a>").attr({'class':'fr btn btn-sm btn-default spceViewBtn', 'data-value' : item.fcltySn, 'href': '#self'}).text("공간보기");
+
+				var $li = $("<li>");
+				$codeItem.appendTo($li);
+				$btnItem.appendTo($li);
+				$li.appendTo($obj);
+
+			});
+		}
+	},"json");
+}
+
+
+//예약 달력화면 불러오기
+function fnLoadCanlendar(obj, pFcltySn, pYear, pMonth, chkSum) {
+	var $obj = obj;
+	$obj.empty();
+	var url = "/bos/fcltyResve/resveSttus/listCal.do";
+	var params = {
+		fcltySn : pFcltySn,
+		year  : pYear,
+		month : pMonth,
+		viewType : "CONTBODY",
+		chkSum  : chkSum
+	};
+	$.post(url, params, function(data) {
+		if (data) $obj.html(data);
+	});
+
+}
+
+
+//예약 시간화면 불러오기
+function fnLoadTimes(obj,pDay, resveTp) {
+	var $obj = obj;
+	$obj.empty();
+
+	var year = $(".yearmonth").find("year").text();
+	var month = $(".yearmonth").find("month").text();
+	if (pDay.length == 1) pDay = "0"+ pDay;
+	var resveDt = year + month + pDay;
+
+	var fcltySn = $("#spceNmDiv").find(".spceSelctBtn").filter(".on").attr("data-value");
+
+	var url = "/bos/fcltyResve/resveSttus/listTime.do";
+	var params = {
+		resveTp : resveTp,
+		resveDt  : resveDt,
+		fcltySn : fcltySn,
+		viewType : "CONTBODY"
+	};
+	$.post(url, params, function(data) {
+		if (data) $obj.html(data);
+	});
+}
+
+//예약 장비 화면 불러오기
+function fnLoadEqpmnList(obj) {
+	var $obj = obj;
+	$obj.empty();
+
+	var year = $(".yearmonth").find(".year").text();
+	var month = $(".yearmonth").find(".month").text();
+	var day = $("#calendarDiv").find("td a.on").text();
+	if (day.length == 1) day = "0"+ day;
+	var resveDt = year + month + day;
+
+
+	var beginTime = $("#timeDiv").find(".timeTable").find("td.time_first").attr("data-value");
+	var endTime = $("#timeDiv").find(".timeTable").find("td.time_last").attr("data-value");
+
+	var fcltySn = $("#spceNmDiv").find(".spceSelctBtn").filter(".on").attr("data-value");
+
+	var url = "/bos/fcltyResve/resveSttus/listEqpmn.do";
+	var params = {
+		resveDt  : resveDt,
+		beginTime : beginTime,
+		endTime : endTime,
+		fcltySn : fcltySn,
+		viewType : "CONTBODY"
+	};
+	$.post(url, params, function(data) {
+		if (data) $obj.html(data);
+	});
+}
+
+// 시설예약 저장하기 함수
+function fnResveSave(resveTp) {
+
+	var fcltySn = $("#spceNmDiv").find(".spceSelctBtn").filter(".on").attr("data-value");
+	var year = $(".yearmonth").find(".year").text();
+	var month = $(".yearmonth").find(".month").text();
+	var day = $("#calendarDiv").find("td a.on").text();
+	if (day.length == 1) day = "0"+ day;
+	var resveDt = year +"-"+ month +"-"+ day;
+	var beginTime = $("#timeDiv").find(".timeTable").find("td.time_first").attr("data-value");
+	var endTime = $("#timeDiv").find(".timeTable").find("td.time_last").attr("data-value");
+	var resveTpVal = resveTp == "wait" ? "03" : "01";
+
+	var eqpmnsStr = "";
+	if ($("#noEqpnm:checked").val() != "N") {
+		var eqpmnList = [];
+		if ($("#eqpmnList").find("li").find("input[name=eqpmnSn]:checked").size() == 0) {
+			alert("STEP5. 장비를 선택해 주세요.");
+			return false;
+		}
+
+		var flag = false;
+		$("#eqpmnList").find("li").find("input[name=eqpmnSn]:checked").each(function(n) {
+			var item = {};
+			item.eqpmnSn = $(this).closest("li").find("input[name=eqpmnSn]").val();
+			item.eqpmnNm = $(this).closest("li").find("input[name=eqpmnNm]").val();
+			item.eqpmnQy = $(this).closest("li").find("select[name=inputEqpmnQy]").val();
+
+			var inputEqpmnQy = $(this).closest("li").find("select[name=inputEqpmnQy]").val();
+
+			if (inputEqpmnQy == "") {
+				alert("신청 수량을 선택해 주세요.");
+				var $select = $(this).closest("li").find("select[name=inputEqpmnQy]");
+				$select.focus();
+				flag = true;
+				return false;
+			}
+
+			var detailSnStr = $(this).closest("li").find("input[name=eqpmnDetailSnStr]").val();
+			var dtlSnArr = detailSnStr.split(",");
+			var tmpSnArr = [];
+			for (var i=0 ; i < inputEqpmnQy; i++) {
+				tmpSnArr.push(dtlSnArr[i]);
+			}
+			item.eqpmnDetailSnStr = tmpSnArr.join(",");
+
+			eqpmnList.push(item);
+		});
+
+		if (flag) return false;
+
+		eqpmnsStr = JSON.stringify(eqpmnList);
+		eqpmnsStr = Base64.encode(eqpmnsStr);
+	}
+
+
+	var vwSpceAllNm = "";
+	vwSpceAllNm += $("#areaSeDiv").find("a").filter(".on").text();
+	vwSpceAllNm += " > "+ $("#spceNmDiv").find(".spceSelctBtn").filter(".on").text();
+	vwSpceAllNm += " > "+ $(".fcltySeDiv").find("a").filter(".on").closest("ul").parent().children("a").text();
+	vwSpceAllNm += " > "+ $(".fcltySeDiv").find("a").filter(".on").text();
+	vwSpceAllNm += " > "+ $("#spceNmDiv").find(".spceSelctBtn").filter(".on").text();
+
+	var url = "/bos/fcltyResve/resveSttus/forInsertStep2.do";
+
+
+	if (confirm("예약 하시겠습니까?")) {
+
+		$("#fcltySn").val(fcltySn);
+		$("#resveDt").val(resveDt);
+		$("#resveBeginTime").val(resveBeginTime);
+		$("#resveEndTime").val(resveEndTime);
+		$("#resveSttus").val(resveSttus);
+		$("#vwSpceAllNm").val(vwSpceAllNm);
+		$("#eqpmnsStr").val(eqpmnsStr);
+		$("#resveForm").attr("action", url);
+		$("#resveForm").submit();
+	}
+
+
+
+	return false;
+}
+//]]>
+</script>
+
+
+<form name="resveForm" id="resveForm" method="post" action="/bos/fcltyResve/fclty/insert.do" class="form-inline">
+	<input type="hidden" name="menuNo" id="menuNo" value="100065" />
+	<input type="hidden" name="pageQueryString" id="pageQueryString" value="searchCnd=&amp;searchWrd=&amp;gubun=&amp;delCode=&amp;useAt=&amp;replyAt=&amp;menuNo=100065&amp;sdate=&amp;edate=&amp;viewType=&amp;type=&amp;option1=&amp;pageIndex=" />
+	<input type="hidden" name="resveSn" id="resveSn" value="" />
+	<input type="hidden" name="fcltySn" id="fcltySn" value="" />
+	<input type="hidden" name="resveDt" id="resveDt" value="" />
+	<input type="hidden" name="resveBeginTime" id=resveBeginTime value="" />
+	<input type="hidden" name="resveEndTime" id="resveEndTime" value="" />
+	<input type="hidden" name="resveSttus" id="resveSttus" value="" />
+	<input type="hidden" name="vwSpceAllNm" id="vwSpceAllNm" value="" />
+	<input type="hidden" name="eqpmnsStr" id="eqpmnsStr" value="" />
+</form>
+
+<ul class="navWizard">
+	<li class="active"><span class="sr-only">현재페이지</span><span>공간 및 일자/시간 선택</span></li>
+	<li><span>예약자 정보 입력</span></li>
+	<li class="last"><span>예약완료</span></li>
+</ul>
+<div class="reservSet">
+	<div class="row clear">
+		<div class="col-md-4">
+			<h4>STEP1. 시설정보</h4>
+			<div class="graybox" id="areaSeDiv"><a class="btn btn-sm btn-default on" data-value="01" href="#self">대학로</a></div>
+			<div class="scrollY">
+				<ul class="reserv_ltbx buListRev" id="lcSeDiv"><li><a data-value="0101" href="#self">2층</a><ul class="fcltySeDiv"><li><a data-value="010101" href="#self" class="on">프로젝트룸</a></li><li><a data-value="010102" href="#self">소회의실</a></li></ul></li><li><a data-value="0102" href="#self">10층</a><ul class="fcltySeDiv"></ul></li><li class="bgn">※ 예약 가능한 공간이 없습니다.</li><li><a data-value="0103" href="#self">13층</a><ul class="fcltySeDiv"></ul></li><li class="bgn">※ 예약 가능한 공간이 없습니다.</li><li><a data-value="0104" href="#self">14층</a><ul class="fcltySeDiv"></ul></li><li class="bgn">※ 예약 가능한 공간이 없습니다.</li></ul>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<h4>STEP2. 공간선택</h4>
+			<div class="graybox"></div>
+			<div class="p10" tabindex="0">
+				<ul class="ulBlock" id="spceNmDiv"><li><a class="spceSelctBtn on" data-value="4" href="#self">프로젝트룸 1</a><a class="fr btn btn-sm btn-default spceViewBtn" data-value="4" href="#self">공간보기</a></li></ul>
+			</div>
+
+		</div>
+		<div class="col-md-4">
+			<h4>STEP3. 일자선택</h4>
+
+			<div class="main_cal" id="main_cal">
+
+				<div class="graybox">
+					<div class="cal_head tac headStep3" style="">
+						<!--<h2>월간일정</h2>-->
+						<a href="#" class="prevMonth" data-value="2015-08"><img src="/portal/images/common/cal_left.gif" width="31" height="30" alt=""></a>
+						<span class="yearmonth"><span class="year">2015</span>년 <strong><span class="month">09</span>월</strong></span>
+						<a href="#" class="nextMonth" data-value="2015-10"><img src="/portal/images/common/cal_right.gif" width="31" height="30" alt=""></a>
+					</div>
+				</div>
+				<div class="cal_table_wrap">
+					<div class="posr" id="calendarDiv">
+
+
+
+
+
+<script type="text/javascript">
+//<![CDATA[
+fnInitYearMonth();
+
+//날짜 값 초기 세팅(year, month);
+function fnInitYearMonth() {
+
+	var dayYY = "2015";
+	var dayMM = "09";
+	var prevDt = "2015-08";
+	var nextDt = "2015-10";
+
+	$(".headStep3").find(".year").text(dayYY);
+	$(".headStep3").find(".month").text(dayMM);
+	$(".headStep3").find(".prevMonth").attr("data-value",prevDt);
+	$(".headStep3").find(".nextMonth").attr("data-value",nextDt);
+
+}
+
+//]]>
+</script>
+<input type="hidden" name="chkSum" id="chkSum" value="0">
+<table style="width:100%;" class="cal_mtable" summary="일요일, 월요일, 화요일, 수요일, 목요일, 금요일, 토요일로 구분되는 표">
+	<caption>월간일정</caption>
+	<colgroup>
+		<col>
+		<col>
+		<col>
+		<col>
+		<col>
+		<col>
+		<col>
+	</colgroup>
+	<thead>
+		<tr>
+			<th scope="col" class="bln">일</th>
+			<th scope="col">월</th>
+			<th scope="col">화</th>
+			<th scope="col">수</th>
+			<th scope="col">목</th>
+			<th scope="col">금</th>
+			<th scope="col" class="brn">토</th>
+		</tr>
+	</thead>
+	<tbody class="sixLine">
+
+	
+
+		
+		
+		
+		
+		
+		
+		
+
+		<tr>
+			
+			<td class="cal_blank"><a data-value="" href="#self"></a></td>
+
+			
+			<td class="cal_blank"><a data-value="" href="#self"></a></td>
+
+			
+			<td class="cal_none"><a data-value="1" href="#self">1</a></td>
+
+			
+			<td class="cal_none"><a data-value="2" href="#self">2</a></td>
+
+			
+			<td class="cal_none"><a data-value="3" href="#self">3</a></td>
+
+			
+			<td class="cal_none"><a data-value="4" href="#self">4</a></td>
+
+
+			
+			<td class="cal_none"><a data-value="5" href="#self">5</a></td>
+		</tr>
+	
+
+		
+		
+		
+		
+		
+		
+		
+
+		<tr>
+			
+			<td class="cal_none"><a data-value="6" href="#self">6</a></td>
+
+			
+			<td class="cal_none"><a data-value="7" href="#self">7</a></td>
+
+			
+			<td class="cal_none"><a data-value="8" href="#self">8</a></td>
+
+			
+			<td class="cal_none"><a data-value="9" href="#self">9</a></td>
+
+			
+			<td class="cal_none"><a data-value="10" href="#self">10</a></td>
+
+			
+			<td class="cal_none"><a data-value="11" href="#self">11</a></td>
+
+
+			
+			<td class="cal_none"><a data-value="12" href="#self">12</a></td>
+		</tr>
+
+	
+
+		
+		
+		
+		
+		
+		
+		
+
+		<tr>
+			
+			<td class="cal_none"><a data-value="13" href="#self">13</a></td>
+
+			
+			<td class="cal_none"><a data-value="14" href="#self">14</a></td>
+
+			
+			<td class="cal_none"><a data-value="15" href="#self">15</a></td>
+
+			
+			<td class="cal_none"><a data-value="16" href="#self">16</a></td>
+
+			
+			<td class="cal_none"><a data-value="17" href="#self">17</a></td>
+
+			
+			<td class="cal_none"><a data-value="18" href="#self">18</a></td>
+
+
+			
+			<td class="cal_none"><a data-value="19" href="#self">19</a></td>
+		</tr>
+	
+
+		
+		
+		
+		
+		
+		
+		
+
+		<tr>
+			
+			<td class="cal_none"><a data-value="20" href="#self">20</a></td>
+
+			
+			<td class="cal_none"><a data-value="21" href="#self">21</a></td>
+
+			
+			<td class="cal_none"><a data-value="22" href="#self">22</a></td>
+
+			
+			<td class="cal_none"><a data-value="23" href="#self">23</a></td>
+
+			
+				
+				
+				
+				
+					
+				
+			
+			<td class="cal_reserv_ok cal_today"><a data-value="24" href="#self" class="on">24</a></td>
+
+			
+				
+				
+				
+				
+			
+			<td class="cal_reserv_ok"><a data-value="25" href="#self" class="on">25</a></td>
+
+
+			
+				
+				
+					
+				
+				
+				
+				
+			
+			<td class="cal_reserv_end"><a data-value="26" href="#self">26</a></td>
+		</tr>
+	
+
+		
+		
+		
+		
+		
+		
+		
+
+		<tr>
+			
+				
+				
+					
+				
+				
+				
+				
+
+			
+			<td class="cal_reserv_end"><a data-value="27" href="#self">27</a></td>
+
+			
+				
+				
+				
+					
+				
+				
+			
+			<td class="cal_reserv_end"><a data-value="28" href="#self">28</a></td>
+
+			
+				
+				
+				
+					
+				
+				
+			
+			<td class="cal_reserv_end"><a data-value="29" href="#self">29</a></td>
+
+			
+				
+				
+				
+				
+			
+			<td class="cal_reserv_ok"><a data-value="30" href="#self">30</a></td>
+
+			
+			<td class="cal_blank"><a data-value="" href="#self"></a></td>
+
+			
+			<td class="cal_blank"><a data-value="" href="#self"></a></td>
+
+
+			
+			<td class="cal_blank"><a data-value="" href="#self"></a></td>
+		</tr>
+	
+
+	</tbody>
+</table></div>
+					<div class="clear"></div>
+					<ul class="cal_ico headStep3_ico" style="">
+						<li><span class="cal_today"><span class="sr-only">오늘 표시</span></span> 오늘</li>
+						<li><span class="cal_reserv_ok"><span class="sr-only">예약가능 표시</span></span><em class="uline">예약가능</em></li>
+						<li><span class="cal_reserv_end"><span class="sr-only">예약불가 표시</span></span>예약불가</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="row clear">
+			<div class="col-md-8">
+				<h4>STEP4. 시간선택</h4>
+				<div id="timeDiv">
+
+
+
+
+<p>예약을 원하는 시간 및 장비를 선택하고 ‘예약하기’ 버튼을 클릭하여 주세요.<br> 원하시는 시간이 없을 경우, 시간 및 장비를 선택한 후 ‘대기예약’을 클릭하여 주세요.</p>
+
+<p class="tar mb10">
+	<span class="reserve_dot1"></span>예약가능
+	<span class="reserve_dot2 ml20"></span>예약완료
+</p>
+<div class="cal_timer">
+	<table cellspacing="0" cellpadding="0" summary="AM(오전), PM(오후)의 아침 9시에서 오후 9시까지 시간별로 구분되는 표" class="table table-bordered mb0">
+		<caption>
+		</caption>
+		<colgroup>
+		<col span="13">
+		</colgroup>
+		<thead>
+			<tr>
+				<th colspan="4">AM</th>
+				<th colspan="9">PM</th>
+			</tr>
+			<tr>
+				<th>9</th>
+				<th>10</th>
+				<th>11</th>
+				<th>12</th>
+				<th>1</th>
+				<th>2</th>
+				<th>3</th>
+				<th>4</th>
+				<th>5</th>
+				<th>6</th>
+				<th>7</th>
+				<th>8</th>
+				<th>9</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr style="height:40px;" class="timeTable">
+				<td class="resve_ok" data-value="9"><span class="sr-only"></span></td>
+				<td class="resve_ok" data-value="10"><span class="sr-only"></span></td>
+				<td class="resve_ok" data-value="11"><span class="sr-only"></span></td>
+				<td class="resve_ok on time_first" data-value="12"><span class="sr-only"></span></td>
+				<td class="resve_ok on" data-value="13"><span class="sr-only"></span></td>
+				<td class="resve_ok on" data-value="14"><span class="sr-only"></span></td>
+				<td class="resve_ok on" data-value="15"><span class="sr-only"></span></td>
+				<td class="resve_ok on" data-value="16"><span class="sr-only"></span></td>
+				<td class="resve_ok time_last on" data-value="17"><span class="sr-only"></span></td>
+				<td class="resve_ok" data-value="18"><span class="sr-only"></span></td>
+				<td class="resve_ok" data-value="19"><span class="sr-only"></span></td>
+				<td class="resve_ok" data-value="20"><span class="sr-only"></span></td>
+				<td class="resve_ok" data-value="21"><span class="sr-only"></span></td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<div class="btnSet tar">
+	<a href="#self" class="btn btn-sm btn-primary" id="eqpmnSrchBtn">장비조회</a>
+</div></div>
+
+			</div>
+			<div class="col-md-4 reservRt">
+				<h4>STEP5. 장비선택</h4>
+				<div id="eqpmnDiv">◀ STEP 4 예약시간을 선택하여 주세요.</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row clear mt20 tac" id="resveBtnDiv" style="display:none;">
+	<div class="col-md-12">
+		<a href="#self" class="btn btn-primary" id="resveBtn" style="diplay:none;">예약하기</a>
+		<a href="#self" class="btn btn-primary" id="waitBtn" style="diplay:none;">대기예약하기</a>
+		<a href="/bos/fcltyResve/resveSttus/list.do?searchCnd=&amp;searchWrd=&amp;gubun=&amp;delCode=&amp;useAt=&amp;replyAt=&amp;menuNo=100065&amp;sdate=&amp;edate=&amp;viewType=&amp;type=&amp;option1=&amp;pageIndex=" id="cacelBtn" class="btn btn-default">취소</a>
+	</div>
+</div>
+
+
+<div id="spceViewPopup" title="공간보기 팝업">
+	<div id="spceViewPopupCont"></div>
+</div>
+
+
+					
+				
+				
+
+			</div>
+		</div>
+		<!-- quick -->
+		<!-- <div id="quick">
+			<div class="btn-group-vertical" role="group">
+			<a href="/bos/wordDicary/list.do" class="btn btn-default" target="contentFrame"><span class="text-info"><i class="fa fa-book fs25"></i><br />행정용어사전</span></a>
+			<a href="/bos/metaDataSearch/list.do" class="btn btn-default" target="contentFrame"><span class="text-info"><i class="fa fa-search-plus fs25 text-info"></i><br />메타데이터검색</span></a>
+			<a href="/bos/guide/index.html" class="btn btn-default" target="_blank"><span class="text-info"><i class="fa fa-link fs25 text-info"></i><br />GUIDE</span></a>
+			</div>
+		</div>
+		<script type="text/javascript">
+		//퀵메뉴 스크롤링
+		function quick(){
+			var quick_menu = jQuery('#quick');
+			var quick_top = 230;
+
+			quick_menu.css('top', jQuery(window).height);
+			quick_menu.animate({"top": jQuery(document).scrollTop() + quick_top + "px"}, 500);
+
+			$(window).scroll(function(){
+				quick_menu.stop();
+				quick_menu.animate({"top" : jQuery(document).scrollTop() + quick_top + "px"}, 1000);
+			});
+		}
+		quick();
+		</script> -->
+		<!-- //quick -->
+
+	</div>
+
+
+	
+
+
+
+	
+<div id="footer">
+	<p><span class="bold">콘텐츠코리아랩</span>&nbsp;&nbsp;&nbsp;
+	서울시 영등포구 여의나루로 76(150-010),
+	&nbsp;&nbsp;&nbsp;  <span class="bold">전화번호</span>: 02)767-7114 </p>
+	<em>Copyright ⓒ 2012 CKL Corp. All Rights reserved.</em>
+</div>	
+	
+<!--[if lte IE 7]>
+<script type="text/javascript">
+//<![CDATA[
+	$('*').each(function(index) {
+		if ($(this).css("overflow")=="hidden"){ $(this).css("zoom",1)}
+		if ($(this).css("display")=="inline-block"){ $(this).css("display",'inline'); $(this).css("zoom",1)}
+	});
+//]]>
+</script>
+<![endif]-->
+
+
+	
+<script type="text/javascript" src="/js/zclip/jquery.zclip.js"></script>
+<style>
+	.posr{position: relative;}
+</style>
+<div class="posr">
+	<div class="souceUrl" style="color:#f00">*/WEB-INF/jsp/bos/fcltyResve/resveSttus/reg.jsp</div>
+	<div class="check" style="display: none">복사완료</div>
+	<div class="souceUrl" style="color:#f00">WEB-INF/jsp/bos/fcltyResve/resveSttus/reg.jsp</div>
+	<div class="check" style="display: none">복사완료</div>
+	<script type="text/javascript">
+		$(document).ready(function(){
+		    $(".souceUrl").each(function () {
+				$(this).zclip({
+				    path: "/js/zclip/ZeroClipboard.swf",
+				    copy:$(this).text(),
+				    beforeCopy:function(){
+				        $(this).css('background','yellow');
+				        $(this).css('color','orange');
+				    },
+				    afterCopy:function(){
+				        $(this).css('background','green');
+				        $(this).css('color','purple');
+				        $(this).next('.check').show();
+				        // $(this).width('auto')
+				    }
+				});
+		    })
+		});
+	</script>
+</div>
+
+</body>
+</html>

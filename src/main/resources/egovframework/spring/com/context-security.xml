@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bean:beans xmlns:bean="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.springframework.org/schema/security"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+    <http pattern="/files/**" security="none"/>
+    <http pattern="/js/**" security="none"/>
+    <http pattern="/bos/new/**" security="none"/>
+    <http pattern="/bos/js/**" security="none"/>
+    <http pattern="/bos/css/**" security="none"/>
+    <http pattern="/bos/images/**" security="none"/>
+    <http pattern="/bos/mdcs/**" security="none"/>
+    <http pattern="/bos/member/forLogin**" security="none"/>
+
+    <!-- 관리자 security -->
+    <http pattern="/bos/**" auto-config="true" use-expressions="true" authentication-manager-ref="bosJdbcUserManager">
+        <intercept-url pattern="/bos/sym/mpm/MenuLoadSite/**" access="permitAll"/>
+        <intercept-url pattern="/bos/member/toLogin**" access="permitAll"/>
+        <intercept-url pattern="/bos/**" access="hasRole('ROLE_ADMINKEY')"/>
+        <access-denied-handler ref="bosAccessDenied"/>
+
+        <form-login login-page="/bos/member/forLogin.do"
+                login-processing-url="/bos/login.do"
+                username-parameter="username"
+                password-parameter="password"
+                authentication-success-handler-ref="bosSessionSavedRequestAwareAuthenticationHandler"
+                authentication-failure-handler-ref="loginHistoryAuthenticationFailureHandler"
+                authentication-failure-url="/bos/member/forLogin.do?flag=authFailure"
+                default-target-url="/bos/loginProcess.do"/>
+        <logout logout-url="/bos/member/logout.do"
+                logout-success-url="/bos/member/forLogin.do"/>
+        <session-management session-fixation-protection="migrateSession">
+
+		</session-management>
+    </http>
+
+    <!-- 창의인재양성 security -->
+    <http pattern="/edu/**" auto-config="true" use-expressions="true" authentication-manager-ref="userJdbcUserManager">
+        <intercept-url pattern="/edu/member/loginForward**" access="permitAll"/>
+        <intercept-url pattern="/edu/member/login**" access="permitAll"/>
+        <intercept-url pattern="/edu/member/insert**" access="hasRole('ROLE_VNAME')"/>
+        <intercept-url pattern="/edu/member/joinCompt**" access="hasRole('ROLE_VNAME')"/>
+
+		<intercept-url pattern="/edu/bbs/B0000036/join**" access="hasRole('ROLE_USER')"/>
+
+		<intercept-url pattern="/edu/bbs/*/forInsert.do*" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/edu/bbs/*/insert.do*" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/edu/bbs/*/forUpdate.do*" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/edu/bbs/*/update.do*" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/edu/bbs/*/delete.do*" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/edu/bbs/*/forInsertRe.do*" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/edu/bbs/*/insertStsfdg.do*" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/edu/bbs/*/listMy.do*" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/edu/bbs/*/listSec.do*" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/edu/comment/insert**" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/edu/comment/delete**" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/edu/comment/login**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/edu/bbs/myList/**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/edu/mypage/*" access="hasRole('ROLE_USER')"/>
+
+        <intercept-url pattern="/edu/progrm/master/list**" access="permitAll"/>
+        <intercept-url pattern="/edu/progrm/master/view**" access="permitAll"/>
+        <intercept-url pattern="/edu/progrm/master/tmplat**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/edu/progrm/master/progrsSttusChk**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/edu/progrm/master/*" access="hasRole('ROLE_ADMINKEY')"/>
+        <intercept-url pattern="/edu/progrm/applcnt/**" access="hasRole('ROLE_USER')"/>
+
+        <intercept-url pattern="/edu/fcltyResve/resveSttus/**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/edu/userMember/**oldMember**" access="hasRole('ROLE_VNAME')"/>
+        <intercept-url pattern="/edu/userMember/forUpdate**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/edu/userMember/update**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/edu/userMember/simpleLogin**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/edu/userMember/**SimpleLogin**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/edu/userMember/reAgre**" access="hasRole('ROLE_USER')"/>
+
+
+        <intercept-url pattern="/edu/onlineEdu/realm/viewEdu**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/edu/onlineEdu/realm/memberInfoUpdateNew**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/edu/onlineEdu/realm/sendSMSMsg**" access="hasRole('ROLE_USER')"/>
+
+        <intercept-url pattern="/edu/onlineEdu/openLecture/myOpenLetureList**" access="hasRole('ROLE_USER')"/>
+
+        <intercept-url pattern="/edu/onlineEdu/mylctrum/*" access="hasRole('ROLE_USER')"/>
+
+        <intercept-url pattern="/edu/onlineEdu/edcsystm/eduSystmScrapInsert**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/edu/onlineEdu/edcsystm/eduSystmScrapDelete**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/edu/onlineEdu/edcsystm/eduSystmScrapDelete**" access="hasRole('ROLE_USER')"/>
+
+        <intercept-url pattern="/edu/job/empymnCnsl/empymnCnslListMypage**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/edu/job/empymnCnsl/recruit**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/edu/job/empymnCnsl/view**" access="hasRole('ROLE_USER')"/>
+        
+        <intercept-url pattern="/edu/**/resveSttus/step**" access="hasRole('ROLE_USER')"/>
+
+
+
+        <access-denied-handler error-page="/edu/member/forLogin.do?menuNo=500077"/>
+
+        <form-login login-page="/edu/member/forLogin.do?menuNo=500077"
+                login-processing-url="/edu/login.do"
+                username-parameter="username"
+                password-parameter="password"
+                authentication-success-handler-ref="sessionSavedRequestAwareAuthenticationHandler"
+                authentication-failure-handler-ref="loginHistoryAuthenticationFailureHandler"
+                authentication-failure-url="/edu/member/forLogin.do?menuNo=500077"
+                default-target-url="/edu/main/main.do"/>
+        <logout logout-url="/edu/member/logout.do"
+                logout-success-url="/sso/member/logoutSSO.do"/>
+        <session-management session-fixation-protection="migrateSession">
+        	<!--
+		    <concurrency-control max-sessions="100" error-if-maximum-exceeded="true" />
+		    -->
+		</session-management>
+    </http>
+    
+    <!-- 콘텐츠시연장 security -->
+    <http pattern="/testbed/**" auto-config="true" use-expressions="true" authentication-manager-ref="userJdbcUserManager">
+        <intercept-url pattern="/testbed/member/loginForward**" access="permitAll"/>
+        <intercept-url pattern="/testbed/member/login**" access="permitAll"/>
+        <intercept-url pattern="/testbed/member/insert**" access="hasRole('ROLE_VNAME')"/>
+        <intercept-url pattern="/testbed/member/joinCompt**" access="hasRole('ROLE_VNAME')"/>
+
+		<intercept-url pattern="/testbed/bbs/B0000036/join**" access="hasRole('ROLE_USER')"/>
+
+		<intercept-url pattern="/testbed/bbs/*/forInsert.do*" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/testbed/bbs/*/insert.do*" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/testbed/bbs/*/forUpdate.do*" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/testbed/bbs/*/update.do*" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/testbed/bbs/*/delete.do*" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/testbed/bbs/*/forInsertRe.do*" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/testbed/bbs/*/insertStsfdg.do*" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/testbed/bbs/*/listMy.do*" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/testbed/bbs/*/listSec.do*" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/testbed/comment/insert**" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/testbed/comment/delete**" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/testbed/comment/login**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/testbed/bbs/myList/**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/testbed/mypage/*" access="hasRole('ROLE_USER')"/>
+
+        <intercept-url pattern="/testbed/progrm/master/list**" access="permitAll"/>
+        <intercept-url pattern="/testbed/progrm/master/view**" access="permitAll"/>
+        <intercept-url pattern="/testbed/progrm/master/tmplat**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/testbed/progrm/master/progrsSttusChk**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/testbed/progrm/master/*" access="hasRole('ROLE_ADMINKEY')"/>
+        <intercept-url pattern="/testbed/progrm/applcnt/**" access="hasRole('ROLE_USER')"/>
+
+        <intercept-url pattern="/testbed/fcltyResve/resveSttus/**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/testbed/userMember/**oldMember**" access="hasRole('ROLE_VNAME')"/>
+        <intercept-url pattern="/testbed/userMember/forUpdate**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/testbed/userMember/update**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/testbed/userMember/simpleLogin**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/testbed/userMember/**SimpleLogin**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/testbed/userMember/reAgre**" access="hasRole('ROLE_USER')"/>
+
+
+        <intercept-url pattern="/testbed/onlineEdu/realm/viewEdu**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/testbed/onlineEdu/realm/memberInfoUpdateNew**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/testbed/onlineEdu/realm/sendSMSMsg**" access="hasRole('ROLE_USER')"/>
+
+        <intercept-url pattern="/testbed/onlineEdu/openLecture/myOpenLetureList**" access="hasRole('ROLE_USER')"/>
+
+        <intercept-url pattern="/testbed/onlineEdu/mylctrum/*" access="hasRole('ROLE_USER')"/>
+
+        <intercept-url pattern="/testbed/onlineEdu/edcsystm/testbedSystmScrapInsert**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/testbed/onlineEdu/edcsystm/testbedSystmScrapDelete**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/testbed/onlineEdu/edcsystm/testbedSystmScrapDelete**" access="hasRole('ROLE_USER')"/>
+
+        <intercept-url pattern="/testbed/job/empymnCnsl/empymnCnslListMypage**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/testbed/job/empymnCnsl/recruit**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/testbed/job/empymnCnsl/view**" access="hasRole('ROLE_USER')"/>
+
+
+
+        <access-denied-handler error-page="/testbed/member/forLogin.do?menuNo=700115"/>
+
+        <form-login login-page="/testbed/member/forLogin.do?menuNo=700115"
+                login-processing-url="/testbed/login.do"
+                username-parameter="username"
+                password-parameter="password"
+                authentication-success-handler-ref="sessionSavedRequestAwareAuthenticationHandler"
+                authentication-failure-handler-ref="loginHistoryAuthenticationFailureHandler"
+                authentication-failure-url="/testbed/member/forLogin.do?menuNo=700115"
+                default-target-url="/testbed/main/main.do"/>
+        <logout logout-url="/testbed/member/logout.do"
+                logout-success-url="/testbed/main/main.do"/>
+        <session-management session-fixation-protection="migrateSession">
+        	<!--
+		    <concurrency-control max-sessions="100" error-if-maximum-exceeded="true" />
+		    -->
+		</session-management>
+    </http>
+
+	<!-- 콘텐츠코리아랩 security -->
+    <http pattern="/ckl/**" auto-config="true" use-expressions="true" authentication-manager-ref="userJdbcUserManager">
+        <intercept-url pattern="/ckl/member/loginForward**" access="permitAll"/>
+        <intercept-url pattern="/ckl/member/login**" access="permitAll"/>
+        <intercept-url pattern="/ckl/member/join03**" access="hasRole('ROLE_VNAME')"/>
+        <intercept-url pattern="/ckl/member/join04**" access="hasRole('ROLE_VNAME')"/>
+        <intercept-url pattern="/ckl/member/entJoin03**" access="hasRole('ROLE_VNAME')"/>
+		<intercept-url pattern="/ckl/bbs/*/forInsert.do*" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/ckl/bbs/*/insert.do*" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/ckl/bbs/*/forUpdate.do*" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/ckl/bbs/*/update.do*" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/ckl/bbs/*/delete.do*" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/ckl/bbs/*/forInsertRe.do*" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/ckl/bbs/*/insertStsfdg.do*" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/ckl/bbs/*/listMy.do*" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/ckl/bbs/*/listSec.do*" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/ckl/comment/insert**" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/ckl/comment/delete**" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/ckl/comment/login**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/ckl/member/forInsert**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/ckl/bbs/myList/**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/ckl/mypage/*" access="hasRole('ROLE_USER')"/>
+
+        <intercept-url pattern="/ckl/progrm/master/list**" access="permitAll"/>
+        <intercept-url pattern="/ckl/progrm/master/view**" access="permitAll"/>
+        <intercept-url pattern="/ckl/progrm/master/tmplat**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/ckl/progrm/master/progrsSttusChk**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/ckl/progrm/master/*" access="hasRole('ROLE_ADMINKEY')"/>
+        <intercept-url pattern="/ckl/progrm/applcnt/**" access="hasRole('ROLE_USER')"/>
+
+        <intercept-url pattern="/ckl/fcltyResve/resveSttus/**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/ckl/userMember/**oldMember**" access="hasRole('ROLE_VNAME')"/>
+        <intercept-url pattern="/ckl/userMember/forUpdate**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/ckl/userMember/update**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/ckl/userMember/simpleLogin**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/ckl/userMember/**SimpleLogin**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/ckl/userMember/reAgre**" access="hasRole('ROLE_USER')"/>
+
+
+
+
+        <access-denied-handler error-page="/ckl/member/forLogin.do?menuNo=200055"/>
+
+        <form-login login-page="/ckl/member/forLogin.do?menuNo=200055"
+                login-processing-url="/ckl/login.do"
+                username-parameter="username"
+                password-parameter="password"
+                authentication-success-handler-ref="cklSessionSavedRequestAwareAuthenticationHandler"
+                authentication-failure-handler-ref="loginHistoryAuthenticationFailureHandler"
+                authentication-failure-url="/ckl/member/forLogin.do?menuNo=200055"
+                default-target-url="/ckl/main/main.do"/>
+        <logout logout-url="/ckl/member/logout.do"
+                logout-success-url="/ckl/main/main.do"/>
+        <session-management session-fixation-protection="migrateSession">
+		    <concurrency-control max-sessions="100" error-if-maximum-exceeded="true" />
+		</session-management>
+    </http>
+
+
+
+    <!-- 콘텐츠코리아랩 security -->
+    <http pattern="/cklmobile/**" auto-config="true" use-expressions="true" authentication-manager-ref="userJdbcUserManager">
+        <intercept-url pattern="/cklmobile/member/loginForward**" access="permitAll"/>
+        <intercept-url pattern="/cklmobile/member/login**" access="permitAll"/>
+        <intercept-url pattern="/cklmobile/member/join03**" access="hasRole('ROLE_VNAME')"/>
+        <intercept-url pattern="/cklmobile/member/join04**" access="hasRole('ROLE_VNAME')"/>
+        <intercept-url pattern="/cklmobile/member/entJoin03**" access="hasRole('ROLE_VNAME')"/>
+		<intercept-url pattern="/cklmobile/bbs/*/forInsert.do*" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/cklmobile/bbs/*/insert.do*" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/cklmobile/bbs/*/forUpdate.do*" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/cklmobile/bbs/*/update.do*" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/cklmobile/bbs/*/delete.do*" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/cklmobile/bbs/*/forInsertRe.do*" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/cklmobile/bbs/*/insertStsfdg.do*" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/cklmobile/bbs/*/listMy.do*" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/cklmobile/bbs/*/listSec.do*" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/cklmobile/comment/insert**" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/cklmobile/comment/delete**" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/cklmobile/comment/login**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/cklmobile/member/forInsert**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/cklmobile/bbs/myList/**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/cklmobile/mypage/*" access="hasRole('ROLE_USER')"/>
+
+        <intercept-url pattern="/cklmobile/progrm/master/list**" access="permitAll"/>
+        <intercept-url pattern="/cklmobile/progrm/master/view**" access="permitAll"/>
+        <intercept-url pattern="/cklmobile/progrm/master/tmplat**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/cklmobile/progrm/master/progrsSttusChk**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/cklmobile/progrm/master/*" access="hasRole('ROLE_ADMINKEY')"/>
+        <intercept-url pattern="/cklmobile/progrm/applcnt/**" access="hasRole('ROLE_USER')"/>
+
+        <intercept-url pattern="/cklmobile/fcltyResve/resveSttus/**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/cklmobile/userMember/**oldMember**" access="hasRole('ROLE_VNAME')"/>
+        <intercept-url pattern="/cklmobile/userMember/forUpdate**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/cklmobile/userMember/update**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/cklmobile/userMember/simpleLogin**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/cklmobile/userMember/**SimpleLogin**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/cklmobile/userMember/reAgre**" access="hasRole('ROLE_USER')"/>
+
+        <access-denied-handler error-page="/cklmobile/member/forLogin.do?menuNo=400029"/>
+
+        <form-login login-page="/cklmobile/member/forLogin.do?menuNo=400029"
+                login-processing-url="/cklmobile/login.do"
+                username-parameter="username"
+                password-parameter="password"
+                authentication-success-handler-ref="mcklSessionSavedRequestAwareAuthenticationHandler"
+                authentication-failure-handler-ref="loginHistoryAuthenticationFailureHandler"
+                authentication-failure-url="/cklmobile/member/forLogin.do?menuNo=400029"
+                default-target-url="/cklmobile/main/main.do"/>
+        <logout logout-url="/cklmobile/member/logout.do"
+                logout-success-url="/cklmobile/main/main.do"/>
+        <session-management session-fixation-protection="migrateSession">
+        <!--
+		    <concurrency-control max-sessions="1000" error-if-maximum-exceeded="true" />
+		 -->
+		</session-management>
+    </http>
+
+    <!-- 콘텐츠코리아랩 security -->
+    <http pattern="/edumobile/**" auto-config="true" use-expressions="true" authentication-manager-ref="userJdbcUserManager">
+        <intercept-url pattern="/edumobile/member/loginForward**" access="permitAll"/>
+        <intercept-url pattern="/edumobile/member/login**" access="permitAll"/>
+        <intercept-url pattern="/edumobile/member/join03**" access="hasRole('ROLE_VNAME')"/>
+        <intercept-url pattern="/edumobile/member/join04**" access="hasRole('ROLE_VNAME')"/>
+        <intercept-url pattern="/edumobile/member/entJoin03**" access="hasRole('ROLE_VNAME')"/>
+		<intercept-url pattern="/edumobile/bbs/*/forInsert.do*" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/edumobile/bbs/*/insert.do*" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/edumobile/bbs/*/forUpdate.do*" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/edumobile/bbs/*/update.do*" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/edumobile/bbs/*/delete.do*" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/edumobile/bbs/*/forInsertRe.do*" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/edumobile/bbs/*/insertStsfdg.do*" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/edumobile/bbs/*/listMy.do*" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/edumobile/bbs/*/listSec.do*" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/edumobile/comment/insert**" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/edumobile/comment/delete**" access="hasRole('ROLE_USER')"/>
+		<intercept-url pattern="/edumobile/comment/login**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/edumobile/member/forInsert**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/edumobile/bbs/myList/**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/edumobile/mypage/*" access="hasRole('ROLE_USER')"/>
+
+        <intercept-url pattern="/edumobile/progrm/master/list**" access="permitAll"/>
+        <intercept-url pattern="/edumobile/progrm/master/view**" access="permitAll"/>
+        <intercept-url pattern="/edumobile/progrm/master/tmplat**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/edumobile/progrm/master/progrsSttusChk**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/edumobile/progrm/master/*" access="hasRole('ROLE_ADMINKEY')"/>
+        <intercept-url pattern="/edumobile/progrm/applcnt/**" access="hasRole('ROLE_USER')"/>
+
+        <intercept-url pattern="/edumobile/fcltyResve/resveSttus/**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/edumobile/userMember/**oldMember**" access="hasRole('ROLE_VNAME')"/>
+        <intercept-url pattern="/edumobile/userMember/forUpdate**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/edumobile/userMember/update**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/edumobile/userMember/simpleLogin**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/edumobile/userMember/**SimpleLogin**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/edumobile/userMember/reAgre**" access="hasRole('ROLE_USER')"/>
+
+        <access-denied-handler error-page="/edumobile/member/forLogin.do?menuNo=600130"/>
+
+        <form-login login-page="/edumobile/member/forLogin.do?menuNo=600130"
+                login-processing-url="/edumobile/login.do"
+                username-parameter="username"
+                password-parameter="password"
+                authentication-success-handler-ref="meduSavedRequestAwareAuthenticationHandler"
+                authentication-failure-handler-ref="loginHistoryAuthenticationFailureHandler"
+                authentication-failure-url="/edumobile/member/forLogin.do?menuNo=600130"
+                default-target-url="/edumobile/main/main.do?siteName=testbed"/>
+        <logout logout-url="/edumobile/member/logout.do"
+                logout-success-url="/edumobile/main/main.do?siteName=testbed"/>
+        <session-management session-fixation-protection="migrateSession">
+        <!--
+		    <concurrency-control max-sessions="1000" error-if-maximum-exceeded="true" />
+		 -->
+		</session-management>
+    </http>
+
+    <authentication-manager id="bosJdbcUserManager">
+        <authentication-provider user-service-ref="bosJdbcUserService">
+            <!-- <password-encoder ref="passwordEncoder"/> -->
+        </authentication-provider>
+    </authentication-manager>
+
+    <authentication-manager id="userJdbcUserManager">
+        <authentication-provider user-service-ref="jdbcUserService">
+            <!-- <password-encoder ref="passwordEncoder"/> -->
+        </authentication-provider>
+    </authentication-manager>
+
+
+    <bean:bean id="bosAccessDenied" class="kr.co.unp.cmm.sec.ram.service.impl.UnpAccessDeniedHandler">
+    	<bean:property name="defaultErrorPage" value="/bos/member/forLogin.do?flag=accessDenied" />
+    	<bean:property name="siteName" value="bos" />
+    </bean:bean>
+
+    <bean:bean id="cklAccessDenied" class="kr.co.unp.cmm.sec.ram.service.impl.UnpAccessDeniedHandler">
+    	<bean:property name="defaultErrorPage" value="/errors/403" />
+    	<bean:property name="siteName" value="ckl" />
+    </bean:bean>
+
+    <bean:bean id="eduAccessDenied" class="kr.co.unp.cmm.sec.ram.service.impl.UnpAccessDeniedHandler">
+    	<bean:property name="defaultErrorPage" value="/errors/403" />
+    	<bean:property name="siteName" value="edu" />
+    </bean:bean>
+
+    <bean:bean id="bosSessionSavedRequestAwareAuthenticationHandler" class="kr.co.unp.cmm.sec.ram.service.impl.BosSessionSavedRequestAwareAuthenticationHandler">
+    	<bean:property name="defaultTargetUrl" value="/bos/loginProcess.do" />
+    </bean:bean>
+
+    <bean:bean id="loginHistoryAuthenticationFailureHandler" class="kr.co.unp.cmm.sec.ram.service.impl.LoginHistoryAuthenticationFailureHandler">
+    	<bean:property name="defaultFailureUrl" value="/bos/member/forLogin.do" />
+    	<bean:property name="sqlDao" ref="SqlDAO" />
+    </bean:bean>
+
+    <bean:bean id="sessionSavedRequestAwareAuthenticationHandler" class="kr.co.unp.cmm.sec.ram.service.impl.SessionSavedRequestAwareAuthenticationHandler">
+    	<bean:property name="defaultTargetUrl" value="/edu/main/main.do" />
+    </bean:bean>
+
+    <bean:bean id="meduSavedRequestAwareAuthenticationHandler" class="kr.co.unp.cmm.sec.ram.service.impl.SessionSavedRequestAwareAuthenticationHandler">
+    	<bean:property name="defaultTargetUrl" value="/edumobile/main/main.do" />
+    </bean:bean>
+
+    <bean:bean id="cklSessionSavedRequestAwareAuthenticationHandler" class="kr.co.unp.cmm.sec.ram.service.impl.SessionSavedRequestAwareAuthenticationHandler">
+    	<bean:property name="defaultTargetUrl" value="/ckl/main/main.do" />
+    </bean:bean>
+
+    <bean:bean id="mcklSessionSavedRequestAwareAuthenticationHandler" class="kr.co.unp.cmm.sec.ram.service.impl.SessionSavedRequestAwareAuthenticationHandler">
+    	<bean:property name="defaultTargetUrl" value="/cklmobile/main/main.do" />
+    </bean:bean>
+
+	<bean:bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.ShaPasswordEncoder">
+		<bean:constructor-arg value="256" />
+	</bean:bean>
+
+    <bean:bean id="bosUserMapping" class="kr.co.unp.cmm.sec.ram.service.impl.BosUserMapping" />
+
+    <bean:bean id="userMapping" class="kr.co.unp.cmm.sec.ram.service.impl.UserMapping" />
+
+    <bean:bean id="jdbcUserService" class="kr.co.unp.cmm.sec.ram.service.impl.JnBosJdbcUserDetailsManager" >
+        <bean:property name="usersByUsernameQuery" value="
+		    SELECT
+				MBER_SE, USER_SN, PASSWORD, USER_NM, crypto.dec('normal', EMAIL) AS EMAIL, crypto.dec('normal', MBTLNUM) AS MBTLNUM, TO_CHAR(BRTHDY,'YYYY-MM-DD') AS BRTHDY, SEX, EMAIL_AT, SMS_AT, SIDO, GUGUN,
+				LAST_LOGIN_DT, AUTH_SE, USER_STTUS, AUTH_EMAIL_AT, USER_IP, USER_ID, USER_SN as username,
+				AGRE_AT, AGRE_DT, AGRE_DT + (INTERVAL '2' YEAR) AS AGRE_CHK_DT, JOB AS JOB_SE,
+				PWD_CHANGE_AT, ADD_MONTHS(PWD_CHANGE_DT, 3) AS PWD_CHANGE_DT, CONFIRM_KEY,
+				TRUNC((TO_NUMBER(TO_CHAR(SYSDATE,'YYYY')) - TO_NUMBER(TO_CHAR(A.BRTHDY,'YYYY'))+1)/10)*10 AS AGE_SE,
+				SIDO AS RESDNC_SE,
+				(SELECT COUNT(*) FROM SMARTWORLD.SM_USERS WHERE email = crypto.dec('normal', A.EMAIL) AND TYPE IN ('1','2','3','4','5')) AS MENTO_CNT
+				, (SELECT COUNT(*) FROM TM_CONCERT_USER WHERE USER_ID = A.USER_ID ) AS TESTBED_CNT
+				, nvl((SELECT COMP_AUTH FROM TM_CONCERT_USER WHERE USER_ID = A.USER_ID ),'N') AS TESTBED_COMP_AUTH
+			FROM TM_USER A
+		  	WHERE USE_AT = 'Y' AND USER_SN = ?
+  		"/>
+
+        <bean:property name="authoritiesByUsernameQuery" value="
+        		SELECT USER_SN,
+					   'ROLE_USER' AS AUTHORITY
+       			FROM TM_USER
+				WHERE USE_AT = 'Y' AND USER_SN = ?
+        "/>
+
+        <bean:property name="hierarchicalRolesQuery" value="
+        		SELECT a.chldrn_auth as child, a.parnts_auth as parent
+        		FROM TC_AUTHOR_HIERARCHY a LEFT JOIN TC_AUTHOR_HIERARCHY b on (a.chldrn_auth = b.parnts_auth) "
+        />
+        <bean:property name="mapper" ref="userMapping"/>
+        <bean:property name="dataSource" ref="egov.dataSource"/>
+    </bean:bean>
+
+    <bean:bean id="bosJdbcUserService" class="kr.co.unp.cmm.sec.ram.service.impl.JnBosJdbcUserDetailsManager" >
+        <bean:property name="usersByUsernameQuery" value="
+			SELECT
+				USER_IDX, A.USER_ID, PWD as password, A.USER_NM, B.DEPT_NM_KOR AS DEPT_NM, A.AUTHOR_CODE,
+		       	A.FRST_REGIST_PNTTM, A.DEPT_ID, A.SEAT_NO, A.TEL_NO, A.USER_IP, A.EMAIL, A.STATUS,
+		       USER_ID as username, ADD_MONTHS(PWD_CHANGE_DT, 3) AS PWD_CHANGE_DT
+		  	FROM TM_ADMIN A
+		  	LEFT OUTER JOIN TM_ADMIN_DEPT B ON A.DEPT_ID = B.DEPT_ID
+		  	WHERE A.USER_ID = ?"
+		/>
+
+        <bean:property name="authoritiesByUsernameQuery" value="
+        		SELECT USER_ID,
+					   AUTHOR_CODE AS AUTHORITY
+				FROM TM_ADMIN
+				WHERE USER_ID = ?"
+        />
+
+        <bean:property name="hierarchicalRolesQuery" value="
+        		SELECT a.chldrn_auth as child, a.parnts_auth as parent
+        		FROM TC_AUTHOR_HIERARCHY a LEFT JOIN TC_AUTHOR_HIERARCHY b on (a.chldrn_auth = b.parnts_auth) "
+        />
+        <bean:property name="mapper" ref="bosUserMapping"/>
+        <bean:property name="dataSource" ref="egov.dataSource"/>
+    </bean:bean>
+</bean:beans>

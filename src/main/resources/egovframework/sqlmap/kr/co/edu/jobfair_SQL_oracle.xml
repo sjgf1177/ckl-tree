@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="jobfair">
+
+	<typeAlias alias="zvl" type="kr.co.unp.util.ZValue" />
+
+	<insert id="jobfair.insertJobfair" parameterClass="zvl" >
+	<![CDATA[
+	INSERT INTO TN_JOBFAIR_TEST
+       (
+           A --A컬럼
+           , B --B컬럼
+       )
+       VALUES
+       (
+           #a#, --A값
+           #b#, --B값
+       )
+	]]>
+	</insert>
+
+</sqlMap>
+
+
+
+

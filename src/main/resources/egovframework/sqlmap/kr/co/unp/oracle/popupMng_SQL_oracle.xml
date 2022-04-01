@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="popupMng">
+
+	<typeAlias  alias="zvl" type="kr.co.unp.util.ZValue"/>
+
+
+	<sql id="popupMngDAO.selectPopupList-where">
+		<isNotEmpty property="siteId" prepend="AND">
+			<![CDATA[	SITE_ID LIKE '%' || #siteId# || '%' 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="sdate">
+			<![CDATA[	TO_CHAR(SYSDATE, 'YYYYMMDD') >= REPLACE(#sdate#,'-','') 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="edate">
+			<![CDATA[	TO_CHAR(SYSDATE, 'YYYYMMDD') <= REPLACE(#edate#,'-','') 		]]>
+		</isNotEmpty>
+		<isNotEmpty property="searchTxt">
+			<isEqual prepend="AND" property="searchType" compareValue="1">
+				<![CDATA[	TITLE LIKE '%' || #searchTxt# || '%' 		]]>
+			</isEqual>
+			<isEqual prepend="AND" property="searchType" compareValue="2">
+				<![CDATA[	CONTENT LIKE '%' || #searchTxt# || '%' 		]]>
+			</isEqual>
+		</isNotEmpty>
+	</sql>
+
+	<select id="popupMngDAO.selectPopupListCnt" parameterClass="zvl" resultClass="int">
+		<![CDATA[
+			SELECT COUNT(*)
+			FROM TB_POPUP_MNG a
+			WHERE 1=1
+		 ]]>
+		<include refid="popupMngDAO.selectPopupList-where" />
+	</select>
+
+	<select id="popupMngDAO.selectPopupList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+
+		SELECT * FROM
+		( SELECT a.*, rownum+rnum-1 as totalRows
+		   FROM ( SELECT a.*, rownum rnum
+		            FROM (
+
+			SELECT
+			   PNO,TITLE,CONTENT,SDATE,EDATE,WIDTH,HEIGHT,ATCH_FILE_ID,TO_CHAR(REG_DATE, 'YYYY-MM-DD HH:mm:ss') AS REG_DATE,
+			   SITE_ID,CLOSE_USE_YN,USEFLAG,PLEFT,TOP,LINK,LINKADDRESS,MAP,SCROLL
+		  FROM TB_POPUP_MNG a
+		  WHERE 1=1
+		]]>
+		<include refid="popupMngDAO.selectPopupList-where" />
+		<![CDATA[
+			ORDER BY REG_DATE DESC
+		            ) a
+		          ORDER BY rnum DESC ) a
+		  ORDER BY rnum )
+		WHERE rnum BETWEEN #firstIndex# + 1 AND #lastIndex#
+		]]>
+	</select>
+
+	<select id="popupMngDAO.selectPubPopupList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+			SELECT
+			   PNO,TITLE,CONTENT,SDATE,EDATE,WIDTH,HEIGHT,ATCH_FILE_ID,TO_CHAR(REG_DATE, 'YYYY-MM-DD HH:mm:ss') AS REG_DATE,
+			   SITE_ID, CLOSE_USE_YN, USEFLAG, PLEFT, TOP, LINK, LINKADDRESS, MAP, SCROLL
+		  FROM TB_POPUP_MNG a
+		  where REPLACE(a.SDATE,'-','') <= TO_CHAR(SYSDATE, 'YYYYMMDD') AND REPLACE(a.EDATE,'-','') >= TO_CHAR(SYSDATE, 'YYYYMMDD') AND a.USEFLAG = 'Y'
+		]]>
+		<include refid="popupMngDAO.selectPopupList-where" />
+		  order by reg_date desc
+	</select>
+
+	<insert id="popupMngDAO.addPopup" parameterClass="zvl">
+		<selectKey resultClass="java.lang.Long" keyProperty="pno">
+			SELECT NVL(MAX(PNO),0)+1 AS NTT_ID  FROM TB_POPUP_MNG
+		</selectKey>
+		<![CDATA[
+		     INSERT INTO TB_POPUP_MNG ( PNO,TITLE,CONTENT,SDATE,EDATE,WIDTH,HEIGHT,ATCH_FILE_ID,REG_DATE,SITE_ID,CLOSE_USE_YN, USEFLAG, PLEFT, TOP, LINK, LINKADDRESS, MAP, SCROLL )
+			VALUES (#pno#, #title#,#content#,#sdate#,#edate#,#width#,#height#,#atchFileId#,SYSDATE,#siteId#,#closeUseYn#,#useflag#,#pleft#,#top#,#link#,#linkaddress#,#map#,#scroll#)
+		]]>
+	</insert>
+
+	<update id="popupMngDAO.updatePopup" parameterClass="zvl">
+		<![CDATA[
+		    UPDATE TB_POPUP_MNG
+			SET TITLE = #title#, CONTENT = #content#, SDATE = #sdate#, EDATE = #edate#,
+				WIDTH = #width#, HEIGHT = #height#, ATCH_FILE_ID = #atchFileId#, SITE_ID = #siteId#,
+				CLOSE_USE_YN = #closeUseYn#, USEFLAG = #useflag#, PLEFT = #pleft#, TOP = #top#, LINK = #link#,
+				LINKADDRESS = #linkaddress#, MAP = #map#, SCROLL = #scroll#
+			WHERE PNO = #pno#
+		]]>
+	</update>
+
+	<delete id="popupMngDAO.delPopup" parameterClass="zvl">
+		<![CDATA[
+		     DELETE TB_POPUP_MNG
+			 WHERE PNO = #pno#
+		]]>
+	</delete>
+
+	<select id="popupMngDAO.selectPopup" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+			SELECT PNO,TITLE,CONTENT,SDATE,EDATE,WIDTH,HEIGHT,ATCH_FILE_ID,TO_CHAR(REG_DATE, 'YYYY-MM-DD HH:mm:ss') AS REG_DATE,
+			SITE_ID, CLOSE_USE_YN, USEFLAG, PLEFT, TOP, LINK, LINKADDRESS, MAP, SCROLL
+			FROM TB_POPUP_MNG
+			WHERE PNO = #pno#
+		 ]]>
+	</select>
+</sqlMap>

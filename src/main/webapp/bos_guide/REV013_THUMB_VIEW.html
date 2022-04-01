@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=Edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<meta name="robots" content="all" />
+<link rel="stylesheet" type="text/css" href="/js/bootstrap/css/bootstrap.css" />
+<link rel="stylesheet" type="text/css" href="/js/bootstrap/css/bootstrap-theme.css" />
+<link rel="stylesheet" type="text/css" href="/js/jquery-ui/jquery-ui.css">
+<link rel="stylesheet" type="text/css" href="/portal/css/common.css" />
+<link rel="stylesheet" type="text/css" href="/bos/css/common.css" />
+<link rel="stylesheet" type="text/css" href="/bos/css/bosLayout.css" />
+
+<script type="text/javascript" src="/js/jquery.js"></script>
+<script type="text/javascript" src="/js/bootstrap/bootstrap.js"></script>
+<script type="text/javascript" src="/js/bootstrap/respond.min.js"></script>
+<script type="text/javascript" src="/js/jquery-ui/jquery-ui.js"></script>
+<script type="text/javascript" src="/js/jquery.highlight-4.js"></script>
+<script type="text/javascript" src="/js/miya_validator.js"></script>
+<script type="text/javascript" src="/bos/js/common.js"></script>
+
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+<script type="text/javascript" src="/js/html5shiv.js"></script><script type="text/javascript" src="js/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+<div id="wrap">
+	<div id="header_wrap">
+		<div class="header">
+			<h1><a href="/bos/main/main.do"><img src="/bos/images/common/logo.gif" alt="콘텐츠코리아랩" /></a></h1>
+			<p class="user bold"><span class="color1">[]CKL관리자(ckladmin)</span>님 로그인 접속IP:0:0:0:0:0:0:0:1</p>
+			<div class="util btn-group"> <a href="javascript:openPopup();"class="btn btn-success"><i class="fa fa-power-off"></i>내정보수정</a> <a href="/bos/member/logout.do" class="btn btn-info"><i class="fa fa-power-off"></i> 로그아웃</a> </div>
+		</div>
+		<div id="gnb">
+			<ul class="gnb_width">
+				<li class='on'> <a href="/bos/member/list.do?menuNo=100001" >관리자관리</a> </li>
+				<li > <a href="/bos/bbs/B0000002/list.do?menuNo=100009" >게시물관리</a> </li>
+				<li > <a href="/bos/mpm/commonContents/list.do?siteId=2&amp;menuNo=100020" >콘텐츠관리</a> </li>
+				<li class='pr0'> <a href="/bos/cmmncode/CmmnCodeClList.do?menuNo=100021" >사이트관리</a> </li>
+			</ul>
+		</div>
+	</div>
+	<div id="container" class="clearfix" >
+		<div id="lnb">
+			<h2>관리자관리</h2>
+			<!-- <p><input type="text" name="searchTxt" id="searchTxt" value="" /> <label for="search"><a id="search" href="#search">조회</a></label></p> -->
+
+			<ul>
+				<li> <a href="/bos/member/list.do?menuNo=100002" title="/bos/member/list.do" >관리자정보</a> </li>
+				<li> <a href="/bos/mpm/MenuCreatManageSelect.do?menuNo=100003" title="/bos/mpm/MenuCreatManageSelect.do" >권한관리</a>
+					<ol>
+						<li> <a href="/bos/cmm/sec/ram/AuthorList.do?menuNo=100004" title="/bos/cmm/sec/ram/AuthorList.do" >권한관리</a> </li>
+						<li> <a href="/bos/mpm/MenuCreatManageSelect.do?menuNo=100005" title="/bos/mpm/MenuCreatManageSelect.do" >권한별 메뉴관리</a> </li>
+					</ol>
+				</li>
+			</ul>
+		</div>
+		<div id="content">
+			<div class="hgroup clearfix">
+				<h3 class="fl">예약현황(시설예약)</h3>
+				<div class="fr"> <a class="btn btn-sm btn-success" href="/bos/forprint.jsp" id="print" title="새창" onclick="window.open(this.href, 'printPage', 'width=800,height=550,scrollbars,toolbar,status');return false;" alt="인쇄하기 (자바스크립트 미지원시 브라우저은 인쇄기능을 이용하세요)"><i class="fa fa-hover fa-print"></i><span >인쇄하기</span></a> </div>
+			</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			<h4 class="clear">장비정보</h4>
+
+			<div class="bdView">
+				<table class="table table-bordered" summary=" ">
+					<caption>장비정보</caption>
+					<colgroup>
+					<col />
+					<col />
+					<col />
+					<col />
+					</colgroup>
+					<tbody>
+						<tr>
+							<th scope="row" >장비구분</th>
+							<td colspan="3">HD Camcorder</td>
+						</tr>
+						<tr>
+							<th scope="row" >예약구분</th>
+							<td colspan="3">내부/외부</td>
+						</tr>
+						<tr>
+							<th scope="row" >예약가능여부</th>
+							<td>예약가능</td>
+							<th scope="row" >사용여부</th>
+							<td>사용</td>
+						</tr>
+						<tr>
+							<th scope="row" >세부내역</th>
+							<td colspan="3"> Sona HD    Camcorder (1920*1080 i 촬영가능) </td>
+						</tr>
+						<tr>
+							<th scope="row" >예약불가사유</th>
+							<td colspan="3"> 공사중</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<!-- thumbGallery -->
+			<script type="text/javascript" src="/js/jquery.carouFredSel-6.2.1-packed.js"></script>
+			<div class="visualSet">
+				<div class="visual">
+					<div class="thumbs" id="vsThumbs">
+						<div> <a href="/portal/bbs/view/B0000425/31683.do?menuNo=200618"><img src="/portal/images/tmp/dbTmp1.jpg" width="682" height="345" alt="" /></a></div>
+						<div> <a href="/portal/bbs/view/B0000425/31690.do?menuNo=200618"><img src="/portal/images/tmp/dbTmp1.jpg" width="635" height="380" alt="" /></a></div>
+						<div> <a href="/portal/bbs/view/B0000425/31698.do?menuNo=200618"><img src="/portal/images/tmp/dbTmp1.jpg" width="635" height="380" alt="" /></a></div>
+						<div> <a href="/portal/bbs/view/B0000425/31701.do?menuNo=200618"><img src="/portal/images/tmp/dbTmp1.jpg" width="635" height="380" alt="" /></a></div>
+						<div> <a href="/portal/bbs/view/B0000425/31690.do?menuNo=200618"><img src="/portal/images/tmp/dbTmp1.jpg" width="635" height="380" alt="" /></a></div>
+						<div> <a href="/portal/bbs/view/B0000425/31698.do?menuNo=200618"><img src="/portal/images/tmp/dbTmp1.jpg" width="635" height="380" alt="" /></a></div>
+						<div> <a href="/portal/bbs/view/B0000425/31701.do?menuNo=200618"><img src="/portal/images/tmp/dbTmp1.jpg" width="635" height="380" alt="" /></a></div>
+					</div>
+					<div class="thumbsList" id="thumbsList">
+						<ul>
+							<li><a href="#self"><img src="/portal/images/tmp/dbTmp1.jpg" alt="영화 속 선거이야기 <킹스스피치>연설을 위해 몸을 단련시킨 정치인 " /></a></li>
+							<li><a href="#self"><img src="/portal/images/tmp/dbTmp1.jpg" alt="영화 속 선거이야기 <스미스씨, 워싱턴에 가다>, 국회의원은 어떻게 일을 하는가?" /></a></li>
+							<li><a href="#self"><img src="/portal/images/tmp/dbTmp1.jpg" alt="영화 속 선거이야기 <우리 의사 선생님>, 투표에 앞서 선택을 의심해 봐야 하는 이유" /></a></li>
+							<li><a href="#self"><img src="/portal/images/tmp/dbTmp1.jpg" alt="영화 속 선거이야기 <이장과 군수>, 반장선거부터 재미있게 바꿔보면 어떨까?" /></a></li>
+							<li><a href="#self"><img src="/portal/images/tmp/dbTmp1.jpg" alt="영화 속 선거이야기 <스미스씨, 워싱턴에 가다>, 국회의원은 어떻게 일을 하는가?" /></a></li>
+							<li><a href="#self"><img src="/portal/images/tmp/dbTmp1.jpg" alt="영화 속 선거이야기 <우리 의사 선생님>, 투표에 앞서 선택을 의심해 봐야 하는 이유" /></a></li>
+							<li><a href="#self"><img src="/portal/images/tmp/dbTmp1.jpg" alt="영화 속 선거이야기 <이장과 군수>, 반장선거부터 재미있게 바꿔보면 어떨까?" /></a></li>
+						</ul>
+					</div>
+					<!-- <div class="visualCtrl"><a href="#self" class="nextVs"><img src="/images/mains/m_44.gif" width="211" height="40" alt="다음 배너 보기" /></a></div> -->
+				</div>
+			</div>
+<script type="text/javascript">
+//<![CDATA[
+$(function() {
+	 $('#thumbsList ul').carouFredSel({
+		items		:{
+			visible : 4
+		},
+		direction: 'up',
+		scroll      :{
+			items		:1,
+			pauseOnHover	: true
+		},
+		auto: {
+			play: false,
+			duration: 750,
+			timeoutDuration: 2000,
+			easing: 'quadratic',
+			onBefore: function() {
+				var index = $(this).triggerHandler( 'currentPosition' );
+				if ( index == 0 ) {
+					index = $(this).children().length;
+				}
+				$('#vsThumbs').trigger('slideTo', [ index, {
+					fx: 'directscroll'
+				}, 'prev' ]);
+				 $('#thumbsList ul').find( 'li' ).eq(index).addClass( 'selected' );
+			}
+
+		},
+		next : ".nextVs"
+	 });
+
+	var thumbsList = $('#thumbsList ul li');
+	thumbsList.bind("click", function(){
+		var index =  thumbsList.index(this);
+		$('#vsThumbs').trigger('slideTo', [ index, {
+			fx: 'directscroll'
+		}, 'prev' ]);
+	});
+
+	 $('#vsThumbs').carouFredSel({
+		items: 1,
+		direction: 'left',
+		width:635,
+		height:380,
+		scroll :{
+			items : 1
+		},
+		auto: {
+			play: false,
+			duration: 750,
+			easing: 'directscroll'
+		}
+	 });
+});
+//]]>
+</script>
+
+			<!-- //thumbGallery -->
+
+
+
+			<h4>장비 신청정보</h4>
+			<div class="bdList">
+				<table class="table table-bordered" summary=" ">
+					<caption>장비 신청정보</caption>
+					<colgroup>
+					<col />
+					<col />
+					<col />
+					</colgroup>
+					<thead>
+						<tr>
+							<th scope="row" >번호</th>
+							<th scope="row" >상세장비명</th>
+							<th scope="row" >사용여부</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>1</td>
+							<td>HD Camcorder 1</td>
+							<td>사용</td>
+						</tr>
+						<tr>
+							<td>2</td>
+							<td>HD Camcorder 2</td>
+							<td>미사용</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+
+
+			<div class="row clear mt20 tac">
+				<div class="col-md-10"><a href="#self" class="btn btn-primary">수정</a> <a href="#self" class="btn btn-default">삭제</a></div>
+				<div class="col-md-2"><a href="#self" class="btn btn-default">목록</a></div>
+			</div>
+
+			<!-- board list end //-->
+
+			</form>
+		</div>
+	</div>
+</div>
+<div id="footer">
+	<p><span class="bold">콘텐츠코리아랩</span>&nbsp;&nbsp;&nbsp;
+		서울시 영등포구 여의나루로 76(150-010),
+		&nbsp;&nbsp;&nbsp; <span class="bold">전화번호</span>: 02)767-7114 </p>
+	<em>Copyright ⓒ 2012 CKL Corp. All Rights reserved.</em> </div>
+
+<!--[if lte IE 7]>
+<script type="text/javascript">
+//<![CDATA[
+	$('*').each(function(index) {
+		if ($(this).css("overflow")=="hidden"){ $(this).css("zoom",1)}
+		if ($(this).css("display")=="inline-block"){ $(this).css("display",'inline'); $(this).css("zoom",1)}
+	});
+//]]>
+</script>
+<![endif]-->
+
+<div class="posr">
+	<div class="souceUrl" style="color:#f00">*/WEB-INF/jsp/bos/member/list.jsp</div>
+	<div class="check" style="display: none">복사완료</div>
+	<div class="souceUrl" style="color:#f00">WEB-INF/jsp/bos/member/list.jsp</div>
+	<div class="check" style="display: none">복사완료</div>
+</div>
+</body>
+</html>

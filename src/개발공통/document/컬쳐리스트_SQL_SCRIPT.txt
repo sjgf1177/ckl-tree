@@ -1,0 +1,184 @@
+CREATE TABLE CUS_Notice (
+	Not_SEQ NUMBER NOT NULL ,
+	Not_Flag char(1)  NOT NULL ,
+	Not_subject varchar2(150) NOT NULL ,
+	Not_RegName varchar2(20) NOT NULL ,
+	Not_RegDate DATE NOT NULL,
+	Not_File varchar2(100)  NULL ,
+	Not_CLOB CLOB  NOT NULL ,
+	Not_Hit NUMBER  DEFAULT 0,
+	Not_ViewFlag char(1) DEFAULT 'Y',
+	DelFlag char(1) DEFAULT 'N' NOT NULL,
+	PRIMARY KEY(Not_SEQ)	
+);
+
+
+CREATE TABLE tbl_mcast_magazine (
+	idx NUMBER  NOT NULL ,
+	category varchar2(50)  NULL ,
+	subject varchar2(300)  NULL ,
+	summary CLOB  NULL ,
+	contents CLOB  NULL ,
+	regdate DATE NULL,
+	openYN char(1)    DEFAULT 'N',
+	regist_id varchar2(100)  NULL ,
+	viewcount NUMBER   DEFAULT 0,
+	list_image varchar2(300)  NULL ,
+	list_image_comment varchar2(300)  NULL ,
+	etc_image1 varchar2(300)  NULL ,
+	etc_image2 varchar2(300)  NULL ,
+	etc_image3 varchar2(300)  NULL ,
+	etc_image4 varchar2(300)  NULL ,
+	etc_image5 varchar2(300)  NULL ,
+	openMain char(1)  DEFAULT 'N'  ,
+	PRIMARY KEY(idx)
+);
+
+
+CREATE TABLE JOB_EXP (
+	JE_ID NUMBER NOT NULL ,
+	DIV_CODE NUMBER  DEFAULT 0 NOT NULL,
+	JOB_NAME varchar2(100)  NOT NULL ,
+	REG_NAME varchar2(15)  NOT NULL  ,
+	REG_PICT varchar2(100)  NOT NULL,
+	ORGAN varchar2(100)  NOT NULL  ,
+	DEPART varchar2(60)  NOT NULL  ,
+	CONT_1 CLOB  NOT NULL ,
+	CONT_2 CLOB  NOT NULL ,
+	CONT_3 CLOB  NOT NULL ,
+	CONT_4 CLOB  NOT NULL ,
+	CONT_5 CLOB  NOT NULL ,
+	CONT_6 CLOB  NOT NULL ,
+	CONT_7 CLOB  NOT NULL ,
+	CONT_ETC CLOB  NULL ,
+	REG_DATE DATE NOT NULL ,
+	TOP_FLAG char(1) DEFAULT 'N'  NOT NULL ,
+	PRIMARY KEY(JE_ID) 
+);
+
+
+CREATE TABLE EVENT_INFO (
+	EI_ID NUMBER NOT NULL ,
+	ADMIN_ID varchar2(20)  NOT NULL  ,
+	EVENT_NAME varchar2(150)  NOT NULL ,
+	EVENT_SDATE varchar2(10)  NOT NULL  ,
+	EVENT_EDATE varchar2(10)  NOT NULL  ,
+	EVENT_IMG varchar2(100)  NOT NULL  ,
+	EVENT_THUMB_IMG varchar2(100)  NOT NULL ,
+	EVENT_JOIN_URL varchar2(150)  NOT NULL ,
+	EVENT_SIMPLE_CONT varchar2(1000)  NOT NULL,
+	EVENT_CONT CLOB  NOT NULL,
+	REG_DATE date NOT NULL,
+	PRIZE_DATE varchar2(20)  NOT NULL,
+	EVENT_START_FLAG char(1)  DEFAULT 'N' NOT NULL ,
+	EVENT_CLOSE_FLAG char(1)  DEFAULT 'N' NOT NULL ,
+	PRIZE_SHOW_FLAG char(1) DEFAULT 'N' NOT NULL ,
+	PRIMARY KEY (EI_ID)
+);
+
+
+CREATE TABLE EVENT_PRIZE_INFO (
+	EPI_ID NUMBER NOT NULL ,
+	EI_ID NUMBER NOT NULL ,
+	PRIZE_CONT CLOB  NOT NULL,
+	REG_DATE DATE NOT NULL ,
+	PRIMARY KEY (EPI_ID) 
+);
+
+
+CREATE TABLE PDS (
+	PDS_ID NUMBER NOT NULL ,
+	DATA_GUBUN NUMBER DEFAULT 0 NOT NULL  ,
+	TITLE varchar2(250)  NOT NULL ,
+	ATTACH_FILE varchar2(100)  NOT NULL,
+	CONT CLOB  NOT NULL,
+	REG_DATE DATE NOT NULL,
+	HIT_NUM NUMBER NOT NULL ,
+	DOWN_NUM NUMBER DEFAULT 0  NOT NULL ,
+	 PRIMARY KEY (PDS_ID)
+);
+
+
+CREATE TABLE JOB_INFO (
+	JI_ID NUMBER NOT NULL ,
+	DIV_CODE char(5)  NOT NULL ,
+	JOB_NAME varchar2(100)  NOT NULL ,
+	INFO_SEQ_1 CLOB  NOT NULL
+	INFO_SEQ_2 CLOB  NOT NULL
+	INFO_SEQ_3 CLOB  NOT NULL
+	INFO_SEQ_4 CLOB  NOT NULL
+	INFO_SEQ_5 CLOB  NOT NULL
+	INFO_SEQ_6 CLOB  NOT NULL
+	INFO_SEQ_7 CLOB  NOT NULL
+	INFO_SEQ_8 CLOB  NOT NULL
+	INFO_SEQ_9 CLOB  NOT NULL
+	INFO_SEQ_10 CLOB  NOT NULL,
+	INFO_SEQ_11 CLOB  NOT NULL,
+	INFO_SEQ_12 CLOB  NOT NULL,
+	INFO_SEQ_13 CLOB  NOT NULL,
+	INFO_SEQ_14 CLOB  NOT NULL,
+	INFO_SEQ_15 CLOB  NOT NULL,
+	PRIMARY KEY(JI_ID)
+);
+
+
+CREATE TABLE HIS_GUIDE_ENG (
+	B_Num NUMBER NOT NULL ,
+	B_M_ID varchar2(20)  NULL ,
+	B_Name varchar2(20)  NULL ,
+	B_NickName varchar2(20)  NULL ,
+	B_Email varchar2(70)  NULL ,
+	B_Homepage varchar2(100)  NULL ,
+	B_Title varchar2(200)  NULL ,
+	B_Pwd varchar2(20)  NULL ,
+	B_W_Date DATE NULL ,
+	B_Read_Cnt NUMBER DEFAULT 0,
+	B_Tag char(1)  NULL ,
+	B_Ref NUMBER NULL ,
+	B_Re_Level NUMBER NULL ,
+	B_Re_Step NUMBER NULL ,
+	B_Content CLOB  NULL ,
+	B_Recomm_Cnt NUMBER NULL ,
+	B_TBL varchar2(50)  NULL ,
+	B_Best_Stat char(1)  NULL ,
+	B_Reply_Cnt NUMBER NULL ,
+	B_Class_Stat NUMBER NULL ,
+	B_Top_Part_No char(5)  NULL ,
+	B_Sub_Part_No char(5)  NULL ,
+	B_Id_Stat char(1)  NULL ,
+	PRIMARY KEY(B_Num)
+);
+
+CREATE TABLE HIS_GUIDE_KOR (
+	B_Num NUMBER  NOT NULL ,
+	B_M_ID varchar2(20)  NULL ,
+	B_Name varchar2(20)  NULL ,
+	B_NickName varchar2(20)  NULL ,
+	B_Email varchar2(70)  NULL ,
+	B_Homepage varchar2(100)  NULL ,
+	B_Title varchar2(200)  NULL ,
+	B_Pwd varchar2(20)  NULL ,
+	B_W_Date DATE NULL ,
+	B_Read_Cnt NUMBER DEFAULT 0  ,
+	B_Tag char(1)  NULL ,
+	B_Ref NUMBER NULL ,
+	B_Re_Level NUMBER NULL ,
+	B_Re_Step NUMBER NULL ,
+	B_Content CLOB  NULL ,
+	B_Recomm_Cnt NUMBER NULL ,
+	B_TBL varchar2(50)  NULL ,
+	B_Best_Stat char(1)  NULL ,
+	B_Reply_Cnt NUMBER NULL ,
+	B_Class_Stat NUMBER NULL ,
+	B_Top_Part_No char(5)  NULL ,
+	B_Sub_Part_No char(5)  NULL ,
+	B_Id_Stat char(1)  NULL ,
+	PRIMARY KEY(B_Num)
+);
+
+
+
+
+
+
+

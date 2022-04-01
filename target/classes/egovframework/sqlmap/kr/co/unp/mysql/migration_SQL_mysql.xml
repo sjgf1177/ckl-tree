@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="migration">
+
+	<typeAlias  alias="MigrationVO" type="kr.co.unp.migration.vo.MigrationVO"/>
+
+	<insert id="migrationDAO.insertBasicBoardArticle" parameterClass="MigrationVO" >
+		<![CDATA[
+			INSERT INTO $tableNm$
+			(NTT_ID, BBS_ID, NTT_SJ, NTT_CN, SORT_ORDR,
+			 NTCR_ID, NTCR_NM, PASSWORD, INQIRE_CO,
+			 NTCE_BGNDE, NTCE_ENDDE, REPLY_AT,
+			 PARNTS, NTT_NO, REPLY_LC, ATCH_FILE_ID,
+			 FRST_REGISTER_ID, FRST_REGIST_PNTTM, USE_AT,
+			 NTT_TYPE, DELETE_CODE,
+			 SECTION, NTCR_CI, HTML_AT
+			 )
+			VALUES
+			( #nttId#, #bbsId#, #nttSj#, #nttCn#, #sortOrdr#,
+			  #ntcrId#, #ntcrNm#, #password#, #inqireCo#,
+			  #ntceBgnde#, #ntceEndde#, #replyAt#,
+			  #parnts#, #nttNo#, #replyLc#, #atchFileId#,
+			  #frstRegisterId#, #regDate#, #useAt#,
+			  #nttType#, #delcode#,
+			  #section#, #ntcrPinno#, #htmlYn#
+
+			 )
+		]]>
+	</insert>
+
+	<select id="migrationDAO.selectMaxPlusNttId" resultClass="int" parameterClass="MigrationVO" >
+		<![CDATA[
+			SELECT IFNULL(MAX(NTT_ID),0)+1 AS NTT_ID  FROM $tableNm$
+		]]>
+	</select>
+
+	<insert id="migrationDAO.insertBoardArticle" parameterClass="MigrationVO" >
+		<![CDATA[
+			INSERT INTO $tableNm$
+			(NTT_ID, BBS_ID, NTT_SJ, NTT_CN, SORT_ORDR,
+			 NTCR_ID, NTCR_NM, PASSWORD, INQIRE_CO,
+			 NTCE_BGNDE, NTCE_ENDDE, REPLY_AT,
+			 PARNTS, NTT_NO, REPLY_LC, ATCH_FILE_ID,
+			 FRST_REGISTER_ID, FRST_REGIST_PNTTM, USE_AT,
+			 SECRET, DELETE_CODE, OPTION1, OPTION2, OPTION3,
+			 OPTION4, OPTION5, OPTION6, OPTION7, OPTION8,
+			 OPTION9, OPTION10, OPTION11, OPTION12, OPTION13, OPTION14, OPTION15, NTT_TYPE,
+			 SECTION, NTCR_CI, HTML_AT,
+			 NTCR_TEL, NTCR_MOBILE, NTCR_EMAIL, NTCR_ZIPCODE, NTCR_ADDR1, NTCR_ADDR2,
+			 RECOMMEND, OPPOSITION
+			 )
+			VALUES
+			( #nttId#, #bbsId#, #nttSj#, #nttCn#, #nttNo#,
+			  #ntcrId#, #ntcrNm#, #password#, #inqireCo#,
+			  #ntceBgnde#, #ntceEndde#, #replyAt#,
+			  #parnts#, 1, #replyLc#, #atchFileId#,
+			  #frstRegisterId#, #regDate#, #useAt#,
+			  #secret#, #delcode#, #option1#, #option2#, #option3#,
+			  #option4#, #option5#, #option6#, #option7#, #option8#,
+			  #option9#, #option10#, #option11#, #option12#, #option13#, #option14#, #option15#, #nttType#,
+			  #section#, #ntcrPinno#, #htmlYn#,
+			  #ntcrTel#, #ntcrMobile#, #ntcrEmail#, #ntcrZipcode#, #ntcrAddr1#, #ntcrAddr2#,
+			  0, 0
+
+			 )
+		]]>
+	</insert>
+
+
+ 	<delete id="migrationDAO.deleteBbs" parameterClass="MigrationVO">
+ 		<![CDATA[
+			DELETE $tableNm$ WHERE BBS_ID = #bbsId#
+ 		]]>
+ 	</delete>
+
+ 	<delete id="migrationDAO.deleteFileDetail" parameterClass="MigrationVO">
+ 		<![CDATA[
+			DELETE FROM TC_COMMNFILE_DETAIL
+			WHERE ATCH_FILE_ID IN (SELECT ATCH_FILE_ID FROM $tableNm$ WHERE BBS_ID = #bbsId#)
+ 		]]>
+ 	</delete>
+
+ 	<delete id="migrationDAO.deleteFile" parameterClass="MigrationVO">
+ 		<![CDATA[
+			DELETE FROM TC_COMMNFILE
+			WHERE ATCH_FILE_ID IN (SELECT ATCH_FILE_ID FROM $tableNm$ WHERE BBS_ID = #bbsId#)
+ 		]]>
+ 	</delete>
+
+	<insert id="migrationDAO.insertCommentArticle" parameterClass="MigrationVO" >
+		<selectKey resultClass="int" keyProperty="cmmntId">
+			SELECT IFNULL(MAX(CMMNT_ID),0)+1 AS NTT_ID  FROM BBSCOMMENTS
+		</selectKey>
+		<![CDATA[
+			INSERT INTO BBSCOMMENTS ( CMMNT_ID, BBS_ID,NTT_ID,PIN,PWD,CONTENT,REG_DATE, NAME, TITLE, OPINION  )
+			VALUES ( #cmmntId#, #bbsId#,#nttId#,#ntcrPinno#,#password#,#nttCn#,#regDate#,#ntcrNm#,#nttSj#,#opinion#  )
+
+		]]>
+	</insert>
+
+ 	<delete id="migrationDAO.deleteCommnet" parameterClass="MigrationVO">
+ 		<![CDATA[
+			DELETE FROM BBSCOMMENTS
+			WHERE BBS_ID = #bbsId#
+ 		]]>
+ 	</delete>
+
+</sqlMap>

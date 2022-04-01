@@ -1,0 +1,481 @@
+# Virtual Hosts
+#
+# Required modules: mod_log_config
+
+# If you want to maintain multiple domains/hostnames on your
+# machine you can setup VirtualHost containers for them. Most configurations
+# use only name-based virtual hosts so the server doesn't need to worry about
+# IP addresses. This is indicated by the asterisks in the directives below.
+#
+# Please see the documentation at 
+# <URL:http://httpd.apache.org/docs/2.4/vhosts/>
+# for further details before you try to setup virtual hosts.
+#
+# You may use the command line option '-S' to verify your virtual host
+# configuration.
+
+#
+# VirtualHost example:
+# Almost any Apache directive may go into a VirtualHost container.
+# The first VirtualHost section is used for all requests that do not
+# match a ServerName or ServerAlias in any <VirtualHost> block.
+#
+
+
+<VirtualHost *:80>
+    DocumentRoot /data/kocca/lmswebapp
+    ServerName edulms.kocca.kr
+    ServerAlias *.edukocca.or.kr edulms.kocca.kr m.edu.kocca.kr 
+    JkMount /* cklwas03
+    ErrorLog /usr/IBMAHS/logs/kocca/kc_lms-error-log
+    CustomLog /usr/IBMAHS/logs/kocca/kc_lms-access-log common
+    RewriteEngine On
+    RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK)
+    RewriteRule .* - [F]
+
+    <Location />
+        Order allow,deny
+        Allow from all
+        <LimitExcept HEAD GET POST>
+            Deny from all
+        </LimitExcept>
+    </Location>
+
+   <Location /learn/admin>
+       Order deny,allow
+       Deny from all
+       Allow from 210.92.209.130 
+       Allow from 115.91.124.186 
+       Allow from 115.91.124.187 
+       Allow from 112.222.4.140 
+       Allow from 116.125.59.158 
+       Allow from 112.220.85.26 
+       Allow from 182.252.167.94 
+       Allow from 14.36.165.197 
+       Allow from 175.197.46.63 
+       Allow from 211.245.109.223
+       Allow from 116.125.59.8
+       Allow from 123.212.160.4
+       Allow from 172.16.1.40
+       Allow from 211.245.109
+       Allow from 123.212.160
+       Allow from 218.232.92.35 
+       Allow from 218.232.92.36
+       Allow from 143.248.107.94 
+       Allow from 112.217.210.202 
+       Allow from 112.223.167.3 
+       Allow from 123.111.171.247 
+       Allow from 203.248.117.239 
+       Allow from 112.169.74.236 
+       Allow from 143.248.107.183 
+       Allow from 1.238.225.46 
+       Allow from 121.167.96
+       Allow from 112.220.196
+       Allow from 124.111.40.93
+       Allow from 221.148.60.76
+       Allow from 123.143.31.131 
+       Allow from 210.178.144.232 
+       Allow from 211.42.31.15
+       Allow from 10.10.11
+       Allow from 58.229.247
+       Allow from 210.92.229.130
+       Allow from 61.37.86.130
+       Allow from 222.121.255.155
+       Allow from 110.9.124.193
+       Allow from 117.17.0.81
+       Allow from 120.136.107.173
+       Allow from 58.232.91.82
+   </Location>
+
+
+    <Directory /data/kocca/lmswebapp>
+        Allow from all
+        Options FollowSymLinks
+        AllowOverride None
+        Order allow,deny
+        DirectoryIndex index.jsp
+    </Directory>
+</VirtualHost>
+
+<VirtualHost *:80>
+    DocumentRoot /data/kocca/cklwebapp
+    ServerName www.ckl.or.kr
+    ServerAlias www.ckl.or.kr ckl.or.kr lab.ckl.or.kr
+    JkMount /* cklwas01
+    ErrorLog /usr/IBMAHS/logs/kocca/kc_ckl-error-log
+    CustomLog /usr/IBMAHS/logs/kocca/kc_ckl-access-log common
+    RewriteEngine On
+    RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK)
+    RewriteRule .* - [F]
+
+    <Location />
+        Order allow,deny
+        Allow from all
+        <LimitExcept HEAD GET POST>
+            Deny from all
+        </LimitExcept>
+    </Location>
+
+   <Location /crosseditor/manage>
+       Order deny,allow
+       Deny from all
+       Allow from 210.92.209.130 
+       Allow from 115.91.124.186 
+       Allow from 115.91.124.187 
+       Allow from 112.222.4.140 
+       Allow from 116.125.59.158 
+       Allow from 112.220.85.26 
+       Allow from 182.252.167.94 
+       Allow from 14.36.165.197 
+       Allow from 175.197.46.63 
+       Allow from 211.245.109.223
+       Allow from 116.125.59.8
+       Allow from 123.212.160.4
+       Allow from 172.16.1.40
+       Allow from 211.245.109
+       Allow from 123.212.160
+       Allow from 218.232.92.35 
+       Allow from 218.232.92.36
+       Allow from 143.248.107.94 
+       Allow from 112.217.210.202 
+       Allow from 112.223.167.3 
+       Allow from 123.111.171.247 
+       Allow from 203.248.117.239 
+       Allow from 112.169.74.236 
+       Allow from 143.248.107.183 
+       Allow from 1.238.225.46 
+       Allow from 121.167.96
+       Allow from 112.220.196
+       Allow from 124.111.40.93
+       Allow from 221.148.60.76
+       Allow from 123.143.31.131 
+       Allow from 210.178.144.232 
+       Allow from 211.42.31.15
+       Allow from 10.10.11
+       Allow from 58.229.247
+       Allow from 210.92.229.130
+       Allow from 58.230.207.83
+   </Location>
+
+    <Location /bos/>
+        Order deny,allow
+        Deny from all
+        Allow from 210.92.209.130
+        Allow from 115.91.124.186
+        Allow from 115.91.124.187
+        Allow from 112.222.4.140
+        Allow from 116.125.59.158
+        Allow from 112.220.85.26
+        Allow from 182.252.167.94
+        Allow from 14.36.165.197
+       Allow from 175.197.46.63 
+       Allow from 211.245.109.223
+       Allow from 116.125.59.8
+       Allow from 123.212.160.4
+       Allow from 172.16.1.40
+       Allow from 211.245.109
+       Allow from 123.212.160
+       Allow from 218.232.92.35
+       Allow from 218.232.92.36
+       Allow from 143.248.107.94 
+       Allow from 112.217.210.202 
+       Allow from 112.223.167.3 
+       Allow from 123.111.171.247 
+       Allow from 203.248.117.239 
+       Allow from 112.169.74.236 
+       Allow from 143.248.107.183 
+       Allow from 1.238.225.46 
+       Allow from 121.167.96
+       Allow from 112.220.196
+       Allow from 124.111.40.93
+       Allow from 221.148.60.76
+       Allow from 123.143.31.131 
+       Allow from 210.178.144.232 
+       Allow from 211.42.31.15
+       Allow from 10.10.11
+       Allow from 58.229.247
+       Allow from 210.92.229.130
+       Allow from 58.230.207.83
+    </Location>
+
+    <Directory /data/kocca/cklwebapp>
+        Allow from all
+        Options FollowSymLinks
+        AllowOverride None
+        Order allow,deny
+        DirectoryIndex index.jsp
+    </Directory>
+</VirtualHost>
+
+
+<VirtualHost *:80>
+    DocumentRoot /data/kocca/cklwebapp
+    ServerName m.ckl.or.kr
+    ServerAlias m.ckl.or.kr
+    JkMount /* cklwas01
+    ErrorLog /usr/IBMAHS/logs/kocca/kc_mckl-error-log
+    CustomLog /usr/IBMAHS/logs/kocca/kc_mckl-access-log common
+    RewriteEngine On
+    RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK)
+    RewriteRule .* - [F]
+
+    <Location />
+        Order allow,deny
+        Allow from all
+        <LimitExcept HEAD GET POST>
+            Deny from all
+        </LimitExcept>
+    </Location>
+
+   <Location /crosseditor/manage>
+       Order deny,allow
+       Deny from all
+   </Location>
+
+    <Location /bos/>
+        Order deny,allow
+        Deny from all
+    </Location>
+
+    <Directory /data/kocca/cklwebapp>
+        Allow from all
+        Options FollowSymLinks
+        AllowOverride None
+        Order allow,deny
+        DirectoryIndex index.jsp
+    </Directory>
+</VirtualHost>
+
+
+<VirtualHost *:80>
+    DocumentRoot /data/kocca/cklwebapp
+    ServerName edu.kocca.kr
+    ServerAlias edu.kocca.kr edusso.kocca.kr 
+    JkMount /* cklwas01
+    ErrorLog /usr/IBMAHS/logs/kocca/kc_edu-error-log
+    CustomLog /usr/IBMAHS/logs/kocca/kc_edu-access-log common
+    ErrorDocument 404 /data/kocca/cklwebapp/common/err.jsp
+    RewriteEngine On
+    RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK)
+    RewriteRule .* - [F]
+
+    <Location />
+        Order allow,deny
+        Allow from all
+        <LimitExcept HEAD GET POST>
+            Deny from all
+        </LimitExcept>
+    </Location>
+
+    <Location /crosseditor/manage>
+       Order deny,allow
+       Deny from all
+       Allow from 210.92.209.130
+       Allow from 115.91.124.186
+       Allow from 115.91.124.187
+       Allow from 112.222.4.140
+       Allow from 116.125.59.158
+       Allow from 112.220.85.26
+       Allow from 182.252.167.94
+       Allow from 14.36.165.197
+       Allow from 175.197.46.63 
+       Allow from 211.245.109.223
+       Allow from 116.125.59.8
+       Allow from 123.212.160.4
+       Allow from 172.16.1.40
+       Allow from 211.245.109
+       Allow from 123.212.160
+       Allow from 112.223.167.3
+       Allow from 123.111.171.247
+       Allow from 121.167.96
+       Allow from 112.220.196
+       Allow from 221.148.60.76
+       Allow from 122.35.48.163 
+       Allow from 211.42.31.15
+       Allow from 10.10.11
+       Allow from 58.229.247
+       Allow from 210.92.229.130
+       Allow from 58.230.207.83
+   </Location>
+
+    <Location /bos/>
+        Order deny,allow
+        Deny from all
+        Allow from 210.92.209.130
+        Allow from 115.91.124.186
+        Allow from 115.91.124.187
+        Allow from 112.222.4.140
+        Allow from 116.125.59.158
+        Allow from 112.220.85.26
+        Allow from 182.252.167.94
+        Allow from 14.36.165.197
+       Allow from 175.197.46.63 
+       Allow from 211.245.109.223
+       Allow from 116.125.59.8
+       Allow from 123.212.160.4
+       Allow from 172.16.1.40
+       Allow from 211.245.109
+       Allow from 123.212.160
+       Allow from 112.223.167.3
+       Allow from 121.167.96
+       Allow from 112.220.196
+       Allow from 221.148.60.76
+       Allow from 122.35.48.163 
+       Allow from 211.42.31.15
+       Allow from 10.10.11
+       Allow from 58.229.247
+       Allow from 210.92.229.130
+       Allow from 58.230.207.83
+    </Location>
+
+    <Directory /data/kocca/cklwebapp>
+        Allow from all
+        Options FollowSymLinks
+        AllowOverride None
+        Order allow,deny
+        DirectoryIndex index.jsp
+    </Directory>
+</VirtualHost>
+
+
+
+<VirtualHost *:80>
+    DocumentRoot /data/kocca/cklwebapp
+    ServerName medu.kocca.kr
+    ServerAlias medu.kocca.kr
+    JkMount /* cklwas01
+    ErrorLog /usr/IBMAHS/logs/kocca/kc_medu-error-log
+    CustomLog /usr/IBMAHS/logs/kocca/kc_medu-access-log common
+    RewriteEngine On
+    RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK)
+    RewriteRule .* - [F]
+
+    <Location />
+        Order allow,deny
+        Allow from all
+        <LimitExcept HEAD GET POST>
+            Deny from all
+        </LimitExcept>
+    </Location>
+
+   <Location /crosseditor/manage>
+       Order deny,allow
+       Deny from all
+   </Location>
+
+    <Location /bos/>
+        Order deny,allow
+        Deny from all
+    </Location>
+
+    <Directory /data/kocca/cklwebapp>
+        Allow from all
+        Options FollowSymLinks
+        AllowOverride None
+        Order allow,deny
+        DirectoryIndex index.jsp
+    </Directory>
+</VirtualHost>
+
+<VirtualHost *:80>
+    DocumentRoot /data/kocca/solrwebapp
+    ServerName solr.ckl.or.kr 
+    ServerAlias solr.ckl.or.kr 
+    JkMount /* cklwas02
+    ErrorLog /usr/IBMAHS/logs/kocca/solr-error-log
+    CustomLog /usr/IBMAHS/logs/kocca/solr-access-log common
+    RewriteEngine On
+    RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK)
+    RewriteRule .* - [F]
+
+    <Location />
+        Order allow,deny
+        Allow from all
+        <LimitExcept HEAD GET POST>
+            Deny from all
+        </LimitExcept>
+    </Location>
+
+#    <Location /solr>
+#        Order deny,allow
+#        Deny from all
+#        Allow from 10.10.10.10
+#    </Location>
+
+</VirtualHost>
+
+<VirtualHost *:80>
+    DocumentRoot /data/kocca/cklwebapp
+    ServerName dream.kocca.or.kr
+    ServerAlias dream.kocca.kr dream.kocca.or.kr 
+    JkMount /* cklwas01
+    ErrorLog /usr/IBMAHS/logs/kocca/kc_dream-error-log
+    CustomLog /usr/IBMAHS/logs/kocca/kc_dream-access-log common
+    RewriteEngine On
+    RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK)
+    RewriteRule .* - [F]
+
+    <Location />
+        Order allow,deny
+        Allow from all
+        <LimitExcept HEAD GET POST>
+            Deny from all
+        </LimitExcept>
+    </Location>
+
+   <Location /crosseditor/manage>
+       Order deny,allow
+       Deny from all
+   </Location>
+
+    <Location /bos/>
+        Order deny,allow
+        Deny from all
+    </Location>
+
+    <Directory /data/kocca/cklwebapp>
+        Allow from all
+        Options FollowSymLinks
+        AllowOverride None
+        Order allow,deny
+        DirectoryIndex index.jsp
+    </Directory>
+</VirtualHost>
+
+<VirtualHost *:80>
+    DocumentRoot /data/kocca/cklwebapp
+    ServerName culturist.or.kr
+    ServerAlias culturist.or.kr www.culturist.or.kr culturist.co.kr www.culturist.co.kr
+    JkMount /* cklwas01
+    ErrorLog /usr/IBMAHS/logs/kocca/culturist-error-log
+    CustomLog /usr/IBMAHS/logs/kocca/culturist-access-log common
+    RewriteEngine On
+    RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK)
+    RewriteRule .* - [F]
+
+    <Location />
+        Order allow,deny
+        Allow from all
+        <LimitExcept HEAD GET POST>
+            Deny from all
+        </LimitExcept>
+    </Location>
+
+   <Location /crosseditor/manage>
+       Order deny,allow
+       Deny from all
+   </Location>
+
+    <Location /bos/>
+        Order deny,allow
+        Deny from all
+    </Location>
+
+    <Directory /data/kocca/cklwebapp>
+        Allow from all
+        Options FollowSymLinks
+        AllowOverride None
+        Order allow,deny
+        DirectoryIndex index.jsp
+    </Directory>
+</VirtualHost>

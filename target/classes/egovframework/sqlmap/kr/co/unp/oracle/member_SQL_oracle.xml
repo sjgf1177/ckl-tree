@@ -1,0 +1,1231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="member">
+
+	<typeAlias  alias="zvl" type="kr.co.unp.util.ZValue"/>
+	<typeAlias  alias="usersVO" type="kr.co.unp.member.vo.UsersVO"/>
+
+	<!-- 관리자 회원 조회 -->
+	<select id="memberDAO.selectLoginInfo" resultClass="zvl">
+		<![CDATA[
+			/*memberDAO.selectLoginInfo*/
+			SELECT A.USER_ID AS username,
+			       A.PWD AS password
+			  FROM TM_ADMIN A
+			WHERE A.USER_ID = #username#
+		]]>
+	</select>
+
+	<select id="memberDAO.selectMember" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/*memberDAO.selectMember*/
+			SELECT
+				   A.USER_IDX,
+				   A.USER_ID,
+			       A.PWD,
+			       A.USER_NM,
+			       A.DEPT_NM,
+			       A.SEAT_NO,
+			       A.DEPT_ID,
+			       A.STATUS,
+			       A.TEL_NO,
+			       A.EMAIL
+			       A.AUTHOR_CODE,
+			       B.AUTHOR_NM,
+			       C.DEPT_NM_KOR,
+			       C.DEPT_NM_ENG,
+			       TO_CHAR(A.FRST_REGIST_PNTTM, 'YYYY-MM-DD') AS REG_DATE
+			  FROM TM_ADMIN A
+			  LEFT OUTER JOIN TC_AUTHORINFO B ON B.AUTHOR_CODE = A.AUTHOR_CODE
+			  LEFT OUTER JOIN TM_ADMIN_DEPT C ON C.DEPT_ID = A.DEPT_ID
+			  WHERE A.USER_ID = #userId#
+		]]>
+		<isNotEmpty prepend="AND" property="status">
+			<![CDATA[	A.STATUS = #status# 		]]>
+		</isNotEmpty>
+	</select>
+
+	<sql id="memberDAO.selectMemberList-where">
+		<isNotEmpty prepend="AND" property="sdate">
+			<![CDATA[	TO_CHAR(A.FRST_REGIST_PNTTM, 'YYYYMMDD') >= REPLACE(#sdate#,'-','') 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="edate">
+			<![CDATA[	TO_CHAR(A.FRST_REGIST_PNTTM, 'YYYYMMDD') <= REPLACE(#edate#,'-','') 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="userIdx">
+			<![CDATA[	USER_IDX = #userIdx# 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="userId">
+			<![CDATA[	USER_ID = #userId# 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchWrd">
+			<isEqual property="searchCnd" compareValue="1">
+				<![CDATA[	A.USER_ID  LIKE '%' || #searchWrd# || '%'		]]>
+			</isEqual>
+			<isEqual property="searchCnd" compareValue="3">
+				<![CDATA[	C.DEPT_NM_KOR LIKE '%' || #searchWrd# || '%' 	]]>
+			</isEqual>
+			<isEqual property="searchCnd" compareValue="4">
+				<![CDATA[	A.USER_NM LIKE '%' || #searchWrd# || '%' 		]]>
+			</isEqual>
+		</isNotEmpty>
+	</sql>
+
+
+	<select id="memberDAO.selectMemberList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/*memberDAO.selectMemberList*/
+		SELECT  *
+			  FROM  (
+			SELECT ROWNUM RNUM, ALL_LIST.*
+			  FROM  (
+					SELECT
+						A.USER_IDX,
+					   	A.USER_ID,
+				       	A.PWD,
+				       	A.USER_NM,
+				       	A.DEPT_NM,
+				       	A.SEAT_NO,
+				       	A.DEPT_ID,
+				       	A.STATUS,
+				       	A.TEL_NO,
+				       	A.EMAIL,
+				       	A.AUTHOR_CODE,
+				       	B.AUTHOR_NM,
+				       	C.DEPT_NM_KOR,
+				       	C.DEPT_NM_ENG,
+						C.DEPT_NM_KOR AS DEPT_NAME,
+						TO_CHAR(A.FRST_REGIST_PNTTM, 'YYYY-MM-DD') AS REG_DATE
+
+					FROM TM_ADMIN A
+					LEFT OUTER JOIN TC_AUTHORINFO B ON B.AUTHOR_CODE = A.AUTHOR_CODE
+					LEFT OUTER JOIN TM_ADMIN_DEPT C ON C.DEPT_ID = A.DEPT_ID
+					WHERE 1 = 1
+		]]>
+		<include refid="memberDAO.selectMemberList-where" />
+	    <![CDATA[
+	    		order by A.FRST_REGIST_PNTTM desc
+
+				    ) ALL_LIST
+				    )
+			 WHERE  RNUM  > #firstIndex#
+			   AND  RNUM <= #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="memberDAO.selectMembers" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/*memberDAO.selectMembers*/
+			SELECT
+				A.USER_IDX,
+				A.USER_ID,
+				A.PWD,
+				A.USER_NM,
+				A.TEL_NO,
+				A.EMAIL,
+				A.SEAT_NO,
+				A.DEPT_ID,
+				A.STATUS,
+				C.DEPT_NM_KOR AS DEPT_NAME,
+				A.AUTHOR_CODE,
+				B.AUTHOR_NM,
+				TO_CHAR(A.FRST_REGIST_PNTTM, 'YYYY-MM-DD') AS REG_DATE,
+				C.DEPT_NM_KOR,
+				C.DEPT_NM_ENG
+			FROM TM_ADMIN A
+			LEFT OUTER JOIN TC_AUTHORINFO B ON B.AUTHOR_CODE = A.AUTHOR_CODE
+			LEFT OUTER JOIN TM_ADMIN_DEPT C ON C.DEPT_ID = A.DEPT_ID
+			WHERE 1=1
+		]]>
+		<include refid="memberDAO.selectMemberList-where" />
+	</select>
+
+	<insert id="memberDAO.insertMember" parameterClass="zvl" >
+		<selectKey resultClass="java.lang.Long" keyProperty="userIdx">
+			SELECT NVL(MAX(USER_IDX),0)+1 AS USER_IDX FROM TM_ADMIN
+		</selectKey>
+		<![CDATA[
+			INSERT INTO TM_ADMIN (
+				USER_IDX,USER_ID,PWD,USER_NM,DEPT_ID,AUTHOR_CODE,FRST_REGIST_PNTTM,SEAT_NO,TEL_NO,USER_IP,EMAIL,STATUS
+			)
+			VALUES (
+				#userIdx#, #userId#, #encodedPwd#, #userNm#, #deptId#, #authorCode#, SYSDATE, #seatNo#, #telNo#, #userIp#, #email#, #status#
+ 			)
+		]]>
+	</insert>
+
+	<update id="memberDAO.updateMember" parameterClass="zvl">
+		<![CDATA[
+		/*memberDAO.updateMember*/
+			UPDATE TM_ADMIN
+			SET
+			     USER_NM = #userNm#,
+			     DEPT_ID = #deptId#,
+			     TEL_NO = #telNo#,
+			     EMAIL = #email#,
+			     SEAT_NO = #seatNo#,
+			     STATUS = #status#,
+		]]>
+		<isNotEmpty property="encodedPwd">
+			<![CDATA[	PWD = #encodedPwd#, 		]]>
+		</isNotEmpty>
+		<![CDATA[
+			     AUTHOR_CODE = #authorCode#
+			  WHERE USER_ID = #userId#
+		]]>
+	</update>
+
+	<delete id="memberDAO.deleteMember" parameterClass="zvl">
+		<![CDATA[
+		/*memberDAO.deleteMember*/
+			DELETE FROM TM_ADMIN
+			WHERE USER_ID = #userId#
+		]]>
+	</delete>
+
+	<update id="memberDAO.updatePwdReset" parameterClass="zvl">
+		<![CDATA[
+		/*memberDAO.updatePwdReset*/
+			UPDATE TM_ADMIN SET
+				PWD = #pwd#
+			WHERE USER_ID = #userId#
+		]]>
+	</update>
+
+	<select id="memberDAO.selectMemberListCnt" parameterClass="zvl" resultClass="int">
+		<![CDATA[
+		/*memberDAO.selectMemberListCnt*/
+			SELECT COUNT(*)
+			  FROM TM_ADMIN A
+			  WHERE 1=1
+		]]>
+		<include refid="memberDAO.selectMemberList-where" />
+	</select>
+
+	<update id="memberDAO.updateMemberMy" parameterClass="zvl">
+		<![CDATA[
+		/*memberDAO.updateMemberMy*/
+			UPDATE TM_ADMIN SET
+				SEAT_NO = #seatNo#,
+				TEL_NO = #telNo#,
+		]]>
+		<isNotEmpty property="encodedPwd">
+			<![CDATA[	PWD = #encodedPwd#, 		]]>
+		</isNotEmpty>
+		<![CDATA[
+			     EMAIL = #email#
+			  WHERE USER_ID = #userId#
+		]]>
+	</update>
+
+
+	<sql id="memberDAO.selectMemberDeptList-where">
+		<isNotEmpty prepend="AND" property="searchWrd">
+			<isEqual property="searchCnd" compareValue="1">
+				<![CDATA[	( DEPT_NM_KOR LIKE '%' || #searchWrd# || '%'   OR DEPT_NM_ENG LIKE '%' || #searchWrd# || '%'  ) 		]]>
+			</isEqual>
+		</isNotEmpty>
+	</sql>
+
+	<select id="memberDAO.selectMemberDeptListCnt" parameterClass="zvl" resultClass="int">
+		<![CDATA[
+		/*memberDAO.selectMemberDeptListCnt*/
+			SELECT COUNT(*)
+			FROM TM_ADMIN_DEPT
+			WHERE 1=1
+		]]>
+		<include refid="memberDAO.selectMemberDeptList-where" />
+	</select>
+
+	<select id="memberDAO.selectMemberDeptList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/*memberDAO.selectMemberDeptList*/
+		SELECT  *
+		  FROM  (
+			SELECT ROWNUM RNUM, ALL_LIST.*
+			  FROM  (
+
+			  SELECT DEPT_ID,
+			       DEPT_NM_KOR,
+			       DEPT_NM_ENG,
+			       TO_CHAR(FRST_REGIST_PNTTM, 'YYYY-MM-DD') AS REG_DATE
+			  FROM TM_ADMIN_DEPT
+			  WHERE 1=1
+		]]>
+		<include refid="memberDAO.selectMemberDeptList-where" />
+	    <![CDATA[
+	    		order by FRST_REGIST_PNTTM DESC
+
+				    ) ALL_LIST
+			    ) ALL_LIST
+			WHERE rnum BETWEEN #firstIndex# + 1 AND #lastIndex#
+		]]>
+	</select>
+
+	<select id="memberDAO.selectAllMemberDeptList" resultClass="zvl">
+		<![CDATA[
+		/*memberDAO.selectAllMemberDeptList*/
+			SELECT
+				DEPT_ID,
+				DEPT_NM_KOR,
+				DEPT_NM_ENG
+			FROM TM_ADMIN_DEPT
+			order by DEPT_NM_KOR
+		]]>
+	</select>
+
+	<insert id="memberDAO.insertMemberDept" parameterClass="zvl" >
+		<selectKey resultClass="java.lang.Long" keyProperty="deptId">
+			SELECT NVL(MAX(DEPT_ID),0)+1 AS DEPT_ID  FROM TM_ADMIN_DEPT
+		</selectKey>
+		<![CDATA[
+		/*memberDAO.insertMemberDept*/
+			INSERT INTO TM_ADMIN_DEPT (DEPT_ID, DEPT_NM_KOR,DEPT_NM_ENG,FRST_REGIST_PNTTM)
+			VALUES ( #deptId#, #deptNmKor#, #deptNmEng#, SYSDATE )
+		]]>
+	</insert>
+
+	<update id="memberDAO.updateMemberDept" parameterClass="zvl">
+		<![CDATA[
+		/*memberDAO.updateMemberDept*/
+			UPDATE TM_ADMIN_DEPT
+			SET
+		       DEPT_NM_KOR = #deptNmKor#,
+		       DEPT_NM_ENG = #deptNmEng#
+			WHERE DEPT_ID = #deptId#
+		]]>
+	</update>
+
+	<delete id="memberDAO.deleteMemberDept" parameterClass="zvl">
+		<![CDATA[
+		/*memberDAO.deleteMemberDept*/
+			DELETE FROM TM_ADMIN_DEPT
+			WHERE DEPT_ID = #deptId#
+		]]>
+	</delete>
+	
+	<!-- 비밀번호 변경 -->
+ 	<update id="memberDAO.adminPwdChangeRequest" parameterClass="zvl">
+ 		<![CDATA[
+		    UPDATE TM_ADMIN
+		    SET
+			  PWD = #password#,
+			  PWD_CHANGE_DT = SYSDATE
+			WHERE USER_IDX = #userIdx#
+ 		]]>
+ 	</update>
+
+<!-- 비밀번호 다음에 변경(한달후) -->
+	<update id="memberDAO.adminPwdNextChange" parameterClass="zvl">
+		<![CDATA[
+			UPDATE TM_ADMIN
+			SET
+			  PWD_CHANGE_DT = SYSDATE - (INTERVAL '2' MONTH)
+			WHERE USER_IDX = #userIdx#
+		]]>
+	</update>
+
+
+
+
+
+
+
+
+
+
+	<!-- 여기서부터 사용자 쿼리입니다. -->
+
+	<select id="memberDAO.selectSimpletUserLoginInfo" resultClass="zvl">
+		<![CDATA[
+			SELECT
+				B.USER_SN,
+		       	B.USER_ID,
+		       	B.PASSWORD,
+		       	A.AUTH_KEY,
+		       	A.USER_SN,
+		       	NVL(B.CONFIRM_KEY,'kocca') AS CONFIRM_KEY
+		  	FROM TM_SIMPLE_LOGIN A, TM_USER B
+			WHERE A.USER_SN = B.USER_SN
+			AND A.AUTH_SE = #authSe#
+			AND A.AUTH_KEY = #authKey#
+			AND B.USE_AT = 'Y'
+		]]>
+	</select>
+
+	<select id="memberDAO.selectUserLoginInfo" resultClass="zvl">
+		<![CDATA[
+			SELECT
+				A.USER_SN,
+				A.USER_NM,
+				A.USER_ID AS username,
+			    A.PASSWORD AS password,
+			    NVL(A.CONFIRM_KEY,'kocca') AS CONFIRM_KEY,
+			    crypto.dec('normal', A.EMAIL) AS EMAIL,
+			    crypto.dec('normal', A.MBTLNUM) AS MBTLNUM,
+			    A.MBER_SE,
+			    A.AUTH_SE,
+			    A.USER_STTUS,
+			    A.AUTH_EMAIL_AT
+			  FROM TM_USER A
+			WHERE USE_AT = 'Y' AND
+
+			(A.USER_ID = #username#
+		]]>
+		<isNotEmpty prepend="OR" property="userSn">
+			A.USER_SN = #userSn#
+		</isNotEmpty>
+			)
+
+		<isNotEmpty prepend="AND" property="chkPwd">
+			A.PASSWORD = #chkPwd#
+		</isNotEmpty>
+	</select>
+
+	<sql id="memberDAO.selectUserMemberList-where">
+		<isNotEmpty prepend="AND" property="searchWrd">
+			<isEqual property="searchCnd" compareValue="1">
+				<![CDATA[	A.USER_ID LIKE '%' || #searchWrd# || '%' 		]]>
+			</isEqual>
+			<isEqual property="searchCnd" compareValue="2">
+				<![CDATA[	A.USER_NM LIKE '%' || #searchWrd# || '%' 		]]>
+			</isEqual>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="mberSe">
+			<![CDATA[	MBER_SE = #mberSe# 		]]>
+		</isNotEmpty>
+
+		<isNotEmpty prepend="AND" property="userId">
+			<![CDATA[	A.USER_ID LIKE '%' || #userId# || '%' 		]]>
+		</isNotEmpty>
+
+		<isNotEmpty prepend="AND" property="userNm">
+			<![CDATA[	A.USER_NM LIKE '%' || #userNm# || '%' 		]]>
+		</isNotEmpty>
+
+		<isNotEmpty prepend="AND" property="mbtlnum">
+			<![CDATA[	A.MBTLNUM = crypto.enc('normal', #mbtlnum#) 		]]>
+		</isNotEmpty>
+
+		<isNotEmpty prepend="AND" property="email">
+			<![CDATA[	A.EMAIL = crypto.enc('normal', #email#) 		]]>
+		</isNotEmpty>
+	</sql>
+
+	<select id="memberDAO.selectUserMemberList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		SELECT
+			MBER_SE,
+	       	USER_SN,
+	       USER_NM,
+	       TO_CHAR(BRTHDY,'YYYY-MM-DD') AS BRTHDY,
+	       crypto.dec('normal', EMAIL) AS  EMAIL,
+	       crypto.dec('normal', MBTLNUM) AS  MBTLNUM,
+	       SEX,
+	       RESDNC_SE,
+	       SIDO,
+	       GUGUN,
+	       RESDNC_OVSEA,
+	       JOB,
+	       EMAIL_AT,
+	       SMS_AT,
+	       SBSCRB_DT,
+	       DRMNCY_CNVRS_DT,
+		   REG_DATE,
+	       LAST_LOGIN_DT,
+	       PWD_CHANGE_DT,
+	       AGRE_AT,
+	       AGRE_DT,
+	       AUTH_SE,
+	       AUTH_DT,
+	       AUTH_EMAIL_AT,
+	       USER_STTUS,
+	       USER_IP,
+	       FRST_REGISTER_ID,
+	       LAST_UPDT_PNTTM,
+	       LAST_UPDUSR_ID,
+	       USER_ID
+		FROM
+		( SELECT a.*, rownum+rnum-1 as TOTAL_ROWS
+		   FROM ( SELECT a.*, rownum rnum
+		            FROM (
+			SELECT A.MBER_SE,
+			       A.USER_SN,
+			       A.USER_NM,
+			       A.BRTHDY,
+			       A.SEX,
+			       A.RESDNC_SE,
+			       A.SIDO,
+			       A.GUGUN,
+			       A.RESDNC_OVSEA,
+			       A.JOB,
+			       A.EMAIL_AT,
+			       A.SMS_AT,
+			       A.SBSCRB_DT,
+			       TO_CHAR((A.LAST_LOGIN_DT + 366), 'YYYY-MM-DD') AS DRMNCY_CNVRS_DT,
+				   TO_CHAR(A.SBSCRB_DT, 'YYYY-MM-DD') as REG_DATE,
+			       A.LAST_LOGIN_DT,
+			       A.PWD_CHANGE_DT,
+			       A.AGRE_AT,
+			       A.AGRE_DT,
+			       A.AUTH_SE,
+			       A.AUTH_DT,
+			       A.AUTH_EMAIL_AT,
+			       A.USER_STTUS,
+			       A.USER_IP,
+			       A.FRST_REGISTER_ID,
+			       A.LAST_UPDT_PNTTM,
+			       A.LAST_UPDUSR_ID,
+			       A.USER_ID,
+			       A.MBTLNUM,
+			       A.EMAIL
+
+			  FROM TM_USER A
+			  WHERE USE_AT = 'Y'
+		]]>
+		<include refid="memberDAO.selectUserMemberList-where" />
+	    <![CDATA[
+	    		ORDER BY SBSCRB_DT DESC NULLS LAST
+		            ) a
+		          ORDER BY rnum DESC ) a
+		  ORDER BY rnum )
+		WHERE rnum BETWEEN #firstIndex# + 1 AND #lastIndex#
+		]]>
+	</select>
+
+	<select id="memberDAO.selectUserMembers" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/*memberDAO.selectUserMembers*/
+			SELECT A.MBER_SE,
+			       A.USER_SN,
+			       A.PASSWORD,
+			       A.USER_NM,
+				   crypto.dec('normal', A.EMAIL) AS EMAIL,
+				   crypto.dec('normal', A.MBTLNUM) AS MBTLNUM,
+			       A.BRTHDY,
+			       A.SEX,
+			       A.RESDNC_SE,
+			       FN_CMMNCODE_NM('COM062',A.RESDNC_SE) AS RESDNC_SE_NM,
+			       A.SIDO,
+			       FN_CMMNCODE_NM('COM063',A.SIDO) AS SIDO_NM,
+			       A.GUGUN,
+			       FN_CMMNCODE_NM('COM063',A.GUGUN) AS GUGUN_NM,
+			       A.RESDNC_OVSEA,
+			       A.JOB,
+			       A.EMAIL_AT,
+			       A.SMS_AT,
+			       TO_CHAR(A.SBSCRB_DT, 'YYYY-MM-DD HH24:MI:SS') as SBSCRB_DT,
+			       TO_CHAR((A.LAST_LOGIN_DT + 366), 'YYYY-MM-DD HH24:MI:SS') AS DRMNCY_CNVRS_DT,
+			       TO_CHAR(A.LAST_LOGIN_DT, 'YYYY-MM-DD HH24:MI:SS') as LAST_LOGIN_DT,
+			       TO_CHAR(A.PWD_CHANGE_DT, 'YYYY-MM-DD HH24:MI:SS') as PWD_CHANGE_DT,
+			       TO_CHAR((A.PWD_CHANGE_DT + 90), 'YYYY-MM-DD HH24:MI:SS') AS PWD_CHANGE_PREARNGE_DT,
+			       A.AGRE_AT,
+			       TO_CHAR(A.AGRE_DT, 'YYYY-MM-DD HH24:MI:SS') as AGRE_DT,
+			       TO_CHAR((A.AGRE_DT + 365*3), 'YYYY-MM-DD HH24:MI:SS') as RE_AGRE_DT,
+			       A.AUTH_SE,
+			       FN_CMMNCODE_NM('COM088',A.AUTH_SE) AS AUTH_SE_NM,
+			       TO_CHAR(A.AUTH_DT, 'YYYY-MM-DD HH24:MI:SS') as AUTH_DT,
+			       A.AUTH_EMAIL_AT,
+			       A.USER_STTUS,
+			       A.USER_IP,
+			       A.FRST_REGISTER_ID,
+			       A.LAST_UPDT_PNTTM,
+			       A.LAST_UPDUSR_ID,
+			       A.USER_ID,
+			       A.PARNTS_NM,
+			       A.PARNTS_MBTLNUM,
+			       A.PARNTS_AGRE_AT,
+                   (SELECT COUNT(*) FROM TM_LOGIN_HISTORY WHERE A.USER_ID = USER_ID AND SITE_NM IN('ckl', 'edu')) AS FAILR_CNT
+			FROM TM_USER A
+			WHERE 1 = 1
+		]]>
+		<isNotEmpty prepend="AND" property="userSn">
+			<![CDATA[	USER_SN = #userSn# 		]]>
+		</isNotEmpty>
+		<isEmpty prepend="AND" property="userSn">
+			<![CDATA[	USER_ID = #userId# 		]]>
+		</isEmpty>
+	</select>
+
+	<insert id="memberDAO.insertUserMember" parameterClass="zvl" >
+		<selectKey resultClass="java.lang.Long" keyProperty="userSn">
+			SELECT NVL(MAX(USER_SN),0)+1 AS USER_SN FROM TM_USER
+		</selectKey>
+		<![CDATA[
+ 			INSERT INTO TM_USER (
+ 				MBER_SE,USER_SN,PASSWORD,USER_NM,EMAIL,MBTLNUM,BRTHDY,SEX,RESDNC_SE,SIDO,GUGUN,RESDNC_OVSEA,JOB,EMAIL_AT,SMS_AT,
+ 				SBSCRB_DT,PWD_CHANGE_AT,PWD_CHANGE_DT,AGRE_AT,AGRE_DT,AUTH_SE,AUTH_DT,AUTH_EMAIL_AT,USER_STTUS,
+ 				USER_IP,FRST_REGISTER_ID,LAST_UPDT_PNTTM,LAST_UPDUSR_ID,USER_ID,USE_AT,RM,PARNTS_NM, PARNTS_MBTLNUM, PARNTS_AGRE_AT
+ 			)
+			VALUES (
+				#mberSe#, #userSn#, #password#, #userNm#, crypto.enc('normal', #email#), crypto.enc('normal', #mbtlnum#), TO_DATE(#brthdy#, 'YYYY-MM-DD'), #sex#, #resdncSe#, #sido#, #gugun#, #resdncOvsea#, #job#, #emailAt#, #smsAt#,
+				sysdate, 'Y', sysdate, 'Y', sysdate, #authSe#, sysdate, #authEmailAt#, #userSttus#,
+				#userIp#, #userSn#, sysdate, #userSn#, #userId#, 'Y', #rm#, #parntsNm#, #parntsMbtlnum#, #parntsAgreAt#
+			)
+		]]>
+	</insert>
+
+    <!-- 간편로그인 등록 -->
+	<insert id="memberDAO.insertSimpleUserMember" parameterClass="zvl" >
+		<![CDATA[
+ 			INSERT INTO TM_SIMPLE_LOGIN (
+ 				AUTH_SE,AUTH_DT,AUTH_KEY,USER_SN
+ 			)
+			VALUES (
+				#snsAuthSe#,SYSDATE,#authKey#,#userSn#
+			)
+		]]>
+	</insert>
+
+	<update id="memberDAO.updateUserMember" parameterClass="zvl">
+		<![CDATA[
+			UPDATE TM_USER
+			SET
+			       USER_NM = #userNm#,
+			       EMAIL = crypto.enc('normal', #email#),
+			       MBTLNUM = crypto.enc('normal', #mbtlnum#),
+			       BRTHDY = #brthdy#,
+			       SEX = #sex#,
+			       RESDNC_SE = #resdncSe#,
+			       SIDO = #sido#,
+			       GUGUN = #gugun#,
+			       RESDNC_OVSEA = #resdncOvsea#,
+			       JOB = #job#,
+			       EMAIL_AT = #emailAt#,
+			       SMS_AT = #smsAt#,
+			       LAST_UPDT_PNTTM = sysdate,
+			       LAST_UPDUSR_ID = #lastUpdusrId#,
+			       RM = #rm#
+		]]>
+		<isNotEmpty property="mberSe" >
+				<![CDATA[
+					,MBER_SE = #mberSe#
+				]]>
+		</isNotEmpty>
+		<isNotEmpty property="siteSe" >
+			<isEqual property="siteSe" compareValue="kocca">
+				<![CDATA[
+					,PASSWORD = #password#
+					,AUTH_SE = #authSe#
+					,AUTH_EMAIL_AT = #pwdChangeAt#
+					,PWD_CHANGE_AT = #authEmailAt#
+					,USER_STTUS = #userSttus#
+					,AGRE_AT = #agreAt#
+					,AGRE_DT = SYSDATE
+				]]>
+			</isEqual>
+		</isNotEmpty>
+		<![CDATA[
+			WHERE USER_SN = #userSn#
+		]]>
+	</update>
+
+
+	<update id="memberDAO.updateUserMemberMbtlnum" parameterClass="zvl">
+		<![CDATA[
+			UPDATE TM_USER
+			SET
+			       MBTLNUM = crypto.enc('normal', #mbtlnum#),
+
+			       LAST_UPDT_PNTTM = sysdate,
+			       LAST_UPDUSR_ID = #lastUpdusrId#
+			WHERE USER_SN = #userSn#
+		]]>
+	</update>
+
+
+	<delete id="memberDAO.deleteUserMember" parameterClass="zvl">
+		<![CDATA[
+			DELETE
+			  FROM TM_USER
+			  WHERE USER_SN = #userSn#
+		]]>
+	</delete>
+
+
+	<delete id="memberDAO.deleteSimpleLogin2" parameterClass="zvl">
+		<![CDATA[
+			DELETE
+			  FROM TM_SIMPLE_LOGIN
+			  WHERE USER_SN = #userSn#
+		]]>
+	</delete>
+
+	<update id="memberDAO.updateUserPwdReset" parameterClass="zvl">
+		<![CDATA[
+			UPDATE TM_USER
+			SET
+				PASSWORD = #password#,
+				PWD_CHANGE_DT = SYSDATE
+			WHERE USER_SN = #userSn#
+		]]>
+	</update>
+
+	<select id="memberDAO.selectUserMemberListCnt" parameterClass="zvl" resultClass="int">
+		<![CDATA[
+			SELECT COUNT(*) FROM TM_USER A
+			WHERE USE_AT = 'Y'
+		]]>
+		<include refid="memberDAO.selectUserMemberList-where" />
+	</select>
+
+<!-- 비밀번호 초기화 -->
+ 	<update id="memberDAO.pwdInitl" parameterClass="zvl" >
+ 		<![CDATA[
+			UPDATE TM_USER SET
+			  PASSWORD = #pwd#
+			  ,PWD_CHANGE_AT = 'N'
+			  ,PWD_CHANGE_DT = SYSDATE
+			WHERE USER_SN = #userSn#
+ 		]]>
+ 	</update>
+
+ 	<select id="memberDAO.selectSimpleLoginList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		SELECT
+			A.AUTH_SE,
+		    B.CODE,
+		    B.CODE_NM AS AUTH_SE_NM,
+		    TO_CHAR(A.AUTH_DT, 'YYYY-MM-DD HH24:MI:SS') AS AUTH_DT,
+		    A.AUTH_KEY AS AUTH_KEY,
+		    A.USER_SN
+		FROM TC_CMMNCODE_DETAIL B
+		LEFT OUTER JOIN TM_SIMPLE_LOGIN A ON B.CODE = A.AUTH_SE AND USER_SN = #userSn#
+		WHERE B.USE_AT = 'Y'
+		AND B.CODE_ID = 'COM086'
+		ORDER BY B.SORT_ORDR ASC
+		]]>
+	</select>
+
+<!-- 간편로그인 삭제 -->
+	<delete id="memberDAO.deleteSimpleLogin" parameterClass="zvl">
+		<![CDATA[
+			DELETE FROM TM_SIMPLE_LOGIN
+			WHERE USER_SN = #userSn# AND AUTH_SE = #authSe#
+		]]>
+	</delete>
+
+	<!-- 이메일 인증 email중복체크 -->
+	<select id="memberDAO.checkDupEmailAuth" parameterClass="zvl" resultClass="java.lang.Integer">
+		<![CDATA[
+			SELECT COUNT(*) AS cnt
+			  FROM TM_USER
+			 WHERE EMAIL = crypto.enc('normal', #email#) AND USE_AT = 'Y'
+		]]>
+		<isNotEmpty prepend="AND" property="userSn">
+			<![CDATA[	USER_SN = #userSn# 		]]>
+		</isNotEmpty>
+	</select>
+
+<!-- 아이디 중복 체크 -->
+	<select id="memberDAO.checkDupID" parameterClass="zvl" resultClass="java.lang.Integer">
+		<![CDATA[
+			SELECT COUNT(*) AS cnt FROM TM_USER
+			WHERE USER_ID = #userId# AND USE_AT = 'Y'
+		]]>
+	</select>
+
+<!-- 이메일 중복 체크 -->
+	<select id="memberDAO.checkDupEmail" parameterClass="zvl" resultClass="java.lang.Integer">
+		<![CDATA[
+			SELECT COUNT(*) AS cnt
+			  FROM TM_USER
+			 WHERE EMAIL = crypto.enc('normal', #email#) AND USE_AT = 'Y'
+		]]>
+		<isNotEmpty prepend="AND" property="userSn">
+			<![CDATA[	USER_SN != #userSn# 		]]>
+		</isNotEmpty>
+	</select>
+
+<!-- 휴대폰번호 중복 체크 -->
+	<select id="memberDAO.checkDupMbtlnum" parameterClass="zvl" resultClass="java.lang.Integer">
+		<![CDATA[
+			SELECT COUNT(*) AS cnt
+			  FROM TM_USER
+			 WHERE MBTLNUM = crypto.enc('normal', #mbtlnum#) AND USE_AT = 'Y'
+		]]>
+		<isNotEmpty prepend="AND" property="userSn">
+			<![CDATA[	USER_SN != #userSn# 		]]>
+		</isNotEmpty>
+	</select>
+
+<!-- 개인정보처리방침 동의 및 정보수신여부-->
+	<update id="memberDAO.reAgreRequest" parameterClass="zvl">
+		<![CDATA[
+			UPDATE TM_USER
+			SET
+				AGRE_AT = 'Y',
+				AGRE_DT = SYSDATE
+		]]>
+		<isNotEmpty prepend="," property="mode">
+			<![CDATA[
+				EMAIL_AT = #emailAt#,
+				SMS_AT = #smsAt#
+			]]>
+		</isNotEmpty>
+		<![CDATA[
+			WHERE USER_SN = #userSn#
+		]]>
+	</update>
+
+<!-- 아이디/비밀번호 찾기 -->
+	<select id="memberDAO.searchRequest" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+			SELECT ROWNUM RNUM,
+				USER_SN, USER_ID, USER_NM, crypto.dec('normal', EMAIL) AS EMAIL, crypto.dec('normal', MBTLNUM) AS MBTLNUM, AUTH_SE, AUTH_EMAIL_AT, TO_CHAR(SBSCRB_DT, 'YYYY-MM-DD HH24:MI') as SBSCRB_DT
+			FROM TM_USER
+			WHERE USER_NM = #userNm# AND USE_AT = 'Y'
+		]]>
+		<isNotEmpty property="returnTp">
+			<isEqual prepend="AND" property="returnTp" compareValue="1">
+				<![CDATA[	EMAIL = crypto.enc('normal', #email#)   ]]>
+			</isEqual>
+			<isEqual prepend="AND" property="returnTp" compareValue="2">
+				<![CDATA[	MBTLNUM = crypto.enc('normal', #mbtlnum#)   ]]>
+			</isEqual>
+
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="userId">
+			<![CDATA[	USER_ID = #userId#   ]]>
+		</isNotEmpty>
+	</select>
+
+<!-- 비밀번호 변경 -->
+ 	<update id="memberDAO.pwdChangeRequest" parameterClass="zvl">
+ 		<![CDATA[
+		    UPDATE TM_USER
+		    SET
+			  PASSWORD = #password#,
+			  PWD_CHANGE_DT = SYSDATE,
+			  PWD_CHANGE_AT = 'Y'
+			WHERE USER_SN = #userSn#
+ 		]]>
+ 	</update>
+
+<!-- 비밀번호 다음에 변경(한달후) -->
+	<update id="memberDAO.pwdNextChange" parameterClass="zvl">
+		<![CDATA[
+			UPDATE TM_USER
+			SET
+			  PWD_CHANGE_DT = SYSDATE - (INTERVAL '2' MONTH)
+			WHERE USER_SN = #userSn#
+		]]>
+	</update>
+
+<!-- 회원인증 변경 -->
+	<update id="memberDAO.authSeChange" parameterClass="zvl">
+		<![CDATA[
+			UPDATE TM_USER
+			SET
+				AUTH_DT = SYSDATE,
+				AUTH_SE = #authSe#
+		]]>
+		<isNotEmpty prepend="," property="authEmailAt">
+			<![CDATA[	AUTH_EMAIL_AT = #authEmailAt# 		]]>
+		</isNotEmpty>
+		<![CDATA[
+			WHERE USER_SN = #userSn#
+		]]>
+	</update>
+
+<!-- 회원메일인증 체크 -->
+	<select id="memberDAO.authEmailcheckDup" parameterClass="zvl" resultClass="java.lang.Integer">
+		<![CDATA[
+			SELECT COUNT(*) AS cnt
+			  FROM TM_USER
+			 WHERE EMAIL = crypto.enc('normal', #email#) AND USER_SN = #userSn#
+		]]>
+	</select>
+
+<!-- 회원메일인증 -->
+	<update id="memberDAO.authEmailAtChange" parameterClass="zvl">
+		<![CDATA[
+			UPDATE TM_USER
+			SET
+				AUTH_DT = SYSDATE,
+				AUTH_EMAIL_AT = #authEmailAt#
+			WHERE  1 = 1
+		]]>
+		<isNotEmpty property="userSn">
+			AND USER_SN = #userSn#
+		</isNotEmpty>
+
+		<isEmpty property="userSn">
+			AND EMAIL = crypto.enc('normal', #email#)
+		</isEmpty>
+	</update>
+
+<!-- 회원탈퇴 등록 -->
+	<insert id="memberDAO.insertSecsn" parameterClass="zvl" >
+		<selectKey resultClass="java.lang.Long" keyProperty="sn">
+			SELECT NVL(MAX(SN),0)+1 AS SN FROM TM_USER_SECSN
+		</selectKey>
+		<![CDATA[
+ 			INSERT INTO TM_USER_SECSN (
+ 				SN,USER_ID,USER_SECSN_DT
+ 			)
+			VALUES (
+				#sn#, #userId#, SYSDATE
+			)
+		]]>
+	</insert>
+
+	<!-- 로그인시 최종접속일시 -->
+ 	<update id="memberDAO.lastLoginDe" parameterClass="usersVO" >
+ 		<![CDATA[
+			UPDATE TM_USER SET
+			  LAST_LOGIN_DT = SYSDATE
+			WHERE USER_SN = #userIdx#
+ 		]]>
+ 	</update>
+
+ 	<!-- 로그인시 confirmkey(salt)값 업데이트 -->
+ 	<update id="memberDAO.updateConfirmKey" parameterClass="zvl" >
+ 		<![CDATA[
+			UPDATE TM_USER SET
+			  CONFIRM_KEY = #newConfirmKey#
+			WHERE USER_SN = #userSn#
+ 		]]>
+ 	</update>
+
+ 	<!-- 로그인시 구 콘텐츠아카데미 회원정보 조회 -->
+	<select id="memberDAO.oldAcademyUser" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+			SELECT
+			   A.USER_ID,
+		       A.EMAIL,
+		       A.MOBLPHON,
+		       A.USER_NM,
+		       A.PASSWORD
+			FROM TM_OLD_CKL_USER A
+			WHERE A.USER_ID = #username# AND A.UNITY_AT = 'N'
+		]]>
+	</select>
+
+ 	<!-- 로그인시 구 창의드림 회원정보 조회 -->
+	<select id="memberDAO.oldDreamUser" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+			SELECT
+			   A.USER_ID,
+		       A.EMAIL,
+		       A.MOBLPHON,
+		       A.USER_NM,
+		       A.PASSWORD
+			FROM TM_OLD_DREAM_USER A
+			WHERE A.USER_ID = #username# AND A.UNITY_AT = 'N'
+		]]>
+	</select>
+
+ 	<!-- 구 창의드림 비밀번호 암호화 -->
+	<select id="memberDAO.oldDreamPwd" parameterClass="zvl" resultClass="java.lang.String">
+		<![CDATA[
+			SELECT CRYPTO.HASH(6, #password#) AS PASSWORD FROM DUAL
+		]]>
+	</select>
+
+ 	<!-- 구 회원 목록 조회 -->
+	<select id="memberDAO.listOldMember" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		SELECT ROWNUM RNUM, B.* FROM
+			(
+      		SELECT
+			      A.USER_ID,
+			      A.EMAIL,
+			      MOBLPHON,
+			      A.USER_NM,
+			      A.LAST_JOIN_DT,
+			      A.SBSCRB_DT,
+			      'ckl' AS SITE_SE,
+			      A.PASSWORD,
+			      A.USER_SN,
+			      A.UNITY_AT
+			  FROM TM_OLD_CKL_USER A
+              WHERE UNITY_AT = 'N' AND USER_ID = #email#
+			UNION ALL
+			  SELECT
+			      A.USER_ID,
+			      A.EMAIL,
+			      A.MOBLPHON,
+			      A.USER_NM,
+			      A.LAST_JOIN_DT,
+			      A.SBSCRB_DT,
+			      'dream' AS SITE_SE,
+		       	  PASSWORD,
+			      A.USER_SN,
+			      A.UNITY_AT
+			  FROM TM_OLD_DREAM_USER A
+              WHERE UNITY_AT = 'N' AND USER_ID = #email#
+			UNION ALL
+			  SELECT
+			      A.USER_ID,
+			      crypto.dec('normal', A.EMAIL) AS EMAIL,
+			      crypto.dec('normal', A.MBTLNUM) AS MOBLPHON,
+			      A.USER_NM,
+			      A.LAST_LOGIN_DT AS LAST_JOIN_DT,
+			      A.SBSCRB_DT,
+			      'kocca' AS SITE_SE,
+		       	  A.PASSWORD,
+			      A.USER_SN,
+			      A.USE_AT AS UNITY_AT
+			  FROM TM_USER A
+              WHERE USE_AT = 'Y' AND EMAIL = crypto.enc('normal', #email#)
+			) B
+			WHERE 1=1
+		]]>
+	</select>
+
+	<update id="memberDAO.updateUseAtUser" parameterClass="zvl">
+		<![CDATA[
+			UPDATE TM_USER
+			SET
+				USE_AT = 'N'
+			WHERE USE_AT = 'Y' AND EMAIL = crypto.enc('normal', #email#) AND USER_SN != #userSn#
+		]]>
+	</update>
+
+	<update id="memberDAO.updateOldAcademy" parameterClass="zvl">
+		<![CDATA[
+			UPDATE TM_OLD_CKL_USER
+			SET
+				UNITY_AT = 'Y'
+			WHERE UNITY_AT = 'N' AND USER_ID = #email#
+		]]>
+	</update>
+
+	<update id="memberDAO.updateOldDream" parameterClass="zvl">
+		<![CDATA[
+			UPDATE TM_OLD_DREAM_USER
+			SET
+				UNITY_AT = 'Y'
+			WHERE UNITY_AT = 'N' AND USER_ID = #email#
+		]]>
+	</update>
+
+ 	<delete id="memberDAO.loginHistoryDelete" parameterClass="zvl">
+ 		<![CDATA[
+			DELETE FROM TM_LOGIN_HISTORY
+			WHERE SITE_NM IN('ckl', 'edu','cklmobile') AND USER_ID = #userId#
+ 		]]>
+ 	</delete>
+
+	<!-- 14세 이상 회원으로 전환 -->
+	<update id="memberDAO.updateParntsAgreChange" parameterClass="zvl">
+		<![CDATA[
+			UPDATE TM_USER SET
+				PARNTS_NM = NULL,
+				PARNTS_MBTLNUM = NULL,
+				PARNTS_AGRE_AT = NULL,
+				LAST_UPDT_PNTTM = SYSDATE
+			WHERE USER_SN = #userSn#
+		]]>
+	</update>
+	
+	
+<!-- /////////// 콘텐츠 시연장 ////////////// -->
+	<select id="memberDAO.selectConcertUserMembers" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/*memberDAO.selectConcertUserMembers*/
+			SELECT  *
+			  FROM  (
+			SELECT ROWNUM RNUM, ALL_LIST.*
+			  FROM  (
+					SELECT cc.USER_ID
+						, cc.COMP_AUTH
+						, cc.CONCERT_EMAIL_AT
+						, cc.CONCERT_SMS_AT
+						, crypto.dec('normal', cc.CONCERT_EMAIL) AS CONCERT_EMAIL
+						, cc.COMP_NM
+						, cc.COMP_CN
+						, cc.CONCERT_USER_NM
+						, cc.FRST_REGISTER_DT AS REG_DATE
+						, cc.LAST_UPDT_DT AS UPT_DATE
+						, crypto.dec('normal', ckl.EMAIL) AS EMAIL
+						, ckl.USER_NM
+					FROM TM_CONCERT_USER cc
+		     	 	LEFT JOIN TM_USER ckl ON ckl.USER_ID = cc.USER_ID
+					WHERE 1=1
+				]]>
+				<isNotEmpty prepend="AND" property="userSn">
+					<![CDATA[	cc.USER_ID = (SELECT USER_ID FROM TM_USER WHERE USER_SN = #userSn# )		]]>
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="userId">
+					<![CDATA[	cc.USER_ID = #userId#		]]>
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="compAuth">
+					<![CDATA[	cc.COMP_AUTH = #compAuth#		]]>
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="concertUseAt"><![CDATA[	
+								cc.USE_AT = #concertUseAt# 
+				]]></isNotEmpty>
+				<isEqual prepend="AND" property="searchCnd" compareValue="1">
+					<![CDATA[	cc.USER_ID = #searchWrd#		]]>
+				</isEqual>
+				<isEqual prepend="AND" property="searchCnd" compareValue="2">
+					<![CDATA[	ckl.USER_NM = #searchWrd#		]]>
+				</isEqual>
+		<![CDATA[
+	    ) ALL_LIST
+	    )
+		 WHERE  RNUM  > #firstIndex#
+		   AND  RNUM <= #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="memberDAO.selectConcertUserMemberListCnt" parameterClass="zvl" resultClass="int">
+		<![CDATA[
+			SELECT COUNT(*) FROM TM_CONCERT_USER
+			WHERE 1=1 
+		]]>
+		<isNotEmpty prepend="AND" property="compAuth">
+			<![CDATA[	COMP_AUTH = #compAuth#		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="concertUseAt">
+			<![CDATA[	USE_AT = #concertUseAt#		]]>
+		</isNotEmpty>
+	</select>
+
+	<insert id="memberDAO.insertConcertUserMember" parameterClass="zvl" >
+		<![CDATA[
+ 			MERGE INTO TM_CONCERT_USER cc
+			USING (SELECT USER_ID FROM TM_USER WHERE 1=1 
+		]]>
+			<isEmpty property="userId"><isNotEmpty prepend="AND" property="userSn"><![CDATA[	
+				USER_SN = #userSn#
+			]]></isNotEmpty></isEmpty>
+			<isEmpty property="userSn"><isNotEmpty prepend="AND" property="userId"><![CDATA[	
+				USER_ID = #userId#
+			]]></isNotEmpty></isEmpty>
+			<isNotEmpty property="userId"><isNotEmpty prepend="AND" property="userSn">
+				USER_SN = #userSn#
+			</isNotEmpty></isNotEmpty>
+		<![CDATA[
+			) ckl
+			ON ( ckl.USER_ID = cc.USER_ID )
+			
+	--!!!!! UPDATE !!!!!		
+			WHEN MATCHED THEN
+			UPDATE SET 
+				LAST_UPDT_DT = SYSDATE
+		]]>
+			<isNotEmpty property="concertEmailAt"><![CDATA[	
+				, CONCERT_EMAIL_AT = #concertEmailAt#
+			]]></isNotEmpty>
+			<isNotEmpty property="concertSmsAt"><![CDATA[	
+				, CONCERT_SMS_AT = #concertSmsAt#
+			]]></isNotEmpty>
+			<isNotEmpty property="compNm"><![CDATA[	
+				, COMP_NM = #compNm#
+			]]></isNotEmpty>
+			<isNotEmpty property="concertEmail"><![CDATA[	
+				, CONCERT_EMAIL = crypto.enc('normal', #concertEmail#) --!!
+			]]></isNotEmpty>
+			<isNotEmpty property="compAuth"><![CDATA[	
+				, COMP_AUTH = #compAuth# 
+			]]></isNotEmpty>
+			<isNotEmpty property="compCn"><![CDATA[	
+				, COMP_CN = #compCn# 
+			]]></isNotEmpty>
+			<isNotEmpty property="concertUserNm"><![CDATA[	
+				, CONCERT_USER_NM = #concertUserNm# 
+			]]></isNotEmpty>
+			<isNotEmpty property="concertUseAt"><![CDATA[	
+				, USE_AT = #concertUseAt# 
+			]]></isNotEmpty>
+		<![CDATA[
+				
+	--!!!!! INSERT !!!!!		
+			WHEN NOT MATCHED THEN
+			INSERT ( 
+				USER_ID
+		]]>
+			<isNotEmpty property="concertEmailAt"><![CDATA[
+				, CONCERT_EMAIL_AT
+			]]></isNotEmpty>
+			<isNotEmpty property="concertSmsAt"><![CDATA[
+				, CONCERT_SMS_AT
+			]]></isNotEmpty>
+			<isNotEmpty property="compNm"><![CDATA[
+				, COMP_NM
+			]]></isNotEmpty>
+			<isNotEmpty property="concertEmail"><![CDATA[
+				, CONCERT_EMAIL
+			]]></isNotEmpty>
+			<isNotEmpty property="compAuth"><![CDATA[
+				, COMP_AUTH 
+			]]></isNotEmpty>
+			<isNotEmpty property="compCn"><![CDATA[	
+				, COMP_CN
+			]]></isNotEmpty>
+			<isNotEmpty property="concertUserNm"><![CDATA[	
+				, CONCERT_USER_NM
+			]]></isNotEmpty>
+			<isNotEmpty property="concertUseAt"><![CDATA[	
+				, USE_AT 
+			]]></isNotEmpty>
+		<![CDATA[
+				, FRST_REGISTER_DT, LAST_UPDT_DT
+			)
+			VALUES (
+				#userId#
+		]]>
+			<isNotEmpty property="concertEmailAt"><![CDATA[
+				, #concertEmailAt#
+			]]></isNotEmpty>
+			<isNotEmpty property="concertSmsAt"><![CDATA[
+				, #concertSmsAt#
+			]]></isNotEmpty>
+			<isNotEmpty property="compNm"><![CDATA[
+				, #compNm# 		
+			]]></isNotEmpty>
+			<isNotEmpty property="concertEmail"><![CDATA[
+				, crypto.enc('normal', #concertEmail#) 
+			]]></isNotEmpty>
+			<isNotEmpty property="compAuth"><![CDATA[
+				, #compAuth# 
+			]]></isNotEmpty>
+			<isNotEmpty property="compCn"><![CDATA[	
+				, #compCn#
+			]]></isNotEmpty>
+			<isNotEmpty property="concertUserNm"><![CDATA[	
+				, #concertUserNm#
+			]]></isNotEmpty>
+			<isNotEmpty property="concertUseAt"><![CDATA[	
+				, #concertUseAt# 
+			]]></isNotEmpty>
+		<![CDATA[
+				, SYSDATE, SYSDATE
+			)
+		]]>
+	</insert>
+	
+	<update id="memberDAO.updateUseAtConcertUser" parameterClass="zvl">
+		<![CDATA[
+			UPDATE TM_CONCERT_USER
+			SET LAST_UPDT_DT = SYSDATE
+		]]>
+			<isNotEmpty prepend="," property="compAuth"><![CDATA[
+				COMP_AUTH = #compAuth#
+			]]></isNotEmpty>
+		<![CDATA[
+			WHERE USER_ID = #userId#
+		]]>
+	</update>
+	
+	<select id="memberDAO.listExcel" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+			SELECT CASE A.MBER_SE WHEN '01' THEN '일반' WHEN '02' THEN 'SNS' ELSE '문화광장' END AS MBER_SE
+				 , A.USER_NM
+				 , A.USER_ID
+				 , FN_CMMNCODE_NM('COM088', A.AUTH_SE) AS AUTH_SE_NM
+				 , TO_CHAR(A.SBSCRB_DT, 'YYYY-MM-DD') AS SBSCRB_DT
+				 , TO_CHAR((A.LAST_LOGIN_DT + 366), 'YYYY-MM-DD') AS DRMNCY_CNVRS_DT
+			  FROM TM_USER A
+			 WHERE USE_AT = 'Y'
+		]]>
+		<include refid="memberDAO.selectUserMemberList-where" />
+	    <![CDATA[
+	    	 ORDER BY SBSCRB_DT DESC NULLS LAST
+		]]>
+	</select>
+</sqlMap>

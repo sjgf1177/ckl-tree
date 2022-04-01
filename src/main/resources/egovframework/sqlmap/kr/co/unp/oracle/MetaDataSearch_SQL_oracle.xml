@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="MetaDataSearchDAO">
+
+	<typeAlias  alias="zvl" type="kr.co.unp.util.ZValue"/>
+
+	<sql id="MetaDataSearchDAO.list-where">
+		<isNotEmpty prepend="AND" property="searchWrd">
+			<isEqual property="searchCnd" compareValue="1"> <![CDATA[	(TABLE_COMMENTS LIKE '%' || TRIM(#searchWrd#) || '%' OR COMMENTS LIKE '%' || TRIM(#searchWrd#) || '%' )  	]]> </isEqual>
+			<isEqual property="searchCnd" compareValue="2"> <![CDATA[	TABLE_NAME LIKE '%' || TRIM(UPPER(#searchWrd#)) || '%' 		]]> </isEqual>
+			<isEqual property="searchCnd" compareValue="3"> <![CDATA[	COLUMN_NAME LIKE '%' || TRIM(UPPER(#searchWrd#)) || '%' 		]]> </isEqual>
+		</isNotEmpty>
+	</sql>
+
+	<select id="MetaDataSearchDAO.listCnt" parameterClass="zvl" resultClass="int" >
+		<![CDATA[
+			SELECT count(*)
+			  FROM
+			       (SELECT a.TABLE_NAME,
+			              (SELECT COMMENTS
+			                FROM ALL_TAB_COMMENTS
+			               WHERE TABLE_TYPE='TABLE'
+			                     AND TABLE_NAME=a.TABLE_NAME
+			                     AND ROWNUM=1
+			              ) AS TABLE_COMMENTS,
+			              a.COLUMN_NAME,
+			              a.DATA_TYPE || '(' || a.DATA_LENGTH || ')' AS f_size,
+			              b.COMMENTS
+			         FROM USER_TAB_COLUMNS a,
+			              USER_COL_COMMENTS b
+			        WHERE a.TABLE_NAME=b.TABLE_NAME
+			              AND a.COLUMN_NAME=b.COLUMN_NAME
+			       ) tb_m
+			 WHERE 1=1
+		]]>
+		<include refid="MetaDataSearchDAO.list-where" />
+	</select>
+
+	<select id="MetaDataSearchDAO.list" parameterClass="zvl" resultClass="zvl" >
+		<![CDATA[
+
+		SELECT  *
+		  FROM  (
+
+			SELECT ROWNUM RNUM,
+			       TABLE_NAME,
+			       TABLE_COMMENTS,
+			       COLUMN_NAME,
+			       F_SIZE,
+			       COMMENTS,
+			       COLUMN_ID,
+			       pk
+			  FROM
+			       (SELECT TABLE_NAME,
+			              TABLE_COMMENTS,
+			              COLUMN_NAME,
+			              F_SIZE,
+			              COMMENTS,
+			              COLUMN_ID,
+			              NVL
+			              (
+			                     (SELECT
+			                            CASE COUNT(CONSTRAINT_TYPE)
+			                                WHEN 0
+			                                THEN ''
+			                                ELSE 'PK'
+			                            END
+			                       FROM USER_CONSTRAINTS tA,
+			                            USER_CONS_COLUMNS tB
+			                      WHERE tA.CONSTRAINT_NAME = tB.CONSTRAINT_NAME
+			                            AND tA.CONSTRAINT_TYPE = 'P'
+			                            AND tA.TABLE_NAME=tb_m.TABLE_NAME
+			                            AND tB.COLUMN_NAME=tb_m.COLUMN_NAME
+			                     ),''
+			                 ) AS pk
+			            FROM
+			                 (SELECT a.TABLE_NAME,
+			                        (SELECT COMMENTS
+			                          FROM ALL_TAB_COMMENTS
+			                         WHERE TABLE_TYPE='TABLE'
+			                               AND TABLE_NAME=a.TABLE_NAME
+			                               AND ROWNUM=1
+			                        ) AS TABLE_COMMENTS,
+			                        a.COLUMN_NAME,
+			                        a.DATA_TYPE || '(' || a.DATA_LENGTH || ')' AS f_size,
+			                        b.COMMENTS,
+			                        a.COLUMN_ID
+			                   FROM USER_TAB_COLUMNS a,
+			                        USER_COL_COMMENTS b
+			                  WHERE a.TABLE_NAME=b.TABLE_NAME
+			                        AND a.COLUMN_NAME=b.COLUMN_NAME
+			                 ) tb_m
+			            WHERE 1=1
+
+		]]>
+		<include refid="MetaDataSearchDAO.list-where" />
+		<isNotEmpty prepend="ORDER BY" property="searchWrd">
+			<isEqual property="searchCnd" compareValue=""> <![CDATA[	COLUMN_NAME,  F_SIZE ASC	]]> </isEqual>
+			<isEqual property="searchCnd" compareValue="1"> <![CDATA[	COLUMN_NAME,  F_SIZE ASC	]]> </isEqual>
+			<isEqual property="searchCnd" compareValue="2"> <![CDATA[	TABLE_NAME , COLUMN_ID	ASC	]]> </isEqual>
+			<isEqual property="searchCnd" compareValue="3"> <![CDATA[	COLUMN_NAME,  F_SIZE ASC	]]> </isEqual>
+		</isNotEmpty>
+		<![CDATA[
+
+	          ) ALL_LIST
+				    )
+			 WHERE  RNUM  > #firstIndex#
+			   AND  RNUM <= #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+</sqlMap>

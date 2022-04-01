@@ -1,0 +1,622 @@
+#
+# This is the Apache server configuration file providing SSL support.
+# It contains the configuration directives to instruct the server how to
+# serve pages over an https connection. For detailed information about these 
+# directives see <URL:http://httpd.apache.org/docs/2.4/mod/mod_ssl.html>
+# 
+# Do NOT simply read the instructions in here without understanding
+# what they do.  They're here only as hints or reminders.  If you are unsure
+# consult the online docs. You have been warned.  
+#
+# Required modules: mod_log_config, mod_setenvif, mod_ssl,
+#          socache_shmcb_module (for default value of SSLSessionCache)
+
+#
+# Pseudo Random Number Generator (PRNG):
+# Configure one or more sources to seed the PRNG of the SSL library.
+# The seed data should be of good random quality.
+# WARNING! On some platforms /dev/random blocks if not enough entropy
+# is available. This means you then cannot use the /dev/random device
+# because it would lead to very long connection times (as long as
+# it requires to make more entropy available). But usually those
+# platforms additionally provide a /dev/urandom device which doesn't
+# block. So, if available, use this one instead. Read the mod_ssl User
+# Manual for more details.
+#
+#SSLRandomSeed startup file:/dev/random  512
+#SSLRandomSeed startup file:/dev/urandom 512
+#SSLRandomSeed connect file:/dev/random  512
+#SSLRandomSeed connect file:/dev/urandom 512
+
+
+#
+# When we also provide SSL we have to listen to the 
+# standard HTTP port (see above) and to the HTTPS port
+#
+Listen 443
+
+##
+##  SSL Global Context
+##
+##  All SSL configuration in this context applies both to
+##  the main server and all SSL-enabled virtual hosts.
+##
+
+#   SSL Cipher Suite:
+#   List the ciphers that the client is permitted to negotiate.
+#   See the mod_ssl documentation for a complete list.
+SSLCipherSuite HIGH:MEDIUM:!aNULL:!MD5
+
+#   Speed-optimized SSL Cipher configuration:
+#   If speed is your main concern (on busy HTTPS servers e.g.),
+#   you might want to force clients to specific, performance
+#   optimized ciphers. In this case, prepend those ciphers
+#   to the SSLCipherSuite list, and enable SSLHonorCipherOrder.
+#   Caveat: by giving precedence to RC4-SHA and AES128-SHA
+#   (as in the example below), most connections will no longer
+#   have perfect forward secrecy - if the server's key is
+#   compromised, captures of past or future traffic must be
+#   considered compromised, too.
+#SSLCipherSuite RC4-SHA:AES128-SHA:HIGH:MEDIUM:!aNULL:!MD5
+#SSLHonorCipherOrder on 
+
+#   Pass Phrase Dialog:
+#   Configure the pass phrase gathering process.
+#   The filtering dialog program (`builtin' is an internal
+#   terminal dialog) has to provide the pass phrase on stdout.
+SSLPassPhraseDialog  builtin
+
+#   Inter-Process Session Cache:
+#   Configure the SSL Session Cache: First the mechanism 
+#   to use and second the expiring timeout (in seconds).
+#SSLSessionCache         "dbm:/usr/IBMAHS/logs/ssl_scache"
+SSLSessionCache        "shmcb:/usr/IBMAHS/logs/ssl_scache(512000)"
+SSLSessionCacheTimeout  300
+
+#   OCSP Stapling (requires OpenSSL 0.9.8h or later)
+#
+#   This feature is disabled by default and requires at least
+#   the two directives SSLUseStapling and SSLStaplingCache.
+#   Refer to the documentation on OCSP Stapling in the SSL/TLS
+#   How-To for more information.
+#
+#   Enable stapling for all SSL-enabled servers:
+#SSLUseStapling On
+
+#   Define a relatively small cache for OCSP Stapling using
+#   the same mechanism that is used for the SSL session cache
+#   above.  If stapling is used with more than a few certificates,
+#   the size may need to be increased.  (AH01929 will be logged.)
+#SSLStaplingCache "shmcb:/usr/IBMAHS/logs/ssl_stapling(32768)"
+
+#   Seconds before valid OCSP responses are expired from the cache
+#SSLStaplingStandardCacheTimeout 3600
+
+#   Seconds before invalid OCSP responses are expired from the cache
+#SSLStaplingErrorCacheTimeout 600
+
+##
+## SSL Virtual Host Context
+##
+
+
+#NameVirtualHost *:443
+
+################### www.ckl.or.kr #################        
+<VirtualHost *:443>
+	DocumentRoot /data/kocca/cklwebapp
+	ServerAdmin ckl@ckl.or.kr
+	ServerName  www.ckl.or.kr:443
+
+        SSLEngine on
+	SSLProtocol all -SSLv2
+	SSLCipherSuite HIGH:MEDIUM:!aNULL:!MD5
+
+	SSLCertificateFile "/usr/IBMAHS/conf/ssl/STAR.kocca.kr.crt"
+	SSLCertificateKeyFile "/usr/IBMAHS/conf/ssl/STAR.kocca.kr.key"
+	SSLCertificateChainFile "/usr/IBMAHS/conf/ssl/STAR.kocca.kr.ca-bundle"
+
+        ErrorLog /usr/IBMAHS/logs/kocca/kc_ckl-error-log
+        CustomLog /usr/IBMAHS/logs/kocca/kc_ckl-access-log common
+
+	<FilesMatch "\.(cgi|shtml|phtml|php)$">
+		SSLOptions +StdEnvVars
+	</FilesMatch>
+	<Directory "/usr/IBMAHS/conf/cgi-bin">
+		SSLOptions +StdEnvVars
+	</Directory>
+
+
+	<Directory "/data/kocca/cklwebapp">
+		Options FollowSymLinks
+		AllowOverride None
+		Order allow,deny
+		Allow from all
+		DirectoryIndex index.jsp
+	</Directory>
+
+	<Location />
+		Order allow,deny
+		Allow from all
+		<LimitExcept HEAD GET POST>
+			Deny from all
+		</LimitExcept>
+	</Location>
+
+   <Location /crosseditor/manage>
+       Order deny,allow
+       Deny from all
+       Allow from 210.92.209.130
+       Allow from 115.91.124.186
+       Allow from 115.91.124.187
+       Allow from 112.222.4.140
+       Allow from 116.125.59.158
+       Allow from 112.220.85.26
+       Allow from 182.252.167.94
+       Allow from 14.36.165.197
+       Allow from 175.197.46.63 
+       Allow from 211.245.109.223 
+       Allow from 116.125.59.8
+       Allow from 123.212.160.4
+       Allow from 172.16.1.40
+       Allow from 172.16.1.40
+       Allow from 211.245.109
+       Allow from 123.212.160
+       Allow from 218.232.92.35 
+       Allow from 218.232.92.36
+       Allow from 143.248.107.94 
+       Allow from 112.217.210.202 
+       Allow from 112.223.167.3 
+       Allow from 123.111.171.247 
+       Allow from 203.248.117.239 
+       Allow from 112.169.74.236 
+       Allow from 143.248.107.183 
+       Allow from 1.238.225.46 
+       Allow from 121.167.96
+       Allow from 112.220.196
+       Allow from 124.111.40.93
+       Allow from 221.148.60.76
+       Allow from 123.143.31.131 
+       Allow from 210.178.144.232 
+       Allow from 211.42.31.15
+       Allow from 10.10.11
+       Allow from 58.229.247
+       Allow from 210.92.229.130
+       Allow from 58.230.207.83
+   </Location>
+
+    <Location /bos/>
+        Order deny,allow
+        Deny from all
+        Allow from 210.92.209.130
+        Allow from 115.91.124.186
+        Allow from 115.91.124.187
+        Allow from 112.222.4.140
+        Allow from 116.125.59.158
+        Allow from 112.220.85.26
+        Allow from 182.252.167.94
+        Allow from 14.36.165.197
+       Allow from 175.197.46.63 
+       Allow from 211.245.109.223 
+       Allow from 116.125.59.8
+       Allow from 123.212.160.4
+       Allow from 172.16.1.40
+       Allow from 211.245.109
+       Allow from 123.212.160
+       Allow from 218.232.92.35 
+       Allow from 218.232.92.36
+       Allow from 143.248.107.94 
+       Allow from 112.217.210.202 
+       Allow from 112.223.167.3 
+       Allow from 123.111.171.247 
+       Allow from 203.248.117.239 
+       Allow from 112.169.74.236 
+       Allow from 143.248.107.183 
+       Allow from 1.238.225.46 
+       Allow from 121.167.96
+       Allow from 112.220.196
+       Allow from 124.111.40.93
+       Allow from 221.148.60.76
+       Allow from 123.143.31.131 
+       Allow from 210.178.144.232 
+       Allow from 211.42.31.15
+       Allow from 10.10.11
+       Allow from 58.229.247
+       Allow from 210.92.229.130
+       Allow from 58.230.207.83
+    </Location>      
+        
+
+	JkMount /* cklwas01
+	RewriteEngine On
+	RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK)
+	RewriteRule .* - [F]
+
+</VirtualHost>
+
+
+################### edu.kocca.kr #################
+<VirtualHost *:443>
+        DocumentRoot /data/kocca/cklwebapp
+        ServerAdmin ckl@ckl.or.kr
+        ServerName  edu.kocca.kr:443
+
+        SSLEngine on
+        SSLProtocol all -SSLv2
+        SSLCipherSuite HIGH:MEDIUM:!aNULL:!MD5
+
+        SSLCertificateFile "/usr/IBMAHS/conf/ssl/STAR.kocca.kr.crt"
+        SSLCertificateKeyFile "/usr/IBMAHS/conf/ssl/STAR.kocca.kr.key"
+        SSLCertificateChainFile "/usr/IBMAHS/conf/ssl/STAR.kocca.kr.ca-bundle"
+
+        ErrorLog /usr/IBMAHS/logs/kocca/kc_edu-error-log
+        CustomLog /usr/IBMAHS/logs/kocca/kc_edu-access-log common
+
+        <FilesMatch "\.(cgi|shtml|phtml|php)$">
+                SSLOptions +StdEnvVars
+        </FilesMatch>
+        <Directory "/usr/IBMAHS/conf/cgi-bin">
+                SSLOptions +StdEnvVars
+        </Directory>
+
+
+        <Directory "/data/kocca/cklwebapp">
+                Options FollowSymLinks
+                AllowOverride None
+                Order allow,deny
+                Allow from all
+                DirectoryIndex index.jsp
+        </Directory>
+
+        <Location />
+                Order allow,deny
+                Allow from all
+                <LimitExcept HEAD GET POST>
+                        Deny from all
+                </LimitExcept>
+        </Location>
+
+   <Location /crosseditor/manage>
+       Order deny,allow
+       Deny from all
+       Allow from 210.92.209.130
+       Allow from 115.91.124.186
+       Allow from 115.91.124.187
+       Allow from 112.222.4.140
+       Allow from 116.125.59.158
+       Allow from 112.220.85.26
+       Allow from 182.252.167.94
+       Allow from 14.36.165.197
+       Allow from 175.197.46.63 
+       Allow from 211.245.109.223 
+       Allow from 116.125.59.8
+       Allow from 123.212.160.4
+       Allow from 172.16.1.40
+       Allow from 211.245.109
+       Allow from 123.212.160
+       Allow from 143.248.107.94
+       Allow from 112.223.167.3 
+       Allow from 123.111.171.247 
+       Allow from 121.167.96
+       Allow from 112.220.196
+       Allow from 221.148.60.76
+       Allow from 122.35.48.163 
+       Allow from 211.42.31.15
+       Allow from 10.10.11
+       Allow from 58.229.247
+       Allow from 210.92.229.130
+       Allow from 58.230.207.83
+   </Location>
+
+    <Location /bos/>
+        Order deny,allow
+        Deny from all
+        Allow from 210.92.209.130
+        Allow from 115.91.124.186
+        Allow from 115.91.124.187
+        Allow from 112.222.4.140
+        Allow from 116.125.59.158
+        Allow from 112.220.85.26
+        Allow from 182.252.167.94
+        Allow from 14.36.165.197
+       Allow from 175.197.46.63 
+       Allow from 211.245.109.223 
+       Allow from 116.125.59.8
+       Allow from 123.212.160.4
+       Allow from 172.16.1.40
+       Allow from 211.245.109
+       Allow from 123.212.160
+       Allow from 143.248.107.94
+       Allow from 112.223.167.3 
+       Allow from 121.167.96
+       Allow from 112.220.196
+       Allow from 221.148.60.76
+       Allow from 122.35.48.163 
+       Allow from 211.42.31.15
+       Allow from 10.10.11
+       Allow from 58.229.247
+       Allow from 210.92.229.130
+       Allow from 58.230.207.83
+    </Location>       
+
+
+        JkMount /* cklwas01
+        RewriteEngine On
+        RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK)
+        RewriteRule .* - [F]
+
+</VirtualHost>
+
+################### edusso.kocca.kr #################
+<VirtualHost *:443>
+        DocumentRoot /data/kocca/cklwebapp
+        ServerAdmin ckl@ckl.or.kr
+        ServerName  edusso.kocca.kr:443
+
+        SSLEngine on
+        SSLProtocol all -SSLv2
+        SSLCipherSuite HIGH:MEDIUM:!aNULL:!MD5
+
+        SSLCertificateFile "/usr/IBMAHS/conf/ssl/STAR.kocca.kr.crt"
+        SSLCertificateKeyFile "/usr/IBMAHS/conf/ssl/STAR.kocca.kr.key"
+        SSLCertificateChainFile "/usr/IBMAHS/conf/ssl/STAR.kocca.kr.ca-bundle"
+
+        ErrorLog /usr/IBMAHS/logs/kocca/kc_edusso-error-log
+        CustomLog /usr/IBMAHS/logs/kocca/kc_edusso-access-log common
+
+        <FilesMatch "\.(cgi|shtml|phtml|php)$">
+                SSLOptions +StdEnvVars
+        </FilesMatch>
+        <Directory "/usr/IBMAHS/conf/cgi-bin">
+                SSLOptions +StdEnvVars
+        </Directory>
+
+
+        <Directory "/data/kocca/cklwebapp">
+                Options FollowSymLinks
+                AllowOverride None
+                Order allow,deny
+                Allow from all
+                DirectoryIndex index.jsp
+        </Directory>
+
+        <Location />
+                Order allow,deny
+                Allow from all
+                <LimitExcept HEAD GET POST>
+                        Deny from all
+                </LimitExcept>
+        </Location>
+
+        <Location /crosseditor/manage/>
+               Order deny,allow
+               Deny from all
+        </Location>
+
+        <Location /bos/>
+               Order deny,allow
+               Deny from all
+        </Location>
+
+        JkMount /* cklwas01
+        RewriteEngine On
+        RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK)
+        RewriteRule .* - [F]
+
+</VirtualHost>
+
+################### medu.kocca.kr #################
+<VirtualHost *:443>
+        DocumentRoot /data/kocca/cklwebapp
+        ServerAdmin ckl@ckl.or.kr
+        ServerName  medu.kocca.kr:443
+
+        SSLEngine on
+        SSLProtocol all -SSLv2
+        SSLCipherSuite HIGH:MEDIUM:!aNULL:!MD5
+
+        SSLCertificateFile "/usr/IBMAHS/conf/ssl/STAR.kocca.kr.crt"
+        SSLCertificateKeyFile "/usr/IBMAHS/conf/ssl/STAR.kocca.kr.key"
+        SSLCertificateChainFile "/usr/IBMAHS/conf/ssl/STAR.kocca.kr.ca-bundle"
+
+        ErrorLog /usr/IBMAHS/logs/kocca/kc_medu-error-log
+        CustomLog /usr/IBMAHS/logs/kocca/kc_medu-access-log common
+
+        <FilesMatch "\.(cgi|shtml|phtml|php)$">
+                SSLOptions +StdEnvVars
+        </FilesMatch>
+        <Directory "/usr/IBMAHS/conf/cgi-bin">
+                SSLOptions +StdEnvVars
+        </Directory>
+
+
+        <Directory "/data/kocca/cklwebapp"> 
+                Options FollowSymLinks
+                AllowOverride None
+                Order allow,deny
+                Allow from all
+                DirectoryIndex index.jsp
+        </Directory>
+
+        <Location />
+                Order allow,deny
+                Allow from all
+                <LimitExcept HEAD GET POST>
+                        Deny from all
+                </LimitExcept>
+        </Location>
+
+        <Location /crosseditor/manage/>
+               Order deny,allow
+               Deny from all
+        </Location>
+
+        <Location /bos/>
+               Order deny,allow
+               Deny from all
+        </Location>
+
+        JkMount /* cklwas01
+        RewriteEngine On
+        RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK)
+        RewriteRule .* - [F]
+
+</VirtualHost>
+
+
+################### m.ckl.or.kr #################
+<VirtualHost *:443>
+        DocumentRoot /data/kocca/cklwebapp
+        ServerAdmin ckl@ckl.or.kr
+        ServerName  m.ckl.or.kr:443
+
+        SSLEngine on
+        SSLProtocol all -SSLv2
+        SSLCipherSuite HIGH:MEDIUM:!aNULL:!MD5
+
+        SSLCertificateFile "/usr/IBMAHS/conf/ssl/STAR.kocca.kr.crt"
+        SSLCertificateKeyFile "/usr/IBMAHS/conf/ssl/STAR.kocca.kr.key"
+        SSLCertificateChainFile "/usr/IBMAHS/conf/ssl/STAR.kocca.kr.ca-bundle"
+
+        ErrorLog /usr/IBMAHS/logs/kocca/kc_mckl-error-log
+        CustomLog /usr/IBMAHS/logs/kocca/kc_mckl-access-log common
+
+        <FilesMatch "\.(cgi|shtml|phtml|php)$">
+                SSLOptions +StdEnvVars
+        </FilesMatch>
+        <Directory "/usr/IBMAHS/conf/cgi-bin">
+                SSLOptions +StdEnvVars
+        </Directory>
+
+
+        <Directory "/data/kocca/cklwebapp">
+                Options FollowSymLinks
+                AllowOverride None
+                Order allow,deny
+                Allow from all
+                DirectoryIndex index.jsp
+        </Directory>
+
+        <Location />
+                Order allow,deny
+                Allow from all
+                <LimitExcept HEAD GET POST>
+                        Deny from all
+                </LimitExcept>
+        </Location>
+
+        <Location /crosseditor/manage/>
+               Order deny,allow
+               Deny from all
+        </Location>
+
+        <Location /bos/>
+               Order deny,allow
+               Deny from all
+        </Location>
+
+        JkMount /* cklwas01
+        RewriteEngine On
+        RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK)
+        RewriteRule .* - [F]
+
+</VirtualHost>
+
+
+################### edulms.kocca.kr #################
+<VirtualHost *:443>
+        DocumentRoot /data/kocca/lmswebapp
+        ServerAdmin edulms.kocca.kr
+        ServerName  edulms.kocca.kr:443
+        ServerAlias *.edukocca.or.kr
+
+        SSLEngine on
+        SSLProtocol all -SSLv2
+        SSLCipherSuite HIGH:MEDIUM:!aNULL:!MD5
+
+        SSLCertificateFile "/usr/IBMAHS/conf/ssl/STAR.kocca.kr.crt"
+        SSLCertificateKeyFile "/usr/IBMAHS/conf/ssl/STAR.kocca.kr.key"
+        SSLCertificateChainFile "/usr/IBMAHS/conf/ssl/STAR.kocca.kr.ca-bundle"
+
+        ErrorLog /usr/IBMAHS/logs/kocca/kc_lms-error-log
+        CustomLog /usr/IBMAHS/logs/kocca/kc_lms-access-log common
+
+        <FilesMatch "\.(cgi|shtml|phtml|php)$">
+                SSLOptions +StdEnvVars
+        </FilesMatch>
+        <Directory "/usr/IBMAHS/conf/cgi-bin">
+                SSLOptions +StdEnvVars
+        </Directory>
+
+ 
+        <Directory "/data/kocca/lmswebapp">
+                Options FollowSymLinks
+                AllowOverride None
+                Order allow,deny
+                Allow from all
+                DirectoryIndex index.jsp
+        </Directory>
+
+        <Location />
+                Order allow,deny
+                Allow from all
+                <LimitExcept HEAD GET POST>
+                        Deny from all
+                </LimitExcept>
+        </Location>
+
+
+   <Location /learn/admin>
+       Order deny,allow
+       Deny from all
+       Allow from 210.92.209.130 
+       Allow from 115.91.124.186 
+       Allow from 115.91.124.187 
+       Allow from 112.222.4.140 
+       Allow from 116.125.59.158 
+       Allow from 112.220.85.26 
+       Allow from 182.252.167.94 
+       Allow from 14.36.165.197 
+       Allow from 175.197.46.63 
+       Allow from 211.245.109.223
+       Allow from 116.125.59.8
+       Allow from 123.212.160.4
+       Allow from 172.16.1.40
+       Allow from 211.245.109
+       Allow from 123.212.160
+       Allow from 218.232.92.35 
+       Allow from 218.232.92.36
+       Allow from 143.248.107.94 
+       Allow from 112.217.210.202 
+       Allow from 112.223.167.3 
+       Allow from 123.111.171.247 
+       Allow from 203.248.117.239 
+       Allow from 112.169.74.236 
+       Allow from 143.248.107.183 
+       Allow from 1.238.225.46 
+       Allow from 121.167.96
+       Allow from 112.220.196
+       Allow from 124.111.40.93
+       Allow from 221.148.60.76
+       Allow from 123.143.31.131 
+       Allow from 210.178.144.232 
+       Allow from 211.42.31.15
+       Allow from 10.10.11
+       Allow from 58.229.247
+       Allow from 210.92.229.130
+       Allow from 61.37.86.130
+       Allow from 222.121.255.155
+       Allow from 110.9.124.193
+       Allow from 117.17.0.81
+       Allow from 120.136.107.173
+       Allow from 58.232.91.82
+   </Location>
+
+
+        JkMount /* cklwas03
+        RewriteEngine On
+        RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK)
+        RewriteRule .* - [F]
+
+</VirtualHost>
+

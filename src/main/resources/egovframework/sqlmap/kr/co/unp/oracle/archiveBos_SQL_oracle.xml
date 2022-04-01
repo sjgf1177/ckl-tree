@@ -1,0 +1,502 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="archiveBos">
+
+	<typeAlias alias="ArchiveBosVO" type="kr.co.unp.archive.vo.ArchiveBosVO" />
+	<typeAlias alias="zvl" type="kr.co.unp.util.ZValue" />
+
+	<resultMap id="archiveBosDAO.viewMap" class="zvl">
+		<result property="archiveTaskSeq" column="ARCHIVE_TASK_SEQ" />
+		<result property="year" column="YEAR" />
+		<result property="workField" column="WORK_FIELD" />
+		<result property="organNm" column="ORGAN_NM" />
+		<result property="taskNm" column="TASK_NM" />
+		<result property="archiveField1" column="ARCHIVE_FIELD1" />
+		<result property="archiveField2" column="ARCHIVE_FIELD2" />
+		<result property="archiveField3" column="ARCHIVE_FIELD3" />
+		<result property="archiveFieldEtc1" column="ARCHIVE_FIELD_ETC1" />
+		<result property="archiveFieldEtc2" column="ARCHIVE_FIELD_ETC2" />
+		<result property="archiveFieldEtc3" column="ARCHIVE_FIELD_ETC3" />
+		<result property="taskSummary" column="TASK_SUMMARY" jdbcType="CLOB" javaType="java.lang.String" />
+		<result property="atchFileId" column="ATCH_FILE_ID" />
+		<result property="useAt" column="USE_AT" />
+		<result property="userNm" column="USER_NM" />
+		<!-- <result property="projectCnt" column="PROJECT_CNT" /> -->
+		<result property="frstRegisterId" column="FRST_REGISTER_ID" />
+		<result property="firstDate" column="FRST_REGIST_PNTTM" />
+		<result property="firstUpdateId" column="LAST_UPDUSR_ID" />
+		<result property="firstUpdateDate" column="LAST_UPDT_PNTTM" />
+	</resultMap>
+
+	<!-- 과제목록 -->
+	<select id="archiveBosDAO.list" parameterClass="zvl" resultClass="zvl">
+		/* archiveBosDAO.list */
+		<![CDATA[
+		SELECT *
+		  FROM (
+		         SELECT ROWNUM RNUM, ALL_LIST.*
+		           FROM (
+						  SELECT TAT.ARCHIVE_TASK_SEQ /* 과제일련번호 */
+						       , TAT.YEAR /* 연도 */
+						       , TAT.WORK_FIELD /* 사업분야 */
+						       , TAT.ORGAN_NM /* 주관기관명 */
+						       , TAT.TASK_NM /* 과제명 */
+						       , TAT.ARCHIVE_FIELD1 /* 분야1 */
+						       , TAT.ARCHIVE_FIELD2 /* 분야1 */
+						       , TAT.ARCHIVE_FIELD3 /* 분야1 */
+						       , TAT.ARCHIVE_FIELD_ETC1 /* 분야_기타1 */
+						       , TAT.ARCHIVE_FIELD_ETC2 /* 분야_기타2 */
+						       , TAT.ARCHIVE_FIELD_ETC3 /* 분야_기타3 */
+						       , TAT.TASK_SUMMARY /* 과제개요 */
+						       , TAT.ATCH_FILE_ID /* 첨부파일 - 과제썸네일 */
+						       , TAT.USE_AT /* 사용여부 */
+						       , TU.USER_NM /* 등록자 */
+						       , NVL(TAP.PROJECT_CNT, 0) AS PROJECT_CNT /* 프로젝트 개수 */
+						       , TAT.FRST_REGISTER_ID /* 최초등록자아이디 */
+						       , TAT.FRST_REGIST_PNTTM /* 최초등록시점 */
+						       , TAT.LAST_UPDUSR_ID /* 최종수정자아이디 */
+						       , TAT.LAST_UPDT_PNTTM /* 최종수정시점 */
+						   FROM TN_ARCHIVE_TASK TAT
+						  INNER JOIN (SELECT USER_SN
+						  				   , USER_ID
+						  				   , USER_NM 
+						  			    FROM TM_USER 
+						  			   UNION ALL 
+						  			  SELECT USER_IDX
+						  			  	   , USER_ID
+						  			  	   , USER_NM 
+						  			  	FROM TM_ADMIN A 
+						  			   WHERE A.USER_ID NOT IN ((SELECT B.USER_ID 
+						  			   							  FROM TM_USER B 
+						  			   							 WHERE B.USER_ID = A.USER_ID))
+						  			 ) TU ON TAT.FRST_REGISTER_ID = TU.USER_ID
+						   LEFT OUTER JOIN
+								(
+								  SELECT ARCHIVE_TASK_SEQ
+									   , COUNT(ARCHIVE_PROJECT_SEQ) AS PROJECT_CNT
+									FROM TN_ARCHIVE_PROJECT
+								   GROUP BY ARCHIVE_TASK_SEQ
+								) TAP ON TAT.ARCHIVE_TASK_SEQ = TAP.ARCHIVE_TASK_SEQ
+								WHERE 1=1
+		]]>
+		<isNotEmpty prepend="AND" property="year">
+		 <![CDATA[	TAT.YEAR = #year# ]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="workField">
+		 <![CDATA[	TAT.WORK_FIELD = #workField# ]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="organNm">
+		<![CDATA[TAT.ORGAN_NM LIKE '%' || #organNm# || '%' ]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="taskNm">
+		 <![CDATA[	TAT.TASK_NM LIKE '%' || #taskNm# || '%' ]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="useAt">
+		 <![CDATA[	TAT.USE_AT = #useAt# ]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="sdate">
+   <![CDATA[ TO_CHAR(TAT.FRST_REGIST_PNTTM, 'YYYYMMDD') >= REPLACE(#sdate#,'-','')   ]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="edate">
+   <![CDATA[ TO_CHAR(TAT.FRST_REGIST_PNTTM, 'YYYYMMDD') <= REPLACE(#edate#,'-','')   ]]>
+		</isNotEmpty>
+ <![CDATA[
+					ORDER BY FRST_REGIST_PNTTM DESC 
+				    ) ALL_LIST
+				    )
+			 WHERE  RNUM  > #firstIndex#
+			   AND  RNUM <= #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<!-- 아카이브 신규 등록 -->
+	<insert id="archiveBosDAO.insert" parameterClass="zvl">
+		<selectKey resultClass="java.lang.String" keyProperty="taskSeq">
+			SELECT NVL(MAX(ARCHIVE_TASK_SEQ),0)+1 AS ARCHIVE_TASK_SEQ FROM
+			TN_ARCHIVE_TASK
+		</selectKey>
+		/* archiveBosDAO.insert */
+		INSERT INTO TN_ARCHIVE_TASK
+		(
+		ARCHIVE_TASK_SEQ
+		, YEAR
+		, WORK_FIELD
+		, ORGAN_NM
+		, TASK_NM
+		, ARCHIVE_FIELD1
+		, ARCHIVE_FIELD2
+		, ARCHIVE_FIELD3
+		, ARCHIVE_FIELD_ETC1
+		, ARCHIVE_FIELD_ETC2
+		, ARCHIVE_FIELD_ETC3
+		, TASK_SUMMARY
+		, ATCH_FILE_ID
+		, USE_AT
+		, FRST_REGISTER_ID
+		, FRST_REGIST_PNTTM
+		, LAST_UPDUSR_ID
+		, LAST_UPDT_PNTTM
+		)
+		VALUES
+		(
+		#taskSeq#
+		, #year#
+		, #workField#
+		, #organNm#
+		, #taskNm#
+		, #archiveField1#
+		, #archiveField2#
+		, #archiveField3#
+		, #archiveFieldEtc1#
+		, #archiveFieldEtc2#
+		, #archiveFieldEtc3#
+		, #taskSummary#
+		, #atchFileId#
+		, #useAt#
+		, #frstRegisterId#
+		, SYSDATE
+		, #lastUpdusrId#
+		, SYSDATE
+		)
+	</insert>
+
+
+
+	<select id="archiveBosDAO.selectArchiveListTotCnt"
+		parameterClass="zvl" resultClass="int">
+		/* ArchiveBosDAO.selectArchiveListTotCnt */
+		
+			<![CDATA[
+			/*  archiveBosDAO.selectArchiveListTotCnt */
+				SELECT  COUNT(*) as totcnt
+				  FROM  TN_ARCHIVE_TASK
+			]]>
+		WHERE 1=1
+		<isNotEmpty prepend="AND" property="year">
+			YEAR = #year#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="workField">
+			WORK_FIELD = #workField#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="organNm">
+			ORGAN_NM LIKE '%' || #organNm# || '%'
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="taskNm">
+			TASK_NM LIKE '%' || #taskNm# || '%'
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="useAt">
+			USE_AT = #useAt#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="sdate">
+	   <![CDATA[ TO_CHAR(FRST_REGIST_PNTTM, 'YYYYMMDD') >= REPLACE(#sdate#,'-','')   ]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="edate">
+	   <![CDATA[ TO_CHAR(FRST_REGIST_PNTTM, 'YYYYMMDD') <= REPLACE(#edate#,'-','')   ]]>
+		</isNotEmpty>
+	</select>
+
+	<!-- 아카이브 과제 수정 -->
+	<update id="archiveBosDAO.update" parameterClass="zvl">
+		/*
+		ArchiveBosDAO.update */
+		UPDATE TN_ARCHIVE_TASK
+		SET YEAR = #year#
+		, WORK_FIELD = #workField#
+		, ORGAN_NM = #organNm#
+		, TASK_NM = #taskNm#
+		, ARCHIVE_FIELD1 = #archiveField1#
+		, ARCHIVE_FIELD2 = #archiveField2#
+		, ARCHIVE_FIELD3 = #archiveField3#
+		, ARCHIVE_FIELD_ETC1 = #archiveFieldEtc1#
+		, ARCHIVE_FIELD_ETC2 = #archiveFieldEtc2#
+		, ARCHIVE_FIELD_ETC3 = #archiveFieldEtc3#
+		, TASK_SUMMARY = #taskSummary#
+		, ATCH_FILE_ID = #atchFileId#
+		, USE_AT = #useAt#
+		, LAST_UPDUSR_ID = #lastUpdusrId#
+		, LAST_UPDT_PNTTM = SYSDATE
+		WHERE ARCHIVE_TASK_SEQ = #archiveTaskSeq#
+	</update>
+
+	<delete id="archiveBos.delete" parameterClass="zvl">
+		DELETE
+		FROM TN_ARCHIVE_TASK
+		WHERE ARCHIVE_TASK_SEQ = #archiveTaskSeq#
+	</delete>
+
+	<!-- 아카이브 과제 목록 -->
+	<select id="archiveBosDAO.listDetail" parameterClass="zvl" resultClass="zvl" resultMap="archiveBosDAO.viewMap">
+		/* archiveBosDAO.listDetail */
+		SELECT TAT.ARCHIVE_TASK_SEQ /* 과제일련번호 */
+			 , TAT.YEAR /* 연도 */
+			 , TAT.WORK_FIELD /* 사업분야 */
+			 , TAT.ORGAN_NM /* 주관기관명 */
+			 , TAT.TASK_NM /* 과제명 */
+			 , TAT.ARCHIVE_FIELD1 /* 분야1 */
+			 , TAT.ARCHIVE_FIELD2 /* 분야1 */
+			 , TAT.ARCHIVE_FIELD3 /* 분야1 */
+			 , TAT.ARCHIVE_FIELD_ETC1 /* 분야_기타1 */
+			 , TAT.ARCHIVE_FIELD_ETC2 /* 분야_기타2 */
+			 , TAT.ARCHIVE_FIELD_ETC3 /* 분야_기타3 */
+			 , TAT.TASK_SUMMARY /* 과제개요 */
+			 , TAT.ATCH_FILE_ID /* 첨부파일 - 과제썸네일 */
+			 , TAT.USE_AT /* 사용여부 */
+			 , TU.USER_NM /* 등록자 */
+			 , TAT.FRST_REGISTER_ID /* 최초등록자아이디 */
+			 , TAT.FRST_REGIST_PNTTM /* 최초등록시점 */
+			 , TAT.LAST_UPDUSR_ID /* 최종수정자아이디 */
+			 , TAT.LAST_UPDT_PNTTM /* 최종수정시점 */
+		  FROM TN_ARCHIVE_TASK TAT
+		 INNER JOIN (SELECT USER_SN
+		 				  , USER_ID
+		 				  , USER_NM 
+		 		  	   FROM TM_USER 
+		 		  	  UNION ALL 
+		 		  	 SELECT USER_IDX
+		 		  	 	  , USER_ID
+		 		  	 	  , USER_NM 
+		 		  	   FROM TM_ADMIN A 
+		 		  	  WHERE A.USER_ID NOT IN ((SELECT B.USER_ID 
+		 		  	  							 FROM TM_USER B 
+		 		  	  							WHERE B.USER_ID = A.USER_ID))
+		 		    ) TU ON TAT.FRST_REGISTER_ID = TU.USER_ID
+		 WHERE TAT.ARCHIVE_TASK_SEQ = #taskSeq#
+	</select>
+
+	<!-- 프로젝트 -->
+	<resultMap id="archiveBosDAO.projectListMap" class="zvl">
+		<result property="archiveTaskSeq" column="ARCHIVE_TASK_SEQ" />
+		<result property="archiveProjectSeq" column="ARCHIVE_PROJECT_SEQ" />
+		<result property="projectNm" column="PROJECT_NM" />
+		<result property="expert" column="EXPERT" />
+		<result property="students" column="STUDENTS" />
+		<result property="projectSummary" column="PROJECT_SUMMARY"
+			jdbcType="CLOB" javaType="java.lang.String" />
+		<result property="resultVideo" column="RESULT_VIDEO" />
+		<result property="resultUrl" column="RESULT_URL" />
+		<result property="mainResultAt" column="MAIN_RESULT_AT" />
+		<result property="projectUseAt" column="USE_AT" />
+		<result property="openAt" column="OPEN_AT" />
+		<result property="atchFileId" column="ATCH_FILE_ID" />
+		<result property="resultEtcFile" column="RESULT_ETC_FILE" />
+		<result property="userNm" column="USER_NM" />
+		<result property="projectFrstRegisterId" column="FRST_REGISTER_ID" />
+		<result property="projectFirstDate" column="FRST_REGIST_PNTTM" />
+		<result property="projectFirstUpdateId" column="LAST_UPDUSR_ID" />
+		<result property="projectFirstUpdateDate" column="LAST_UPDT_PNTTM" />
+	</resultMap>
+
+	<!-- 아카이브 프로젝트 목록 -->
+	<select id="archiveBosDAO.projectList" parameterClass="zvl"
+		resultClass="zvl">
+		/* archiveBosDAO.projectList */
+	<![CDATA[
+	
+	SELECT  *
+			  FROM  (
+			SELECT ROWNUM RNUM, ALL_LIST.*
+			  FROM  (
+						SELECT TAP.ARCHIVE_TASK_SEQ
+						     , TAP.ARCHIVE_PROJECT_SEQ
+						     , TAP.PROJECT_NM
+						     , TAP.EXPERT
+						     , TAP.STUDENTS
+						     , TAP.PROJECT_SUMMARY
+						     , TAP.RESULT_VIDEO
+						     , TAP.RESULT_URL
+						     , TAP.MAIN_RESULT_AT
+						     , TAP.USE_AT
+						     , TAP.OPEN_AT
+						     , TAP.ATCH_FILE_ID
+						     , TAP.RESULT_ETC_FILE
+						     , TU.USER_NM
+						     , TAP.FRST_REGISTER_ID
+						     , TAP.FRST_REGIST_PNTTM
+						     , TAP.LAST_UPDUSR_ID
+						     , TAP.LAST_UPDT_PNTTM
+						 FROM TN_ARCHIVE_PROJECT TAP
+					    INNER JOIN (SELECT USER_SN
+						  				   , USER_ID
+						  				   , USER_NM 
+						  			    FROM TM_USER 
+						  			   UNION ALL 
+						  			  SELECT USER_IDX
+						  			  	   , USER_ID
+						  			  	   , USER_NM 
+						  			  	FROM TM_ADMIN A 
+						  			   WHERE A.USER_ID NOT IN ((SELECT B.USER_ID 
+						  			   							  FROM TM_USER B 
+						  			   							 WHERE B.USER_ID = A.USER_ID))
+						  		   ) TU ON TAP.FRST_REGISTER_ID = TU.USER_ID
+			  	 	      AND TAP.ARCHIVE_TASK_SEQ = #taskSeq#
+				 	    ORDER BY TAP.FRST_REGIST_PNTTM DESC
+						  ) ALL_LIST
+				    )
+			 WHERE  RNUM  > #firstIndex#
+			   AND  RNUM <= #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="archiveBosDAO.projectListCnt" parameterClass="zvl"
+		resultClass="int">
+		/* archiveBosDAO.projectListCnt */
+	
+		<![CDATA[
+			SELECT  COUNT(*) as totcnt
+			  FROM  TN_ARCHIVE_PROJECT
+			  WHERE  ARCHIVE_TASK_SEQ = #taskSeq#
+		]]>
+	</select>
+
+	<!-- 아카이브 프로젝트 목록 -->
+	<select id="archiveBosDAO.taskProjectList" parameterClass="zvl"
+		resultClass="zvl">
+		/* archiveBosDAO.taskProjectList */
+
+		SELECT TAT.ARCHIVE_TASK_SEQ /* 과제일련번호 */
+		, TAT.YEAR /* 연도 */
+		, TAT.WORK_FIELD /* 사업분야 */
+		, TAT.ORGAN_NM /* 주관기관명 */
+		, TAT.TASK_NM /* 과제명 */
+		, TAT.ARCHIVE_FIELD1 /* 분야1 */
+		, TAT.ARCHIVE_FIELD2 /* 분야1 */
+		, TAT.ARCHIVE_FIELD3 /* 분야1 */
+		, TAT.ARCHIVE_FIELD_ETC1 /* 분야_기타1 */
+		, TAT.ARCHIVE_FIELD_ETC2 /* 분야_기타2 */
+		, TAT.ARCHIVE_FIELD_ETC3 /* 분야_기타3 */
+		, TAT.TASK_SUMMARY /* 과제개요 */
+		, TAT.ATCH_FILE_ID /* 첨부파일 - 과제썸네일 */
+		, TAT.USE_AT /* 사용여부 */
+		, TAT.FRST_REGISTER_ID /* 최초등록자아이디 */
+		, TAT.FRST_REGIST_PNTTM /* 최초등록시점 */
+		, TAT.LAST_UPDUSR_ID /* 최종수정자아이디 */
+		, TAT.LAST_UPDT_PNTTM /* 최종수정시점 */
+		FROM TN_ARCHIVE_TASK TAT
+		WHERE 1 = 1
+		AND TAT.ARCHIVE_TASK_SEQ = #taskSeq#
+	</select>
+
+
+
+	<!-- 아카이브 프로젝트 상세 목록 -->
+	<select id="archiveBosDAO.projectListDetail" parameterClass="zvl"
+		resultClass="zvl" resultMap="archiveBosDAO.projectListMap">
+		/* archiveBosDAO.projectListDetail */
+
+		SELECT TAP.ARCHIVE_TASK_SEQ
+		, TAP.ARCHIVE_PROJECT_SEQ
+		, TAP.PROJECT_NM
+		, TAP.EXPERT
+		, TAP.STUDENTS
+		, TAP.PROJECT_SUMMARY
+		, TAP.RESULT_VIDEO
+		, TAP.RESULT_URL
+		, TAP.MAIN_RESULT_AT
+		, TAP.USE_AT
+		, TAP.OPEN_AT
+		, TAP.ATCH_FILE_ID
+		, TAP.RESULT_ETC_FILE
+		, TU.USER_NM
+		, TAP.FRST_REGISTER_ID
+		, TAP.FRST_REGIST_PNTTM
+		, TAP.LAST_UPDUSR_ID
+		, TAP.LAST_UPDT_PNTTM
+		FROM TN_ARCHIVE_PROJECT TAP
+		INNER JOIN (SELECT USER_SN
+	  				     , USER_ID
+	  				     , USER_NM 
+	  			      FROM TM_USER 
+	  			     UNION ALL 
+	  			    SELECT USER_IDX
+	  			  	     , USER_ID
+	  			  	     , USER_NM 
+	  			  	  FROM TM_ADMIN A 
+	  			     WHERE A.USER_ID NOT IN ((SELECT B.USER_ID 
+	  			   							    FROM TM_USER B 
+	  			   							   WHERE B.USER_ID = A.USER_ID))
+	  			   ) TU ON TAP.FRST_REGISTER_ID = TU.USER_ID
+		WHERE 1 = 1
+		AND TAP.ARCHIVE_PROJECT_SEQ = #projectTaskSeq#
+
+	</select>
+
+	<!-- 아카이브 프로젝트 등록 -->
+	<insert id="archiveBosDAO.projectInsert" parameterClass="zvl">
+		<selectKey resultClass="java.lang.String" keyProperty="archiveProjectSeq">
+			SELECT NVL(MAX(ARCHIVE_PROJECT_SEQ),0)+1 AS ARCHIVE_PROJECT_SEQ FROM
+			TN_ARCHIVE_PROJECT
+		</selectKey>
+		/* archiveBosDAO.projectInsert */
+
+		INSERT INTO TN_ARCHIVE_PROJECT
+		(
+		ARCHIVE_PROJECT_SEQ
+		, ARCHIVE_TASK_SEQ
+		, PROJECT_NM
+		, EXPERT
+		, STUDENTS
+		, PROJECT_SUMMARY
+		, RESULT_VIDEO
+		, RESULT_URL
+		, MAIN_RESULT_AT
+		, USE_AT
+		, OPEN_AT
+		, ATCH_FILE_ID
+		, RESULT_ETC_FILE
+		, FRST_REGISTER_ID
+		, FRST_REGIST_PNTTM
+		)
+		VALUES
+		(
+		#archiveProjectSeq#
+		, #archiveTaskSeq#
+		, #projectNm#
+		, #expert#
+		, #students#
+		, #projectSummary#
+		, #resultVideo#
+		, #resultUrl#
+		, #mainResultAt#
+		, #projectUseAt#
+		, #openAt#
+		, #atchFileId#
+		, #resultEtcFile#
+		, #frstRegisterId#
+		, SYSDATE
+		)
+	</insert>
+
+	<!-- 아카이브 프로젝트 수정 -->
+	<update id="archiveBosDAO.projectUpdate" parameterClass="zvl">
+		/* archiveBosDAO.projectUpdate */
+
+		UPDATE TN_ARCHIVE_PROJECT
+		SET ARCHIVE_TASK_SEQ = #archiveTaskSeq#
+		, PROJECT_NM = #projectNm#
+		, EXPERT = #expert#
+		, STUDENTS = #students#
+		, PROJECT_SUMMARY = #projectSummary#
+		, RESULT_VIDEO = #resultVideo#
+		, RESULT_URL = #resultUrl#
+		, MAIN_RESULT_AT = #mainResultAt#
+		, USE_AT = #projectUseAt#
+		, OPEN_AT = #openAt#
+		, ATCH_FILE_ID = #atchFileId#
+		, RESULT_ETC_FILE = #resultEtcFile#
+		, LAST_UPDUSR_ID = #lastUpdusrId#
+		, LAST_UPDT_PNTTM = SYSDATE
+		WHERE ARCHIVE_PROJECT_SEQ = #archiveProjectSeq#
+
+	</update>
+
+	<!-- 아카이브 프로젝트 삭제 -->
+	<delete id="archiveBos.projectDelete" parameterClass="zvl">
+		/* archiveBos.projectDelete */
+
+		DELETE
+		FROM TN_ARCHIVE_PROJECT
+		WHERE ARCHIVE_PROJECT_SEQ = #archiveProjectSeq#
+	</delete>
+
+</sqlMap>

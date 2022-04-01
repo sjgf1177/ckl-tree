@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN"
+    "http://www.ibatis.com/dtd/sql-map-config-2.dtd">
+
+<sqlMapConfig>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/mysql/Banner_SQL_mysql.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/mysql/AuthorManage_SQL_mysql.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/mysql/BasicBoard_SQL_mysql.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/mysql/OptionalBoard_SQL_mysql.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/mysql/BBSMaster_SQL_mysql.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/mysql/CmmnClCodeManage_SQL_mysql.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/mysql/CmmnCodeManage_SQL_mysql.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/mysql/CmmnDetailCodeManage_SQL_mysql.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/mysql/Comment_SQL_mysql.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/mysql/CommonContentsManage_SQL_mysql.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/mysql/DeptAuthor_SQL_mysql.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/mysql/DeptPop_SQL_mysql.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/mysql/File_SQL_mysql.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/mysql/member_SQL_mysql.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/mysql/entMember_SQL_mysql.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/mysql/MenuManage_SQL_mysql.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/mysql/migration_SQL_mysql.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/mysql/pageGenerator_SQL_mysql.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/mysql/popupMng_SQL_mysql.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/mysql/NtcnlAlert_SQL_mysql.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/mysql/satisfaction_SQL_mysql.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/mysql/siteMng_SQL_mysql.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/mysql/MenuCreat_SQL_mysql.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/mysql/authoDeptMenu_SQL_mysql.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/mysql/WordDicary_SQL_mysql.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/mysql/MetaDataSearch_SQL_mysql.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/mysql/loginHistory_SQL_mysql.xml"/>
+</sqlMapConfig>

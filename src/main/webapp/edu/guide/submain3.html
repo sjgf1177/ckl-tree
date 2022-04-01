@@ -1,0 +1,682 @@
+﻿<!doctype html>
+<html lang="ko">
+<head>
+<title>현장스토리&lt;창의현장&lt;창의동반&lt; 한국콘텐츠아카데미</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1, maximum-scale=3, minimum-scale=1" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="title" content="현장스토리&lt;창의현장&lt;창의동반&lt; 한국콘텐츠아카데미" />
+<meta name="type" content="website" />
+<link rel="stylesheet" type="text/css" href="/fonts/css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css" href="/js/bootstrap/css/bootstrap.css"/>
+<link rel="stylesheet" type="text/css" href="/edu/css/bootstrap.reset.css"/>
+<link rel="stylesheet" type="text/css" href="/edu/css/animate.min.css" />
+<link rel="stylesheet" type="text/css" href="/edu/css/common.css" />
+<link rel="stylesheet" type="text/css" href="/edu/css/layout.css" />
+<link rel="stylesheet" type="text/css" href="/edu/css/sub.css" />
+
+
+<link rel="stylesheet" type="text/css" href="/edu/css/submain.css" />
+
+<script type="text/javascript"  src="/js/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="/js/jquery.cookies.js"></script>
+<script type="text/javascript"  src="/js/bootstrap/bootstrap.min.js"></script>
+<script type="text/javascript"  src="/js/jquery.carouFredSel-6.2.1-packed.js"></script>
+<script type="text/javascript" src="/js/jquery.sticky.js"></script>
+<script type="text/javascript" src="/js/jquery.scrollTo.min.js"></script>
+<script type="text/javascript" src="/js/jquery.easing.1.3.js"></script>
+<script type="text/javascript" src="/js/jquery.isotope.min.js"></script>
+<script type="text/javascript" src="/js/jquery.appear.js"></script>
+<script type="text/javascript" src="/js/modernizr.min.js"></script>
+<script type="text/javascript" src="/js/mousewheel.js"></script>
+<script type="text/javascript" src="/js/zclip/jquery.zclip.js"></script>
+<script type="text/javascript"  src="/js/tablesummary.js"></script>
+<script type="text/javascript" src="/js/base64.js"></script>
+<script type="text/javascript" src="/js/ssl.js"></script>
+<script type="text/javascript" src="/js/miya_validator.js"></script>
+<script type="text/javascript"  src="/edu/js/sub.js"></script>
+
+<!--[if lt IE 9]>
+	<link rel="stylesheet" href="/edu/css/ie.css" type="text/css" />
+	<script type="text/javascript" src="/js/bootstrap/html5shiv.min.js"></script>
+	<script type="text/javascript" src="/js/respond.min.js"></script>
+	<script type="text/javascript"> $('html').attr('id','ie');</script>
+<![endif]-->
+<!--[if lte IE 8]><script type="text/javascript"> $('html').attr('id','ie8'); </script><![endif]-->
+<!--[if lte IE 7]><script type="text/javascript"> $('html').attr('id','ie7'); </script><![endif]-->
+
+<script type="text/javascript">
+	//<![CDATA[
+	$(function() {
+
+		$(".logoutBtn").click(function() {
+			$("#logoutForm").attr("action","https://sso.ckl.or.kr/sso/member/logout.xml");
+			$("#logoutForm").attr("target","ssoAuthFrame");
+			$("#logoutForm").submit();
+			location.href = $(this).attr("href");
+			return false;
+	     });
+
+	});
+
+	function search2(form){
+		if(!form.q.value){
+			alert("검색어를 입력하세요.");
+			$("#q2")[0].focus();
+			return false;
+		}
+		return true;
+	}
+	//]]>
+	</script>
+</head>
+
+<body class="sub05">
+<form name="logoutForm" id="logoutForm" method="post" target="ssoAuthFrame">
+</form>
+<ul class="skip">
+	<li><a href="#content">본문내용 바로가기</a></li>
+	<li><a href="#gnb">주메뉴 바로가기</a></li>
+</ul>
+<div id="wrap" class="sub01Head">
+	<div id="header"> 
+		<!-- 하위스크롤 경우 // headerTopOn -->
+		<div class="headerCts">
+			<div class="wrapSet clearfix">
+				<h1 class="logo"><a href="/edu/main/main.do"><span class="hidden">한국콘텐츠아카데미</span></a></h1>
+				<div id="global">
+					<ul>
+						<li><a href="/edu/member/forLogin.do?menuNo=500077" class="ico1" title="로그인">로그인</a></li>
+						<li><a href="/edu/member/join01.do?menuNo=500076" class="ico2" title="회원가입">회원가입</a></li>
+						<li class="bgn"><a href="/edu/main/contents.do?menuNo=500074" class="ico3" title="사이트맵">사이트맵</a></li>
+					</ul>
+					<!-- 검색창 -->
+					<div class="globalSchSet">
+						<form name="frmSearch2" method="post" action="/edu/search/list.do?menuNo=500079" onsubmit="return search2(this);">
+							<input type="text" name="q" id="q2" class="schWordInput vt" value="" title="검색어를 입력하세요." />
+							<input type="image" src="/edu/images/common/schGlobalSetOk.gif" alt="검색 확인" class="p0 m0 vt" />
+						</form>
+					</div>
+					<!-- //검색창 --> 
+				</div>
+				
+				<!-- gnb -->
+				
+				<div class="gnbSet">
+					<div id="gnb">
+						<ul>
+							<li id="gnb1" > <a href="/edu/main/contents.do?menuNo=500001" >서비스소개</a><span class="current"><span class="sr-only">(현재페이지)</span></span> </li>
+							<li id="gnb2" > <a href="/edu/bbs/B0000011/list.do?menuNo=500007" >새소식</a><span class="current"><span class="sr-only">(현재페이지)</span></span> </li>
+							<li id="gnb3" > <a href="/edu/main/contents.do?menuNo=500019" >현장교육</a><span class="current"><span class="sr-only">(현재페이지)</span></span> </li>
+							<li id="gnb4" > <a href="/edu/onlineEdu/edumain/list.do?menuNo=500026" >온라인교육</a><span class="current"><span class="sr-only">(현재페이지)</span></span> </li>
+							<li id="gnb5" class="on"> <a href="/edu/bbs/B0000041/list.do?menuNo=500034" >창의동반</a><span class="current"><span class="sr-only">(현재페이지)</span></span> </li>
+							<li id="gnb6" > <a href="/edu/progrm/master/list.do?prgSe=02&amp;prgCl=20&amp;menuNo=500046" >취업정보</a><span class="current"><span class="sr-only">(현재페이지)</span></span> </li>
+							<li id="gnb7" > <a href="/edu/main/contents.do?menuNo=500068" >이용안내</a><span class="current"><span class="sr-only">(현재페이지)</span></span> </li>
+						</ul>
+					</div>
+					<div class="gnbTotMenu"><a href="#self"><span class="hidden">전체메뉴 열기</span></a></div>
+					<div class="totMenuT">
+						<dl class="tms1">
+							<dt><a href="/edu/main/contents.do?menuNo=500001" >서비스소개</a></dt>
+							<ul>
+								<li><a href="/edu/main/contents.do?menuNo=500002" >인사말</a></li>
+								<li><a href="/edu/main/contents.do?menuNo=500003" >홍보영상</a></li>
+								<li><a href="/edu/main/contents.do?menuNo=500004" >교육협력기관</a></li>
+								<li><a href="/edu/bbs/B0000036/join01.do?menuNo=500005" >단체수강신청</a></li>
+								<li><a href="/edu/main/contents.do?menuNo=500006" >찾아오시는 길</a></li>
+							</ul>
+						</dl>
+						<dl class="tms2">
+							<dt><a href="/edu/bbs/B0000011/list.do?menuNo=500007" >새소식</a></dt>
+							<ul>
+								<li><a href="/edu/bbs/B0000011/list.do?menuNo=500008" >공지사항</a></li>
+								<li><a href="/edu/bbs/B0000010/list.do?menuNo=500009" >보도자료</a></li>
+								<li><a href="/edu/bbs/B0000038/list.do?menuNo=500017" >문의하기</a></li>
+								<li><a href="/edu/progrm/master/list.do?prgSe=05&amp;menuNo=500018" >이벤트</a></li>
+								<li><a href="/edu/bbs/B0000020/list.do?menuNo=500010" >스토리</a></li>
+							</ul>
+						</dl>
+						<dl class="tms3">
+							<dt><a href="/edu/main/contents.do?menuNo=500019" >현장교육</a></dt>
+							<ul>
+								<li><a href="/edu/main/contents.do?menuNo=500020" >교육일정</a></li>
+								<li><a href="/edu/progrm/master/list.do?prgSe=01&amp;prgCl=10&amp;menuNo=500021" >교육프로그램</a></li>
+							</ul>
+						</dl>
+						<dl class="tms4">
+							<dt><a href="/edu/onlineEdu/edumain/list.do?menuNo=500026" >온라인교육</a></dt>
+							<ul>
+								<li><a href="/edu/onlineEdu/realm/list.do?menuNo=500027" >정규과정</a></li>
+								<li><a href="/edu/onlineEdu/openLecture/list.do?menuNo=500085" >열린강좌</a></li>
+								<li><a href="/edu/main/contents.do?menuNo=500033" >학습지원</a></li>
+							</ul>
+						</dl>
+						<dl class="tms5">
+							<dt><a href="/edu/bbs/B0000041/list.do?menuNo=500034" >창의동반</a></dt>
+							<ul>
+								<li><a href="/edu/bbs/B0000041/list.do?menuNo=500035" >창의현장</a></li>
+								<li><a href="/edu/dream/mainRsltManage/list.do?menuNo=500039" >창의동반</a></li>
+								<li><a href="/edu/bbs/B0000040/list.do?menuNo=500043" >미디어존</a></li>
+							</ul>
+						</dl>
+						<dl class="tms6">
+							<dt><a href="/edu/progrm/master/list.do?prgSe=02&amp;prgCl=20&amp;menuNo=500046" >취업정보</a></dt>
+							<ul>
+								<li><a href="/edu/progrm/master/list.do?prgSe=02&amp;prgCl=20&amp;menuNo=500047" >취창업지원</a></li>
+								<li><a href="/edu/bbs/B0000028/list.do?menuNo=500050" >자료실</a></li>
+								<li><a href="/edu/job/empmnInfo/list.do?menuNo=500054" >채용정보</a></li>
+							</ul>
+						</dl>
+						<dl class="tms7">
+							<dt><a href="/edu/main/contents.do?menuNo=500068" >이용안내</a></dt>
+							<ul>
+								<li><a href="/edu/main/contents.do?menuNo=500069" >개인정보처리방침</a></li>
+								<li><a href="/edu/main/contents.do?menuNo=500070" >저작권정책</a></li>
+								<li><a href="/edu/main/contents.do?menuNo=500072" >이용약관</a></li>
+								<li><a href="/edu/bbs/B0000046/list.do?menuNo=500073" >FAQ</a></li>
+								<li><a href="/edu/main/contents.do?menuNo=500074" >사이트맵</a></li>
+							</ul>
+						</dl>
+						<a href="javascript:void(0);" class="closetotMenuT"><span class="hidden">전체메뉴 닫기</span></a> </div>
+				</div>
+				<!-- //gnb --> 
+			</div>
+		</div>
+	</div>
+	<!-- //header -->
+	
+	<div class="svisualSet"></div>
+	
+	<!--container-->
+	<div id="containerSet">
+		<div class="navSet">
+			<div id="lnb">
+				<div class="lnbHome dib fl"><a href="/ckl/main/main.do" class="ico03"><span class="hidden">홈페이지</span></a> </div>
+				<ul class="lnbNav fl">
+					<li class="menu01 on"> <a href="/edu/bbs/B0000041/list.do?menuNo=500035" >창의현장</a>
+						<ul>
+							<li class="on"> <a	href="/edu/bbs/B0000041/list.do?menuNo=500036" >현장스토리</a> </li>
+							<li class=""> <a	href="/edu/bbs/B0000042/list.do?menuNo=500037" >창의인물</a> </li>
+							<li class=""> <a	href="/edu/bbs/B0000044/list.do?menuNo=500038" >진행프로젝트</a> </li>
+						</ul>
+					</li>
+					<li class="menu02 "> <a href="/edu/dream/mainRsltManage/list.do?menuNo=500039" >창의동반</a>
+						<ul>
+							<li class=""> <a	href="/edu/dream/mainRsltManage/list.do?menuNo=500040" >사업소개</a> </li>
+							<li class=""> <a	href="/edu/dream/pltfomList/list.do?menuNo=500041" >플랫폼 기관</a> </li>
+							<li class=""> <a	href="/edu/dream/mentorManage/list.do?menuNo=500042" >멘토라인업</a> </li>
+						</ul>
+					</li>
+					<li class="menu03 "> <a href="/edu/bbs/B0000040/list.do?menuNo=500043" >미디어존</a>
+						<ul>
+							<li class=""> <a	href="/edu/bbs/B0000040/list.do?menuNo=500044" >보도자료</a> </li>
+							<li class=""> <a	href="/edu/bbs/B0000043/list.do?menuNo=500045" >창의클럽 커뮤니티</a> </li>
+						</ul>
+					</li>
+				</ul>
+				
+				<!-- snsSet -->
+				<div class="snsSet snsIco">
+					<ul>
+						<li> <a href="javascript:void(0);" class="ico01 snsToggleOpen"><span class="hidden">SNS 공유하기</span></a>
+							<div class="snsDrop" style="display:none;">
+								<ul>
+									<li><a href="https://www.facebook.com/sharer.php?t=%ed%98%84%ec%9e%a5%ec%8a%a4%ed%86%a0%eb%a6%ac%26lt%3b%ec%b0%bd%ec%9d%98%ed%98%84%ec%9e%a5%26lt%3b%ec%b0%bd%ec%9d%98%eb%8f%99%eb%b0%98%26lt%3b+%ed%95%9c%ea%b5%ad%ec%bd%98%ed%85%90%ec%b8%a0%ec%95%84%ec%b9%b4%eb%8d%b0%eb%af%b8&amp;u=%2fedu%2fbbs%2fB0000041%2flist.do%3fmenuNo%3d500034" class="icos01" onclick="return facebookOpen();" title="(새창열림)페이스북 링크 공유하기" target="_blank">페이스북</a></li>
+									<li><a href="https://twitter.com/share?text=현장스토리&lt;창의현장&lt;창의동반&lt; 한국콘텐츠아카데미&amp;url=" class="icos02" onclick="return twitterOpen();" title="(새창열림)트위터 링크 공유하기" target="_blank">트위터</a></li>
+								</ul>
+							</div>
+						</li>
+						<li><a Href="#self" Class="ico02 CopyClipOpen"><span Class="hidden">URL 복사하기</span></a> 
+							<script type="text/javascript">
+							//<![CDATA[
+								var linkURL = document.URL;
+								//$("#COPYCP").prop("value", linkURL);
+								function urlLink() {
+								    var IE = (document.all) ? true : false;
+								    if (IE) {
+								         window.clipboardData.setData('Text', linkURL);
+								         alert('주소가 복사되었습니다. 브라우저의 URL 입력창에 Ctrl+V로 붙여 넣기 하세요.');
+								    } else {
+								        temp = prompt("이 글의 트랙백 주소입니다. Ctrl+C를 눌러 클립보드로 복사하세요", linkURL );
+								    }
+								    return false;
+								}
+								$(".snsIco .ico02").click(function(){
+									urlLink();
+									return false;
+								});
+							//]]>
+							</script> 
+						</li>
+						<li><a href="/edu/forPrint.jsp" class="ico03" onclick="window.open(this.href, 'printPage', 'width=1120,height=650,scrollbars=1,toolbar=1,status');return false;" target="_blank" title="(새창열림)내용인쇄하기"><span class="hidden">인쇄하기</span></a></li>
+					</ul>
+				</div>
+				<!-- //snsSet --> 
+				
+			</div>
+		</div>
+		<div id="container" class="clearfix">
+			<div id="locationSet">
+				<div class="hgroup">
+					<h1><span>현장스토리</span></h1>
+				</div>
+				<div id="location">
+					<ol>
+						<li class="home">home</li>
+						<li>창의동반</li>
+						<li>창의현장</li>
+						<li class="current">현장스토리<span class="more"></span></li>
+					</ol>
+				</div>
+			</div>
+			
+			<!--content-->
+			<div id="content">
+				
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="inner"> 
+	<!-- 본문 컨텐츠 시작-->
+	<!--section1-->
+	<div class="section1">
+		<div class="col" style="margin-right:8px;">
+			<div class="photoGallery4 boxCol bn"><!-- 5n+5의 간격으로 mr0클래스 필수 -->
+				<ul>
+					<li class="w100p"> <a href="/edu/bbs/B0000041/view.do?nttId=9437&amp;searchCnd=&amp;searchWrd=&amp;gubun=&amp;delCode=0&amp;useAt=&amp;replyAt=&amp;menuNo=500034&amp;sdate=&amp;edate=&amp;viewType=&amp;type=&amp;siteId=&amp;option1=&amp;option5=&amp;pageIndex=1 "> <img src="/cmm/fms/getImage.do?atchFileId=FILE_000000000009250&amp;fileSn=7443" style="width: 300px;height: 270.188px;" alt=""> <span class="db fl" style="background:#EB9856;"> <!-- 멘티 색깔.  --> 
+						<span class="title mb5"> </span> <span class="desc tal fs14">'창의인재동반사업 중간성과 보고회' 현장을 다녀오다!</span> <span class="w100p mt5"> <span class="w50p fl">2015-11-27</span> <span class="w50p tar"><span class="icoSm icoStory"></span>창의동반 <br>
+						</span> </span> </span> </a> </li>
+					<li class="w100p"> <a href="/edu/bbs/B0000041/view.do?nttId=9417&amp;searchCnd=&amp;searchWrd=&amp;gubun=&amp;delCode=0&amp;useAt=&amp;replyAt=&amp;menuNo=500034&amp;sdate=&amp;edate=&amp;viewType=&amp;type=&amp;siteId=&amp;option1=&amp;option5=&amp;pageIndex=1 "><span class="db fl" style="background:#34546B;"> <!-- 멘티 색깔.  --> 
+						<span class="title mb5"> </span> <span class="desc tal fs14">창의인재동반사업과 함께한 6개월, 멘티들의 노력의 결과를 소개합니다.</span> <span class="w100p mt5"> <span class="w50p fl">2015-11-26</span> <span class="w50p tar"><span class="icoSm icoStory"></span>창의동반 <br>
+						</span> </span> </span> </a> </li>
+					<li class="w100p"> <a href="/edu/bbs/B0000041/view.do?nttId=9337&amp;searchCnd=&amp;searchWrd=&amp;gubun=&amp;delCode=0&amp;useAt=&amp;replyAt=&amp;menuNo=500034&amp;sdate=&amp;edate=&amp;viewType=&amp;type=&amp;siteId=&amp;option1=&amp;option5=&amp;pageIndex=1 "> 
+					<span class="db fl" style="background:#87B304;"> <!-- 멘티 색깔.  --> 
+						<span class="title mb5"> </span> <span class="desc tal fs14">재미의 근본 원칙과 '연장통'연출에 대한 특강!</span> <span class="w100p mt5"> <span class="w50p fl">2015-11-18</span> <span class="w50p tar"><span class="icoSm icoStory"></span>창의동반 <br>
+						</span> </span> </span> </a> </li>
+					<li class="w100p"> <a href="/edu/bbs/B0000041/view.do?nttId=9277&amp;searchCnd=&amp;searchWrd=&amp;gubun=&amp;delCode=0&amp;useAt=&amp;replyAt=&amp;menuNo=500034&amp;sdate=&amp;edate=&amp;viewType=&amp;type=&amp;siteId=&amp;option1=&amp;option5=&amp;pageIndex=1 ">
+					<span class="db fl" style="background:#648DAB;"> <!-- 멘티 색깔.  --> 
+						<span class="title mb5"> </span> <span class="desc tal fs14">안방극장을 사로잡을 방송작가 양성 프로젝트, 드라마 모듈교육 2주차 </span> <span class="w100p mt5"> <span class="w50p fl">2015-11-11</span> <span class="w50p tar"><span class="icoSm icoStory"></span>창의동반 <br>
+						</span> </span> </span> </a> </li>
+				</ul>
+			</div>
+		</div>
+		
+
+		<div class="col">
+			<div class="photoGallery4 boxCol bn"><!-- 5n+5의 간격으로 mr0클래스 필수 -->
+				<ul>
+					<li class="w100p"> <a href="/edu/bbs/B0000041/view.do?nttId=9437&amp;searchCnd=&amp;searchWrd=&amp;gubun=&amp;delCode=0&amp;useAt=&amp;replyAt=&amp;menuNo=500034&amp;sdate=&amp;edate=&amp;viewType=&amp;type=&amp;siteId=&amp;option1=&amp;option5=&amp;pageIndex=1 "> <img src="/cmm/fms/getImage.do?atchFileId=FILE_000000000009250&amp;fileSn=7443" style="width: 300px;height: 270.188px;" alt=""> <span class="db fl" style="background:#EB9856;"> <!-- 멘티 색깔.  --> 
+						<span class="title mb5"> </span> <span class="desc tal fs14">'창의인재동반사업 중간성과 보고회' 현장을 다녀오다!</span> <span class="w100p mt5"> <span class="w50p fl">2015-11-27</span> <span class="w50p tar"><span class="icoSm icoStory"></span>창의동반 <br>
+						</span> </span> </span> </a> </li>
+					<li class="w100p"> <a href="/edu/bbs/B0000041/view.do?nttId=9417&amp;searchCnd=&amp;searchWrd=&amp;gubun=&amp;delCode=0&amp;useAt=&amp;replyAt=&amp;menuNo=500034&amp;sdate=&amp;edate=&amp;viewType=&amp;type=&amp;siteId=&amp;option1=&amp;option5=&amp;pageIndex=1 "><span class="db fl" style="background:#34546B;"> <!-- 멘티 색깔.  --> 
+						<span class="title mb5"> </span> <span class="desc tal fs14">창의인재동반사업과 함께한 6개월, 멘티들의 노력의 결과를 소개합니다.</span> <span class="w100p mt5"> <span class="w50p fl">2015-11-26</span> <span class="w50p tar"><span class="icoSm icoStory"></span>창의동반 <br>
+						</span> </span> </span> </a> </li>
+					<li class="w100p"> <a href="/edu/bbs/B0000041/view.do?nttId=9337&amp;searchCnd=&amp;searchWrd=&amp;gubun=&amp;delCode=0&amp;useAt=&amp;replyAt=&amp;menuNo=500034&amp;sdate=&amp;edate=&amp;viewType=&amp;type=&amp;siteId=&amp;option1=&amp;option5=&amp;pageIndex=1 "> 
+					<span class="db fl" style="background:#87B304;"> <!-- 멘티 색깔.  --> 
+						<span class="title mb5"> </span> <span class="desc tal fs14">재미의 근본 원칙과 '연장통'연출에 대한 특강!</span> <span class="w100p mt5"> <span class="w50p fl">2015-11-18</span> <span class="w50p tar"><span class="icoSm icoStory"></span>창의동반 <br>
+						</span> </span> </span> </a> </li>
+					<li class="w100p"> <a href="/edu/bbs/B0000041/view.do?nttId=9277&amp;searchCnd=&amp;searchWrd=&amp;gubun=&amp;delCode=0&amp;useAt=&amp;replyAt=&amp;menuNo=500034&amp;sdate=&amp;edate=&amp;viewType=&amp;type=&amp;siteId=&amp;option1=&amp;option5=&amp;pageIndex=1 ">
+					<span class="db fl" style="background:#648DAB;"> <!-- 멘티 색깔.  --> 
+						<span class="title mb5"> </span> <span class="desc tal fs14">안방극장을 사로잡을 방송작가 양성 프로젝트, 드라마 모듈교육 2주차 </span> <span class="w100p mt5"> <span class="w50p fl">2015-11-11</span> <span class="w50p tar"><span class="icoSm icoStory"></span>창의동반 <br>
+						</span> </span> </span> </a> </li>
+				</ul>
+			</div>
+
+		</div>
+			
+		<div class="col2">
+		</div>
+	</div>
+	<!--section1 끝--> 
+	
+	<!--section2-->
+	<div class="section2">
+		<div class="mb10">
+			<div id="sm01Roller">
+				<div class="sm01Ctrl">
+					<a href="javascript:void(0);" class="sm01prev rollerIcoLt"><span class="hidden">이전 이미지 보기</span></a>
+					<a href="javascript:void(0);" class="sm01next rollerIcoRt"><span class="hidden">다음 이미지 보기</span></a>
+				</div>
+				<div>
+					<ul id="sm01Roll">
+						<li><a href="#self"><img src="/edu/images/main/m21Img_01.jpg" style="width: 300px;height: 270px;" alt="대체텍스트 입력값 필수 대입" /></a></li>
+						<li><a href="#self"><img src="/edu/images/main/m21Img_02.jpg" style="width: 300px;height: 270px;" alt="대체텍스트 입력값 필수 대입" /></a></li>
+						<li><a href="#self"><img src="/edu/images/main/m21Img_03.jpg" style="width: 300px;height: 270px;" alt="대체텍스트 입력값 필수 대입" /></a></li>
+						<li><a href="#self"><img src="/edu/images/main/m21Img_04.jpg" style="width: 300px;height: 270px;" alt="대체텍스트 입력값 필수 대입" /></a></li>
+						<li><a href="#self"><img src="/edu/images/main/m21Img_01.jpg" style="width: 300px;height: 270px;" alt="대체텍스트 입력값 필수 대입" /></a></li>
+						<li><a href="#self"><img src="/edu/images/main/m21Img_01.jpg" style="width: 300px;height: 270px;" alt="대체텍스트 입력값 필수 대입" /></a></li>
+						<li><a href="#self"><img src="/edu/images/main/m21Img_03.jpg" style="width: 300px;height: 270px;" alt="대체텍스트 입력값 필수 대입" /></a></li>
+					</ul>
+				</div>
+			</div>
+<script type="text/javascript">
+//<![CDATA[
+	$(function(){
+		$('#sm01Roll').carouFredSel({
+			auto:false,
+			pauseOnHover: false,
+			next: '.sm01next',
+			prev: '.sm01prev'
+		});
+	});
+//]]>
+</script>			
+
+
+			<div class="infoBox clear fl mb10">
+				<dl>
+					<dt><span class="hidden">세계경쟁력위원회연합 선정</span></dt>
+					<dd style="width:100px" class="fl tac brn"><img src="/edu/images/sub4/040201_06.png" alt=""><br>
+						<span class="fs11">수행프로젝트</span><br> 
+						<strong><span class="fs5">1,086</span> 명</strong></dd>
+					<dd style="width:100px" class="fl tac brn"><img src="/edu/images/sub4/040201_07.png" alt=""><br>
+						<span class="fs11">국내외 공모전 수상</span><br> 
+						<strong><span class="fs5">100</span> 명</strong></dd>
+					<dd style="width:100px" class="fl tac brn"><img src="/edu/images/sub4/040201_08.png" alt=""><br>
+						<span class="fs11">작품계약 및 데뷔</span><br> 
+						<strong><span class="fs5">120</span> 명</strong></dd>
+				</dl>
+			</div>
+		</div>
+
+
+
+		<div>
+			<div class="photoGallery4 boxCol bn" id="sm02Roller"><!-- 5n+5의 간격으로 mr0클래스 필수 -->
+				<div class="sm02Ctrl">
+					<a href="javascript:void(0);" class="sm02prev rollerIcoLt"><span class="hidden">이전 이미지 보기</span></a>
+					<a href="javascript:void(0);" class="sm02next rollerIcoRt"><span class="hidden">다음 이미지 보기</span></a>
+				</div>
+				<ul class="mentiGp">
+					<li> <a href="#self"> <img src="/edu/images/sub4/040101_02.jpg" style="width: 300px;height: 270.188px;" alt=" "> 
+					<span class="db fl" style="background:#7D6857;">
+						<span class="title mb5">(주)와이랩</span>
+						<span class="desc tal fs14">[와이랩] 영화를 찍으며 출연까지? 구교환멘티와의 인터뷰를 소개합니다</span>
+						<span class="w100p mt5">
+							<span class="w50p fl">2015-09-10</span>
+							<span class="w50p tar"><span class="icoSm icoStory"></span>창의인물  <br> 멘티</span>
+						</span>
+					</span>
+					</a>
+					</li>
+					<li> <a href="#self"> <img src="/edu/images/sub4/040101_02.jpg" style="width: 300px;height: 270.188px;" alt=" "> 
+					<span class="db fl" style="background:#7D6857;">
+						<span class="title mb5">(주)와이랩</span>
+						<span class="desc tal fs14">[와이랩] 영화를 찍으며 출연까지? 구교환멘티와의 인터뷰를 소개합니다</span>
+						<span class="w100p mt5">
+							<span class="w50p fl">2015-09-10</span>
+							<span class="w50p tar"><span class="icoSm icoStory"></span>창의인물  <br> 멘티</span>
+						</span>
+					</span>
+					</a>
+					</li>
+					<li> <a href="#self"> <img src="/edu/images/sub4/040101_02.jpg" style="width: 300px;height: 270.188px;" alt=" "> 
+					<span class="db fl" style="background:#7D6857;">
+						<span class="title mb5">(주)와이랩</span>
+						<span class="desc tal fs14">[와이랩] 영화를 찍으며 출연까지? 구교환멘티와의 인터뷰를 소개합니다</span>
+						<span class="w100p mt5">
+							<span class="w50p fl">2015-09-10</span>
+							<span class="w50p tar"><span class="icoSm icoStory"></span>창의인물  <br> 멘티</span>
+						</span>
+					</span>
+					</a>
+					</li>
+					<li> <a href="#self"> <img src="/edu/images/sub4/040101_02.jpg" style="width: 300px;height: 270.188px;" alt=" "> 
+					<span class="db fl" style="background:#7D6857;">
+						<span class="title mb5">(주)와이랩</span>
+						<span class="desc tal fs14">[와이랩] 영화를 찍으며 출연까지? 구교환멘티와의 인터뷰를 소개합니다</span>
+						<span class="w100p mt5">
+							<span class="w50p fl">2015-09-10</span>
+							<span class="w50p tar"><span class="icoSm icoStory"></span>창의인물  <br> 멘티</span>
+						</span>
+					</span>
+					</a>
+					</li>
+					<li> <a href="#self"> <img src="/edu/images/sub4/040101_02.jpg" style="width: 300px;height: 270.188px;" alt=" "> 
+					<span class="db fl" style="background:#7D6857;">
+						<span class="title mb5">(주)와이랩</span>
+						<span class="desc tal fs14">[와이랩] 영화를 찍으며 출연까지? 구교환멘티와의 인터뷰를 소개합니다</span>
+						<span class="w100p mt5">
+							<span class="w50p fl">2015-09-10</span>
+							<span class="w50p tar"><span class="icoSm icoStory"></span>창의인물  <br> 멘티</span>
+						</span>
+					</span>
+					</a>
+					</li>
+					<li> <a href="#self"> <img src="/edu/images/sub4/040101_02.jpg" style="width: 300px;height: 270.188px;" alt=" "> 
+					<span class="db fl" style="background:#7D6857;">
+						<span class="title mb5">(주)와이랩</span>
+						<span class="desc tal fs14">[와이랩] 영화를 찍으며 출연까지? 구교환멘티와의 인터뷰를 소개합니다</span>
+						<span class="w100p mt5">
+							<span class="w50p fl">2015-09-10</span>
+							<span class="w50p tar"><span class="icoSm icoStory"></span>창의인물  <br> 멘티</span>
+						</span>
+					</span>
+					</a>
+					</li>
+					<li> <a href="#self"> <img src="/edu/images/sub4/040101_02.jpg" style="width: 300px;height: 270.188px;" alt=" "> 
+					<span class="db fl" style="background:#7D6857;">
+						<span class="title mb5">(주)와이랩</span>
+						<span class="desc tal fs14">[와이랩] 영화를 찍으며 출연까지? 구교환멘티와의 인터뷰를 소개합니다</span>
+						<span class="w100p mt5">
+							<span class="w50p fl">2015-09-10</span>
+							<span class="w50p tar"><span class="icoSm icoStory"></span>창의인물  <br> 멘티</span>
+						</span>
+					</span>
+					</a>
+					</li>
+					<li> <a href="#self"> <img src="/edu/images/sub4/040101_02.jpg" style="width: 300px;height: 270.188px;" alt=" "> 
+					<span class="db fl" style="background:#7D6857;">
+						<span class="title mb5">(주)와이랩</span>
+						<span class="desc tal fs14">[와이랩] 영화를 찍으며 출연까지? 구교환멘티와의 인터뷰를 소개합니다</span>
+						<span class="w100p mt5">
+							<span class="w50p fl">2015-09-10</span>
+							<span class="w50p tar"><span class="icoSm icoStory"></span>창의인물  <br> 멘티</span>
+						</span>
+					</span>
+					</a>
+					</li>
+					<li> <a href="#self"> <img src="/edu/images/sub4/040101_02.jpg" style="width: 300px;height: 270.188px;" alt=" "> 
+					<span class="db fl" style="background:#7D6857;">
+						<span class="title mb5">(주)와이랩</span>
+						<span class="desc tal fs14">[와이랩] 영화를 찍으며 출연까지? 구교환멘티와의 인터뷰를 소개합니다</span>
+						<span class="w100p mt5">
+							<span class="w50p fl">2015-09-10</span>
+							<span class="w50p tar"><span class="icoSm icoStory"></span>창의인물  <br> 멘티</span>
+						</span>
+					</span>
+					</a>
+					</li>
+				</ul>
+
+
+
+<script type="text/javascript">
+//<![CDATA[
+	$(function(){
+		$('.mentiGp').carouFredSel({
+			auto:false,
+			pauseOnHover: false,
+			next: '.sm02next',
+			prev: '.sm02prev'
+		});
+	});
+//]]>
+</script>		
+
+
+
+
+			</div>
+
+
+		</div>
+	</div>
+	<!--section2 끝--> 
+	
+	<!--section3-->
+	<div class="section3">
+		<div class="sidebanner2">
+			<div class="sidebanner"> 
+				<a href="#" onclick="window.open('/2015/main2.jsp','','left=2515, top=250, width=720,height=420,resizable=no');"><img src="../images/submain/video.jpg"></a> 
+			</div>
+			<div class="boxCol community">
+				<div style="background:#34546B;">
+					<h3>창의클럽 커뮤니티</h3>
+					<ul>
+						<li class="w100p tal"><a href="/community_view.do?idx=8202">“창의인재는 제게 이정표..</a></li>
+						<li class="w100p tal"><a href="/community_view.do?idx=8062">영화  1기 멘티 김성무 감..</a></li>
+						<li class="w100p tal"><a href="/community_view.do?idx=7942">“창의인재 동반사업 덕분..</a></li>
+						<li class="w100p tal"><a href="/community_view.do?idx=7882">'버틸수있는 힘을 얻게 되..</a></li>
+						<li class="w100p tal"><a href="/community_view.do?idx=7782">"나를 되돌아보는 시간이 ..</a></li>
+					</ul>
+				</div>
+			</div>
+			<div class="boxCol broadCast mt10">
+				<div>
+					<h3>보도자료</h3>
+					<div class="item"> 
+						<a href="news_view.do?idx=7962"><img src="../images/tmp/_subm07.jpg" alt="">
+							<p class="title">'창의인재 동반사업' 창조경제 대표적인 모델 평가</p>
+							<p class="ellipsis_2row">'창의인재 동반사업' 창조경제 대표적인 모델 평가'춘희막이' 참여 멘티만 4년간 7명, 다들 자기길 찾아[2015-10-21 | 아시아뉴스통신=송현수 기자]지난해 독립영화로 역대...</p>
+							<span>2015.10.30</span>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--section3 끝--> 
+	
+	<!-- 본문 컨텐츠 끝--> 
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			<!--//content-->
+			<hr />
+			<!--<a href="#self" class="pageTop" title="문서 처음으로 이동">TOP</a> </div>--> 
+			
+			<!--//container--> 
+		</div>
+	</div>
+</div>
+<!-- //wrap --> 
+
+<!-- footer -->
+
+<div class="footerSet">
+	<div id="footer">
+		<div class="fContents">
+			<div class="fLinks"> <a href="/edu/main/contents.do?menuNo=500069" class="ml0"><strong>개인정보처리방침</strong></a> <a href="/edu/main/contents.do?menuNo=500068">이용약관</a> <a href="/edu/bbs/B0000038/list.do?menuNo=500017">문의하기</a> <a href="/edu/main/contents.do?menuNo=500074">사이트맵</a> <a href="/edu/main/contents.do?menuNo=500091" class="linkRed pl0 pr0 fr tar">한국콘텐츠아카데미앱 다운로드<span class="fLinkArr"></span></a> </div>
+			<div class="copyright">
+				<div class="fl fLogoSet">
+					<div class="fImages fLogo"><span class="hidden">한국콘텐츠아카데미(하단로고)</span></div>
+				</div>
+				<p class="fs12">본 페이지에 게시된 이메일주소가 자동 수집되는 것을 거부하며, 이를 위반시 정보통신법에 의해 처벌됨을 유념하시기 바랍니다.</p>
+				<address>
+				본원 : [58217] 전라남도 나주시 교육길 35 한국콘텐츠진흥원<br />
+				대학로분원 : [03082] 서울시 종로구 대학로 57 콘텐츠코리아랩
+				</address>
+				<div class="copy fs12">Copyright 2015. Korea Creative Content Agency all rights reserved.</div>
+			</div>
+			<div class="footerRt">
+				<div class="selBox tar">
+					<form name="siteGoLink" action="#none" method="post" target="_blank" onsubmit="return fnGoLinkSite(this);">
+						<select class="vm" name="link">
+							<option value="">관련사이트</option>
+							<option value="http://www.mcst.go.kr/main.jsp">문화체육관광부</option>
+							<option value="http://www.kocca.kr/cop/main.do">한국콘텐츠진흥원</option>
+							<option value="https://www.ckl.or.kr:446/www/main/userMain/main.do">콘텐츠코리아랩</option>
+							<option value="http://www.culturist.or.kr/">종합인력정보</option>
+							<option value="https://dream.kocca.kr/home.do">창의드림</option>
+							<option value="http://www.culturecontent.com/main.do">문화콘텐츠닷컴</option>
+							<option value="http://www.kgq.or.kr/service/pub/IntroServlet">게임국가자격기술검정</option>
+						</select>
+						<input type="image" src="/edu/images/common/siteGo.gif" alt="이동" class="vm" />
+					</form>
+				</div>
+				<div class="logoGroup"> <a href="#self" class="fImages fLink1"><span class="hidden"><strong>콘텐츠코리아랩 바로가기</strong></span></a> <a href="#self" title="새창열림" class="fImages fLink2"><span class="hidden">e러닝전문기관인증</span></a> <a href="#self" title="새창열림" class="fImages fLink3"><span class="hidden">개인정보보호안전 인증</span></a> <a href="#self" class="fImages fLink4"><span class="hidden">콘텐츠제공서비스 품질인증</span></a> </div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- //footer --> 
+
+<!--[if lte IE 7]>
+<script type="text/javascript">
+//<![CDATA[
+	$('*').each(function(index) {
+		if ($(this).css("overflow")=="hidden"){
+			$(this).css("zoom",1);
+		}
+		if ($(this).css("display")=="inline-block"){
+			$(this).css("display",'inline');
+			$(this).css("zoom",1);
+		}
+	});
+//]]>
+</script>
+<![endif]-->
+<iframe name="ssoAuthFrame" id="ssoAuthFrame" style="width:0px;height:0px;border:0;" src="https://sso.ckl.or.kr/sso/member/checkSSO.do?service=edu&menuNo=500034&userTp=0" title="SSO 로그인 유무확인 프레임 입니다."></iframe>
+<script type="text/javascript" src="/js/zclip/jquery.zclip.js"></script>
+<div class="souceUrl">*/WEB-INF/jsp/edu/bbs/PG0016/List.jsp</div>
+<div class="check" style="display: none">복사완료</div>
+<script type="text/javascript">
+	$(document).ready(function(){
+	    $(".souceUrl").zclip({
+		    path: "/js/zclip/ZeroClipboard.swf",
+	        copy:$('.souceUrl').text(),
+	        beforeCopy:function(){
+	            $('.souceUrl').css('background','yellow');
+	            $(this).css('color','orange');
+	        },
+	        afterCopy:function(){
+	            $('.souceUrl').css('background','green');
+	            $(this).css('color','purple');
+	            $(this).next('.check').show();
+	            $(this).width('auto')
+	        }
+	    });
+	});
+</script>
+</body>
+</html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=Edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<meta name="robots" content="all" />
+<link rel="stylesheet" type="text/css" href="/js/bootstrap/css/bootstrap.css" />
+<link rel="stylesheet" type="text/css" href="/js/bootstrap/css/bootstrap-theme.css" />
+<link rel="stylesheet" type="text/css" href="/js/jquery-ui/jquery-ui.css">
+<link rel="stylesheet" type="text/css" href="/portal/css/common.css" />
+<link rel="stylesheet" type="text/css" href="/bos/css/common.css" />
+<link rel="stylesheet" type="text/css" href="/bos/css/bosLayout.css" />
+
+<script type="text/javascript" src="/js/jquery.js"></script>
+<script type="text/javascript" src="/js/bootstrap/bootstrap.js"></script>
+<script type="text/javascript" src="/js/bootstrap/respond.min.js"></script>
+<script type="text/javascript" src="/js/jquery-ui/jquery-ui.js"></script>
+<script type="text/javascript" src="/js/jquery.highlight-4.js"></script>
+<script type="text/javascript" src="/js/miya_validator.js"></script>
+<script type="text/javascript" src="/bos/js/common.js"></script>
+
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+<script type="text/javascript" src="/js/html5shiv.js"></script><script type="text/javascript" src="js/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+<div id="wrap" class="popupWrap">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1>선택장비 찾기</h1>
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+							<form action="">
+								<fieldset>
+									<legend>선택장비 찾기</legend>
+										<div class="bdView mb0">
+											<table class="table table-bordered" summary=" ">
+												<caption>
+												
+												</caption>
+												<colgroup>
+												<col />
+												<col />
+												<col />
+												<col />
+												</colgroup>
+												<tbody>
+													<tr>
+														<th scope="row" ><label for="TOLNM">장비명</label></th>
+														<td><input type="text" name="TOLNM" id="TOLNM" value="" /></td>
+														<th scope="row" ><label for="DTELS">세부내역</label></th>
+														<td><input type="text" name="DTELS" id="DTELS" value="" /></td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+								</fieldset>
+							</form>
+							<div class="btnSet tar"><a href="#self" class="btn btn-primary">검색</a></div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+							<div class="bdList">
+								<table class="table table-bordered" summary="">
+									<caption>
+									
+									</caption>
+									<colgroup>
+									<col />
+									<col />
+									<col />
+									<col />
+									<col />
+									</colgroup>
+									<thead>
+										<tr>
+											<th scope="row" >선택</th>
+											<th scope="row" >아이디</th>
+											<th scope="row" >회원명</th>
+											<th scope="row" >휴대폰</th>
+											<th scope="row" >이메일</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td><input type="checkbox" name="SELCHK1" id="SELCHK1" title="선택1" /></td>
+											<td> ddddd</td>
+											<td>홍길동</td>
+											<td>010-1111-1111</td>
+											<td>aaaa@kkkk.co.kr</td>
+										</tr>
+										<tr>
+											<td><input type="checkbox" name="SELCHK2" id="SELCHK2" title="선택2" /></td>
+											<td> aaaaaa</td>
+											<td>김철수</td>
+											<td>010-1111-1111</td>
+											<td>aaaa@kkkk.co.kr</td>
+										</tr>
+										<tr>
+											<td><input type="checkbox" name="SELCHK3" id="SELCHK3" title="선택3" /></td>
+											<td> asdasdasd</td>
+											<td>김미영</td>
+											<td>010-1111-1111</td>
+											<td>aaaa@kkkk.co.kr</td>
+										</tr>
+										<tr>
+											<td><input type="checkbox" name="SELCHK4" id="SELCHK4" title="선택4" /></td>
+											<td> asdasdsad</td>
+											<td>김미수</td>
+											<td>010-1111-1111</td>
+											<td>aaaa@kkkk.co.kr</td>
+										</tr>
+										<tr>
+											<td><input type="checkbox" name="SELCHK5" id="SELCHK5" title="선택5" /></td>
+											<td> test1</td>
+											<td>김수미</td>
+											<td>010-1111-1111</td>
+											<td>aaaa@kkkk.co.kr</td>
+										</tr>
+										<tr>
+											<td colspan="5">- 검색 결과가 없습니다 -</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							
+											
+							<!-- paging -->
+							<div class="paging">
+								<div class='paginationSet'>
+									<ul class='pagination pagination-centered'>
+										<li class='first'><span>처음 <span class='t'>목록으로 이동</span></span></li>
+										<li class='prev'><span>이전 <span class='t'>목록으로 이동</span></span></li>
+										<li class='active'><span><em title='현재페이지'><span>1</span></em></span></li>
+										<li><a href="#self"><span><span>2</span></span></a></li>
+										<li><a href="#self"><span><span>3</span></span></a></li>
+										<li><a href="#self"><span><span>4</span></span></a></li>
+										<li><a href="#self"><span><span>5</span></span></a></li>
+										<li><a href="#self"><span><span>6</span></span></a></li>
+										<li><a href="#self"><span><span>7</span></span></a></li>
+										<li><a href="#self"><span><span>8</span></span></a></li>
+										<li><a href="#self"><span><span>9</span></span></a></li>
+										<li class='next'><span>다음 <span class='t'>목록으로 이동</span></span></li>
+										<li class='end'><span>끝 <span class='t'>목록으로 이동</span></span></li>
+									</ul>
+								</div>
+							</div>
+							<!-- //paging -->
+
+							<div class="btnSet"><a href="#self" class="btn btn-primary">확인</a></div>
+							
+
+                        </div>
+                    </div>
+				</div>
+			</div>
+
+</div>
+<div id="footer">
+	<p><span class="bold">콘텐츠코리아랩</span>&nbsp;&nbsp;&nbsp;
+		서울시 영등포구 여의나루로 76(150-010),
+		&nbsp;&nbsp;&nbsp; <span class="bold">전화번호</span>: 02)767-7114 </p>
+	<em>Copyright ⓒ 2012 CKL Corp. All Rights reserved.</em> </div>
+
+<!--[if lte IE 7]>
+<script type="text/javascript">
+//<![CDATA[
+	$('*').each(function(index) {
+		if ($(this).css("overflow")=="hidden"){ $(this).css("zoom",1)}
+		if ($(this).css("display")=="inline-block"){ $(this).css("display",'inline'); $(this).css("zoom",1)}
+	});
+//]]>
+</script>
+<![endif]-->
+</div>
+</body>
+</html>

@@ -1,0 +1,616 @@
+<!doctype html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1, maximum-scale=3, minimum-scale=1" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<link rel="stylesheet" type="text/css" href="/js/bootstrap/css/bootstrap.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/ckl/css/common.css" />
+	<link rel="stylesheet" type="text/css" href="/ckl/css/layout.css" />
+	<link rel="stylesheet" type="text/css" href="/ckl/css/main.css" />
+
+	<script type="text/javascript" src="/js/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" src="/js/jquery.carouFredSel-6.2.1-packed.js"></script>
+	<script type="text/javascript" src="/js/modernizr.min.js"></script>
+	<script type="text/javascript" src="/ckl/js/main.js"></script>
+
+
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+  <script src="/js/bootstrap/html5shiv.min.js"></script>
+  <script src="/js/respond.min.js"></script>
+  <script>
+  $('html').attr('id','ie');
+//  $('#responsive').remove();
+  </script>
+<![endif]-->
+
+</head>
+<body>
+
+<!-- <div class="debug" style="position:absolute;z-index:-100;width:100%;height:1900px; 
+	background:url(/ckl/images/tmp/_main.jpg) no-repeat center top; opacity:0.3;filter: invert(1);
+	-webkit-filter: invert(1);
+	-moz-filter: invert(1);
+	-o-filter: invert(1);
+	-ms-filter: invert(1);display:block;">
+</div> -->
+
+<ul class="skip">
+	<li><a href="#content">본문내용 바로가기</a></li>
+	<li><a href="#container">주메뉴 바로가기</a></li>
+</ul>
+
+<div id="wrap">
+	<div class="globalSet">
+		<ul class="globalLink">
+			<li><a href="#self">한국콘텐츠진흥원<span class="mainIcos icoArr"></span></a></li>
+			<li><a href="#self">한국콘텐츠아카데미<span class="mainIcos icoArr"></span></a></li>
+		</ul>
+		<ul class="globalUtil">
+			<li class="bar"><a href="#self">로그인</a></li>
+			<li class="bar"><a href="#self">회원가입</a></li>
+			<li class="mr20"><a href="#self">English</a></li>
+			<li class="schIcos">
+				<!-- search -->
+				<a href="javascript:void(0);" class="OpenSch"><span class="sr-only">검색창 열기</span></a>
+				<a href="javascript:void(0);" class="closeSch"><span class="sr-only">검색창 닫기</span></a>
+				<div class="shSet">
+					<form action="">
+						<fieldset>
+							<legend>검색창 입력양식</legend>
+							<input type="text" class="schWd" name="SCHWD" id="SCHWD" value="" title="검색어를 입력하세요." />
+							<input type="image" class="schGo" src="/ckl/images/common/schGo.png" name="SCHGO" id="SCHGO" alt="검색 확인" title="검색 확인"  />
+						</fieldset>
+					</form>
+				</div>
+				<!-- //search -->
+			</li>
+		</ul>
+	</div>
+	
+	<div class="mainVisualSet">
+		<!-- header -->
+		<div id="header">
+			<div class="logoSet">
+				<p class="mCommon orgLogo"><span class="sr-only">대한민국 영토 콘텐츠로 넓힌다!  KOCCA 한국콘텐츠진흥원</span></p>
+				<h1 class="mCommon logo"><a href="#self"><span class="sr-only">콘텐츠코리아랩(Content korea lab)</span></a></h1>
+			</div>
+		
+			<div id="gnb">
+				<ul>
+					<li id="smenu1" class="on"><a href="/ckl/main/contents.do?menuNo=200001" >CKL소개</a>
+						<ul>
+							<li><a href="/ckl/main/contents.do?menuNo=200002" >소개</a></li>
+							<li><a href="/ckl/main/contents.do?menuNo=200003" >연혁</a></li>
+							<li><a href="/ckl/main/contents.do?menuNo=200004" >인사말</a></li>
+							<li><a href="/ckl/main/contents.do?menuNo=200005" >유관기관</a></li>
+							<li><a href="/ckl/main/contents.do?menuNo=200006" >지역랩소개</a></li>
+							<li><a href="/ckl/main/contents.do?menuNo=200011" >찾아오시는길</a></li>
+						</ul>
+					</li>
+					<li id="smenu2" ><a href="/ckl/main/contents.do?menuNo=200012" >새소식</a>
+						<ul>
+							<li><a href="/ckl/bbs/B0000017/list.do?menuNo=200013" >공지사항</a></li>
+							<li><a href="/ckl/bbs/B0000018/list.do?menuNo=200014" >보도자료</a></li>
+							<li><a href="/ckl/bbs/B0000045/list.do?menuNo=200015" >유튜브 게시판</a></li>
+							<li><a href="/ckl/bbs/B0000037/list.do?menuNo=200016" >문의하기</a></li>
+							<li><a href="/ckl/main/contents.do?menuNo=200017" >이벤트</a></li>
+							<li><a href="/ckl/main/contents.do?menuNo=200018" >SNS커뮤니티</a></li>
+						</ul>
+					</li>
+					<li id="smenu3" ><a href="/ckl/fcltyResve/fclty/list.do?menuNo=200019" >시설/장비</a>
+						<ul>
+							<li><a href="/ckl/fcltyResve/fclty/list.do?menuNo=200020" >시설소개</a></li>
+							<li><a href="/ckl/fcltyResve/eqpmn/list.do?menuNo=200021" >장비소개</a></li>
+						</ul>
+					</li>
+					<li id="smenu4" ><a href="/ckl/progrm/master/list.do?prgSe=03&amp;prgCl=30&amp;menuNo=200023" >창작지원</a>
+						<ul>
+							<li><a href="/ckl/progrm/master/list.do?prgSe=03&amp;prgCl=30&amp;menuNo=200024" >아이디어융합</a></li>
+							<li><a href="/ckl/progrm/master/list.do?prgSe=04&amp;prgCl=40&amp;menuNo=200028" >스타트업</a></li>
+						</ul>
+					</li>
+				</ul>
+				<!-- 전체메뉴 열기 -->
+				<div class="gnbTotMenu"><a href="#self"><span class="sr-only">전체메뉴 열기</span></a></div>
+				<div class="totMenuT">
+					<dl class="tms0">
+						<dt><a href="/ckl/main/contents.do?menuNo=200001">CKL소개</a></dt>
+						<dd>
+							<ul>
+								<li><a href="/ckl/main/contents.do?menuNo=200002">소개</a> </li>
+								<li><a href="/ckl/main/contents.do?menuNo=200003">연혁</a> </li>
+								<li><a href="/ckl/main/contents.do?menuNo=200004">인사말</a> </li>
+								<li><a href="/ckl/main/contents.do?menuNo=200005">유관기관</a> </li>
+								<li><a href="/ckl/main/contents.do?menuNo=200006">지역랩소개</a></li>
+								<li><a href="/ckl/main/contents.do?menuNo=200011">찾아오시는길</a> </li>
+							</ul>
+						</dd>
+					</dl>
+					<dl class="tms1">
+						<dt><a href="/ckl/main/contents.do?menuNo=200012">새소식</a></dt>
+						<dd>
+							<ul>
+								<li><a href="/ckl/bbs/B0000017/list.do?menuNo=200013">공지사항</a> </li>
+								<li><a href="/ckl/bbs/B0000018/list.do?menuNo=200014">보도자료</a> </li>
+								<li><a href="/ckl/bbs/B0000045/list.do?menuNo=200015">유튜브 게시판</a> </li>
+								<li><a href="/ckl/bbs/B0000037/list.do?menuNo=200016">문의하기</a> </li>
+								<li><a href="/ckl/main/contents.do?menuNo=200017">이벤트</a> </li>
+								<li><a href="/ckl/main/contents.do?menuNo=200018">SNS커뮤니티</a> </li>
+							</ul>
+						</dd>
+					</dl>
+					<dl class="tms2">
+						<dt><a href="/ckl/fcltyResve/fclty/list.do?menuNo=200019">시설/장비</a></dt>
+						<dd>
+							<ul>
+								<li><a href="/ckl/fcltyResve/fclty/list.do?menuNo=200020">시설소개</a> </li>
+								<li><a href="/ckl/fcltyResve/eqpmn/list.do?menuNo=200021">장비소개</a> </li>
+							</ul>
+						</dd>
+					</dl>
+					<dl class="tms3">
+						<dt><a href="/ckl/progrm/master/list.do?prgSe=03&amp;prgCl=30&amp;menuNo=200023">창작지원</a></dt>
+						<dd>
+							<ul>
+								<li><a href="/ckl/progrm/master/list.do?prgSe=03&amp;prgCl=30&amp;menuNo=200024">아이디어융합</a></li>
+								<li><a href="/ckl/progrm/master/list.do?prgSe=04&amp;prgCl=40&amp;menuNo=200028">스타트업</a></li>
+							</ul>
+						</dd>
+					</dl>
+					<dl class="tms4">
+						<dt><a href="/ckl/main/contents.do?menuNo=200046">이용안내</a></dt>
+						<dd>
+							<ul>
+								<li><a href="/ckl/main/contents.do?menuNo=200047">개인정보처리방침</a> </li>
+								<li><a href="/ckl/main/contents.do?menuNo=200048">저작권정책</a> </li>
+								<li><a href="/ckl/main/contents.do?menuNo=200049">영상정보처리운영방침</a> </li>
+								<li><a href="/ckl/main/contents.do?menuNo=200050">이용약관</a> </li>
+								<li><a href="/ckl/main/contents.do?menuNo=200051">FAQ</a> </li>
+								<li><a href="/ckl/main/contents.do?menuNo=200052">사이트맵</a> </li>
+							</ul>
+						</dd>
+					</dl>
+					<a href="javascript:void(0);" class="closetotMenuT"><span class="sr-only">전체메뉴 닫기</span></a>
+				</div>
+				<!-- 전체메뉴 열기 -->
+			</div>
+		</div>
+		<!-- //header -->
+		
+		<!-- visualText -->
+		<div class="mainVisuals">
+			<div class="sr-only">
+				<ul>
+					<li>아이디어융합팩토리</li>
+					<li>창업발전소</li>
+					<li>콘텐츠스타트업리그</li>
+					<li>대한민국상상캠프</li>
+					<li>창업마스터즈</li>
+				</ul>
+				<p>빛나는 작은 아이디어 하나가 클로벌콘텐츠가 되는 그날까지</p>
+			</div>
+
+			<a href="#self" class="labGo"><span class="sr-only">지역랩소개 바로가기</span></a>
+		</div>
+		<!-- //visualText -->
+	</div>
+
+
+
+	<!-- container -->
+	<div id="container">
+		<div class="lastestSet">
+
+
+			<!-- popupZone -->
+			<div class="popupZone">
+				<h2 class="sr-only">팝업존</h2>
+				<div class="popupCtrlSet">
+					<p class="total"> 2 / 5</p>
+					<ul class="popupCtrl">
+						<li><button type="button" class="prevPop" id="prevPop" style="display: block;"><span class="sr-only">이전팝업보기</span></button></li>
+						<li><button type="button" class="stopPop" id="stopPop"><span class="sr-only">팝업정지</span></button></li>
+						<li><button type="button" class="playPop" id="playPop"><span class="sr-only">팝업재생</span></button></li>
+						<li><button type="button" class="nextPop" id="nextPop" style="display: block;"><span class="sr-only">다음팝업보기</span></button></li>
+					</ul>
+				</div>
+				<div class="popupList">
+					<ul>
+						<li>
+							<a href="#self" target="_blank" title="새창열림">
+							<span class="img"><img src="/ckl/images/tmp/_mainVis01.jpg" alt="대체텍스트 필수"  /></span>
+							<span class="title">대체 텍스트의 내용1</span>
+							</a>
+						</li>
+						<li>
+							<a href="#self" target="_blank" title="새창열림">
+							<span class="img"><img src="/ckl/images/tmp/_mainVis02.jpg" alt="대체텍스트 필수"  /></span>
+							<span class="title">대체 텍스트의 내용2</span>
+							</a>
+						</li>
+						<li>
+							<a href="#self" target="_blank" title="새창열림">
+							<span class="img"><img src="/ckl/images/tmp/_mainVis01.jpg" alt="대체텍스트 필수3"  /></span>
+							<span class="title">대체 텍스트의 내용3</span>
+							</a>
+						</li>
+						<li>
+							<a href="#self" target="_blank" title="새창열림">
+							<span class="img"><img src="/ckl/images/tmp/_mainVis02.jpg" alt="대체텍스트 필수4"  /></span>
+							<span class="title">대체 텍스트의 내용4</span>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<!-- popupZone --> 
+<script type="text/javascript">
+//<![CDATA[
+$(function(){
+	$(".popupList ul").carouFredSel({
+		align		: "left",
+		width		: 460,
+		height		: 315,
+		items		:{
+		visible : 1
+	},
+		scroll      :{
+		items		:1,
+		duration        : 390,
+		timeoutDuration: 5000,
+		pauseOnHover	: false
+	},
+		next: '.nextPop',
+		prev: '.prevPop',
+		direction	: "left"
+	});
+
+
+	$('.popupList ul').bind('updatePageStatus.cfs', function() {
+		var _psTotal = $(this).children().length;
+		var _psCurrent = $(this).triggerHandler( 'currentPosition' ) + 1;
+		$('.popupZone .total').text(_psCurrent +' / '+ _psTotal);
+	}).trigger( 'updatePageStatus.cfs' );
+
+
+	$(".stopPop").hide();
+	$(".stopPop").click(function() {
+		$(this).hide();
+		$(".playPop").show();
+		$(".popupList ul").trigger("pause");
+	});
+	$(".playPop").click(function() {
+		$(this).hide();
+		$(".stopPop").show();
+		$(".popupList ul").trigger("play");
+	});
+	$('.popupList a').each(function(index) {
+		$(this).bind('focus', function() {
+			$(".popupList ul").trigger("pause");
+		});
+	});
+});
+//]]>
+</script> 
+
+
+
+			<div class="notice">
+				<h2><a href="#self">공지사항</a></h2>
+				<ul class="bull">
+					<li><a href="#self">[경기콘텐츠코리아랩] 창작자 주간</a></li>
+					<li><a href="#self">[청년 창업 활성화 포럼] K-Startup Frorum</a></li>
+					<li><a href="#self">[아이디어 융합팩토리] 'MCN 크리에디터 커뮤니티' 참가자 모집</a></li>
+					<li><a href="#self">&lt;대한민국 모두가 걷기왕이이 되는 그 날까지 - '직토워킹(King)</a></li>
+					<li><a href="#self">[경기CKL] 콘텐츠 창작자 네트워킹, 익스트림 드립에 초대합니다.</a></li>
+				</ul>
+				<div class="tac">
+					<a href="#self" class="more"><span class="sr-only">공지사항 더보기</span></a>
+				</div>
+			</div>
+
+			<div class="useInfo">
+				<h2><a href="#self">시설이용 안내</a></h2>
+				<div class="infoBox">
+					<div class="pl20">
+						<h3>열린공간</h3>
+						<p>콘텐츠 창작자를 위한 공용공간 운영데스크에서 출입증 발급 후 자유이용</p>
+						<ul>
+							<li>2F - 라이브러리, 라운지</li>
+							<li>10F - 파크, 아이디어빌리지</li>
+						</ul>
+					</div>
+				</div>
+
+				<div class="infoBox">
+					<div>
+						<h3>예약공간</h3>
+						<p>홈페이지에서 예약(회원가입) 후 관리자 승인 필요</p>
+						<ul>
+							<li>2F - 창작시설, 회의시설</li>
+							<li>14F - 창작시설</li>
+						</ul>
+					</div>
+				</div>
+				<div class="posa">
+					<a href="#self"><span class="mainIcos mCal"></span>시설예약 바로가기<span class="mainIcos icoArrB"></span></a>
+				</div>
+			</div>
+
+			<div class="pdsSet">
+				<h2><a href="#self">자료실</a></h2>
+				<ul>
+					<li><a href="#self"><span class="psdIco1"></span>전기<br />간행물</a></li>
+					<li><a href="#self"><span class="psdIco2"></span>연구<br />보고서</a></li>
+					<li><a href="#self"><span class="psdIco3"></span>세미나<br />자료</a></li>
+					<li><a href="#self"><span class="psdIco4"></span>콘텐츠<br />도서관</a></li>
+					<li class="mr0"><a href="#self"><span class="psdIco5"></span>kocca<br />웹진</a></li>
+				</ul>
+				<div class="posa">
+					<a href="#self">한국콘텐츠진흥원 바로가기<span class="mainIcos icoArr"></span></a>
+				</div>
+			</div>
+		</div>
+
+		<!-- 일정표 -->
+		<div class="proSchejule">
+			<div class="proHeading">
+				<h2>이달의 프로그램 일정</h2>
+				<div class="calTitle">
+					<span class="prevMonth"><span class="sr-only">이전달 보기</span></span>
+					<h3 class="nowMonth">2015.11</h3>
+					<span class="nextMonth"><span class="sr-only">이전달 보기</span></span>
+				</div>
+				<div class="todayTitle tar">
+					<span class="todayIs fl">2015.11.01</span>
+					총 <strong>5</strong> 건의 일정이 있습니다.
+				</div>
+				<div class="more"></div>
+			</div>
+
+
+			<div class="schejuleList">
+				<ul>
+					<li>
+						<span class="date">11</span>
+						<dl>
+							<dt>창업발전소</dt>
+							<dd class="perDay"><strong>2015.11.11 ~ 2015.12.11</strong></dd>
+							<dd class="schejuleDesc">직토워킹(walking) </dd>
+						</dl>
+						<span class="arrLefts"></span>
+					</li>
+					<li>
+						<span class="date today">11<span class="sr-only">(오늘 일정)</span></span>
+						<dl>
+							<dt>창업발전소</dt>
+							<dd class="perDay"><strong>2015.11.11 ~ 2015.12.11</strong></dd>
+							<dd class="schejuleDesc">직토워킹(walking) </dd>
+						</dl>
+						<span class="arrLefts"></span>
+					</li>
+					<li>
+						<span class="date">11</span>
+						<dl>
+							<dt>창업발전소</dt>
+							<dd class="perDay"><strong>2015.11.11 ~ 2015.12.11</strong></dd>
+							<dd class="schejuleDesc">직토워킹(walking) </dd>
+						</dl>
+						<span class="arrLefts"></span>
+					</li>
+					<li>
+						<span class="date">11</span>
+						<dl>
+							<dt>창업발전소</dt>
+							<dd class="perDay"><strong>2015.11.11 ~ 2015.12.11</strong></dd>
+							<dd class="schejuleDesc">직토워킹(walking) </dd>
+						</dl>
+						<span class="arrLefts"></span>
+					</li>
+					<li>
+						<span class="date">11</span>
+						<dl>
+							<dt>창업발전소</dt>
+							<dd class="perDay"><strong>2015.11.11 ~ 2015.12.11</strong></dd>
+							<dd class="schejuleDesc">직토워킹(walking) </dd>
+						</dl>
+						<span class="arrLefts"></span>
+					</li>
+					<li>
+						<span class="date">11</span>
+						<dl>
+							<dt>창업발전소</dt>
+							<dd class="perDay"><strong>2015.11.11 ~ 2015.12.11</strong></dd>
+							<dd class="schejuleDesc">직토워킹(walking) </dd>
+						</dl>
+						<span class="arrLefts"></span>
+					</li>
+					<li>
+						<span class="date">11</span>
+						<dl>
+							<dt>창업발전소</dt>
+							<dd class="perDay"><strong>2015.11.11 ~ 2015.12.11</strong></dd>
+							<dd class="schejuleDesc">직토워킹(walking) </dd>
+						</dl>
+						<span class="arrLefts"></span>
+					</li>
+				</ul>
+			</div>
+			<!-- 3개이상일 경우 더보기 -->
+			<div class="listMore clearfix">
+				<a href="#self"><span class="icoMore"></span> 더보기</a>
+			</div>
+
+			<div class="posa">
+				<a href="#self"><strong>창작지원 프로그램</strong> 바로가기<span class="mainIcos icoArrB"></span></a>
+			</div>
+		</div>
+		<!-- //일정표 -->
+	</div>
+	<!-- //container --> 
+
+
+
+
+	<div class="tailer">
+		<div class="totMenuF">
+			<dl class="tmenu0">
+				<dt><a href="/ckl/main/contents.do?menuNo=200001">CKL소개</a></dt>
+				<dd>
+					<ul>
+						<li><a href="/ckl/main/contents.do?menuNo=200002">소개</a> </li>
+						<li><a href="/ckl/main/contents.do?menuNo=200003">연혁</a> </li>
+						<li><a href="/ckl/main/contents.do?menuNo=200004">인사말</a> </li>
+						<li><a href="/ckl/main/contents.do?menuNo=200005">유관기관</a> </li>
+						<li><a href="/ckl/main/contents.do?menuNo=200006">지역랩소개</a></li>
+						<li><a href="/ckl/main/contents.do?menuNo=200011">찾아오시는길</a> </li>
+					</ul>
+				</dd>
+			</dl>
+			<dl class="tmenu1">
+				<dt><a href="/ckl/main/contents.do?menuNo=200012">새소식</a></dt>
+				<dd>
+					<ul>
+						<li><a href="/ckl/bbs/B0000017/list.do?menuNo=200013">공지사항</a> </li>
+						<li><a href="/ckl/bbs/B0000018/list.do?menuNo=200014">보도자료</a> </li>
+						<li><a href="/ckl/bbs/B0000045/list.do?menuNo=200015">유튜브 게시판</a> </li>
+						<li><a href="/ckl/bbs/B0000037/list.do?menuNo=200016">문의하기</a> </li>
+						<li><a href="/ckl/main/contents.do?menuNo=200017">이벤트</a> </li>
+						<li><a href="/ckl/main/contents.do?menuNo=200018">SNS커뮤니티</a> </li>
+					</ul>
+				</dd>
+			</dl>
+			<dl class="tmenu2">
+				<dt><a href="/ckl/fcltyResve/fclty/list.do?menuNo=200019">시설/장비</a></dt>
+				<dd>
+					<ul>
+						<li><a href="/ckl/fcltyResve/fclty/list.do?menuNo=200020">시설소개</a> </li>
+						<li><a href="/ckl/fcltyResve/eqpmn/list.do?menuNo=200021">장비소개</a> </li>
+					</ul>
+				</dd>
+			</dl>
+			<dl class="tmenu3">
+				<dt><a href="/ckl/progrm/master/list.do?prgSe=03&amp;prgCl=30&amp;menuNo=200023">창작지원</a></dt>
+				<dd>
+					<ul>
+						<li><a href="/ckl/progrm/master/list.do?prgSe=03&amp;prgCl=30&amp;menuNo=200024">아이디어융합</a></li>
+						<li><a href="/ckl/progrm/master/list.do?prgSe=04&amp;prgCl=40&amp;menuNo=200028">스타트업</a></li>
+					</ul>
+				</dd>
+			</dl>
+			<dl class="tmenu4">
+				<dt><a href="/ckl/main/contents.do?menuNo=200046">이용안내</a></dt>
+				<dd>
+					<ul>
+						<li><a href="/ckl/main/contents.do?menuNo=200047">개인정보처리방침</a> </li>
+						<li><a href="/ckl/main/contents.do?menuNo=200048">저작권정책</a> </li>
+						<li><a href="/ckl/main/contents.do?menuNo=200049">영상정보처리운영방침</a> </li>
+						<li><a href="/ckl/main/contents.do?menuNo=200050">이용약관</a> </li>
+						<li><a href="/ckl/main/contents.do?menuNo=200051">FAQ</a> </li>
+						<li><a href="/ckl/main/contents.do?menuNo=200052">사이트맵</a> </li>
+					</ul>
+				</dd>
+			</dl>
+		</div>
+		
+		
+		
+		
+		<!-- footer -->
+		<div id="footer">
+			<div class="fset">
+				<div class="fl fLogoSet">
+					<div class="fImages fLogo"><img src="/ckl/images/common/fLogo.png" alt="한국콘텐츠진흥원(하단로고)"></div>
+				</div>
+				<div class="fContents">
+					<div class="fLinks"> <a href="/ckl/main/contents.do?menuNo=200047" class="ml0"><strong>개인정보처리방침</strong></a> <a href="/ckl/main/contents.do?menuNo=200046">이용안내</a> <a href="/ckl/bbs/B0000037/list.do?menuNo=200016">문의하기</a> <a href="#self">제휴문의</a> <a href="/ckl/main/contents.do?menuNo=200052">사이트맵</a> </div>
+					<div class="footerRt">
+						<div class="selBox">
+							<form name="siteForm1" action="none" method="post" class="dib" target="_blank" onsubmit="if(document.siteForm1.ftSiteUrl.value == '') {alert('Family Site를 선택해 주세요.');document.siteForm1.ftSiteUrl.focus();return false;} window.open(document.siteForm1.ftSiteUrl.value,'sitePop');return false;">
+								<div class="selectBox dib">
+									<label for="ftSiteUrl" class="sr-only">Family Site</label>
+									<select id="ftSiteUrl" name="ftSiteUrl" class="vm replaceSel" title="Family Site를 선택해 주세요.(새창열림)">
+										<option value="">Family Site</option>
+										<option value="http://www.kocca.kr/">한국콘텐츠진흥원</option>
+										<option value="http://portal.kocca.kr/portal/main.do">콘텐츠종합정보포털</option>
+										<option value="http://www.ckl.or.kr">콘텐츠코리아랩</option>
+										<option value="http://edu.kocca.or.kr">한국콘텐츠아카데미</option>
+										<option value="http://www.culturecontent.com/">문화콘텐츠닷컴</option>
+										<option value="http://www.kcdrc.kr">콘텐츠분쟁조정위원회</option>
+									</select>
+								</div>
+								<input type="image" src="/ckl/images/common/go.gif" alt="Family Site 이동(새창열림)" class="vm">
+							</form>
+							<form name="siteForm2" action="none" method="get" class="dib" target="_blank" onsubmit="if(document.siteForm2.ftLinksUrl.value == '') {alert('관련사이트를 선택해 주세요.');document.siteForm2.ftLinksUrl.focus();return false;} window.open(document.siteForm2.ftLinksUrl.value,'sitePop');return false;">
+								<div class="selectBox dib">
+									<label for="ftLinksUrl" class="sr-only">관련사이트</label>
+									<select name="ftLinksUrl" id="ftLinksUrl" class="vm replaceSel" title="관련사이트를 선택해 주세요.(새창열림)">
+										<option value="">관련사이트</option>
+										<option value="http://www.grb.or.kr ">게임물등급위원회</option>
+										<option value="http://www.cfnmk.or.kr">국립박물관문화재단</option>
+										<option value="http://www.gugakfm.co.kr">국악방송</option>
+										<option value="http://www.kf.or.kr/">국제방송교류재단</option>
+										<option value="http://www.kmrb.or.kr ">영상물등급위원회</option>
+										<option value="http://www.kofic.or.kr ">영화진흥위원회</option>
+										<option value="http://www.gokams.or.kr">예술경영지원센터</option>
+										<option value="http://www.hanpac.or.kr">한국공연예술센터</option>
+										<option value="http://www.visitkorea.or.kr">한국관광공사</option>
+										<option value="http://www.klti.or.kr">한국문학번역원</option>
+										<option value="http://www.kcti.re.kr">한국문화관광연구원</option>
+										<option value="http://www.kofice.or.kr">한국문화산업교류재단</option>
+										<option value="http://www.arko.or.kr">한국문화예술위원회</option>
+										<option value="http://www.kpf.or.kr ">한국언론진흥재단</option>
+										<option value="http://www.koreafilm.or.kr">한국영상자료원</option>
+										<option value="http://www.copyright.or.kr">한국저작권위원회</option>
+										<option value="http://www.kpipa.or.kr">한국출판문화산업진흥원</option>
+										<option value="http://www.mcst.go.kr">문화체육관광부</option>
+										<option value="http://www.kcc.go.kr">방송통신위원회</option>
+										<option value="http://www.president.go.kr ">청와대</option>
+									</select>
+								</div>
+								<input type="image" src="/ckl/images/common/go.gif" alt="관련사이트 이동(새창열림)" class="vm">
+							</form>
+						</div>
+						<div class="logoGroup"> <a href="https://www.facebook.com/ContentKoreaLab" target="_blank" title="새창열림" class="mr5"><img src="/ckl/images/common/footer_04.gif" alt="콘텐츠코리아랩 페이스북 바로가기"></a> <a href="https://www.youtube.com/channel/UCfoovETPwMFH8dbW6NWMAnw" target="_blank" title="새창열림"><img src="/ckl/images/common/footer_05.png" alt="콘텐츠코리아랩 유튜브 바로가기"></a>
+							<div><img src="/ckl/images/common/footer_06.png" alt="웹 접근성 우수사이트 인증마크(WA인증마크)"></div>
+						</div>
+					</div>
+					<div class="copyright">
+						<p class="fs12">본 페이지에 게시된 이메일주소가 자동 수집되는 것을 거부하며, 이를 위반시 정보통신법에 의해 처벌됨을 유념하시기 바랍니다.</p>
+						<address>
+						본원 : [58217] 전라남도 나주시 교육길 35 한국콘텐츠진흥원<br>
+						대학로분원 : [03082] 서울시 종로구 대학로 57 콘텐츠코리아랩 사업자번호 : 105-82-17272
+						</address>
+					</div>
+					<div class="copy">Copyright 2015. Korea Creative Content Agency all rights reserved.</div>
+				</div>
+			</div>
+		</div>
+		<!-- //footer -->
+	</div>
+</div>
+
+
+
+<!--[if lte IE 7]>
+<script type="text/javascript">
+//<![CDATA[
+	$('*').each(function(index) {
+		if ($(this).css("overflow")=="hidden"){
+			$(this).css("zoom",1);
+		}
+		if ($(this).css("display")=="inline-block"){
+			$(this).css("display",'inline');
+			$(this).css("zoom",1);
+		}
+	});
+//]]>
+</script>
+<![endif]-->
+
+
+</body>
+</html>

@@ -1,0 +1,2762 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="asis">
+
+	<typeAlias  alias="zvl" type="kr.co.unp.util.ZValue"/>
+	<typeAlias  alias="MigrationVO" type="kr.co.unp.migration.vo.MigrationVO"/>
+	<typeAlias  alias="DeptVO" type="kr.co.unp.dept.vo.DeptVO"/>
+	<typeAlias  alias="UsersVo" type="kr.co.unp.member.vo.UsersVO"/>
+
+	<select id="asisDAO.selectAsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+
+			SELECT a.no as nttNo,
+			       --a.headnum,
+			       --a.arrangenum,
+			       --a.depth,
+			       --a.prev_no,
+			       --a.next_no,
+			       --a.father,
+			       --a.child,
+			       a.subject as nttSj,
+			       a.memo as nttCn,
+			       --a.comment,
+			       case when a.notice = '1' then '1'
+			            else 2
+			       end as nttTYpe,
+			       --a.secret,
+			       a.userID as ntcrId,
+			       a.name as ntcrNm,
+			       a.email as ntcrEmail,
+			       --a.homepage,
+			       --a.partID,
+			       a.telNum as ntcrTel,
+			       a.mobile as ntcrMobile,
+			       --a.postNo,
+			       a.address1 as ntcrAddr1,
+			       a.address2 as ntcrAddr2,
+			       a.regDate,
+			       isnull(a.hit,0) as inqireCo,
+			       case when a.use_html = '1' then 'Y'
+			            else 'N'
+			       end as htmlYn,
+			       --a.userType,
+			       a.password,
+			       a.ip as ntcrIp,
+			       --a.link1,
+			       --a.link2,
+			       --a.file_hit1,
+			       --a.file_code1,
+			       isnull(cast(a.no as varchar) + '_' + a.file_name1,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name2,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name3,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name4,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name5,'') as fileNm,
+			       --a.category,
+			       case when a.delState = '1' then '0'
+			            else '1'
+			       end as delcode,
+			       --a.rss_yn,
+			       a.partID as deptId,
+			       b.cateName as deptName
+			  FROM $orgTableNm$ a
+			  left JOIN designBox_category b on a.partId = b.cateId
+			  where a.no > #currentSize#
+
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectAsIsArticlesCnt" parameterClass="MigrationVO" resultClass="int" >
+		<![CDATA[
+			select count(*)
+			 From $orgTableNm$ a
+			where a.idx > #currentSize#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectAsIsGujungNewsArticlesCnt" parameterClass="MigrationVO" resultClass="int" >
+		<![CDATA[
+			select count(*)
+			 From $orgTableNm$ a
+			where a.no > #currentSize#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000189AsIsBbsReArticlesCnt" parameterClass="MigrationVO" resultClass="int" >
+		<![CDATA[
+			select count(*)
+			 From $orgTableNm$ a
+			where a.sp_idx > #currentSize#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000221AsIsBbsArticlesCnt" parameterClass="MigrationVO" resultClass="int" >
+		<![CDATA[
+			select count(*)
+			 From $orgTableNm$ a
+			where a.no > #currentSize#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectAsIsDept" parameterClass="DeptVO" resultClass="DeptVO">
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY deptId DESC) AS rn, TB.* FROM (
+
+			SELECT a.cateID as deptId,
+       			   a.cateName as deptName,
+      			   a.positionID as positionID,
+      			   a.recateID as upperDeptId,
+      			   a.cateDepth as deptDepth
+	   		FROM designBox_category a
+			where recateId like '1,%' or recateid = '1' and  a.cateID > #currentSize#
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectAsIsDeptCnt" parameterClass="DeptVO" resultClass="int" >
+		<![CDATA[
+			select count(*)
+			 From designBox_category a
+			where recateId like '1,%' or recateid = '1' and  a.cateID > #currentSize#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000113AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+
+			SELECT a.no as nttNo,
+			       a.subject as nttSj,
+			       a.memo as nttCn,
+			       a.userID as ntcrId,
+			       a.name as ntcrNm,
+			       a.email as ntcrEmail,
+			       a.regDate,
+			       a.hit as inqireCo,
+			       case when a.use_html = '1' then 'Y'
+			            else 'N'
+			       end as htmlYn,
+			       a.password,
+			       a.ip as ntcrIp,
+			       case when a.delState = '1' then '0'
+			            else '1'
+			       end as delcode,
+			       case when a.status = '3' then '5'
+			            when a.status = '4' then '7'
+			            when a.status = '1' then '1'
+			            else '0'
+			       end as replyAt,
+			       a.p_address as ntcrAddr1,
+			       a.p_tel as ntcrTel,
+			       a.p_cphon as ntcrMobile,
+			       a.p_member as option1,
+			       a.p_income as option2,
+			       a.p_bonjeok as option3,
+			       a.p_hoju as option4,
+			       a.h_address1 as option5,
+			       a.h_address2 as option6,
+			       a.h_owner as option7,
+			       a.h_type as option8,
+			       a.c_type1 as option9,
+			       a.c_type2 as option10,
+			       a.c_deposit_money as option11,
+			       a.c_apply_money as option14,
+			       a.statusDate as option15,
+			       a.bank1 as option12,
+			       a.bank2 as option13
+			  FROM $orgTableNm$ a
+			  where a.no > #currentSize#
+
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectAsIsAdminUser" parameterClass="UsersVo" resultClass="UsersVo">
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY userIdx asc) AS rn, TB.* FROM (
+		            SELECT a.no as userIdx,
+				       a.userID as userId,
+				       a.memberType as memberType,
+				       a.groupID as groupID,
+				       a.admin as admin,
+				       a.admission as admission,
+				       a.userName as userName,
+				       a.nickName as nickName,
+				       a.sex as  sex,
+				       a.email as userEmail,
+				       a.postNo as postNo,
+				       a.address1 as address1,
+				       a.address2 as address2,
+				       a.telephone as userPhone,
+				       a.mobile as userMobile,
+				       a.phone as officePhone,
+				       a.job as job,
+				       a.birth as userBirthday,
+				       a.point as point,
+				       a.mailing as mailing,
+				       a.newsReceive as newsReceive,
+				       a.smsReceive as smsReceive,
+				       a.staffPlace as staffPlace,
+				       a.staffOffice as staffOffice,
+				       a.staffPosition as staffPosition,
+				       a.picture as picture,
+				       a.work as work,
+				       a.loginTime as loginTime,
+				       a.regDate as regDate,
+				       a.delState as delState,
+				       a.dupInfo as dupInfo,
+				       a.cyberstatus as cyberstatus,
+				       a.mgroup as mgroup,
+				       a.ssocheck as ssocheck,
+				       a.orguserid  as orguserid,
+				       b.userId as password
+				  FROM DESIGNBOX_MEMBER_TB a
+				  LEFT JOIN DESIGNBOX_MEMBER b ON a.USERID = b.USERID
+
+			where a.no > 0 and a.memberType = 2 or a.memberType = 3
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectAsIsAdminUserCnt" parameterClass="UsersVo" resultClass="int" >
+		<![CDATA[
+			select count(*)
+			 From DESIGNBOX_MEMBER_TB a
+			where a.no > #currentSize# and  a.memberType = 2 or a.memberType = 3
+		]]>
+	</select>
+
+	<select id="asisDAO.selectAsIsUser" parameterClass="UsersVo" resultClass="UsersVo">
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY userIdx asc) AS rn, TB.* FROM (
+		            SELECT a.no as userIdx,
+				       a.userID as userId,
+				       b.password,
+				       '1' as memberType,
+				       a.userName as userName,
+				       a.sex as  sex,
+				       a.email as userEmail,
+				       a.postNo as postNo,
+				       a.address1 as address1,
+				       a.address2 as address2,
+				       a.telephone as userPhone,
+				       a.mobile as userMobile,
+				       a.phone as officePhone,
+				       a.job as job,
+				       a.birth as userBirthday,
+				       a.mailing as mailing,
+				       a.newsReceive as newsReceive,
+				       a.smsReceive as smsReceive,
+				       a.staffPlace as staffPlace,
+				       a.staffOffice as staffOffice,
+				       a.staffPosition as staffPosition,
+				       a.picture as picture,
+				       a.work as work,
+				       a.regDate as regDate,
+				       a.delState as delState,
+				       a.dupInfo as dupInfo,
+				       a.cyberstatus as cyberstatus,
+				       a.mgroup as mgroup,
+				       a.ssocheck as ssocheck,
+				       a.orguserid  as orguserid
+				  FROM DESIGNBOX_MEMBER_TB a
+				  LEFT JOIN DESIGNBOX_MEMBER b ON a.USERID = b.USERID
+				  where a.no > 147500 and a.no <= 148500 and a.memberType in (1,9,0) and a.userid not in ('dolgae', 'mookreve', 'amiques', 'test', 'kwww7', 'seokhyun89')
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectAsIsUserCnt" parameterClass="UsersVo" resultClass="int" >
+		<![CDATA[
+			select count(*)
+			 From DESIGNBOX_MEMBER_TB a
+			where  a.no > 147500 and a.no <= 148500 and a.memberType in (1,9,0) and userid not in ('dolgae', 'mookreve', 'amiques', 'test', 'kwww7', 'seokhyun89')
+		]]>
+	</select>
+
+
+	<select id="asisDAO.selectB0000121AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+		            SELECT a.no as nttNo,
+					       a.subject as nttSj,
+					       a.memo as nttCn,
+					       a.userID as ntcrId,
+					       a.name as ntcrNm,
+					       a.email as ntcrEmail,
+					       a.telNum as ntcrMobile,
+					       a.telNum as option11,
+					       a.address1 as ntcrAddr1,
+					       a.regDate,
+					       a.hit as inqireCo,
+					       case when a.use_html = '1' then 'Y'
+					            else 'N'
+					       end as htmlYn,
+					       a.ip as ntcrIp,
+					       case when a.delState = '1' then '0'
+					            else '1'
+					       end as delcode,
+					       a.re_name as option2,
+					       a.birthDay as option1,
+					       a.hopeDay as option3,
+					       case when a.status = '3' then '5'
+					            when a.status = '4' then '7'
+					            when a.status = '1' then '4'
+					            when a.status = '0' then '0'
+					            else '0'
+					       end as replyAt,
+					       a.cancelDay as option10
+					  FROM dbo.designBox_board_green_request a
+			  where a.no > #currentSize#
+
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<!-- <select id="asisDAO.selectB0000122AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+		            SELECT a.no as nttNo,
+					       a.subject as nttSj,
+					       a.userID as ntcrId,
+					       a.name as ntcrNm,
+					       a.email as ntcrEmail,
+					       a.regDate,
+					       a.hit as inqireCo,
+					       a.ip as ntcrIp,
+			       		   isnull(cast(a.no as varchar) + '_' + a.file_name1,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name2,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name3,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name4,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name5,'') as fileNm,
+					       a.category as gubun,
+					       case when a.delState = '1' then '0'
+					            else '1'
+					       end as delcode,
+					       a.minwonType as option1,
+					       a.chargePlace as option14,
+					       a.chargeCom1 as option3,
+					       a.chargeCom2 as option4,
+					       a.chargeCom3 as option5,
+					       a.priceInfo as option2,
+					       a.statusInfo as option7,
+					       a.dayInfo as option6,
+					       a.officeInfo as option8,
+					       a.etcInfo as option9,
+					       a.paperInfo as option10,
+					       a.lawInfo as option11,
+					       a.chargePrice as option12,
+					       case when a.statusInfoType = 'H' then 'Y'
+					            else 'N'
+					       end as htmlYn,
+					       telephone as option13
+					  FROM dbo.designBox_board_minwon1 a
+			  where a.no > #currentSize#
+
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select> -->
+
+	<select id="asisDAO.selectB0000123AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+
+			SELECT a.no as nttNo,
+			       a.subject as nttSj,
+			       a.memo as nttCn,
+			       a.userID as ntcrId,
+			       a.name as ntcrNm,
+			       a.email as ntcrEmail,
+			       a.regDate,
+			       a.hit as inqireCo,
+			       case when a.use_html = '1' then 'Y'
+			            else 'N'
+			       end as htmlYn,
+			       a.password,
+			       a.ip as ntcrIp,
+			       case when a.delState = '1' then '0'
+			            else '1'
+			       end as delcode,
+			       isnull(cast(a.no as varchar) + '_' + a.file_name1,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name2,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name3,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name4,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name5,'') as fileNm,
+			       a.link1 as option1
+			  FROM $orgTableNm$ a
+			  where a.no > #currentSize#
+
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000124AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+		            SELECT a.no as nttNo,
+					       a.subject as option1,
+					       a.memo as nttCn,
+					       'Y' as secret,
+					       a.userID as ntcrId,
+					       a.name as ntcrNm,
+					       a.homepage as option7,
+					       a.telNum as ntcrTel,
+					       a.mobile as ntcrMobile,
+					       a.address1 as ntcrAddr1,
+					       a.address2 as option2, /*업주명 */
+						   a.email as option4,
+					       a.regDate,
+					       a.hit as inqireCo,
+					       a.ip as ntcrIp,
+						   isnull(cast(a.no as varchar) + '_' + a.file_name1,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name2,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name3,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name4,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name5,'') as fileNm,
+						   a.postNo as option6,
+					       a.rss_yn as nttSj,
+					       '0' as replyAt
+					  FROM dbo.designBox_board_sikpum a
+			  where a.no > #currentSize#
+
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000127AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+
+			SELECT a.no as nttNo,
+			       a.subject as nttSj,
+			       a.memo as nttCn,
+			       a.userID as ntcrId,
+			       a.name as ntcrNm,
+			       a.email as ntcrEmail,
+			       a.regDate,
+			       a.hit as inqireCo,
+			       case when a.use_html = '1' then 'Y'
+			            else 'N'
+			       end as htmlYn,
+			       a.password,
+			       a.ip as ntcrIp,
+			       case when a.delState = '1' then '0'
+			            else '1'
+			       end as delcode,
+			       isnull(cast(a.no as varchar) + '_' + a.file_name1,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name2,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name3,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name4,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name5,'') as fileNm,
+			       a.telNum as ntcrTel,
+			       a.partID as deptId,
+			       b.cateName as deptName
+			  FROM $orgTableNm$ a
+			  	left JOIN designBox_category b on a.partId = b.cateId
+			  where a.no > #currentSize#
+
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000129AsIsBbsArticlesCnt" parameterClass="MigrationVO" resultClass="int" >
+		<![CDATA[
+			select count(*)
+			 From dbo.bbs_1_table a
+			where a.num > #currentSize# and a.depth = 0
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000129AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+
+			SELECT a.num as nttNo,
+			       a.id as ntcrId,
+			       a.name as ntcrNm,
+			       a.pwd as password,
+			       a.subject as nttSj,
+			       a.body as nttCn,
+			       a.user_ip as ntcrIp,
+			       a.count as inqireCo,
+			       a.reg_dt as regDate,
+			       a.dong as option1,
+			       a.address as ntcrAddr1,
+			       a.company as option3,
+			       a.bunya as option2
+			  FROM dbo.bbs_1_table a
+			  where a.num > #currentSize# and a.depth = 0
+
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000129AsIsBbsReplyArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+
+			SELECT a.num as nttNo,
+			       a.id as ntcrId,
+			       a.name as ntcrNm,
+			       a.pwd as password,
+			       a.subject as nttSj,
+			       a.body as nttCn,
+			       a.user_ip as ntcrIp,
+			       a.count as inqireCo,
+			       a.reg_dt as regDate,
+			       a.dong as option1,
+			       a.address as ntcrAddr1,
+			       a.company as option3,
+			       a.bunya as option2
+			  FROM dbo.bbs_1_table a
+			  where a.thread = #nttNo# and a.depth > 0
+			  order by a.reg_dt
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000130AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+
+			SELECT a.no as nttNo,
+			       a.subject as nttSj,
+			       a.memo as nttCn,
+			       a.userID as ntcrId,
+			       a.name as ntcrNm,
+			       a.email as ntcrEmail,
+			       a.regDate,
+			       a.hit as inqireCo,
+			       case when a.use_html = '1' then 'Y'
+			            else 'N'
+			       end as htmlYn,
+			       a.ip as ntcrIp,
+			       case when a.delState = '1' then '0'
+			            else '1'
+			       end as delcode,
+			       isnull(cast(a.no as varchar) + '_' + a.file_name1,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name2,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name3,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name4,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name5,'') as fileNm,
+			       a.telNum as ntcrTel,
+			       'Y' as gubun,
+		]]>
+	<isEqual property="orgTableNm" compareValue="designBox_board_myon01_news">
+		<![CDATA[
+			       deptId = '30601230000',
+			       deptName = '면목본동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_myon02_news">
+		<![CDATA[
+			       deptId = '30600400000',
+			       deptName = '면목2동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_myon03_news">
+		<![CDATA[
+			       deptId = '30601270000',
+			       deptName = '면목제3.8동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_myon08_news">
+		<![CDATA[
+			       deptId = '30601270000',
+			       deptName = '면목제3.8동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_myon04_news">
+		<![CDATA[
+			       deptId = '30600420000',
+			       deptName = '면목4동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_myon05_news">
+		<![CDATA[
+			       deptId = '30600430000',
+			       deptName = '면목5동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_myon07_news">
+		<![CDATA[
+			       deptId = '30600450000',
+			       deptName = '면목7동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_sang01_news">
+		<![CDATA[
+			       deptId = '30600470000',
+			       deptName = '상봉1동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_sang02_news">
+		<![CDATA[
+			       deptId = '30600480000',
+			       deptName = '상봉2동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_jung01_news">
+		<![CDATA[
+			       deptId = '30600490000',
+			       deptName = '중화1동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_jung02_news">
+		<![CDATA[
+			       deptId = '30600500000',
+			       deptName = '중화2동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_mook01_news">
+		<![CDATA[
+			       deptId = '30600520000',
+			       deptName = '묵1동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_mook02_news">
+		<![CDATA[
+			       deptId = '30600530000',
+			       deptName = '묵2동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_mang01_news">
+		<![CDATA[
+			       deptId = '30601250000',
+			       deptName = '망우본동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_mang02_news">
+		<![CDATA[
+			       deptId = '30601250000',
+			       deptName = '망우본동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_mang03_news">
+		<![CDATA[
+			       deptId = '30600560000',
+			       deptName = '망우3동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_shin01_news">
+		<![CDATA[
+			       deptId = '30600570000',
+			       deptName = '신내1동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_shin02_news">
+		<![CDATA[
+			       deptId = '30600580000',
+			       deptName = '신내2동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_myon01_photo">
+		<![CDATA[
+			       deptId = '30601230000',
+			       deptName = '면목본동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_myon02_photo">
+		<![CDATA[
+			       deptId = '30600400000',
+			       deptName = '면목2동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_myon03_photo">
+		<![CDATA[
+			       deptId = '30601270000',
+			       deptName = '면목제3.8동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_myon08_photo">
+		<![CDATA[
+			       deptId = '30601270000',
+			       deptName = '면목제3.8동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_myon04_photo">
+		<![CDATA[
+			       deptId = '30600420000',
+			       deptName = '면목4동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_myon05_photo">
+		<![CDATA[
+			       deptId = '30600430000',
+			       deptName = '면목5동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_myon07_photo">
+		<![CDATA[
+			       deptId = '30600450000',
+			       deptName = '면목7동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_sang01_photo">
+		<![CDATA[
+			       deptId = '30600470000',
+			       deptName = '상봉1동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_sang02_photo">
+		<![CDATA[
+			       deptId = '30600480000',
+			       deptName = '상봉2동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_jung01_photo">
+		<![CDATA[
+			       deptId = '30600490000',
+			       deptName = '중화1동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_jung02_photo">
+		<![CDATA[
+			       deptId = '30600500000',
+			       deptName = '중화2동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_mook01_photo">
+		<![CDATA[
+			       deptId = '30600520000',
+			       deptName = '묵1동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_mook02_photo">
+		<![CDATA[
+			       deptId = '30600530000',
+			       deptName = '묵2동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_mang01_photo">
+		<![CDATA[
+			       deptId = '30601250000',
+			       deptName = '망우본동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_mang02_photo">
+		<![CDATA[
+			       deptId = '30601250000',
+			       deptName = '망우본동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_mang03_photo">
+		<![CDATA[
+			       deptId = '30600560000',
+			       deptName = '망우3동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_shin01_photo">
+		<![CDATA[
+			       deptId = '30600570000',
+			       deptName = '신내1동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_shin02_photo">
+		<![CDATA[
+			       deptId = '30600580000',
+			       deptName = '신내2동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_myon01_notice">
+		<![CDATA[
+			       deptId = '30601230000',
+			       deptName = '면목본동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_myon02_notice">
+		<![CDATA[
+			       deptId = '30600400000',
+			       deptName = '면목2동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_myon03_notice">
+		<![CDATA[
+			       deptId = '30601270000',
+			       deptName = '면목제3.8동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_myon08_notice">
+		<![CDATA[
+			       deptId = '30601270000',
+			       deptName = '면목제3.8동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_myon04_notice">
+		<![CDATA[
+			       deptId = '30600420000',
+			       deptName = '면목4동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_myon05_notice">
+		<![CDATA[
+			       deptId = '30600430000',
+			       deptName = '면목5동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_myon07_notice">
+		<![CDATA[
+			       deptId = '30600450000',
+			       deptName = '면목7동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_sang01_notice">
+		<![CDATA[
+			       deptId = '30600470000',
+			       deptName = '상봉1동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_sang02_notice">
+		<![CDATA[
+			       deptId = '30600480000',
+			       deptName = '상봉2동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_jung01_notice">
+		<![CDATA[
+			       deptId = '30600490000',
+			       deptName = '중화1동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_jung02_notice">
+		<![CDATA[
+			       deptId = '30600500000',
+			       deptName = '중화2동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_mook01_notice">
+		<![CDATA[
+			       deptId = '30600520000',
+			       deptName = '묵1동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_mook02_notice">
+		<![CDATA[
+			       deptId = '30600530000',
+			       deptName = '묵2동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_mang01_notice">
+		<![CDATA[
+			       deptId = '30601250000',
+			       deptName = '망우본동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_mang02_notice">
+		<![CDATA[
+			       deptId = '30601250000',
+			       deptName = '망우본동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_mang03_notice">
+		<![CDATA[
+			       deptId = '30600560000',
+			       deptName = '망우3동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_shin01_notice">
+		<![CDATA[
+			       deptId = '30600570000',
+			       deptName = '신내1동'
+		]]>
+	</isEqual>
+	<isEqual property="orgTableNm" compareValue="designBox_board_shin02_notice">
+		<![CDATA[
+			       deptId = '30600580000',
+			       deptName = '신내2동'
+		]]>
+	</isEqual>
+		<![CDATA[
+			  FROM $orgTableNm$ a
+			  	left JOIN designBox_category b on a.partId = b.cateId
+			  where a.no > #currentSize#
+
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+
+	<select id="asisDAO.selectB0000132AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+			SELECT a.no as nttNo,
+			        a.subject as nttSj,
+                     a.memo as nttCn,
+                     a.userID as ntcrId,
+                     a.name as ntcrNm,
+                     a.email as ntcrEmail,
+                     a.regDate,
+                     a.hit as inqireCo,
+                     CASE
+                         WHEN a.use_html = '1'
+                         THEN 'Y'
+                         ELSE 'N'
+                     END as htmlYn,
+                     a.password,
+                     a.ip as ntcrIp,
+                     CASE
+                         WHEN a.delState = '1'
+                         THEN '0'
+                         ELSE '1'
+                     END as delcode,
+                     isnull(cast(a.no as varchar) + '_' + a.file_name1,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name2,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name3,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name4,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name5,'') as fileNm,
+					 a.category as gubun,
+                     a.partID as deptId,
+			       	 b.cateName as deptName
+			  FROM $orgTableNm$ a
+			  left JOIN designBox_category b on a.partId = b.cateId
+			  where a.no > #currentSize#
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000132AsIsBbsArticlesCnt" parameterClass="MigrationVO" resultClass="int" >
+		<![CDATA[
+			SELECT count(*)
+			  FROM $orgTableNm$ a
+			  left JOIN designBox_category b on a.partId = b.cateId
+			  where a.no > #currentSize#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000134AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+			SELECT a.no as nttNo,
+			        a.subject as nttSj,
+                     a.memo as nttCn,
+                     a.userID as ntcrId,
+                     a.name as ntcrNm,
+                     a.email as ntcrEmail,
+                     a.regDate,
+                     a.hit as inqireCo,
+                     CASE
+                         WHEN a.use_html = '1'
+                         THEN 'Y'
+                         ELSE 'N'
+                     END as htmlYn,
+                     a.password,
+                     a.ip as ntcrIp,
+                     CASE
+                         WHEN a.delState = '1'
+                         THEN '0'
+                         ELSE '1'
+                     END as delcode,
+                     isnull(cast(a.no as varchar) + '_' + a.file_name1,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name2,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name3,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name4,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name5,'') as fileNm,
+					 a.category as gubun,
+                     a.partID as deptId,
+			       	 b.cateName as deptName
+			  FROM $orgTableNm$ a
+			  left JOIN designBox_category b on a.partId = b.cateId
+			  where a.no > #currentSize#
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000133AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+
+			SELECT a.no as nttNo,
+			       a.subject as nttSj,
+			       a.memo as nttCn,
+			       a.userID as ntcrId,
+			       a.name as ntcrNm,
+			       a.email as ntcrEmail,
+			       a.regDate,
+			       a.hit as inqireCo,
+			       case when a.use_html = '1' then 'Y'
+			            else 'N'
+			       end as htmlYn,
+			       a.password,
+			       a.ip as ntcrIp,
+			       case when a.delState = '1' then '0'
+			            else '1'
+			       end as delcode,
+			       isnull(cast(a.no as varchar) + '_' + a.file_name1,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name2,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name3,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name4,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name5,'') as fileNm,
+			       a.telNum as ntcrTel,
+			       a.partID as deptId,
+			       b.cateName as deptName
+			  FROM $orgTableNm$ a
+			  	left JOIN designBox_category b on a.partId = b.cateId
+			  where a.no > #currentSize#
+
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000136AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+
+			SELECT a.no as nttNo,
+			       a.subject as nttSj,
+			       a.memo as nttCn,
+			       a.userID as ntcrId,
+			       a.name as ntcrNm,
+			       a.email as ntcrEmail,
+			       a.regDate,
+			       a.hit as inqireCo,
+			       case when a.use_html = '1' then 'Y'
+			            else 'N'
+			       end as htmlYn,
+			       a.password,
+			       a.ip as ntcrIp,
+			       case when a.delState = '1' then '0'
+			            else '1'
+			       end as delcode,
+			       /* 137번 이하의 게시물은 첨부파일에 번호가 붙어있지 않음*/
+			       case when a.no <= '137' then isnull(a.file_name1,'') + '/' + isnull(a.file_name2,'') + '/' + isnull(a.file_name3,'') + '/' + isnull(a.file_name4,'') + '/' + isnull(a.file_name5,'')
+				   	    else isnull(cast(a.no as varchar) + '_' + a.file_name1,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name2,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name3,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name4,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name5,'')
+			       end as fileNm,
+			       a.telNum as ntcrTel,
+			       a.partID as deptId,
+			       b.cateName as deptName
+			  FROM $orgTableNm$ a
+			  	left JOIN designBox_category b on a.partId = b.cateId
+			  where a.no > #currentSize#
+
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000137AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+
+			SELECT a.no as nttNo,
+			       a.subject as nttSj,
+			       a.memo as nttCn,
+			       a.userID as ntcrId,
+			       a.name as ntcrNm,
+			       a.email as ntcrEmail,
+			       a.regDate,
+			       a.hit as inqireCo,
+			       case when a.use_html = '1' then 'Y'
+			            else 'N'
+			       end as htmlYn,
+			       a.password,
+			       a.ip as ntcrIp,
+			       case when a.delState = '1' then '0'
+			            else '1'
+			       end as delcode,
+				   isnull(cast(a.no as varchar) + '_' + a.file_name1,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name2,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name3,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name4,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name5,'') as fileNm,
+			       a.telNum as ntcrTel,
+			       a.partID as deptId,
+			       b.cateName as deptName
+			  FROM $orgTableNm$ a
+			  	left JOIN designBox_category b on a.partId = b.cateId
+			  where a.no > #currentSize#
+
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000120AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		/* asisDAO.selectB0000120AsIsBbsArticles */
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+
+			SELECT a.no as nttNo,
+			       a.subject as nttSj,
+			       a.memo as nttCn,
+			       a.userID as ntcrId,
+			       a.name as ntcrNm,
+			       a.email as ntcrEmail,
+			       a.regDate,
+			       isnull(a.hit,0) as inqireCo,
+			       case when a.use_html = '1' then 'Y'
+			            else 'N'
+			       end as htmlYn,
+			       a.password,
+			       a.ip as ntcrIp,
+			       case when a.delState = '1' then '0'
+			            else '1'
+			       end as delcode,
+			       isnull(cast(a.no as varchar) + '_' + a.file_name1,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name2,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name3,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name4,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name5,'') as fileNm,
+			       a.telNum as ntcrTel,
+			       a.partID as deptId,
+			       b.cateName as deptName
+			  FROM $orgTableNm$ a
+			  	left JOIN designBox_category b on a.partId = b.cateId
+			  where a.no > #currentSize# and a.no <> 975
+
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000128AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+
+			SELECT a.no as nttNo,
+			       --a.headnum,
+			       --a.arrangenum,
+			       --a.depth,
+			       --a.prev_no,
+			       --a.next_no,
+			       --a.father,
+			       --a.child,
+			       a.subject as nttSj,
+			       a.memo as nttCn,
+			       --a.comment,
+			       case when a.notice = '1' then '1'
+			            else 2
+			       end as nttTYpe,
+			       --a.secret,
+			       a.userID as ntcrId,
+			       a.name as deptName,
+			       a.email as ntcrEmail,
+			       --a.homepage,
+			       --a.partID,
+			       a.telNum as ntcrTel,
+			       a.mobile as ntcrMobile,
+			       --a.postNo,
+			       a.address1 as ntcrAddr1,
+			       a.address2 as ntcrAddr2,
+			       a.regDate,
+			       isnull(a.hit,0) as inqireCo,
+			       case when a.use_html = '1' then 'Y'
+			            else 'N'
+			       end as htmlYn,
+			       --a.userType,
+			       a.password,
+			       a.ip as ntcrIp,
+			       --a.link1,
+			       --a.link2,
+			       --a.file_hit1,
+			       --a.file_code1,
+			       isnull(cast(a.no as varchar) + '_' + a.file_name1,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name2,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name3,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name4,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name5,'') as fileNm,
+			       --a.category,
+			       case when a.delState = '1' then '0'
+			            else '1'
+			       end as delcode,
+			       --a.rss_yn,
+			       a.partID as deptId
+			  FROM $orgTableNm$ a
+			  left JOIN designBox_category b on a.partId = b.cateId
+			  where a.no > #currentSize#
+
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000139AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+
+			SELECT a.no as nttNo,
+			       a.subject as nttSj,
+			       a.memo as nttCn,
+			       a.userID as ntcrId,
+			       a.name as ntcrNm,
+			       a.email as ntcrEmail,
+			       a.regDate,
+			       a.hit as inqireCo,
+			       case when a.use_html = '1' then 'Y'
+			            else 'N'
+			       end as htmlYn,
+			       a.password,
+			       a.ip as ntcrIp,
+			       case when a.delState = '1' then '0'
+			            else '1'
+			       end as delcode,
+				   isnull(cast(a.no as varchar) + '_' + a.file_name1,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name2,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name3,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name4,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name5,'') as fileNm,
+			       a.telNum as ntcrTel,
+			       a.partID as deptId,
+			       b.cateName as deptName
+			  FROM $orgTableNm$ a
+			  	left JOIN designBox_category b on a.partId = b.cateId
+			  where a.no > #currentSize#
+
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000140AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+
+			SELECT a.no as nttNo,
+			       a.subject as nttSj,
+			       a.memo as nttCn,
+			       a.userID as ntcrId,
+			       a.name as ntcrNm,
+			       a.email as ntcrEmail,
+			       a.regDate,
+			       a.hit as inqireCo,
+			       case when a.use_html = '1' then 'Y'
+			            else 'N'
+			       end as htmlYn,
+			       a.password,
+			       a.ip as ntcrIp,
+			       case when a.delState = '1' then '0'
+			            else '1'
+			       end as delcode,
+				   isnull(cast(a.no as varchar) + '_' + a.file_name1,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name2,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name3,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name4,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name5,'') as fileNm,
+			       a.telNum as ntcrTel,
+			       a.partID as deptId,
+			       b.cateName as deptName
+			  FROM $orgTableNm$ a
+			  	left JOIN designBox_category b on a.partId = b.cateId
+			  where a.no > #currentSize#
+
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000142AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+
+			SELECT a.no as nttNo,
+			       a.subject as nttSj,
+			       a.memo as nttCn,
+			       a.userID as ntcrId,
+			       a.name as ntcrNm,
+			       a.email as ntcrEmail,
+			       a.regDate,
+			       a.hit as inqireCo,
+			       case when a.use_html = '1' then 'Y'
+			            else 'N'
+			       end as htmlYn,
+			       a.password,
+			       a.ip as ntcrIp,
+			       case when a.delState = '1' then '0'
+			            else '1'
+			       end as delcode,
+				   isnull(cast(a.no as varchar) + '_' + a.file_name1,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name2,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name3,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name4,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name5,'') as fileNm,
+			       a.telNum as ntcrTel,
+			       a.partID as deptId,
+			       b.cateName as deptName
+			  FROM $orgTableNm$ a
+			  	left JOIN designBox_category b on a.partId = b.cateId
+			  where a.no > #currentSize#
+
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000143AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+
+			SELECT a.no as nttNo,
+			       a.subject as nttSj,
+			       a.memo as nttCn,
+			       a.userID as ntcrId,
+			       a.name as ntcrNm,
+			       a.email as ntcrEmail,
+			       a.regDate,
+			       a.hit as inqireCo,
+			       case when a.use_html = '1' then 'Y'
+			            else 'N'
+			       end as htmlYn,
+			       a.password,
+			       a.ip as ntcrIp,
+			       case when a.delState = '1' then '0'
+			            else '1'
+			       end as delcode,
+				   isnull(cast(a.no as varchar) + '_' + a.file_name1,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name2,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name3,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name4,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name5,'') as fileNm,
+			       a.telNum as ntcrTel,
+			       a.partID as deptId,
+			       b.cateName as deptName
+			  FROM $orgTableNm$ a
+			  	left JOIN designBox_category b on a.partId = b.cateId
+			  where a.no > #currentSize#
+
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000144AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+
+			SELECT a.no as nttNo,
+			       a.subject as nttSj,
+			       a.memo as nttCn,
+			       a.userID as ntcrId,
+			       a.name as ntcrNm,
+			       a.email as ntcrEmail,
+			       a.regDate,
+			       a.hit as inqireCo,
+			       case when a.use_html = '1' then 'Y'
+			            else 'N'
+			       end as htmlYn,
+			       a.password,
+			       a.ip as ntcrIp,
+			       case when a.delState = '1' then '0'
+			            else '1'
+			       end as delcode,
+				   isnull(cast(a.no as varchar) + '_' + a.file_name1,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name2,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name3,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name4,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name5,'') as fileNm,
+			       a.telNum as ntcrTel,
+			       a.partID as deptId,
+			       b.cateName as deptName
+			  FROM $orgTableNm$ a
+			  	left JOIN designBox_category b on a.partId = b.cateId
+			  where a.no > #currentSize#
+
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000146AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY nttNo) AS rn, TB.* FROM (
+
+			SELECT a.no as nttNo,
+			       a.TITLE as nttSj,
+			       a.DRAFTDEPTNAME as deptName,
+			       a.DRAFTERNAME as ntcrNm,
+   			       a.DOCREGNO as deptId,
+			       a.date as nttCn,
+			       a.KEEPPERIOD as gubun,
+			       'Y' as htmlYn,
+			       a.LASTSIGNERNAME as frstRegisterId,
+			       '0' as delcode
+			  FROM gita.dbo.doc_open a
+			  where a.no > #currentSize#
+
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000002AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+
+			SELECT a.no as nttNo,
+			       --a.headnum,
+			       --a.arrangenum,
+			       --a.depth,
+			       --a.prev_no,
+			       --a.next_no,
+			       --a.father,
+			       --a.child,
+			       a.subject as nttSj,
+			       a.memo as nttCn,
+			       --a.comment,
+			       case when a.notice = '1' then '1'
+			            else 2
+			       end as nttTYpe,
+			       --a.secret,
+			       a.userID as ntcrId,
+			       a.name as ntcrNm,
+			       a.email as ntcrEmail,
+			       --a.homepage,
+			       --a.partID,
+			       a.telNum as ntcrTel,
+			       a.mobile as ntcrMobile,
+			       --a.postNo,
+			       a.address1 as ntcrAddr1,
+			       a.address2 as ntcrAddr2,
+			       a.regDate,
+			       isnull(a.hit,0) as inqireCo,
+			       case when a.use_html = '1' then 'Y'
+			            else 'N'
+			       end as htmlYn,
+			       --a.userType,
+			       a.password,
+			       a.ip as ntcrIp,
+			       --a.link1,
+			       --a.link2,
+			       --a.file_hit1,
+			       --a.file_code1,
+			       isnull(cast(a.no as varchar) + '_' + a.file_name1,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name2,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name3,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name4,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name5,'') as fileNm,
+			       --a.category,
+			       case when a.delState = '1' then '0'
+			            else '1'
+			       end as delcode,
+			       --a.rss_yn,
+			       a.partID as deptId,
+			       b.cateName as deptName
+			  FROM $orgTableNm$ a
+			  left JOIN designBox_category b on a.partId = b.cateId
+			  where a.no > #currentSize#
+
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000147AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+
+			SELECT a.no as nttNo,
+			       a.subject as nttSj,
+			       a.memo as nttCn,
+			       a.userID as ntcrId,
+			       a.name as ntcrNm,
+			       a.email as ntcrEmail,
+			       a.regDate,
+			       a.hit as inqireCo,
+			       case when a.use_html = '1' then 'Y'
+			            else 'N'
+			       end as htmlYn,
+			       a.password,
+			       a.ip as ntcrIp,
+			       case when a.delState = '1' then '0'
+			            else '1'
+			       end as delcode,
+				   isnull(cast(a.no as varchar) + '_' + a.file_name1,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name2,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name3,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name4,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name5,'') as fileNm,
+			       a.telNum as ntcrTel
+			  FROM $orgTableNm$ a
+			  	left JOIN designBox_category b on a.partId = b.cateId
+			  where a.no > #currentSize#
+
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000148AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+
+			SELECT a.no as nttNo,
+			       a.subject as nttSj,
+			       a.memo as nttCn,
+			       a.userID as ntcrId,
+			       a.name as ntcrNm,
+			       a.email as ntcrEmail,
+			       a.regDate,
+			       a.hit as inqireCo,
+			       case when a.use_html = '1' then 'Y'
+			            else 'N'
+			       end as htmlYn,
+			       a.password,
+			       a.ip as ntcrIp,
+			       case when a.delState = '1' then '0'
+			            else '1'
+			       end as delcode,
+				   a.mobile as ntcrMobile,
+				   isnull(cast(a.no as varchar) + '_' + a.file_name1,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name2,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name3,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name4,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name5,'') as fileNm,
+			       a.telNum as ntcrTel
+			  FROM $orgTableNm$ a
+			  where a.no > #currentSize#
+
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000153AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+
+			SELECT a.no as nttNo,
+			       a.subject as nttSj,
+			       a.memo as nttCn,
+			       a.userID as ntcrId,
+			       a.name as ntcrNm,
+			       a.email as ntcrEmail,
+			       a.regDate,
+			       a.hit as inqireCo,
+			       case when a.use_html = '1' then 'Y'
+			            else 'N'
+			       end as htmlYn,
+			       a.password,
+			       a.ip as ntcrIp,
+			       case when a.delState = '1' then '0'
+			            else '1'
+			       end as delcode,
+				   a.mobile as ntcrMobile,
+				   isnull(cast(a.no as varchar) + '_' + a.file_name1,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name2,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name3,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name4,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name5,'') as fileNm,
+			       a.telNum as ntcrTel
+			  FROM $orgTableNm$ a
+			  where a.no > #currentSize# and a.father = 0
+
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000153AsIsBbsReplyArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+
+			SELECT
+				   a.no as nttNo,
+			       a.name as ntcrNm,
+			       a.subject as nttSj,
+			       a.memo as nttCn,
+			       a.userId as ntcrId,
+			       a.email as ntcrEmail,
+			       a.telNum as ntcrTel,
+			       a.mobile as ntcrMobile,
+				   a.ip as ntcrIp,
+			       a.hit as inqireCo,
+			       a.regDate as regDate,
+			       case when a.delState = '1' then '0'
+							 else '1'
+				   end as delcode,
+				   case when a.use_html = '1' then 'Y'
+						     else 'N'
+				   end as htmlYn,
+			       isnull(cast(a.no as varchar) + '_' + a.file_name1,'')
+				   + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name2,'')
+				   + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name3,'')
+				   + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name4,'')
+				   + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name5,'') as fileNm,
+				   a.father as parnts
+			  FROM designBox_board_part_praise1 a
+			  where a.father = #nttNo# and a.depth > 0
+			  order by a.regDate
+		]]>
+	</select>
+
+	<!-- <select id="asisDAO.selectB0000153AsIsBbsReplyArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+	<![CDATA[
+
+			SELECT
+				   a.no as nttNo,
+
+			       a.statusDate as regDate,
+			       case when a.delState = '1' then '0'
+							 else '1'
+				   end as delcode,
+
+
+				   a.no as parnts
+			  FROM designBox_board_deposit a
+			  where a.no = '57'
+			  order by a.regDate
+	]]>
+	</select> -->
+
+	<select id="asisDAO.selectB0000154AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+
+			SELECT a.no as nttNo,
+			       a.subject as nttSj,
+			       a.memo as nttCn,
+			       a.userID as ntcrId,
+			       a.name as ntcrNm,
+			       a.email as ntcrEmail,
+			       a.regDate,
+			       a.hit as inqireCo,
+			       case when a.use_html = '1' then 'Y'
+			            else 'N'
+			       end as htmlYn,
+			       a.password,
+			       a.ip as ntcrIp,
+			       case when a.delState = '1' then '0'
+			            else '1'
+			       end as delcode,
+				   a.mobile as ntcrMobile,
+				   isnull(cast(a.no as varchar) + '_' + a.file_name1,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name2,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name3,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name4,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name5,'') as fileNm,
+			       a.telNum as ntcrTel
+			  FROM $orgTableNm$ a
+			  where a.no > #currentSize# and a.father = 0
+
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000154AsIsBbsReplyArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+
+			SELECT
+				   a.no as nttNo,
+			       a.name as ntcrNm,
+			       a.subject as nttSj,
+			       a.memo as nttCn,
+			       a.userId as ntcrId,
+			       a.email as ntcrEmail,
+			       a.telNum as ntcrTel,
+			       a.mobile as ntcrMobile,
+				   a.ip as ntcrIp,
+			       a.hit as inqireCo,
+			       a.regDate as regDate,
+			       case when a.delState = '1' then '0'
+							 else '1'
+				   end as delcode,
+				   case when a.use_html = '1' then 'Y'
+						     else 'N'
+				   end as htmlYn,
+			       isnull(cast(a.no as varchar) + '_' + a.file_name1,'')
+				   + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name2,'')
+				   + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name3,'')
+				   + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name4,'')
+				   + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name5,'') as fileNm,
+				   a.father as parnts
+			  FROM designBox_board_part_praise2 a
+			  where a.father = #nttNo# and a.depth > 0
+			  order by a.regDate
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000155AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+
+			SELECT a.no as nttNo,
+			       a.subject as nttSj,
+			       a.memo as nttCn,
+			       a.userID as ntcrId,
+			       a.name as ntcrNm,
+			       a.email as ntcrEmail,
+			       a.regDate,
+			       a.hit as inqireCo,
+			       case when a.use_html = '1' then 'Y'
+			            else 'N'
+			       end as htmlYn,
+			       a.password,
+			       a.ip as ntcrIp,
+			       case when a.delState = '1' then '0'
+			            else '1'
+			       end as delcode,
+				   isnull(cast(a.no as varchar) + '_' + a.file_name1,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name2,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name3,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name4,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name5,'') as fileNm,
+			       a.telNum as ntcrTel,
+			       a.partId as deptId,
+				   b.cateName as deptName
+				   FROM $orgTableNm$ a
+			  	left JOIN designBox_category b on a.partId = b.cateId
+			  where a.no > #currentSize#
+
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000156AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+
+			SELECT a.no as nttNo,
+			       a.subject as nttSj,
+			       a.memo as nttCn,
+			       a.userID as ntcrId,
+			       a.name as ntcrNm,
+			       a.email as ntcrEmail,
+			       a.regDate,
+			       a.hit as inqireCo,
+			       case when a.use_html = '1' then 'Y'
+			            else 'N'
+			       end as htmlYn,
+			       a.password,
+			       a.ip as ntcrIp,
+			       case when a.delState = '1' then '0'
+			            else '1'
+			       end as delcode,
+				   isnull(cast(a.no as varchar) + '_' + a.file_name1,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name2,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name3,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name4,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name5,'') as fileNm,
+			       a.telNum as ntcrTel,
+			       a.partId as deptId,
+				   b.cateName as deptName
+				   FROM $orgTableNm$ a
+			  	left JOIN designBox_category b on a.partId = b.cateId
+			  where a.no > #currentSize#
+
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000157AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+
+			SELECT a.no as nttNo,
+			       a.subject as nttSj,
+			       a.memo as nttCn,
+			       a.userID as ntcrId,
+			       a.name as ntcrNm,
+			       a.email as ntcrEmail,
+			       a.regDate,
+			       a.hit as inqireCo,
+			       case when a.use_html = '1' then 'Y'
+			            else 'N'
+			       end as htmlYn,
+			       a.password,
+			       a.ip as ntcrIp,
+			       case when a.delState = '1' then '0'
+			            else '1'
+			       end as delcode,
+				   isnull(cast(a.no as varchar) + '_' + a.file_name1,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name2,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name3,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name4,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name5,'') as fileNm,
+			       a.telNum as ntcrTel,
+			       a.partId as deptId,
+				   b.cateName as deptName
+				   FROM $orgTableNm$ a
+			  	left JOIN designBox_category b on a.partId = b.cateId
+			  where a.no > #currentSize#
+
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000158AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+
+			SELECT a.no as nttNo,
+			       a.subject as nttSj,
+			       a.memo as nttCn,
+			       a.userID as ntcrId,
+			       a.name as ntcrNm,
+			       a.email as ntcrEmail,
+			       a.regDate,
+			       a.hit as inqireCo,
+			       case when a.use_html = '1' then 'Y'
+			            else 'N'
+			       end as htmlYn,
+			       a.password,
+			       a.ip as ntcrIp,
+			       case when a.delState = '1' then '0'
+			            else '1'
+			       end as delcode,
+				   isnull(cast(a.no as varchar) + '_' + a.file_name1,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name2,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name3,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name4,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name5,'') as fileNm,
+			       a.telNum as ntcrTel,
+			       a.partId as deptId,
+				   b.cateName as deptName
+				   FROM $orgTableNm$ a
+			  	left JOIN designBox_category b on a.partId = b.cateId
+			  where a.no > #currentSize#
+
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000159AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+
+			SELECT a.no as nttNo,
+			       a.subject as nttSj,
+			       a.memo as nttCn,
+			       a.userID as ntcrId,
+			       a.name as ntcrNm,
+			       a.email as ntcrEmail,
+			       a.regDate,
+			       a.hit as inqireCo,
+			       case when a.use_html = '1' then 'Y'
+			            else 'N'
+			       end as htmlYn,
+			       a.password,
+			       a.ip as ntcrIp,
+			       case when a.delState = '1' then '0'
+			            else '1'
+			       end as delcode,
+				   isnull(cast(a.no as varchar) + '_' + a.file_name1,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name2,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name3,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name4,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name5,'') as fileNm,
+			       a.telNum as ntcrTel,
+			       a.partId as deptId,
+				   b.cateName as deptName
+				   FROM $orgTableNm$ a
+			  	left JOIN designBox_category b on a.partId = b.cateId
+			  where a.no > #currentSize#
+
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000160AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+
+			SELECT a.no as nttNo,
+			       a.subject as nttSj,
+			       a.memo as nttCn,
+			       a.userID as ntcrId,
+			       a.name as ntcrNm,
+			       a.email as ntcrEmail,
+			       a.regDate,
+			       a.hit as inqireCo,
+			       case when a.use_html = '1' then 'Y'
+			            else 'N'
+			       end as htmlYn,
+			       a.password,
+			       a.ip as ntcrIp,
+			       case when a.delState = '1' then '0'
+			            else '1'
+			       end as delcode,
+				   isnull(cast(a.no as varchar) + '_' + a.file_name1,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name2,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name3,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name4,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name5,'') as fileNm,
+			       a.telNum as ntcrTel,
+			       a.partId as deptId,
+				   b.cateName as deptName
+				   FROM $orgTableNm$ a
+			  	left JOIN designBox_category b on a.partId = b.cateId
+			  where a.no > #currentSize#
+
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000174AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+
+			SELECT a.no as nttNo,
+			       a.subject as nttSj,
+			       a.memo as nttCn,
+			       a.userID as ntcrId,
+			       a.name as ntcrNm,
+			       a.email as ntcrEmail,
+			       a.regDate,
+			       a.hit as inqireCo,
+			       case when a.use_html = '1' then 'Y'
+			            else 'N'
+			       end as htmlYn,
+			       a.password,
+			       a.ip as ntcrIp,
+			       case when a.delState = '1' then '0'
+			            else '1'
+			       end as delcode,
+				   isnull(cast(a.no as varchar) + '_' + a.file_name1,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name2,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name3,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name4,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name5,'') as fileNm,
+			       a.telNum as ntcrTel,
+			       a.partId as deptId,
+				   b.cateName as deptName
+				   FROM $orgTableNm$ a
+			  	left JOIN designBox_category b on a.partId = b.cateId
+			  where a.no > #currentSize#
+
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000175AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+
+			SELECT a.no as nttNo,
+			       a.subject as nttSj,
+			       a.memo as nttCn,
+			       a.userID as ntcrId,
+			       a.name as ntcrNm,
+			       a.email as ntcrEmail,
+			       a.regDate,
+			       a.hit as inqireCo,
+			       case when a.use_html = '1' then 'Y'
+			            else 'N'
+			       end as htmlYn,
+			       a.password,
+			       a.ip as ntcrIp,
+			       case when a.delState = '1' then '0'
+			            else '1'
+			       end as delcode,
+				   isnull(a.file_name1,'') + '/' + isnull(a.file_name2,'') + '/' + isnull(a.file_name3,'') + '/' + isnull(a.file_name4,'') + '/' + isnull(a.file_name5,'') as fileNm,
+			       a.telNum as ntcrTel,
+			       a.partId as deptId
+				   FROM $orgTableNm$ a
+			  where a.no > #currentSize#
+
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000179AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+
+			SELECT a.no as nttNo,
+			       a.subject as nttSj,
+			       a.memo as nttCn,
+			       a.userID as ntcrId,
+			       a.name as ntcrNm,
+			       a.email as ntcrEmail,
+			       a.regDate,
+			       a.hit as inqireCo,
+			       case when a.use_html = '1' then 'Y'
+			            else 'N'
+			       end as htmlYn,
+			       a.password,
+			       a.ip as ntcrIp,
+			       case when a.delState = '1' then '0'
+			            else '1'
+			       end as delcode,
+				   isnull(a.file_name1,'') + '/' + isnull(a.file_name2,'') + '/' + isnull(a.file_name3,'') + '/' + isnull(a.file_name4,'') + '/' + isnull(a.file_name5,'') as fileNm,
+			       a.postNo as ntcrZipcode,
+			       a.addr1 as ntcrAddr1,
+			       a.addr2 as ntcrAddr2,
+			       a.telephone as ntcrTel,
+			       a.handphone as ntcrMobile,
+			       case when a.status = '3' then '5'
+			            when a.status = '2' then '4'
+			            when a.status = '1' then '1'
+			            else '0'
+			       end as replyAt,
+			       '11' as option1
+				   FROM $orgTableNm$ a
+			  where a.no > #currentSize# and a.category = '362' and father = '0'
+
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000179AsIsBbsReplyArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+
+
+		select a.*, b.cateName as ntcrDept from (SELECT
+				   a.no as nttNo,
+			       a.subject as nttSj,
+			       a.memo as nttCn,
+			       a.userId as ntcrId,
+			       a.email as ntcrEmail,
+			       a.name as ntcrNm,
+			       a.regDate as regDate,
+			       a.hit as inqireCo,
+			       a.ip as ntcrIp,
+			       case when a.use_html = '1' then 'Y'
+						     else 'N'
+				   end as htmlYn,
+				   case when a.delState = '1' then '0'
+							 else '1'
+				   end as delcode,
+			       a.telephone as ntcrTel,
+			       a.handphone as ntcrMobile,
+				   a.father as parnts,
+
+				   replace(a.chargePlace,',','') as reChar
+			  FROM $orgTableNm$ a
+			  where a.father = #nttNo# and a.depth > 0) a
+			  left join dbo.designBox_category b on a.rechar = b.cateId
+			  order by a.regDate
+
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000178AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+
+			SELECT a.no as nttNo,
+			       a.subject as nttSj,
+			       a.memo as nttCn,
+			       a.userID as ntcrId,
+			       a.name as ntcrNm,
+			       a.email as ntcrEmail,
+			       a.regDate,
+			       a.hit as inqireCo,
+			       case when a.use_html = '1' then 'Y'
+			            else 'N'
+			       end as htmlYn,
+			       a.password,
+			       a.ip as ntcrIp,
+			       case when a.delState = '1' then '0'
+			            else '1'
+			       end as delcode,
+				   isnull(a.file_name1,'') + '/' + isnull(a.file_name2,'') + '/' + isnull(a.file_name3,'') + '/' + isnull(a.file_name4,'') + '/' + isnull(a.file_name5,'') as fileNm,
+			       a.postNo as ntcrZipcode,
+			       a.addr1 as ntcrAddr1,
+			       a.addr2 as ntcrAddr2,
+			       a.telephone as ntcrTel,
+			       a.handphone as ntcrMobile,
+			       case when a.status = '3' then '5'
+			            when a.status = '2' then '4'
+			            when a.status = '1' then '1'
+			            else '0'
+			       end as replyAt,
+			       '14' as option1
+				   FROM $orgTableNm$ a
+			  where a.no > #currentSize# and a.category = '1436' and father = '0'
+
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000187AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+			SELECT a.no as nttNo,
+			        a.subject as nttSj,
+                     a.memo as nttCn,
+                     a.userID as ntcrId,
+                     a.name as ntcrNm,
+                     a.email as ntcrEmail,
+                     a.regDate,
+                     a.hit as inqireCo,
+                     CASE
+                         WHEN a.use_html = '1'
+                         THEN 'Y'
+                         ELSE 'N'
+                     END as htmlYn,
+                     a.password,
+                     a.ip as ntcrIp,
+                     CASE
+                         WHEN a.delState = '1'
+                         THEN '0'
+                         ELSE '1'
+                     END as delcode,
+                     isnull(cast(a.no as varchar) + '_' + a.file_name1,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name2,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name3,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name4,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name5,'') as fileNm,
+                     a.partID as deptId,
+					 a.category as gubun,
+			       	 b.cateName as deptName
+			  FROM $orgTableNm$ a
+			  left JOIN designBox_category b on a.partId = b.cateId
+			  where a.no > #currentSize#
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000188AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+			SELECT a.no as nttNo,
+			        a.subject as nttSj,
+                     a.memo as nttCn,
+                     a.userID as ntcrId,
+                     a.name as ntcrNm,
+                     a.email as ntcrEmail,
+                     a.regDate,
+                     a.hit as inqireCo,
+                     CASE
+                         WHEN a.use_html = '1'
+                         THEN 'Y'
+                         ELSE 'N'
+                     END as htmlYn,
+                     a.password,
+                     a.ip as ntcrIp,
+                     CASE
+                         WHEN a.delState = '1'
+                         THEN '0'
+                         ELSE '1'
+                     END as delcode,
+                     isnull(cast(a.no as varchar) + '_' + a.file_name1,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name2,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name3,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name4,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name5,'') as fileNm,
+                     a.partID as deptId,
+					 a.category as gubun,
+			       	 b.cateName as deptName
+			  FROM $orgTableNm$ a
+			  left JOIN designBox_category b on a.partId = b.cateId
+			  where a.no > #currentSize#
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000189AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY frstRegisterPnttm) AS rn, TB.* FROM (
+			SELECT a.idx as nttNo,
+			       a.org_name as gubun,
+                   a.org_addr1 as ntcrAddr1,
+                   a.org_addr2 as ntcrAddr2,
+                   a.org_dept as deptName,
+                   a.org_staff as ntcrNm,
+			       a.org_tel as ntcrTel,
+			       a.bdg_num as nttSj,
+			       a.bdg_name as option1,
+			       a.bdg_dong as option2,
+			       a.bdg_addr1 as option20,
+			       a.bdg_addr2 as option21,
+			       a.bdg_use as option4,
+			       a.bdg_spec as option5,
+			       a.bdg_Area as option6,
+			       a.bdg_appdate as option7,
+			       a.bdg_builddate as option8,
+			       a.bdg_roof as option9,
+			       a.bdg_repair as option10,
+			       a.bdg_repairText as option11,
+			       a.bdg_surveyNum as option12,
+			       a.bdg_surveyCorp as option13,
+			       a.bdg_surveyDate as option14,
+			       a.bdg_surveyer1 as option15,
+			       a.bdg_surveyer2 as option16,
+			       a.bdg_surveyTest1 as option17,
+			       a.bdg_surveyTest2 as option18,
+			       a.bdg_surveyResult as option19,
+			       a.regdate as frstRegisterPnttm,
+			       a.moddate as lastUpdusrPnttm,
+			       a.ip as ntcrIp
+			  FROM $orgTableNm$ a
+			  where a.idx > #currentSize#
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000189AsIsBbsReArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY frstRegisterPnttm) AS rn, TB.* FROM (
+			SELECT
+				     a.b_idx as nttNo,
+				     a.sp_idx as sortOrdr,
+				     a.sp_num as nttSj,
+				     a.sp_getDate as option1,
+				     a.sp_getLocation as option2,
+				     a.sp_getNum as option3,
+				     a.sp_type as option4,
+				     a.sp_matter as option5,
+				     a.sp_detectNum as option6,
+				     a.sp_range as option7,
+				     a.sp_area as option8,
+				     a.sp_map as option9,
+				     a.sp_result as option10,
+				     a.sp_method as option11,
+				     a.sp_report as option12,
+				     a.sp_photo1 as option13,
+				     a.sp_photo2 as option14,
+				     a.sp_friable as option15,
+				     a.sp_condition as option16,
+				     a.sp_contain as option17,
+				     a.sp_access as option18,
+				     a.sp_activity as option19,
+				     a.sp_vibration as option20,
+				     a.sp_air as option21,
+				     a.sp_leak as option22,
+				     a.sp_main_type as option23,
+				     a.sp_main_freq as option24,
+				     a.sp_exposure_man as option25,
+				     a.sp_exposure_freq as option26,
+				     a.sp_exposure_time as option27,
+				     a.sp_warnScore as option28,
+				     a.sp_warnLevel as option29,
+				     a.sp_manage as option30,
+				     a.regdate as frstRegisterPnttm,
+				     a.moddate as lastUpdusrPnttm,
+				     a.ip as ntcrIp
+			  FROM $orgTableNm$ a
+			  where a.sp_idx > #currentSize#
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000191AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+
+			SELECT a.no as nttNo,
+			       a.subject as nttSj,
+			       a.memo as nttCn,
+			       a.userID as ntcrId,
+			       a.name as ntcrNm,
+			       a.email as ntcrEmail,
+			       a.regDate,
+			       a.hit as inqireCo,
+			       case when a.use_html = '1' then 'Y'
+			            else 'N'
+			       end as htmlYn,
+			       a.password,
+			       a.ip as ntcrIp,
+			       case when a.delState = '1' then '0'
+			            else '1'
+			       end as delcode,
+				   isnull(cast(a.no as varchar) + '_' + a.file_name1,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name2,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name3,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name4,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name5,'') as fileNm,
+			       a.postNo as ntcrZipcode,
+			       a.addr1 as ntcrAddr1,
+			       a.addr2 as ntcrAddr2,
+			       a.telephone as ntcrTel,
+			       a.handphone as ntcrMobile,
+			       case when a.status = '3' then '5'
+			            when a.status = '2' then '4'
+			            when a.status = '1' then '1'
+			            else '0'
+			       end as replyAt,
+			       b.cateName as ntcrDept
+				   FROM $orgTableNm$ a
+				   /*중복으로 부서지정되었을경우 최초의 부서만 등록하기위해 나눔*/
+			  		left JOIN designBox_category b on
+				  		case
+							when chargePlace is null then ''
+							when CHARINDEX(',', chargePlace) = 0 then chargePlace
+							when CHARINDEX(',', chargePlace) > 0 then
+							left(chargePlace,CHARINDEX(',', chargePlace)-1)
+						end = b.cateId
+			  where a.no > #currentSize# and a.father = '0'
+
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000191AsIsBbsReplyArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+
+
+		select a.* from (SELECT
+				   a.no as nttNo,
+			       a.subject as nttSj,
+			       a.memo as nttCn,
+			       a.userId as ntcrId,
+			       a.email as ntcrEmail,
+			       a.name as ntcrNm,
+			       a.regDate as regDate,
+			       a.regDate as answerDate,
+			       a.hit as inqireCo,
+			       a.ip as ntcrIp,
+			       case when a.use_html = '1' then 'Y'
+						     else 'N'
+				   end as htmlYn,
+				   case when a.delState = '1' then '0'
+							 else '1'
+				   end as delcode,
+			       a.telephone as ntcrTel,
+			       a.handphone as ntcrMobile,
+				   a.father as parnts,
+				   isnull(cast(a.no as varchar) + '_' + a.file_name1,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name2,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name3,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name4,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name5,'') as fileNm
+			  FROM $orgTableNm$ a
+			  where a.father = #nttNo# and a.depth > 0) a
+			  order by a.regDate
+
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000221AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+
+			SELECT a.no as nttNo,
+			       a.subject as nttSj,
+			       a.memo as nttCn,
+			       a.userID as ntcrId,
+			       a.name as ntcrNm,
+			       a.email as ntcrEmail,
+			       a.regDate,
+			       a.hit as inqireCo,
+			       case when a.use_html = '1' then 'Y'
+			            else 'N'
+			       end as htmlYn,
+			       a.password,
+			       a.ip as ntcrIp,
+			       case when a.delState = '1' then '0'
+			            else '1'
+			       end as delcode,
+			       file_name1 as fileNm
+			  FROM $orgTableNm$ a
+			  where a.no > #currentSize#
+
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000226AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+
+			SELECT a.no as nttNo,
+			       a.subject as nttSj,
+			       a.memo as nttCn,
+			       a.userID as ntcrId,
+			       a.name as ntcrNm,
+			       a.email as ntcrEmail,
+			       case when a.secret = '1' then 'Y'
+			            else 'N'
+			       end as secret,
+			       a.regDate,
+			       a.hit as inqireCo,
+			       case when a.use_html = '1' then 'Y'
+			            else 'N'
+			       end as htmlYn,
+			       a.telNum as ntcrTel,
+			       a.mobile as ntcrMobile,
+			       a.password,
+			       a.ip as ntcrIp,
+			       case when a.delState = '1' then '0'
+			            else '1'
+			       end as delcode,
+			       file_name1 as fileNm
+			  FROM $orgTableNm$ a
+			  where a.no > #currentSize#
+
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+
+	<select id="asisDAO.selectB0000225AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY nttNo) AS rn, TB.* FROM (
+
+			SELECT a.no as nttNo,
+					a.company as company, /* nttSj*/
+					a.owner as owner, /* option1*/
+					a.company_no as companyNo, /* option1*/
+
+
+					a.date as option7,
+					a.title as nttSj,
+					a.department as deptName,
+					case when a.done = '1' then '1'
+						 when a.done = '0' and price1 = 0 then '0'
+						 else '4'
+					end as option1,
+					a.price0 as option2,
+					a.price0_1 as option3,
+					case when a.price1 = '0' then null
+						 else a.price1
+					end as option10,
+					case when a.price2 = '0' then null
+						 else a.price2
+					end as option11,
+					case when a.price3 = '0' then null
+						 else a.price3
+					end as option12,
+					a.password as option5,
+					a.contract as option6,
+					a.cancle_sidam as option13
+			  FROM $orgTableNm$ a
+			  where a.no > #currentSize#
+
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000234AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+
+			SELECT a.no as nttNo,
+			       a.subject as nttSj,
+			       a.memo as nttCn,
+			       a.userID as ntcrId,
+			       a.name as ntcrNm,
+			       a.email as ntcrEmail,
+			       a.partID as deptId,
+			       a.telNum as ntcrTel,
+			       a.regDate,
+			       a.hit as inqireCo,
+			       case when a.use_html = '1' then 'Y'
+			            else 'N'
+			       end as htmlYn,
+			       a.password,
+			       a.ip as ntcrIp,
+			       case when a.delState = '1' then '0'
+			            else '1'
+			       end as delcode,
+			       isnull(cast(a.no as varchar) + '_' + a.file_name1,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name2,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name3,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name4,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name5,'') as fileNm,
+			       b.cateName as deptName
+			  FROM $orgTableNm$ a
+			  	left JOIN designBox_category b on a.partId = b.cateId
+			  where a.no > #currentSize#
+
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000246AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+
+			SELECT a.no as nttNo,
+			       a.subject as nttSj,
+			       a.memo as nttCn,
+			       a.userID as ntcrId,
+			       a.name as ntcrNm,
+			       a.email as ntcrEmail,
+			       a.partID as deptId,
+			       a.telNum as ntcrTel,
+			       a.regDate,
+			       a.hit as inqireCo,
+			       case when a.use_html = '1' then 'Y'
+			            else 'N'
+			       end as htmlYn,
+			       a.password,
+			       a.ip as ntcrIp,
+			       case when a.delState = '1' then '0'
+			            else '1'
+			       end as delcode,
+			       isnull(cast(a.no as varchar) + '_' + a.file_name1,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name2,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name3,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name4,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name5,'') as fileNm,
+			       b.cateName as deptName
+			  FROM $orgTableNm$ a
+			  	left JOIN designBox_category b on a.partId = b.cateId
+			  where a.no > #currentSize#
+
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+
+	<select id="asisDAO.selectB0000247AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+
+			SELECT a.no as nttNo,
+			       a.subject as nttSj,
+			       a.memo as nttCn,
+			       a.userID as ntcrId,
+			       a.name as ntcrNm,
+			       a.email as ntcrEmail,
+			       a.partID as deptId,
+			       a.telNum as ntcrTel,
+			       a.regDate,
+			       a.hit as inqireCo,
+			       case when a.use_html = '1' then 'Y'
+			            else 'N'
+			       end as htmlYn,
+			       a.password,
+			       a.ip as ntcrIp,
+			       case when a.delState = '1' then '0'
+			            else '1'
+			       end as delcode,
+			       isnull(cast(a.no as varchar) + '_' + a.file_name1,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name2,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name3,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name4,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name5,'') as fileNm,
+			       b.cateName as deptName
+			  FROM $orgTableNm$ a
+			  	left JOIN designBox_category b on a.partId = b.cateId
+			  where a.no > #currentSize#
+
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000250AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+
+			SELECT a.no as nttNo,
+			       a.subject as nttSj,
+			       a.memo as nttCn,
+			       a.userID as ntcrId,
+			       a.name as ntcrNm,
+			       a.email as ntcrEmail,
+			       a.partID as deptId,
+			       a.telNum as ntcrTel,
+			       a.regDate,
+			       a.hit as inqireCo,
+			       case when a.use_html = '1' then 'Y'
+			            else 'N'
+			       end as htmlYn,
+			       a.password,
+			       a.ip as ntcrIp,
+			       case when a.delState = '1' then '0'
+			            else '1'
+			       end as delcode,
+			       isnull(cast(a.no as varchar) + '_' + a.file_name1,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name2,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name3,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name4,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name5,'') as fileNm,
+			       b.cateName as deptName
+			  FROM designBox_board_info_recruitnotice a
+			  	left JOIN designBox_category b on a.partId = b.cateId
+
+		Union all
+
+					SELECT a.no as nttNo,
+				       a.subject as nttSj,
+				       a.memo as nttCn,
+				       a.userID as ntcrId,
+				       a.name as ntcrNm,
+				       a.email as ntcrEmail,
+				       a.partID as deptId,
+				       a.telNum as ntcrTel,
+				       a.regDate,
+				       a.hit as inqireCo,
+				       case when a.use_html = '1' then 'Y'
+				            else 'N'
+				       end as htmlYn,
+				       a.password,
+				       a.ip as ntcrIp,
+				       case when a.delState = '1' then '0'
+				            else '1'
+				       end as delcode,
+				       isnull(cast(a.no as varchar) + '_' + a.file_name1,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name2,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name3,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name4,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name5,'') as fileNm,
+				       b.cateName as deptName
+				  FROM dbo.designBox_board_info_recruitpds a
+			  	left JOIN designBox_category b on a.partId = b.cateId
+			  where a.no > #currentSize#
+
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000264AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+			SELECT a.no as nttNo,
+			        a.subject as nttSj,
+                     a.memo as nttCn,
+                     a.userID as ntcrId,
+                     a.name as ntcrNm,
+                     a.telNum as ntcrTel,
+                     a.email as ntcrEmail,
+                     a.regDate,
+                     a.hit as inqireCo,
+                     CASE
+                         WHEN a.use_html = '1'
+                         THEN 'Y'
+                         ELSE 'N'
+                     END as htmlYn,
+                     a.password,
+                     a.ip as ntcrIp,
+                     CASE
+                         WHEN a.delState = '1'
+                         THEN '0'
+                         ELSE '1'
+                     END as delcode,
+                     isnull(cast(a.no as varchar) + '_' + a.file_name1,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name2,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name3,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name4,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name5,'') as fileNm,
+					 a.category as gubun,
+					 CASE WHEN a.partID = '174' THEN '30601230000'
+					 	  WHEN a.partID = '175' THEN '30600400000'
+					 	  WHEN a.partID = '176' THEN '30601270000'
+					 	  WHEN a.partID = '177' THEN '30600420000'
+					 	  WHEN a.partID = '178' THEN '30600430000'
+					 	  WHEN a.partID = '180' THEN '30600450000'
+					 	  WHEN a.partID = '182' THEN '30600470000'
+					 	  WHEN a.partID = '183' THEN '30600480000'
+					 	  WHEN a.partID = '184' THEN '30600490000'
+					 	  WHEN a.partID = '185' THEN '30600500000'
+					 	  WHEN a.partID = '187' THEN '30600520000'
+					 	  WHEN a.partID = '188' THEN '30600530000'
+					 	  WHEN a.partID = '189' THEN '30601250000'
+					 	  WHEN a.partID = '191' THEN '30600560000'
+					 	  WHEN a.partID = '192' THEN '30600570000'
+					 	  WHEN a.partID = '193' THEN '30600580000'
+			       	 END as deptId,
+					 CASE WHEN b.cateName = '면목본동' THEN '면목본동'
+					 	  WHEN b.cateName = '면목제2동' THEN '면목2동'
+					 	  WHEN b.cateName = '면목제3.8동' THEN '면목제3.8동'
+					 	  WHEN b.cateName = '면목제4동' THEN '면목4동'
+					 	  WHEN b.cateName = '면목제5동' THEN '면목5동'
+					 	  WHEN b.cateName = '면목제7동' THEN '면목7동'
+					 	  WHEN b.cateName = '상봉제1동' THEN '상봉1동'
+					 	  WHEN b.cateName = '상봉제2동' THEN '상봉2동'
+					 	  WHEN b.cateName = '중화제1동' THEN '중화1동'
+					 	  WHEN b.cateName = '중화제2동' THEN '중화2동'
+					 	  WHEN b.cateName = '묵제1동' THEN '묵1동'
+					 	  WHEN b.cateName = '묵제2동' THEN '묵2동'
+					 	  WHEN b.cateName = '망우본동' THEN '망우본동'
+					 	  WHEN b.cateName = '망우제3동' THEN '망우3동'
+					 	  WHEN b.cateName = '신내제1동' THEN '신내1동'
+					 	  WHEN b.cateName = '신내제2동' THEN '신내2동'
+			       	 END as deptName
+			  FROM $orgTableNm$ a
+			  left JOIN designBox_category b on a.partId = b.cateId
+			  where a.no > #currentSize#
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000267AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+
+			SELECT a.no as nttNo,
+			       a.subject as nttSj,
+			       a.memo as nttCn,
+			       a.userID as ntcrId,
+			       a.name as ntcrNm,
+			       a.email as ntcrEmail,
+			       a.regDate,
+			       a.hit as inqireCo,
+			       case when a.use_html = '1' then 'Y'
+			            else 'N'
+			       end as htmlYn,
+			       a.password,
+			       a.ip as ntcrIp,
+			       a.link1 as option1,
+			       case when a.delState = '1' then '0'
+			            else '1'
+			       end as delcode,
+			       isnull(cast(a.no as varchar) + '_' + a.file_name1,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name2,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name3,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name4,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name5,'') as fileNm,
+			       a.telNum as ntcrTel,
+			       a.partID as deptId,
+			       b.cateName as deptName
+			  FROM $orgTableNm$ a
+			  	left JOIN designBox_category b on a.partId = b.cateId
+			  where a.no > #currentSize#
+
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000268AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+
+			SELECT a.no as nttNo,
+			       a.subject as nttSj,
+			       a.memo as nttCn,
+			       a.userID as ntcrId,
+			       a.name as ntcrNm,
+			       a.email as ntcrEmail,
+			       a.regDate,
+			       a.hit as inqireCo,
+			       case when a.use_html = '1' then 'Y'
+			            else 'N'
+			       end as htmlYn,
+			       a.password,
+			       a.ip as ntcrIp,
+			       case when a.delState = '1' then '0'
+			            else '1'
+			       end as delcode,
+			       a.telNum as ntcrTel,
+			       a.partID as deptId,
+			       b.cateName as deptName
+			  FROM $orgTableNm$ a
+			  	left JOIN designBox_category b on a.partId = b.cateId
+			  where a.no > #currentSize#
+
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000268BoardCount" parameterClass="MigrationVO" resultClass="int" >
+		<![CDATA[
+			select count(subject) from designBox_board_intro_photo where subject = #nttSj#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000268BoardFiles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+			select subject, file_name1 as fileNm from designBox_board_intro_photo where subject = #nttSj#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000270AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+
+			select a.no as nttNo,
+				   a.subject as nttSj,
+				   a.memo as nttCn,
+				   case when a.secret = '1' then 'Y'
+						else 'N'
+				   end as secret,
+				   a.userID as ntcrId,
+				   a.name as ntcrNm,
+				   a.email as ntcrEmail,
+				   a.regDate,
+				   a.hit as inqireCo,
+				   case when a.use_html = '1' then 'Y'
+						else 'N'
+				   end as htmlYn,
+				   a.password,
+				   a.ip as ntcrIp,
+				   isnull(cast(a.no as varchar) + '_' + a.file_name1,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name2,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name3,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name4,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name5,'') as fileNm,
+				   case when a.category = '400' then '일반행정' when a.category = '401' then '민원처리'
+						when a.category = '402' then '문화/체육' when a.category = '403' then '세무/지적'
+						when a.category = '404' then '계약/회계' when a.category = '405' then '청소/환경'
+						when a.category = '406' then '지역경제' when a.category = '407' then '복지분야'
+						when a.category = '408' then '주택/건축' when a.category = '409' then '도시계획'
+						when a.category = '410' then '공원녹지' when a.category = '411' then '교통/주차'
+						when a.category = '412' then '토목/하수' when a.category = '413' then '보건/위생/건강'
+						when a.category = '414' then '기타'
+				   end as gubun,
+
+				   case when a.delState = '1' then '0'
+						else '1'
+				   end as delcode,
+				   a.postNo as ntcrZipcode,
+				   a.addr1 as ntcrAddr1,
+				   a.addr2 as ntcrAddr2,
+				   a.telephone as ntcrTel,
+				   a.handphone as ntcrMobile,
+				   a.smsType as smsYn,
+				   a.sijak_il as answering_date,
+				   case when a.status = '0' then '0'
+						when a.status = '1' then '1'
+						when a.status = '2' then '4'
+						when a.status = '3' then '5'
+						when a.status = '4' then '8'
+				   end as replyAt,
+				   a.process1 as option11,
+				   a.process2 as option12,
+				   a.chargePlace as option15,
+				   a.chargePerson as option16,
+				   a.par as satisfaction
+			  FROM $orgTableNm$ a
+			  where a.no > #currentSize# and a.father = '0'
+
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000270AsIsBbsReplyArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+
+		select a.* from (SELECT
+				   a.no as nttNo,
+				   a.subject as nttSj,
+				   a.memo as nttCn,
+				   case when a.secret = '1' then 'Y'
+						else 'N'
+				   end as secret,
+				   a.userID as ntcrId,
+				   a.name as ntcrNm,
+				   a.email as ntcrEmail,
+				   a.regDate,
+				   a.hit as inqireCo,
+				   case when a.use_html = '1' then 'Y'
+						else 'N'
+				   end as htmlYn,
+				   a.password,
+				   a.ip as ntcrIp,
+				   isnull(cast(a.no as varchar) + '_' + a.file_name1,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name2,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name3,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name4,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name5,'') as fileNm,
+				   a.category as gubun,
+				   case when a.delState = '1' then '0'
+						else '1'
+				   end as delcode,
+				   a.postNo as ntcrZipcode,
+				   a.addr1 as ntcrAddr1,
+				   a.addr2 as ntcrAddr2,
+				   a.telephone as ntcrTel,
+				   a.handphone as ntcrMobile,
+				   a.smsType as smsYn,
+				   a.sijak_il as answering_date,
+				   case when a.status = '0' then '0'
+						when a.status = '1' then '1'
+						when a.status = '2' then '4'
+						when a.status = '3' then '5'
+						when a.status = '4' then '8'
+				   end as replyAt,
+				   a.process1 as option11,
+				   a.process2 as option12,
+				   a.chargePlace as deptId,
+				   a.chargePerson as option16,
+				   a.par as satisfaction,
+				   a.father as parnts
+			  FROM $orgTableNm$ a
+			  where a.father = #nttNo# and a.depth > 0) a
+			  order by a.regDate
+
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000275AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+
+			SELECT a.no as nttNo,
+			       a.subject as nttSj,
+			       a.memo as nttCn,
+			       a.userID as ntcrId,
+			       a.name as ntcrNm,
+			       a.email as ntcrEmail,
+			       a.partID as deptId,
+			       a.telNum as ntcrTel,
+			       a.regDate,
+			       a.hit as inqireCo,
+			       case when a.use_html = '1' then 'Y'
+			            else 'N'
+			       end as htmlYn,
+			       a.password,
+			       a.ip as ntcrIp,
+			       case when a.delState = '1' then '0'
+			            else '1'
+			       end as delcode,
+			       isnull(cast(a.no as varchar) + '_' + a.file_name1,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name2,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name3,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name4,'') + '/' + isnull(cast(a.no as varchar) + '_' + a.file_name5,'') as fileNm,
+			       b.cateName as deptName
+			  FROM $orgTableNm$ a
+			  	left JOIN designBox_category b on a.partId = b.cateId
+			  where a.no > #currentSize#
+
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000266AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+		SELECT * FROM ( SELECT Row_Number() OVER (ORDER BY regDate) AS rn, TB.* FROM (
+
+			SELECT a.no as nttNo,
+			       a.subject as nttSj,
+			       a.memo as nttCn,
+			       a.userID as ntcrId,
+			       a.name as ntcrNm,
+			       a.email as ntcrEmail,
+			       a.regDate,
+			       a.hit as inqireCo,
+			       case when a.use_html = '1' then 'Y'
+			            else 'N'
+			       end as htmlYn,
+			       a.password,
+			       a.ip as ntcrIp,
+			       case when a.delState = '1' then '0'
+			            else '1'
+			       end as delcode,
+				   isnull(cast(a.no as varchar) + '_' +a.file_name1,'') + '/' + isnull(cast(a.no as varchar) + '_' +a.file_name2,'') + '/' + isnull(a.file_name3,'') + '/' + isnull(a.file_name4,'') + '/' + isnull(a.file_name5,'') as fileNm,
+			       a.telNum as ntcrTel,
+			       a.mobile as ntcrMobile,
+			       '5' as replyAt
+			  FROM $orgTableNm$ a
+			  where a.no > #currentSize# and father = '0'
+
+			) TB ) TB_A WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+
+	<select id="asisDAO.selectB0000266AsIsBbsReplyArticles" parameterClass="MigrationVO" resultClass="MigrationVO" >
+		<![CDATA[
+			select a.* from (
+				SELECT
+				   a.no as nttNo,
+			       a.subject as nttSj,
+			       a.memo as nttCn,
+			       a.userId as ntcrId,
+			       a.email as ntcrEmail,
+			       a.name as ntcrNm,
+			       a.regDate as regDate,
+			       a.hit as inqireCo,
+			       a.ip as ntcrIp,
+			       case when a.use_html = '1' then 'Y'
+						     else 'N'
+				   end as htmlYn,
+				   case when a.delState = '1' then '0'
+							 else '1'
+				   end as delcode,
+			       a.telNum as ntcrMobile,
+			       a.mobile as ntcrTel,
+				   a.father as parnssts
+			  FROM designBox_board_part_praise1  a
+			  where a.father = #nttNo# and a.depth > 0) a
+			  order by a.regDate
+		]]>
+	</select>
+
+
+</sqlMap>

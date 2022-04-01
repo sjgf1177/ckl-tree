@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="CmmnCodeDetail">
+
+	<typeAlias  alias="zValue" type="kr.co.unp.util.ZValue"/>
+	<typeAlias  alias="egovMap"          type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+	<typeAlias  alias="CmmnCodeDetail"   type="kr.co.unp.cmmncode.vo.CmmnCodeDetail"/>
+	<typeAlias  alias="CmmnCodeDetailVO" type="kr.co.unp.cmmncode.vo.CmmnCodeDetailVO"/>
+
+	<select id="CmmnCodeDetailDAO.selectCmmnCodeDetailList" parameterClass="CmmnCodeDetailVO" resultClass="egovMap">
+		<![CDATA[
+		/*CmmnCodeDetailDAO.selectCmmnCodeDetailList*/
+			SELECT  A.CODE_ID
+			     ,  A.CODE
+			     ,  A.CODE_NM
+			     ,  A.CODE_NM_EN
+			     ,  A.USE_AT
+           		 ,  B.CODE_ID_NM
+           		 , 	A.SORT_ORDR
+           		 ,	A.UPPER_CODE
+           		 ,	A.DEPTH
+           		 ,	A.OPTION1
+           		 ,	A.OPTION2
+           		 ,	A.OPTION3
+           		 ,	A.OPTION4
+           		 ,	A.OPTION5
+			  FROM  TC_CMMNCODE_DETAIL A
+			     ,  TC_CMMNCODE_CTGRY       B
+			 WHERE 	B.USE_AT  = 'Y'
+			   AND  A.CODE_ID = B.CODE_ID
+			    AND A.USE_AT = 'Y'
+		]]>
+			<isEqual prepend="AND" property="searchCondition" compareValue="1">
+				<![CDATA[A.CODE_ID = #searchKeyword#]]>
+			</isEqual>
+			<isEqual prepend="AND" property="searchCondition" compareValue="2">
+				<![CDATA[A.CODE    = #searchKeyword#]]>
+			</isEqual>
+			<isEqual prepend="AND" property="searchCondition" compareValue="3">
+				<![CDATA[A.CODE_NM LIKE CONCAT('%',trim(#searchKeyword#), '%')]]>
+			</isEqual>
+		<![CDATA[
+               ORDER BY A.SORT_ORDR ASC, A.FRST_REGIST_PNTTM DESC
+
+			limit #firstIndex#, #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="CmmnCodeDetailDAO.selectCmmnCodeDetailListTotCnt" parameterClass="CmmnCodeDetailVO" resultClass="int">
+		<![CDATA[
+		/*CmmnCodeDetailDAO.selectCmmnCodeDetailListTotCnt*/
+			SELECT  COUNT(*) totcnt
+			  FROM  TC_CMMNCODE_DETAIL A
+			     ,  TC_CMMNCODE_CTGRY       B
+			 WHERE 	B.USE_AT  = 'Y'
+			   AND  A.CODE_ID = B.CODE_ID
+		]]>
+			<isEqual prepend="AND" property="searchCondition" compareValue="1">
+				<![CDATA[A.CODE_ID = #searchKeyword#]]>
+			</isEqual>
+			<isEqual prepend="AND" property="searchCondition" compareValue="2">
+				<![CDATA[A.CODE    = #searchKeyword#]]>
+			</isEqual>
+			<isEqual prepend="AND" property="searchCondition" compareValue="3">
+				<![CDATA[A.CODE_NM LIKE CONCAT('%',trim(#searchKeyword#), '%')]]>
+			</isEqual>
+	</select>
+
+	<select id="CmmnCodeDetailDAO.selectCmmnCodeDetailDetail" parameterClass="CmmnCodeDetail" resultClass="CmmnCodeDetail">
+		<![CDATA[
+		/*CmmnCodeDetailDAO.selectCmmnCodeDetailDetail*/
+            SELECT  A.CODE_ID    codeId
+                 ,  B.CODE_ID_NM codeIdNm
+                 ,  A.CODE       code
+                 ,  A.CODE_NM    codeNm
+                 ,  A.CODE_NM_EN    codeNmEn
+                 ,  A.CODE_DC    codeDc
+                 ,  A.CODE_DC_EN    codeDcEn
+                 ,  A.USE_AT     useAt
+                 , 	A.SORT_ORDR		sortOrdr
+           		 ,	A.UPPER_CODE	upperCode
+           		 ,	A.DEPTH			depth
+           		 ,	A.OPTION1		option1
+           		 ,	A.OPTION2		option2
+           		 ,	A.OPTION3		option3
+           		 ,	A.OPTION4		option4
+           		 ,	A.OPTION5		option5
+              FROM  TC_CMMNCODE_DETAIL A
+                 ,  TC_CMMNCODE_CTGRY       B
+             WHERE  A.CODE_ID = B.CODE_ID
+			   AND  A.CODE_ID = #codeId#
+			   AND  A.CODE    = #code#
+		]]>
+	</select>
+
+	<insert id="CmmnCodeDetailDAO.insertCmmnCodeDetail">
+		<![CDATA[
+		/*CmmnCodeDetailDAO.insertCmmnCodeDetail*/
+		    INSERT
+		      INTO  TC_CMMNCODE_DETAIL
+		         (  CODE_ID
+		         ,  CODE
+		         ,  CODE_NM
+		         ,  CODE_NM_EN
+		         ,  CODE_DC
+		         ,  CODE_DC_EN
+		         ,  USE_AT
+		         ,  FRST_REGIST_PNTTM
+		         ,  FRST_REGISTER_ID
+		         ,  LAST_UPDT_PNTTM
+		         ,  LAST_UPDUSR_ID
+		         ,  UPPER_CODE
+		         ,  SORT_ORDR
+		         ,  DEPTH
+		         ,  OPTION1
+		         ,  OPTION2
+		         ,  OPTION3
+		         ,  OPTION4
+		         ,  OPTION5
+		         )
+		    VALUES
+		         (  #codeId#
+		         ,  #code#
+		         ,  #codeNm#
+		         ,  #codeNmEn#
+		         ,  #codeDc#
+		         ,  #codeDcEn#
+		         ,  IFNULL(#useAt#,'Y')
+		         ,  NOW()
+		         ,  #frstRegisterId#
+		         ,  NOW()
+		         ,  #frstRegisterId#
+		         ,  IFNULL(#upperCode#,'0')
+		         ,  IFNULL(#sortOrdr#,0)
+		         ,  IFNULL(#depth#,1)
+		         ,  #option1#
+		         ,  #option2#
+		         ,  #option3#
+		         ,  #option4#
+		         ,  #option5#
+		         )
+		]]>
+	</insert>
+
+	<update id="CmmnCodeDetailDAO.updateCmmnCodeDetail">
+		<![CDATA[
+		/*CmmnCodeDetailDAO.updateCmmnCodeDetail*/
+            UPDATE  TC_CMMNCODE_DETAIL
+               SET  CODE_NM           = #codeNm#
+                 ,  CODE_NM_EN        = #codeNmEn#
+                 ,  CODE_DC           = #codeDc#
+                 ,  CODE_DC_EN        = #codeDcEn#
+                 ,  USE_AT            = #useAt#
+                 ,  LAST_UPDT_PNTTM = NOW()
+                 ,  LAST_UPDUSR_ID    = #lastUpdusrId#
+                 ,  SORT_ORDR		= #sortOrdr#
+		         ,  OPTION1			= #option1#
+		         ,  OPTION2			= #option2#
+		         ,  OPTION3			= #option3#
+		         ,  OPTION4			= #option4#
+		         ,  OPTION5			= #option5#
+             WHERE  CODE_ID   = #codeId#
+               AND  CODE      = #code#
+		]]>
+	</update>
+
+	<delete id="CmmnCodeDetailDAO.deleteCmmnCodeDetail">
+		<![CDATA[
+		/*CmmnCodeDetailDAO.deleteCmmnCodeDetail*/
+            DELETE FROM  TC_CMMNCODE_DETAIL
+             WHERE  CODE = #code#
+             AND CODE_ID = #codeId#
+		]]>
+	</delete>
+
+	<select id="CmmnCodeDetailDAO.getDetailCodeList" parameterClass="ZValue" resultClass="ZValue">
+		<![CDATA[
+		/*CmmnCodeDetailDAO.getDetailCodeList*/
+			SELECT CODE,
+			       CODE_NM,
+			       CODE_NM_EN,
+			       CODE_ID,
+			       USE_AT,
+			       SORT_ORDR,
+           		   UPPER_CODE,
+           		   DEPTH,
+           		   OPTION1,
+           		   OPTION2,
+           		   OPTION3,
+           		   OPTION4,
+           		   OPTION5
+			 FROM TC_CMMNCODE_DETAIL
+			 WHERE CODE_ID=#codeId#  AND USE_AT = 'Y'
+		]]>
+		<isNotEmpty prepend="AND" property="upperCode">
+		<![CDATA[	UPPER_CODE = #upperCode#	]]>
+		</isNotEmpty>
+			 ORDER BY SORT_ORDR ASC,  FRST_REGIST_PNTTM ASC
+	</select>
+
+	<select id="CmmnCodeDetailDAO.getDetailCodeLists" parameterClass="ZValue" resultClass="ZValue">
+		<![CDATA[
+		/*CmmnCodeDetailDAO.getDetailCodeLists*/
+			SELECT  A.CODE_ID    codeId
+                 ,  B.CODE_ID_NM codeIdNm
+                 ,  A.CODE       code
+                 ,  A.CODE_NM    codeNm
+                 ,  A.CODE_NM_EN codeNmEn
+                 ,  A.CODE_DC    codeDc
+                 ,  A.CODE_DC_EN codeDcEn
+                 ,  A.USE_AT     useAt
+                 , 	A.SORT_ORDR		sortOrdr
+           		 ,	A.UPPER_CODE	upperCode
+           		 ,	A.DEPTH			depth
+           		 ,	A.OPTION1		option1
+           		 ,	A.OPTION2		option2
+           		 ,	A.OPTION3		option3
+           		 ,	A.OPTION4		option4
+           		 ,	A.OPTION5		option5
+              FROM  TC_CMMNCODE_DETAIL A
+                 ,  TC_CMMNCODE_CTGRY       B
+             WHERE  A.CODE_ID = B.CODE_ID
+			 AND  A.CODE_ID = #codeId#
+			 ORDER BY A.SORT_ORDR ASC,  A.FRST_REGIST_PNTTM ASC
+		]]>
+	</select>
+
+	<!-- 사용자 화면에서 사용하는 코드 목록  -->
+	<select id="CmmnCodeDetailDAO.getSelectDetailCodeList" parameterClass="ZValue" resultClass="ZValue">
+		<![CDATA[
+		/*CmmnCodeDetailDAO.getSelectDetailCodeList*/
+			 SELECT  A.CODE_ID
+                 ,  B.CODE_ID_NM
+                 ,  A.CODE
+                 ,  A.CODE_NM
+                 ,  A.CODE_NM_EN
+                 ,  A.CODE_DC
+                 ,  A.CODE_DC_EN
+                 ,  A.USE_AT
+                 , 	A.SORT_ORDR
+           		 ,	A.UPPER_CODE
+           		 ,	A.DEPTH
+           		 ,	A.OPTION1
+           		 ,	A.OPTION2
+           		 ,	A.OPTION3
+           		 ,	A.OPTION4
+           		 ,	A.OPTION5
+              FROM  TC_CMMNCODE_DETAIL A
+                 ,  TC_CMMNCODE_CTGRY  B
+             WHERE  A.CODE_ID = B.CODE_ID
+			   AND  A.CODE_ID = #codeId#
+			   AND A.USE_AT = 'Y' AND B.USE_AT = 'Y'
+		]]>
+			<isNotEmpty prepend="AND" property="upperCode">
+				UPPER_CODE = #upperCode#
+			</isNotEmpty>
+			<isEmpty prepend="AND" property="upperCode">
+				IFNULL(UPPER_CODE,0) = '0'
+			</isEmpty>
+		<![CDATA[
+			ORDER BY A.SORT_ORDR ASC,  A.FRST_REGIST_PNTTM ASC
+		]]>
+	</select>
+</sqlMap>

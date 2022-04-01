@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE form-validation PUBLIC 
+    "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.1//EN" 
+    "http://jakarta.apache.org/commons/dtds/validator_1_1.dtd">
+
+<form-validation>
+
+    <formset>
+
+       <form name="cmmnDetailCode">
+			<field property="codeId" depends="required, maxlength">
+        		<arg0 key="코드ID" resource="false"/>
+        		<arg1 key="50" resource="false"/>
+				<var>
+				<var-name>maxlength</var-name>
+				<var-value>50</var-value>
+				</var>
+			</field> 
+			<field property="code" depends="required, maxlength">
+        		<arg0 key="코드" resource="false"/>
+        		<arg1 key="15" resource="false"/>
+				<var>
+				<var-name>maxlength</var-name>
+				<var-value>15</var-value>
+				</var>
+			</field> 
+			<field property="codeNm" depends="required, maxlength">
+        		<arg0 key="코드명" resource="false"/>
+        		<arg1 key="60" resource="false"/>
+				<var>
+				<var-name>maxlength</var-name>
+				<var-value>60</var-value>
+				</var>
+			</field> 
+			<!-- 담당자가 코드설명값 필수값에서 제외해달라고 요청함.2013-11-18-->
+			<!-- <field property="codeDc" depends="required, maxlength">
+        		<arg0 key="코드설명" resource="false"/>
+        		<arg1 key="200" resource="false"/>
+				<var>
+				<var-name>maxlength</var-name>
+				<var-value>200</var-value>
+				</var>
+			</field>  -->
+			<field property="useAt" depends="required">
+        		<arg0 key="사용여부" resource="false"/>
+			</field> 
+		</form>
+		
+
+    </formset>
+
+</form-validation>

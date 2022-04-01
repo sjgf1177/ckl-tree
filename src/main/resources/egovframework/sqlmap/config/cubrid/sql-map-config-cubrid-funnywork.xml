@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN"
+    "http://www.ibatis.com/dtd/sql-map-config-2.dtd">
+
+<sqlMapConfig>
+	<sqlMap resource="egovframework/sqlmap/kr/co/funnywork/AuthorManage_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/funnywork/Banner_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/funnywork/Board_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/funnywork/BasicBoard_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/funnywork/BBSMaster_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/funnywork/CmmnClCodeManage_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/funnywork/CmmnCodeManage_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/funnywork/CmmnDetailCodeManage_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/funnywork/Comment_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/funnywork/CommonContentsManage_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/funnywork/DeptAuthor_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/funnywork/DeptPop_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/funnywork/File_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/funnywork/Member_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/funnywork/MenuManage_SQL_cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/funnywork/migration_SQL_cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/funnywork/pageGenerator_SQL_cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/funnywork/petitionMayor_Board_SQL_cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/funnywork/petition_Board_SQL_cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/funnywork/poll_SQL_cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/funnywork/popupMng_SQL_cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/funnywork/PortalAlert_SQL_cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/funnywork/post_SQL_cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/funnywork/satisfaction_SQL_cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/funnywork/siteMng_SQL_cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/funnywork/visitorLog_SQL_cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/funnywork/MenuCreat_SQL_cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/funnywork/TeacherBoard_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/funnywork/CtsDownloadBoard_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/funnywork/myPage_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/funnywork/businessMc_SQL_cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/funnywork/bill_SQL_cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/funnywork/period_SQL_cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/funnywork/businessType_SQL_cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/funnywork/business_SQL_cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/funnywork/checklist_SQL_cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/funnywork/question_SQL_cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/funnywork/answer_SQL_cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/funnywork/checkStatus_SQL_cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/funnywork/manStatus_SQL_cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/funnywork/phychotropic_SQL_cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/funnywork/scoreMng_SQL_cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/funnywork/statistics_SQL_cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/funnywork/infoMessage_SQL_cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/funnywork/teamMng_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/funnywork/authoDeptMenu_SQL_cubrid.xml"/>
+</sqlMapConfig>

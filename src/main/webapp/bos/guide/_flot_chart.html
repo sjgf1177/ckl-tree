@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="ThemeBucket">
+  <link rel="shortcut icon" href="#" type="image/png">
+
+  <title>Flot Charts</title>
+
+<link rel="stylesheet" type="text/css" href="../../js/bootstrap/css/bootstrap.min.css" />
+<link href="/bos/css/bos.css" rel="stylesheet">
+<style type="text/css">
+body { background:#424f63; font-family:'Open Sans', sans-serif; color:#7a7676; line-height:20px; overflow-x:hidden; font-size:14px; }
+</style>
+
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]><script type="text/javascript" src="/js/html5shiv.js"></script><script type="text/javascript" src="js/respond.min.js"></script><![endif]-->
+</head>
+
+<body class="sticky-header">
+
+<section>
+	<!-- gnb -->
+	<div class="nav_gnb"></div>
+	<!-- //gnb -->
+    <!-- left side -->
+    <div class="left-side sticky-left-side"></div>
+    <!-- left side end-->
+
+    <!-- main content start-->
+    <div class="main-content" >
+
+        <!-- header section start-->
+        <div class="header-section">
+
+        <!--toggle button start-->
+        <a class="toggle-btn"><i class="fa fa-bars"></i></a>
+        <!--toggle button end-->
+
+        <!--search start-->
+        <form class="searchform" action="index.html" method="post">
+            <input type="text" class="form-control" name="keyword" placeholder="Search here..." />
+        </form>
+        <!--search end-->
+
+        <!--notification menu start -->
+        <div class="menu-right">
+            <ul class="notification-menu"></ul>
+        </div>
+        <!--notification menu end -->
+
+        </div>
+        <!-- header section end-->
+
+        <!-- page heading start-->
+
+        <!-- page heading end-->
+
+        <!-- body wrapper -->
+        <div class="wrapper">
+            <div class="row">
+                <div class="col-sm-12">
+                    <section class="panel">
+                        <header class="panel-heading">
+                            Area Chart
+                        <span class="tools pull-right">
+                            <a href="javascript:;" class="fa fa-chevron-down"></a>
+                            <a href="javascript:;" class="fa fa-times"></a>
+                         </span>
+                        </header>
+                        <div class="panel-body">
+                            <div id="visitors-chart">
+                                <div id="visitors-container" style="width: 100%;height:300px; text-align: center; margin:0 auto;">
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <section class="panel">
+                        <header class="panel-heading">
+                            Real Time Chart
+                        <span class="tools pull-right">
+                            <a href="javascript:;" class="fa fa-chevron-down"></a>
+                            <a href="javascript:;" class="fa fa-times"></a>
+                         </span>
+                        </header>
+                        <div class="panel-body">
+                            <div id="reatltime-chart">
+                                <div id="reatltime-chartContainer" style="width:100%;height:300px; text-align: center; margin:0 auto;">
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <section class="panel">
+                        <header class="panel-heading">
+                            Pie Chart
+                        <span class="tools pull-right">
+                            <a href="javascript:;" class="fa fa-chevron-down"></a>
+                            <a href="javascript:;" class="fa fa-times"></a>
+                         </span>
+                        </header>
+                        <div class="panel-body">
+                            <div id="pie-chart" class="pie-chart">
+                                <div id="pie-chartContainer" style="width: 100%;height:400px; text-align: left;">
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <div class="col-sm-6">
+                    <section class="panel">
+                        <header class="panel-heading">
+                            Donut Chart
+                        <span class="tools pull-right">
+                            <a href="javascript:;" class="fa fa-chevron-down"></a>
+                            <a href="javascript:;" class="fa fa-times"></a>
+                         </span>
+                        </header>
+                        <div class="panel-body">
+                            <div id="pie-chart-donut" class="pie-chart">
+                                <div id="pie-donutContainer" style="width: 100%;height:400px; text-align: left;">
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <section class="panel">
+                        <header class="panel-heading">
+                            Combined Chart
+                        <span class="tools pull-right">
+                            <a href="javascript:;" class="fa fa-chevron-down"></a>
+                            <a href="javascript:;" class="fa fa-times"></a>
+                         </span>
+                        </header>
+                        <div class="panel-body">
+                            <div id="combine-chart">
+                                <div id="legendcontainer26" class="legend-block">
+                                </div>
+                                <div id="combine-chartContainer" style="width: 100%;height:300px; text-align: center; margin:0 auto;">
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <section class="panel">
+                        <header class="panel-heading">
+                            Toggle Chart
+                        <span class="tools pull-right">
+                            <a href="javascript:;" class="fa fa-chevron-down"></a>
+                            <a href="javascript:;" class="fa fa-times"></a>
+                         </span>
+                        </header>
+                        <div class="panel-body">
+                            <div id="toggle-chart">
+                                <div class="clearfix">
+                                    <form class="form-horizontal pull-left chart-control">
+                                        <div class="control-group">
+                                            <label class="control-label">Chart Type :</label>
+                                            <div class="series-list">
+                                                <label class="checkbox inline">
+                                                    <input id="chartType1" checked name="ct" type="radio" value="line"/>
+                                                    Line Chart</label>
+                                                <label class="checkbox inline">
+                                                    <input id="chartType2" name="ct" type="radio" value="bar"/>
+                                                    Bar Chart </label>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <form class="form-horizontal chart-control pull-right chart-control">
+                                        <div class="control-group ">
+                                            <label class="control-label"> Toggle series :</label>
+                                            <div class="series-list">
+                                                <label class="checkbox inline">
+                                                    <input type="checkbox" id="cbdata1" checked>
+                                                    data1</label>
+                                                <label class="checkbox inline">
+                                                    <input type="checkbox" id="cbdata2" checked>
+                                                    data2 </label>
+                                                <label class="checkbox inline">
+                                                    <input type="checkbox" id="cbdata3" checked>
+                                                    data3 </label>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div id="legendPlaceholder20">
+                                </div>
+                                <div id="toggle-chartContainer" style="width: 100%;height:300px; text-align: left;">
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+        <!-- //body wrapper -->
+
+        <!-- footer section -->
+        <footer>
+	<div id="footer">
+		<p><span class="bold">코스콤</span>&nbsp;&nbsp;&nbsp;
+		서울시 영등포구 여의나루로 76(150-010),
+		&nbsp;&nbsp;&nbsp;  <span class="bold">전화번호</span>: 02)767-7114 </p>
+		<em>Copyright ⓒ 2012 KOSCOM Corp. All Rights reserved.</em>
+	</div>
+
+        </footer>
+        <!--footer section end-->
+
+
+    </div>
+    <!-- main content end-->
+</section>
+
+<!-- Placed js at the end of the document so the pages load faster -->
+<script src="../../js/jquery-1.10.2.min.js"></script>
+<script src="../../js/jquery-ui/jquery-ui.js"></script>
+<script src="../../js/jquery-migrate.js"></script>
+<script src="../../js/bootstrap/bootstrap.min.js"></script>
+<script src="../../js/modernizr.min.js"></script>
+<script src="../../js/jquery.nicescroll.js"></script>
+
+<!-- jQuery Flot Chart-->
+<script src="../../js/flot-chart/jquery.flot.js"></script>
+<script src="../../js/flot-chart/jquery.flot.tooltip.js"></script>
+<script src="../../js/flot-chart/jquery.flot.resize.js"></script>
+<script src="../../js/flot-chart/jquery.flot.pie.resize.js"></script>
+<script src="../../js/flot-chart/jquery.flot.selection.js"></script>
+<script src="../../js/flot-chart/jquery.flot.stack.js"></script>
+<script src="../../js/flot-chart/jquery.flot.time.js"></script>
+<script src="../../js/flot.chart.init.js"></script>
+
+<!--common scripts for all pages-->
+<script src="../../js/scripts.js"></script>
+
+<!--[if lte IE 7]>
+<script type="text/javascript">
+//<![CDATA[
+	$('*').each(function(index) {
+		if ($(this).css("overflow")=="hidden"){ $(this).css("zoom",1)}
+		if ($(this).css("display")=="inline-block"){ $(this).css("display",'inline'); $(this).css("zoom",1)}
+	});
+//]]>
+</script>
+<![endif]-->
+
+</body>
+</html>

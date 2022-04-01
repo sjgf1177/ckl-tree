@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:cps="http://www.unpl.co.kr/schema/cmm-program-service"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	        http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	        http://www.springframework.org/schema/util
+	        http://www.springframework.org/schema/util/spring-util-2.5.xsd
+			http://www.springframework.org/schema/context
+			http://www.springframework.org/schema/context/spring-context-2.5.xsd
+			http://www.unpl.co.kr/schema/cmm-program-service http://www.unpl.co.kr/schema/cmm-program-service-1.0.xsd">
+
+	<bean id="fnwBBSManager" class="kr.co.unp.bbs.service.FnwBBSManager">
+		<property name="serviceNameMap">
+			<map>
+				<entry key="default" value="optionalBBSManageService" />
+				<entry key="B0000011" value="noticeBBSManageService" />
+				<entry key="B0000017" value="noticeBBSManageService" />
+				<entry key="B0000027" value="B0000027BBSManageService" />
+				<entry key="B0000028" value="B0000028BBSManageService" />
+				<entry key="B0000029" value="B0000029BBSManageService" />
+				<entry key="B0000030" value="B0000030BBSManageService" />
+				<entry key="B0000031" value="B0000031BBSManageService" />
+				<entry key="B0000033" value="B0000033BBSManageService" />
+				<entry key="B0000036" value="B0000036BBSManageService" />
+				<entry key="B0000037" value="B0000037BBSManageService" />
+				<entry key="B0000038" value="B0000037BBSManageService" />
+				<entry key="B0000041" value="B0000041BBSManageService" />
+				<entry key="B0000042" value="B0000042BBSManageService" />
+				<entry key="B0000044" value="B0000044BBSManageService" />
+				<entry key="B0000060" value="B0000060BBSManageService" />
+				<entry key="B0000062" value="B0000062BBSManageService" />
+				<entry key="B0000076" value="B0000037BBSManageService" />
+			</map>
+		</property>
+		<property name="mvrNameMap">
+			<map>
+				<entry key="default" value="bbsModelAndViewResolver" />
+			</map>
+		</property>
+		<property name="validatorNameMap">
+			<map>
+				<entry key="default" value="bbsValidator" />
+			</map>
+		</property>
+	</bean>
+
+	<bean id="bbsModelAndViewResolver" class="kr.co.unp.bbs.mvr.BbsModelAndViewResolver">
+		<property name="includePageMap">
+			<map>
+				<entry key="/*/bbs/*/list.do**" value="/[siteName]/bbs/[bbsAttrbCode]/List.jsp" />
+				<entry key="/*/bbs/*/listMy.do**" value="/[siteName]/bbs/[bbsAttrbCode]/ListMy.jsp" />
+				<entry key="/*/bbs/*/listSec.do**" value="/[siteName]/bbs/[bbsAttrbCode]/List.jsp" />
+				<entry key="/*/bbs/*/view.do**" value="/[siteName]/bbs/[bbsAttrbCode]/Read.jsp" />
+				<entry key="/*/bbs/*/viewPop.do**" value="[siteName]/bbs/[bbsAttrbCode]/Read" />
+				<entry key="/*/bbs/*/replyView.do**" value="/[siteName]/bbs/[bbsAttrbCode]/ReplyRead.jsp" />
+				<entry key="/*/bbs/*/secureView.do**" value="/[siteName]/bbs/[bbsAttrbCode]/Read.jsp" />
+				<entry key="/*/bbs/*/forInsert.do**" value="/[siteName]/bbs/[bbsAttrbCode]/Reg.jsp" />
+				<entry key="/*/bbs/*/forInsertRe.do**" value="/[siteName]/bbs/[bbsAttrbCode]/replyReg.jsp" />
+				<entry key="/*/bbs/*/forUpdate.do**" value="/[siteName]/bbs/[bbsAttrbCode]/Reg.jsp" />
+				<entry key="/*/bbs/*/forUpdateRe.do**" value="/[siteName]/bbs/[bbsAttrbCode]/replyReg.jsp" />
+				<entry key="/*/bbs/*/myList.do**" value="/[siteName]/bbs/[bbsAttrbCode]/List.jsp" />
+				<entry key="/*/bbs/*/annmsForInsert.do**" value="/[siteName]/bbs/[bbsAttrbCode]/Reg.jsp" />
+				<entry key="/*/bbs/*/join01.do**" value="/[siteName]/bbs/[bbsAttrbCode]/join01.jsp" />
+				<entry key="/*/bbs/*/join02.do**" value="/[siteName]/bbs/[bbsAttrbCode]/join02.jsp" />
+				<entry key="/*/bbs/*/join03.do**" value="/[siteName]/bbs/[bbsAttrbCode]/join03.jsp" />
+				<entry key="/*/bbs/*/join04.do**" value="/[siteName]/bbs/[bbsAttrbCode]/join04.jsp" />
+			</map>
+		</property>
+	</bean>
+
+	<bean id="bosBbsModelAndViewResolver" class="kr.co.unp.bbs.mvr.BosBbsModelAndViewResolver">
+		<property name="includePageMap">
+			<map>
+				<entry key="/bos/bbs/*/list.do*" value="/bos/bbs/[bbsAttrbCode]/List.jsp" />
+				<entry key="/bos/bbs/*/view.do*" value="/bos/bbs/[bbsAttrbCode]/Read.jsp" />
+				<entry key="/bos/bbs/*/replyView.do*" value="/bos/bbs/[bbsAttrbCode]/ReplyRead.jsp" />
+				<entry key="/bos/bbs/*/forInsert.do*" value="/bos/bbs/[bbsAttrbCode]/Reg.jsp" />
+				<entry key="/bos/bbs/*/forInsertRe.do*" value="/bos/bbs/[bbsAttrbCode]/replyReg.jsp" />
+				<entry key="/bos/bbs/*/forUpdate.do*" value="/bos/bbs/[bbsAttrbCode]/Reg.jsp" />
+				<entry key="/bos/bbs/*/forUpdateRe.do*" value="/bos/bbs/[bbsAttrbCode]/replyReg.jsp" />
+			</map>
+		</property>
+	</bean>
+
+	<util:list id="userUpdatableBbsList">
+		<value>B0000036</value> <!--단체수강신청 인서트  -->
+		<value>B0000037</value>
+		<value>B0000038</value>
+		<value>B0000043</value>
+		<value>B0000062</value>
+		<value>B0000068</value>
+		<value>B0000070</value>
+		<value>B0000076</value>
+	</util:list> 
+
+	<bean id="aclBbsArticleAccessListener" class="kr.co.unp.bbs.listener.AclBbsArticleAccessListener" />
+
+	<bean id="basicBbsArticleAccessListener" class="kr.co.unp.bbs.listener.BasicBbsArticleAccessListener" />
+
+	<cps:bbs id="optionalBBSManageService" class="kr.co.unp.bbs.service.OptionalBBSManageService" />
+
+	<!-- 공지사항 -->
+	<cps:bbs id="noticeBBSManageService"  class="kr.co.ckl.noticeBBS.service.NoticeBBSManageService" >
+		<cps:listeners>
+			<cps:listener target-methods="insert,update,delete" ref="mainCacheRemoveListener"/>
+			<cps:listener ref="COM101CmmCodeViewListener"/>
+		</cps:listeners>
+	</cps:bbs>
+
+	<cps:bbs id="B0000027BBSManageService"  class="kr.co.unp.bbs.service.OptionalBBSManageService" >
+		<cps:listeners>
+			<cps:listener ref="COM091CmmCodeViewListener"/>
+		</cps:listeners>
+	</cps:bbs>
+
+	<cps:bbs id="B0000028BBSManageService"  class="kr.co.unp.bbs.service.OptionalBBSManageService" >
+		<cps:listeners>
+			<cps:listener ref="COM066CmmCodeViewListener"/>
+		</cps:listeners>
+	</cps:bbs>
+
+	<cps:bbs id="B0000029BBSManageService"  class="kr.co.unp.bbs.service.OptionalBBSManageService" >
+		<cps:listeners>
+			<cps:listener ref="COM067CmmCodeViewListener"/>
+		</cps:listeners>
+	</cps:bbs>
+
+	<cps:bbs id="B0000030BBSManageService"  class="kr.co.unp.bbs.service.OptionalBBSManageService" >
+		<cps:listeners>
+			<cps:listener ref="COM068CmmCodeViewListener"/>
+		</cps:listeners>
+	</cps:bbs>
+
+	<cps:bbs id="B0000031BBSManageService"  class="kr.co.unp.bbs.service.OptionalBBSManageService" >
+		<cps:listeners>
+			<cps:listener ref="COM069CmmCodeViewListener"/>
+		</cps:listeners>
+	</cps:bbs>
+
+	<cps:bbs id="B0000033BBSManageService"  class="kr.co.unp.bbs.service.OptionalBBSManageService" >
+		<cps:listeners>
+			<cps:listener ref="COM070CmmCodeViewListener"/>
+		</cps:listeners>
+	</cps:bbs>
+
+	<cps:bbs id="B0000036BBSManageService"  class="kr.co.ckl.bbs.service.B0000036BBSManageService" >
+		<cps:listeners>
+			<cps:listener ref="COM074CmmCodeViewListener"/>
+			<cps:listener ref="COM075CmmCodeViewListener"/>
+			<cps:listener ref="COM077CmmCodeViewListener"/>
+			<cps:listener ref="COM078CmmCodeViewListener"/>
+			<cps:listener ref="COM161CmmCodeViewListener"/>
+		</cps:listeners>
+	</cps:bbs>
+
+	<cps:bbs id="B0000037BBSManageService" class="kr.co.ckl.bbs.service.B0000037BBSManageService" />
+
+	<cps:bbs id="B0000041BBSManageService" class="kr.co.edu.bbs.service.B0000041BBSManageService" >
+		<cps:listeners>
+			<cps:listener ref="COM089CmmCodeViewListener"/>
+			<cps:listener target-methods="insert,update,delete" ref="mainCacheRemoveListener"/>
+		</cps:listeners>
+	</cps:bbs>
+
+	<cps:bbs id="B0000042BBSManageService" class="kr.co.edu.bbs.service.B0000042BBSManageService" >
+		<cps:listeners>
+			<cps:listener ref="COM089CmmCodeViewListener"/>
+			<cps:listener target-methods="insert,update,delete" ref="mainCacheRemoveListener"/>
+		</cps:listeners>
+	</cps:bbs>
+
+	<cps:bbs id="B0000044BBSManageService" class="kr.co.edu.bbs.service.B0000044BBSManageService" >
+		<cps:listeners>
+			<cps:listener ref="COM089CmmCodeViewListener"/>
+			<cps:listener target-methods="insert,update,delete" ref="mainCacheRemoveListener"/>
+		</cps:listeners>
+	</cps:bbs>
+
+	<cps:bbs id="B0000060BBSManageService" class="kr.co.unp.bbs.service.OptionalBBSManageService" >
+		<cps:listeners>
+			<cps:listener ref="COM113CmmCodeViewListener"/> 
+		</cps:listeners>
+	</cps:bbs>
+
+	<cps:bbs id="B0000062BBSManageService" class="kr.co.unp.bbs.service.OptionalBBSManageService" >
+		<cps:listeners>
+			<cps:listener ref="COM127CmmCodeViewListener"/> 
+		</cps:listeners>
+	</cps:bbs>
+</beans>

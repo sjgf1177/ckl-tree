@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="CmmnCodeCl">
+
+	<typeAlias  alias="egovMap"      type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+	<typeAlias  alias="CmmnCodeClVO" type="kr.co.unp.cmmncode.vo.CmmnCodeClVO"/>
+	<typeAlias  alias="CmmnCodeCl"   type="kr.co.unp.cmmncode.vo.CmmnCodeCl"/>
+
+	<select id="CmmnCodeClDAO.selectCmmnCodeClList" parameterClass="CmmnCodeClVO" resultClass="egovMap">
+		<![CDATA[
+
+			SELECT  CL_CODE
+			     ,  CL_CODE_NM
+			     ,  USE_AT
+			  FROM  TC_CMMNCODE_CL
+			 WHERE  USE_AT        = 'Y'
+
+		]]>
+			<isEqual prepend="AND" property="searchCondition" compareValue="1">
+				<![CDATA[CL_CODE = #searchKeyword#]]>
+			</isEqual>
+			<isEqual prepend="AND" property="searchCondition" compareValue="2">
+				<![CDATA[CL_CODE_NM LIKE CONCAT('%',trim(#searchKeyword#), '%') ]]>
+			</isEqual>
+			<isEqual prepend="AND" property="searchCondition" compareValue="CodeList">
+				<![CDATA[USE_AT        = 'Y']]>
+			</isEqual>
+		<![CDATA[
+
+			ORDER BY FRST_REGIST_PNTTM DESC
+			limit #firstIndex#, #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="CmmnCodeClDAO.selectCmmnCodeClListTotCnt" parameterClass="CmmnCodeClVO" resultClass="int">
+		<![CDATA[
+			SELECT  COUNT(*) totcnt
+			  FROM  TC_CMMNCODE_CL
+			 WHERE  USE_AT        = 'Y'
+		]]>
+			<isEqual prepend="AND" property="searchCondition" compareValue="1">
+				<![CDATA[CL_CODE = #searchKeyword#]]>
+			</isEqual>
+			<isEqual prepend="AND" property="searchCondition" compareValue="3">
+				<![CDATA[CL_CODE_NM LIKE CONCAT('%',trim(#searchKeyword#), '%') ]]>
+			</isEqual>
+	</select>
+
+	<select id="CmmnCodeClDAO.selectCmmnCodeClDetail" parameterClass="CmmnCodeCl" resultClass="CmmnCodeCl">
+		<![CDATA[
+            SELECT  CL_CODE    clCode
+			     ,  CL_CODE_NM clCodeNm
+                 ,  CL_CODE_DC clCodeDc
+                 ,  USE_AT     useAt
+              FROM  TC_CMMNCODE_CL
+             WHERE  CL_CODE    = #clCode#
+		]]>
+	</select>
+
+	<insert id="CmmnCodeClDAO.insertCmmnCodeCl">
+		<![CDATA[
+		    INSERT
+		      INTO  TC_CMMNCODE_CL
+		         (  CL_CODE
+		         ,  CL_CODE_NM
+		         ,  CL_CODE_DC
+		         ,  USE_AT
+		         ,  FRST_REGIST_PNTTM
+		         ,  FRST_REGISTER_ID
+		         ,  LAST_UPDT_PNTTM
+		         ,  LAST_UPDUSR_ID
+		         )
+		    VALUES
+		         (  #clCode#
+		         ,  #clCodeNm#
+		         ,  #clCodeDc#
+		         ,  #useAt#
+		         ,  now()
+		         ,  #frstRegisterId#
+		         ,  now()
+		         ,  #frstRegisterId#
+		         )
+		]]>
+	</insert>
+
+	<update id="CmmnCodeClDAO.updateCmmnCodeCl">
+		<![CDATA[
+            UPDATE  TC_CMMNCODE_CL
+               SET  CL_CODE_NM        = #clCodeNm#
+                 ,  CL_CODE_DC        = #clCodeDc#
+                 ,  USE_AT            = #useAt#
+                 ,  LAST_UPDT_PNTTM = now()
+                 ,  LAST_UPDUSR_ID    = #lastUpdusrId#
+             WHERE  CL_CODE           = #clCode#
+		]]>
+	</update>
+
+	<delete id="CmmnCodeClDAO.deleteCmmnCodeCl">
+		<![CDATA[
+            DELETE FROM  TC_CMMNCODE_CL
+             WHERE  CL_CODE = #clCode#
+		]]>
+	</delete>
+
+
+</sqlMap>

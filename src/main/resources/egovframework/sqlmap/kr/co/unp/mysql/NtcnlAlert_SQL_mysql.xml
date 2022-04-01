@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="zvl">
+
+	<typeAlias  alias="zvl" type="kr.co.unp.util.ZValue"/>
+	
+	<sql id="NtcnAlertDAO.selectNtcnAlertList-where">
+		<isNotEmpty prepend="AND" property="siteId">
+			<![CDATA[	a.SITE_ID = #siteId#	]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="useAt">
+			<![CDATA[	a.USE_AT = #useAt#	]]>
+		</isNotEmpty>
+
+		<isEqual prepend="AND" property="searchCnd" compareValue="1">
+			<![CDATA[	a.SITE_ID LIKE CONCAT('%',trim(#searchWrd#), '%')	]]>
+		</isEqual>
+		<isEqual prepend="AND" property="searchCnd" compareValue="2">
+			<![CDATA[	NTCN_NM LIKE CONCAT('%',trim(#searchWrd#), '%')	]]>
+		</isEqual>
+
+		<isNotEmpty prepend="AND" property="publish">
+			<isEqual property="publish" compareValue="Y">
+				<![CDATA[	USE_AT = 'Y' AND NOW() BETWEEN BGNDE AND ENDDE	]]>
+			</isEqual>
+			<isEqual property="publish" compareValue="N">
+				<![CDATA[	( USE_AT = 'N' OR NOW() < BGNDE OR NOW() > ENDDE  ) ]]>
+			</isEqual>
+		</isNotEmpty>
+	</sql>
+
+	<select id="NtcnAlertDAO.selectNtcnAlertListTotCnt" parameterClass="zvl" resultClass="int">
+		<![CDATA[
+			SELECT  COUNT(*) as totcnt
+			  FROM  TC_NTCN
+			 WHERE	DELETE_AT = 'N'
+		]]>
+		<include refid="NtcnAlertDAO.selectNtcnAlertList-where" />
+	</select>
+
+
+	<select id="NtcnAlertDAO.selectNtcnAlertList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+			SELECT  *
+			  FROM  (
+			SELECT @RN:=@RN+1 AS RNUM, ALL_LIST.*
+			  FROM  (
+
+					SELECT
+							NTCN_NO
+							, NTCN_NM
+							, NTCN_URL
+							, USE_AT
+							, POPUP_AT
+							, DELETE_AT
+							, SORT_ORDR
+							, a.FRST_REGIST_PNTTM
+							, FRST_REGISTER_ID
+							, LAST_UPDT_PNTTM
+							, LAST_UPDUSR_ID
+							, a.SITE_ID
+							, a.TYPE
+							, a.ATCH_FILE_ID
+							, MAP_USE_AT
+					  FROM  TC_NTCN a
+					  WHERE DELETE_AT = 'N'
+		]]>
+		<include refid="NtcnAlertDAO.selectNtcnAlertList-where" />
+		<![CDATA[
+		ORDER BY a.FRST_REGIST_PNTTM DESC
+		
+				    ) ALL_LIST
+			    ) ALL_LIST
+			 limit #firstIndex#, #recordCountPerPage#
+		]]>
+	</select>
+
+
+	<select id="NtcnAlertDAO.selectPublishList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+				SELECT	NTCN_NO
+						, NTCN_NM
+						, NTCN_URL
+						, USE_AT
+						, POPUP_AT
+						, DELETE_AT
+						, FRST_REGISTER_ID
+						, LAST_UPDUSR_ID
+						, a.FRST_REGIST_PNTTM
+						, LAST_UPDT_PNTTM
+						, SORT_ORDR
+						, a.SITE_ID
+						, a.TYPE
+						, a.ATCH_FILE_ID
+						, MAP_USE_AT
+						, NTT_CN
+				  FROM  TC_NTCN a
+			     where DELETE_AT = 'N' 
+			     AND USE_AT = 'Y' AND USE_AT = 'Y'
+				 ORDER BY	SORT_ORDR ASC
+		]]>
+	</select>
+
+
+
+
+	<select id="NtcnAlertDAO.selectNtcnAlertDetail" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+			SELECT	a.NTCN_NO
+					, a.NTCN_NM
+					, a.NTCN_URL
+					, a.USE_AT
+					, a.POPUP_AT
+					, a.DELETE_AT
+					, a.FRST_REGISTER_ID
+					, a.LAST_UPDUSR_ID
+					, a.FRST_REGIST_PNTTM
+					, a.LAST_UPDT_PNTTM
+					, a.SORT_ORDR
+					, a.SITE_ID
+					, a.TYPE
+					, a.ATCH_FILE_ID
+					, a.MAP_USE_AT
+					, a.NTT_CN
+			  FROM  TC_NTCN a
+			 WHERE	NTCN_NO = #ntcnNo#
+		]]>
+	</select>
+
+
+
+	<insert id="NtcnAlertDAO.insertNtcnAlert" parameterClass="zvl">
+		<selectKey resultClass="int" keyProperty="ntcnNo">
+			SELECT IFNULL(MAX(NTCN_NO),0)+1 AS ntcnNo  FROM TC_NTCN
+		</selectKey>
+		<![CDATA[
+		    INSERT
+		      INTO  TC_NTCN
+		        (	NTCN_NO
+		        	, NTCN_NM
+					, NTCN_URL
+					, USE_AT
+					, POPUP_AT
+					, BGNDE
+					, ENDDE
+					, DELETE_AT
+					, FRST_REGISTER_ID
+					, LAST_UPDUSR_ID
+					, FRST_REGIST_PNTTM
+					, LAST_UPDT_PNTTM
+					, SORT_ORDR
+					, SITE_ID
+					, TYPE
+					, ATCH_FILE_ID
+					, MAP_USE_AT
+					, NTT_CN
+		        )
+		    VALUES
+		        (
+		        	#ntcnNo#
+		        	, #ntcnNm#
+					, #ntcnUrl#
+					, #useAt#
+					, #popupAt#
+					, DATE_FORMAT(#bgnde#,'%Y-%m-%d')
+					, DATE_FORMAT(#endde#,'%Y-%m-%d')
+					, 'N'
+					, #frstRegisterId#
+					, #lastUpdusrId#
+					, NOW()
+					, NOW()
+					, #sortOrdr#
+					, #siteId#
+					, #type#
+					, #atchFileId#
+					, #mapUseAt#
+					, #nttCn#
+		        )
+		]]>
+	</insert>
+
+	<update id="NtcnAlertDAO.updateNtcnAlert" parameterClass="zvl">
+		<![CDATA[
+            UPDATE  TC_NTCN
+               SET  NTCN_NM=#ntcnNm#
+					, NTCN_URL=#ntcnUrl#
+					, USE_AT=#useAt#
+					, POPUP_AT=#popupAt#
+					, SORT_ORDR=#sortOrdr#
+					, SITE_ID=#siteId#
+					, LAST_UPDT_PNTTM=NOW()
+					, LAST_UPDUSR_ID=#lastUpdusrId#
+					, ATCH_FILE_ID=#atchFileId#
+					, MAP_USE_AT=#mapUseAt#
+					, TYPE=#type#
+					, NTT_CN=#nttCn#
+             WHERE	NTCN_NO = #ntcnNo#
+		]]>
+	</update>
+
+
+	<update id="NtcnAlertDAO.deleteNtcnAlert" parameterClass="zvl">
+		<![CDATA[
+		    UPDATE TC_NTCN SET DELETE_AT = 'Y' WHERE NTCN_NO = #ntcnNo#
+		]]>
+	</update>
+
+
+</sqlMap>

@@ -1,0 +1,940 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="poll">
+
+	<typeAlias  alias="zvl" type="kr.co.unp.util.ZValue"/>
+
+	<resultMap id="masterResMap" class="zvl">
+		<result property="masterCd" 		column="MASTER_CD"/>
+		<result property="typeCd" 		column="TYPE_CD"/>
+		<result property="title" 	column="TITLE"/>
+		<result property="startDt" 	column="START_DT"/>
+		<result property="endDt" 	column="END_DT" />
+		<result property="atchFileId" 	column="ATCH_FILE_ID"/>
+		<result property="insertDt" 	column="INSERT_DT"/>
+		<result property="contents" 	column="CONTENTS" jdbcType="CLOB" javaType="java.lang.String" />
+		<result property="questionCnt" 	column="QUESTION_CNT" />
+		<result property="giganOpenYn" 	column="GIGAN_OPEN_YN" />
+		<result property="deptNm" 	column="DEPT_NM" />
+		<result property="answerCnt" 	column="ANSWER_CNT" />
+	</resultMap>
+
+    <select id="pollDAO.selectMasterListCnt" parameterClass="zvl" resultClass="int">
+	/* pollDAO.selectMasterListCnt */
+    	<![CDATA[
+
+    		SELECT	count(A.MASTER_CD)
+			FROM	ts_poll_master A
+			WHERE 1=1
+    	]]>
+		<isNotEmpty prepend="AND" property="sdate">
+			<![CDATA[	DATE_FORMAT(START_DT, '%Y%m%d') >= REPLACE(#sdate#,'-','') 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="edate">
+			<![CDATA[	DATE_FORMAT(END_DT, '%Y%m%d') <= REPLACE(#edate#,'-','') 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchWrd">
+			<isEqual property="searchCnd" compareValue="1">
+				<![CDATA[	TITLE LIKE CONCAT('%',trim(#searchWrd#), '%')  		]]>
+			</isEqual>
+			<isEqual property="searchCnd" compareValue="2">
+				<![CDATA[	CONTENTS LIKE CONCAT('%',trim(#searchWrd#), '%')  		]]>
+			</isEqual>
+			<isEqual property="searchCnd" compareValue="3">
+				<![CDATA[	( TITLE LIKE CONCAT('%',trim(#searchWrd#), '%')  OR CONTENTS LIKE CONCAT('%',trim(#searchWrd#), '%') )	]]>
+			</isEqual>
+		</isNotEmpty>
+    </select>
+
+    <select id="pollDAO.selectMasterList" parameterClass="zvl" resultClass="zvl">
+	/* pollDAO.selectMaster */
+    	<![CDATA[
+			SELECT  *
+			  FROM  (
+			SELECT @RN:=@RN+1 AS RNUM, ALL_LIST.*
+			  FROM  (
+
+    		SELECT	A.MASTER_CD
+					, TYPE_CD
+					, TITLE
+					, START_DT
+					, END_DT
+					, ATCH_FILE_ID
+					, INSERT_DT
+					, (	SELECT	COUNT(*)
+						FROM	ts_poll_question
+						WHERE	MASTER_CD = #masterCd#
+								) QUESTION_CNT
+					,CASE
+			     	     WHEN DATE_FORMAT(NOW(), '%Y-%m-%d') >= DATE_FORMAT(START_DT,'%Y-%m-%d')
+			     		   AND DATE_FORMAT(NOW(), '%Y-%m-%d') <= DATE_FORMAT(END_DT,'%Y-%m-%d') THEN '2'
+			     	     WHEN DATE_FORMAT(NOW(), '%Y-%m-%d') > DATE_FORMAT(END_DT,'%Y-%m-%d') THEN '3'
+			     	     WHEN DATE_FORMAT(NOW(), '%Y-%m-%d') < DATE_FORMAT(START_DT,'%Y-%m-%d') THEN '1'
+			     	 END AS POLL_STATUS
+			     	 , inqire_co
+			     	 , DEPT_NM
+			FROM	ts_poll_master A
+			WHERE 1=1
+    	]]>
+		<isNotEmpty prepend="AND" property="sdate">
+			<![CDATA[	DATE_FORMAT(START_DT, '%Y%m%d') >= REPLACE(#sdate#,'-','') 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="edate">
+			<![CDATA[	DATE_FORMAT(END_DT, '%Y%m%d') <= REPLACE(#edate#,'-','') 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchWrd">
+			<isEqual property="searchCnd" compareValue="1">
+				<![CDATA[	TITLE LIKE CONCAT('%',trim(#searchWrd#), '%')  		]]>
+			</isEqual>
+			<isEqual property="searchCnd" compareValue="2">
+				<![CDATA[	CONTENTS LIKE CONCAT('%',trim(#searchWrd#), '%')  		]]>
+			</isEqual>
+			<isEqual property="searchCnd" compareValue="3">
+				<![CDATA[	( TITLE LIKE CONCAT('%',trim(#searchWrd#), '%')  OR CONTENTS LIKE CONCAT('%',trim(#searchWrd#), '%') )	]]>
+			</isEqual>
+		</isNotEmpty>
+		<![CDATA[
+				order by INSERT_DT desc
+
+				    ) ALL_LIST
+			    ) ALL_LIST
+			limit #firstIndex#, #recordCountPerPage#
+    	]]>
+    </select>
+
+	<select id="pollDAO.selectCheckformList" resultClass="zvl">
+	/* pollDAO.selectCheckformList */
+		<![CDATA[
+			SELECT	A.MASTER_CD
+					, A.TYPE_CD
+					, A.TITLE
+					, A.ATCH_FILE_ID
+					, A.START_DT
+					, A.END_DT
+					, A.INSERT_DT
+					, A.QUESTION_CNT
+					, A.ANSWER_CNT
+			FROM	(
+					SELECT	A.MASTER_CD
+							, A.TYPE_CD
+							, A.TITLE
+							, A.ATCH_FILE_ID
+							, A.START_DT
+							, A.END_DT
+							, A.INSERT_DT
+							, IFNULL(B.QUESTION_CNT, 0) QUESTION_CNT
+							, IFNULL(C.ANSWER_CNT, 0) ANSWER_CNT
+					FROM	ts_poll_master A
+					LEFT OUTER JOIN
+					(
+						SELECT	MASTER_CD, COUNT(*) QUESTION_CNT
+						FROM	ts_poll_question
+						GROUP BY MASTER_CD
+					) B ON A.MASTER_CD = B.MASTER_CD
+					LEFT OUTER JOIN
+					(
+					  SELECT MASTER_CD, COUNT(*) AS ANSWER_CNT
+					  FROM(
+						SELECT	DISTINCT MASTER_CD, USER_CD
+						FROM	ts_poll_answer
+					  ) aa
+					  GROUP BY MASTER_CD
+					) C ON A.MASTER_CD = C.MASTER_CD
+
+					) A
+			ORDER BY INSERT_DT ASC
+		]]>
+	</select>
+
+	<insert id="pollDAO.insertCheckform" parameterClass="zvl">
+		<selectKey resultClass="java.lang.Long" keyProperty="masterCd">
+			SELECT IFNULL(MAX(MASTER_CD),0)+1 AS MASTER_CD  FROM ts_poll_master
+		</selectKey>
+		<![CDATA[
+		    INSERT
+		      INTO  ts_poll_master
+		        (
+		        	MASTER_CD
+					, TITLE
+					, START_DT
+					, END_DT
+					, ATCH_FILE_ID
+					, INSERT_DT
+					, CONTENTS
+					, DEPT_NM		        )
+		    VALUES
+		        (
+		        	#masterCd#
+					, #title#
+					, STR_TO_DATE(#startDt#, '%Y-%m-%d')
+					, STR_TO_DATE(#endDt#, '%Y-%m-%d')
+					, #atchFileId#
+					,  NOW()
+					, #contents:CLOB#
+					, #deptNm#
+		        )
+		]]>
+	</insert>
+
+	<select id="pollDAO.selectCheckform" parameterClass="zvl" resultMap="masterResMap">
+	/* pollDAO.selectCheckform */
+		<![CDATA[
+			SELECT	A.MASTER_CD
+					, A.TYPE_CD
+					, A.TITLE
+					, A.START_DT
+					, A.END_DT
+					, A.ATCH_FILE_ID
+					, A.INSERT_DT
+					, A.CONTENTS
+					, B.QUESTION_CNT
+					, CASE
+						WHEN ( DATE_FORMAT(START_DT, '%Y-%m-%d') <= DATE_FORMAT(NOW(), '%Y-%m-%d')
+						       AND DATE_FORMAT(END_DT, '%Y-%m-%d') >= DATE_FORMAT(NOW(), '%Y-%m-%d') ) THEN 'Y'
+						ELSE 'N'
+					  END GIGAN_OPEN_YN
+					, A.DEPT_NM
+					, IFNULL(C.ANSWER_CNT,0) AS ANSWER_CNT
+			FROM	ts_poll_master A
+			LEFT OUTER JOIN
+			(
+			  SELECT MASTER_CD, COUNT(*) AS QUESTION_CNT
+			  FROM ts_poll_question
+			  GROUP BY MASTER_CD
+			) B ON A.MASTER_CD = B.MASTER_CD
+			LEFT OUTER JOIN
+			(
+			  SELECT MASTER_CD, COUNT(*) AS ANSWER_CNT
+			  FROM(
+				SELECT	DISTINCT MASTER_CD, USER_CD
+				FROM	ts_poll_answer
+			  ) aa
+			  GROUP BY MASTER_CD
+			) C ON A.MASTER_CD = C.MASTER_CD
+			WHERE A.MASTER_CD = #masterCd#
+		]]>
+	</select>
+
+
+	<update id="pollDAO.updateCheckform" parameterClass="zvl">
+	/* pollDAO.updateCheckform */
+		<![CDATA[
+            UPDATE  ts_poll_master
+               SET
+					  TITLE				= #title#
+					, START_DT			= STR_TO_DATE(#startDt#, '%Y-%m-%d')
+					, END_DT			= STR_TO_DATE(#endDt#, '%Y-%m-%d')
+					, ATCH_FILE_ID		= #atchFileId#
+					, CONTENTS 			= #contents:CLOB#
+					, DEPT_NM           = #deptNm#
+             WHERE	MASTER_CD = #masterCd#
+		]]>
+	</update>
+
+	<select id="pollDAO.selectQuestionList" parameterClass="zvl" resultClass="zvl">
+	/* pollDAO.selectQuestionList */
+		<![CDATA[
+			SELECT 	QUESTION_CD				AS QUESTION_CD
+					, QUESTION				AS QUESTION
+					, QUEST_TYPE_CD			AS QUEST_TYPE_CD
+					, MULTI_CHECK_YN		AS MULTI_CHECK_YN
+					, OTHER_YN				AS OTHER_YN
+			FROM 	ts_poll_question
+			WHERE 	MASTER_CD = #masterCd#
+			ORDER BY ORDERBY ASC
+		]]>
+	</select>
+
+	<select id="pollDAO.selectAnswerStatisticsList" parameterClass="zvl" resultClass="zvl">
+	/* pollDAO.selectAnswerStatisticsList */
+		<![CDATA[
+			SELECT	A.QUESTION2_CD						AS QUESTION2_CD
+					, A.QUESTION2						AS QUESTION2
+					, IFNULL(B.TC, 0) 						AS TC
+					, IFNULL(B.TOT, 0) 					AS TOT
+					, IFNULL(B.PERCENT2, 0) 				AS PERCENT2
+					, IFNULL(B.PERCENT2, 0)*2 				AS BAR_WIDTH
+					, A.VALIDATION
+			FROM 	(
+						SELECT	MASTER_CD
+								, QUESTION1_CD
+								, QUESTION2_CD
+								, QUESTION2
+								, VALIDATION
+						FROM	ts_poll_question2
+						WHERE	MASTER_CD = #masterCd#
+								AND QUESTION1_CD = #questionCd#
+
+						UNION ALL
+
+						SELECT	MASTER_CD
+								, QUESTION_CD
+								, 0 QUESTION2_CD
+								, '기타' QUESTION2
+								, 'N' AS VALIDATION
+						FROM	ts_poll_question
+						WHERE	MASTER_CD = #masterCd#
+								AND QUESTION_CD = #questionCd#
+								AND OTHER_YN = 'Y'
+					) A
+				    LEFT OUTER JOIN (
+										SELECT	A.MASTER_CD
+												, A.QUESTION_CD
+												, A.QUESTION2_CD
+												, A.TC
+												, B.TOT
+												, ROUND(A.TC*100/B.TOT,0) PERCENT2
+										FROM (
+												SELECT	MASTER_CD
+														, QUESTION_CD
+														, QUESTION2_CD
+														, COUNT(*) TC
+												FROM	ts_poll_answer
+												WHERE	MASTER_CD = #masterCd#
+														AND QUESTION_CD = #questionCd#
+												GROUP BY MASTER_CD, QUESTION_CD, QUESTION2_CD
+											 ) A
+										   , (
+												SELECT	MASTER_CD
+												      , QUESTION_CD
+													  , COUNT(*) TOT
+												FROM	ts_poll_answer
+												WHERE	MASTER_CD = #masterCd#
+													AND QUESTION_CD = #questionCd#
+												GROUP BY MASTER_CD, QUESTION_CD
+											  ) B
+										WHERE	A.MASTER_CD = B.MASTER_CD
+												AND A.QUESTION_CD = B.QUESTION_CD
+									 ) B  ON A.MASTER_CD    = B.MASTER_CD
+									     AND A.QUESTION1_CD = B.QUESTION_CD
+									     AND A.QUESTION2_CD = B.QUESTION2_CD
+			ORDER BY CASE A.QUESTION2_CD WHEN 0 THEN 999999999999999999 ELSE A.QUESTION2_CD END ASC
+		]]>
+	</select>
+
+	<insert id="pollDAO.insertQuestion" parameterClass="zvl">
+		<selectKey resultClass="int" keyProperty="orderby">
+		SELECT IFNULL(MAX(ORDERBY), 0)+1 FROM ts_poll_question WHERE MASTER_CD = #masterCd#
+		</selectKey>
+		<![CDATA[
+	/* pollDAO.insertQuestion */
+			INSERT INTO
+				ts_poll_question
+					(
+					QUESTION_CD
+					, MASTER_CD
+					, QUESTION
+					, QUEST_TYPE_CD
+					, MULTI_CHECK_YN
+					, OTHER_YN
+					, ORDERBY
+					, INSERT_DT)
+				VALUES
+					(
+					(SELECT IFNULL(MAX(QUESTION_CD), 0)+1 FROM ts_poll_question)
+					, #masterCd#
+					, #question#
+					, #questTypeCd#
+					, #multiCheckYn#
+					, #otherYn#
+					, #orderby#
+					, NOW())
+		]]>
+	</insert>
+
+	<select id="pollDAO.selectQuestion" parameterClass="zvl" resultClass="zvl">
+	/* pollDAO.selectQuestion */
+		<![CDATA[
+			SELECT	QUESTION_CD
+					, MASTER_CD
+					, QUESTION
+					, QUEST_TYPE_CD
+					, MULTI_CHECK_YN
+					, OTHER_YN
+			FROM	ts_poll_question
+			WHERE	QUESTION_CD = #questionCd#
+					AND MASTER_CD = #masterCd#
+		]]>
+	</select>
+
+	<select id="pollDAO.selectQuestionA" parameterClass="zvl" resultClass="zvl">
+	/* pollDAO.selectQuestionA */
+		<![CDATA[
+	WITH BPM_CTE
+	(
+		MASTER_CD
+	  , USER_CD
+	  , QUESTION_CD
+	  , PATH
+	  , OTHER
+	  , SPAN
+	  )
+	AS
+	(
+	   SELECT	MASTER_CD
+			  , USER_CD
+			  , QUESTION_CD
+			  , CONVERT(VARCHAR(100),',' + QUESTION2_CD) AS PATH
+			  , OTHER
+			  , SPAN
+	   FROM
+	   (
+		   SELECT	MASTER_CD
+				  , USER_CD
+				  , QUESTION_CD
+				  , (':'+STR(QUESTION2_CD)+':') AS QUESTION2_CD
+				  , REPLACE(OTHER, 'º', '') AS OTHER
+				  , ROW_NUMBER() OVER (PARTITION BY MASTER_CD, USER_CD, QUESTION_CD ORDER BY QUESTION_CD, QUESTION2_CD) SPAN
+			FROM ts_poll_answer A
+			WHERE MASTER_CD  = #masterCd#
+			  AND USER_CD = #companyCd#
+		) AA
+		 WHERE AA.SPAN = 1
+
+		UNION ALL
+
+	   SELECT	BB.MASTER_CD
+			  , BB.USER_CD
+			  , BB.QUESTION_CD
+			  , CONVERT(VARCHAR(100), PATH + ',' + BB.QUESTION2_CD) AS PATH
+			  , BB.OTHER
+			  , BB.SPAN
+	   FROM
+	   (
+		   SELECT	MASTER_CD
+				  , USER_CD
+				  , QUESTION_CD
+				  , (':'+STR(QUESTION2_CD)+':') AS QUESTION2_CD
+				  , REPLACE(OTHER, 'º', '') AS OTHER
+				  , ROW_NUMBER() OVER (PARTITION BY MASTER_CD, COMPANY_CD, QUESTION_CD ORDER BY QUESTION_CD, QUESTION2_CD) SPAN
+			FROM ts_poll_answer B
+			WHERE MASTER_CD  = #masterCd#
+			  AND COMPANY_CD = #companyCd#
+			  AND STATUS     = 'N'
+		) BB
+		 INNER JOIN BPM_CTE P
+		 ON BB.SPAN-1 = P.SPAN
+		 AND BB.MASTER_CD = P.MASTER_CD
+		 AND BB.COMPANY_CD = P.COMPANY_CD
+		 AND BB.QUESTION_CD = P.QUESTION_CD
+	)
+			SELECT	A.QUESTION_CD
+				  , A.QUESTION
+				  , A.QUEST_TYPE_CD
+				  , A.MULTI_CHECK_YN
+				  , A.OTHER_YN
+				  , PATH AS QUESTION2_CD
+				  , B.OTHER
+			FROM ts_poll_question A
+				 LEFT OUTER JOIN (
+						SELECT
+							MASTER_CD
+						  , COMPANY_CD
+						  , QUESTION_CD
+						  , MAX(PATH) AS PATH
+						  , OTHER
+						FROM BPM_CTE
+						GROUP BY MASTER_CD, COMPANY_CD, QUESTION_CD, OTHER
+								  )
+				  B ON A.MASTER_CD = B.MASTER_CD AND A.QUESTION_CD = B.QUESTION_CD
+			WHERE A.MASTER_CD = #masterCd# AND A.STATUS = 'N'
+			  /*
+			  AND A.MASTER_CD = B.MASTER_CD
+			  AND A.QUESTION_CD = B.QUESTION_CD
+			  */
+			ORDER BY A.QUESTION_CD ASC
+		]]>
+	</select>
+
+	<update id="pollDAO.updateQuestion" parameterClass="zvl">
+	/* pollDAO.updateQuestion */
+		<![CDATA[
+			UPDATE	ts_poll_question
+			SET		QUESTION 			= #question#
+					, QUEST_TYPE_CD		= #questTypeCd#
+					, MULTI_CHECK_YN 	= #multiCheckYn#
+					, OTHER_YN 			= #otherYn#
+			WHERE	QUESTION_CD = #questionCd#
+					AND MASTER_CD = #masterCd#
+		]]>
+	</update>
+
+	<select id="pollDAO.selectQuestion2ForUpdate" parameterClass="zvl" resultClass="zvl">
+	/* pollDAO.selectQuestion2ForUpdate */
+		<![CDATA[
+			SELECT	QUESTION2_CD
+					, QUESTION2
+					, ORDERBY
+			FROM	ts_poll_question2
+			WHERE	QUESTION1_CD = #question1Cd#
+					AND MASTER_CD = #masterCd#
+			ORDER BY ORDERBY ASC
+		]]>
+	</select>
+
+	<insert id="pollDAO.insertQuestion2" parameterClass="zvl">
+		<selectKey resultClass="java.lang.Long" keyProperty="question2Cd">
+			SELECT IFNULL(MAX(QUESTION2_CD),0)+1 AS QUESTION2_CD  FROM ts_poll_question2
+		</selectKey>
+		<![CDATA[
+	/* pollDAO.insertQuestion2 */
+			INSERT INTO
+				ts_poll_question2
+					(
+					QUESTION2_CD
+					, MASTER_CD
+					, QUESTION1_CD
+					, QUESTION2
+					, ORDERBY)
+				VALUES
+					(
+					#question2Cd#
+					,  #masterCd#
+					,  #question1Cd#
+					, #question2#
+					,  #orderby#)
+		]]>
+	</insert>
+
+	<update id="pollDAO.updateQuestion2" parameterClass="zvl">
+	/* pollDAO.updateQuestion2 */
+		<![CDATA[
+			/* 질문 항목 수정 */
+			UPDATE	ts_poll_question2
+			SET		QUESTION2 = #question2#
+			WHERE	QUESTION2_CD = #question2Cd#
+					AND QUESTION1_CD = #question1Cd#
+					AND MASTER_CD =#masterCd#
+		]]>
+	</update>
+
+    <select id="pollDAO.selectMaster" parameterClass="zvl" resultMap="masterResMap">
+	/* pollDAO.selectMaster */
+    	<![CDATA[
+    		SELECT	A.MASTER_CD
+					, TYPE_CD
+					, TITLE
+					, START_DT
+					, END_DT
+					, ATCH_FILE_ID
+					, INSERT_DT
+					, CONTENTS
+					, B.QUESTION_CNT
+					, CASE
+						WHEN ( DATE_FORMAT(START_DT, '%Y-%m-%d') <= DATE_FORMAT(NOW(), '%Y-%m-%d')
+						AND DATE_FORMAT(END_DT, '%Y-%m-%d') >= DATE_FORMAT(NOW(), '%Y-%m-%d') ) THEN 'Y'
+						ELSE 'N'
+					  END GIGAN_OPEN_YN
+					, A.DEPT_NM
+					, IFNULL(C.ANSWER_CNT,0) AS ANSWER_CNT
+			FROM	ts_poll_master A
+			LEFT OUTER JOIN
+			(
+			  SELECT MASTER_CD, COUNT(*) AS QUESTION_CNT
+			  FROM ts_poll_question
+			  GROUP BY MASTER_CD
+			) B ON A.MASTER_CD = B.MASTER_CD
+			LEFT OUTER JOIN
+			(
+			  SELECT MASTER_CD, COUNT(*) AS ANSWER_CNT
+					  FROM(
+						SELECT	DISTINCT MASTER_CD, USER_CD
+						FROM	ts_poll_answer
+					  ) aa
+					  GROUP BY MASTER_CD
+			) C ON A.MASTER_CD = C.MASTER_CD
+			WHERE A.MASTER_CD = #masterCd#
+    	]]>
+    </select>
+
+    <select id="pollDAO.selectOngoingMasterList" parameterClass="zvl" resultClass="zvl">
+	/* pollDAO.selectOngoingMasterList */
+    	<![CDATA[
+    		SELECT	MASTER_CD
+					, TYPE_CD
+					, TITLE
+					, START_DT
+					, END_DT
+					, ATCH_FILE_ID
+					, INSERT_DT
+					, (	SELECT	COUNT(*)
+						FROM	ts_poll_question
+						WHERE	MASTER_CD = A.MASTER_CD
+								) QUESTION_CNT
+					, CASE
+						WHEN ( DATE_FORMAT(START_DT, '%Y-%m-%d') <= DATE_FORMAT(NOW(), '%Y-%m-%d')
+						AND DATE_FORMAT(END_DT, '%Y-%m-%d') >= DATE_FORMAT(NOW(), '%Y-%m-%d') ) THEN 'Y'
+						ELSE 'N'
+					  END GIGAN_OPEN_YN
+			FROM	ts_poll_master  A
+			WHERE   DATE_FORMAT(START_DT, '%Y-%m-%d') <= DATE_FORMAT(NOW(), '%Y-%m-%d')
+			AND DATE_FORMAT(END_DT, '%Y-%m-%d') >= DATE_FORMAT(NOW(), '%Y-%m-%d')
+			ORDER BY INSERT_DT DESC
+    	]]>
+    </select>
+
+    <select id="pollDAO.selectFinishedMasterList" parameterClass="zvl" resultClass="zvl">
+	/* pollDAO.selectFinishedMasterList */
+    	<![CDATA[
+		SELECT * FROM
+		( SELECT a.*, rownum+rnum-1 as TOTAL_ROWS
+		   FROM ( SELECT a.*, rownum rnum
+		            FROM (
+
+    		SELECT	MASTER_CD
+					, TYPE_CD
+					, TITLE
+					, START_DT
+					, END_DT
+					, ATCH_FILE_ID
+					, INSERT_DT
+					, (	SELECT	COUNT(*)
+						FROM	ts_poll_question
+						WHERE	MASTER_CD = A.MASTER_CD
+								) QUESTION_CNT
+			FROM	ts_poll_master  A
+			WHERE  DATE_FORMAT(END_DT, '%Y-%m-%d') < DATE_FORMAT(NOW(), '%Y-%m-%d')
+
+		            ) a
+		          ORDER BY rnum DESC ) a
+		  ORDER BY rnum )
+		WHERE rnum BETWEEN #firstIndex# + 1 AND #lastIndex#
+    	]]>
+    </select>
+
+    <select id="pollDAO.selectFinishedMasterListCnt" parameterClass="zvl" resultClass="int">
+	/* pollDAO.selectFinishedMasterListCnt */
+    	<![CDATA[
+    		SELECT	COUNT(*)
+			FROM	ts_poll_master
+			WHERE  DATE_FORMAT(END_DT, '%Y-%m-%d') < DATE_FORMAT(NOW(), '%Y-%m-%d')
+    	]]>
+    </select>
+
+    <select id="pollDAO.selectQuestionU" parameterClass="zvl" resultClass="zvl">
+	/* pollDAO.selectQuestionU */
+    	<![CDATA[
+			SELECT	A.QUESTION_CD
+					, A.QUESTION
+					, A.QUEST_TYPE_CD
+					, A.MULTI_CHECK_YN
+					, A.OTHER_YN
+                    , CASE WHEN A.OTHER_YN = 'Y' THEN
+                    	(SELECT IFNULL(COUNT(*),0) AS OTHER_CNT
+                		 FROM ts_poll_answer2
+                		 WHERE QUESTION2_CD = '9999' AND QUESTION_CD = A.QUESTION_CD AND MASTER_CD=A.MASTER_CD
+                        )
+                           ELSE 0
+                      END AS OTHER_CNT
+			FROM	ts_poll_question A
+			WHERE	A.MASTER_CD = #masterCd#
+			ORDER BY A.QUESTION_CD ASC
+    	]]>
+    </select>
+
+    <select id="pollDAO.selectQuestionListM" parameterClass="zvl" resultClass="zvl">
+	/* pollDAO.selectQuestionListM */
+    	<![CDATA[
+			SELECT	A.QUESTION_CD
+					, A.QUESTION
+					, A.QUEST_TYPE_CD
+					, A.MULTI_CHECK_YN
+					, A.OTHER_YN
+                    , CASE WHEN A.OTHER_YN = 'Y' THEN
+                    	(SELECT IFNULL(COUNT(*),0) AS OTHER_CNT
+                		 FROM ts_poll_answer
+                		 WHERE QUESTION2_CD = '9999' AND QUESTION_CD = A.QUESTION_CD AND MASTER_CD=A.MASTER_CD
+                        )
+                           ELSE 0
+                      END AS OTHER_CNT
+			FROM	ts_poll_question A
+			WHERE	A.MASTER_CD = #masterCd#
+			ORDER BY A.QUESTION_CD ASC
+    	]]>
+    </select>
+
+    <select id="pollDAO.selectAnswer" parameterClass="zvl" resultClass="zvl">
+	/* pollDAO.selectAnswer */
+    	<![CDATA[
+			SELECT	QUESTION2_CD
+					, QUESTION2
+			FROM	ts_poll_question2
+			WHERE	QUESTION1_CD = #questionCd#
+					AND MASTER_CD = #masterCd#
+			ORDER BY ORDERBY ASC
+    	]]>
+    </select>
+
+    <select id="pollDAO.selectAnswerListM" parameterClass="zvl" resultClass="zvl">
+	/* pollDAO.selectAnswerListM */
+    	<![CDATA[
+			SELECT
+				QUESTION1_CD
+				,B.QUESTION2_CD
+				,B.QUESTION2
+			FROM ts_poll_question2 B
+			WHERE	B.MASTER_CD = #masterCd#
+			ORDER BY QUESTION1_CD ASC, ORDERBY ASC
+    	]]>
+    </select>
+
+    <select id="pollDAO.selectAnswerAndResponse" parameterClass="zvl" resultClass="zvl">
+	/* pollDAO.selectAnswerAndResponse */
+    	<![CDATA[
+			SELECT	A.QUESTION2_CD
+					, A.QUESTION2
+					, IFNULL(B.ANSWER_CNT,0) AS ANSWER_CNT
+			FROM	ts_poll_question2 A
+			LEFT OUTER JOIN
+			(
+				SELECT MASTER_CD, QUESTION_CD, QUESTION2_CD, IFNULL(COUNT(*),0) AS ANSWER_CNT
+                FROM ts_poll_answer2
+                GROUP BY MASTER_CD, QUESTION_CD, QUESTION2_CD
+			) B
+			ON B.MASTER_CD = A.MASTER_CD AND B.QUESTION_CD = A.QUESTION1_CD
+            AND B.QUESTION2_CD = A.QUESTION2_CD
+			WHERE	A.QUESTION1_CD = #question_cd#
+					AND A.MASTER_CD = #master_cd#
+			ORDER BY A.ORDERBY ASC
+    	]]>
+    </select>
+
+    <insert id="pollDAO.checkUser" parameterClass="zvl">
+		<selectKey resultClass="java.lang.Long" keyProperty="userCd">
+			SELECT IFNULL(MAX(user_cd),0)+1 AS user_cd  FROM dbo.ts_poll_user
+		</selectKey>
+    	<![CDATA[
+	/* pollDAO.checkUser */
+	    	INSERT INTO dbo.ts_poll_user
+	    	(
+	    		USER_CD, ID,SEX,AGE,JOB,AREA,STATUS,INSERT_DT
+	    	)
+			VALUES
+			(
+				#userCd#, #id#,#sex#,#age#,#job#,#area#,#status#,NOW()
+			)
+    	]]>
+
+    </insert>
+
+    <insert id="pollDAO.checkQuestion" parameterClass="zvl">
+    	<![CDATA[
+	/* pollDAO.checkQuestion */
+    		INSERT INTO ts_poll_user ( USER_CD,ID,SEX,AGE,JOB,AREA,STATUS,INSERT_DT )
+			VALUES ( #userCd#, #id#,#sex#,#age#,#job#,#area#,'N',NOW()  )
+    	]]>
+
+    </insert>
+
+    <insert id="pollDAO.checkQuestion2" parameterClass="zvl">
+		<selectKey resultClass="java.lang.Long" keyProperty="answerCd">
+			SELECT IFNULL(MAX(ANSWER_CD),0)+1 AS ANSWER_CD  FROM ts_poll_answer
+		</selectKey>
+    	<![CDATA[
+	/* pollDAO.checkQuestion2 */
+    		INSERT INTO
+			ts_poll_answer (
+				ANSWER_CD
+				, USER_CD
+				, MASTER_CD
+				, QUESTION_CD
+				, QUESTION2_CD
+				, OTHER)
+			VALUES(
+				#answerCd#
+				, #userCd#
+				, #masterCd#
+				, #questionCd#
+				, #question2Cd#
+				, #other#)
+    	]]>
+
+    </insert>
+
+    <select id="pollDAO.selectOtherList" parameterClass="zvl" resultClass="zvl">
+	/* pollDAO.selectOtherList */
+    	<![CDATA[
+			SELECT OTHER
+			FROM ts_poll_answer
+			WHERE MASTER_CD = #masterCd#
+			AND QUESTION_CD = #questionCd#
+			AND QUESTION2_CD = 9999
+			AND OTHER IS NOT NULL
+    	]]>
+    </select>
+
+    <select id="pollDAO.selectEssayList" parameterClass="zvl" resultClass="zvl">
+	/* pollDAO.selectEssayList */
+    	<![CDATA[
+			SELECT OTHER
+			FROM ts_poll_answer
+			WHERE MASTER_CD = #masterCd#
+			AND QUESTION_CD = #questionCd#
+			AND QUESTION2_CD = 0
+			AND OTHER IS NOT NULL
+    	]]>
+    </select>
+
+	<update id="pollDAO.updateQuestionForDelete" parameterClass="zvl">
+	/* pollDAO.updateQuestionForDelete */
+		<![CDATA[
+			UPDATE	ts_poll_question
+			SET		STATUS = Y
+					, UPDATE_DT = NOW()
+					, UPDATE_ID = #updateId#
+			WHERE	QUESTION_CD = #questionCd#
+					AND MASTER_CD = #masterCd#
+		]]>
+	</update>
+
+    <select id="pollDAO.selectTempPollId" resultClass="int">
+	/* pollDAO.selectTempPollId */
+    	<![CDATA[
+			SELECT SEQ_TEMP_POLL_ID.NEXTVAL
+			FROM DUAL
+    	]]>
+    </select>
+
+	<select id="pollDAO.selectCheckedListTotCnt" parameterClass="zvl" resultClass="int">
+	/* pollDAO.selectCheckedListTotCnt */
+		<![CDATA[
+			SELECT	IFNULL(ANSWER_CNT,0) AS ANSWER_CNT
+			FROM	(
+					  SELECT COUNT(*) AS ANSWER_CNT
+					  FROM(
+						SELECT DISTINCT USER_CD
+             			FROM	ts_poll_answer
+						WHERE MASTER_CD = #masterCd#
+					  ) aa
+					) A
+		]]>
+	</select>
+
+
+	<select id="pollDAO.selectCheckedList" parameterClass="zvl" resultClass="zvl">
+	/* pollDAO.selectCheckedList */
+		<![CDATA[
+		SELECT * FROM
+		( SELECT a.*, rownum+rnum-1 as TOTAL_ROWS
+		   FROM ( SELECT a.*, rownum rnum
+		            FROM (
+
+						SELECT *
+						FROM  (
+
+								SELECT DISTINCT USER_CD
+               					FROM	ts_poll_answer
+								WHERE MASTER_CD = #masterCd#
+							) A
+
+		            ) a
+		          ORDER BY rnum DESC ) a
+		  ORDER BY rnum )
+		WHERE rnum BETWEEN #firstIndex# + 1 AND #lastIndex#
+		]]>
+	</select>
+
+	<delete id="pollDAO.deleteAnswer2ForCompanyId" parameterClass="zvl">
+	/* pollDAO.deleteAnswer2ForCompanyId */
+		<![CDATA[
+			DELETE 	FROM ts_poll_answer
+			WHERE 	USER_CD = #id#
+			AND MASTER_CD = #masterCd#
+		]]>
+	</delete>
+
+	<delete id="pollDAO.deleteQuestion2" parameterClass="zvl">
+		<![CDATA[
+	/* pollDAO.deleteQuestion2 */
+		DELETE FROM ts_poll_question2
+		where QUESTION1_CD = #question1Cd#
+		AND MASTER_CD =#masterCd#
+		]]>
+	</delete>
+
+	<delete id="pollDAO.deleteAnswer2A" parameterClass="int">
+	/* pollDAO.deleteAnswer2A */
+		<![CDATA[
+			DELETE 	FROM ts_poll_answer
+			WHERE 	MASTER_CD = #masterCd#
+		]]>
+	</delete>
+
+	<delete id="pollDAO.deleteQuestion2A" parameterClass="int">
+	/* pollDAO.deleteQuestion2A */
+		<![CDATA[
+			DELETE 	FROM ts_poll_question2
+			WHERE 	MASTER_CD = #masterCd#
+		]]>
+	</delete>
+
+	<delete id="pollDAO.deleteQuestionA" parameterClass="int">
+	/* pollDAO.deleteQuestionA */
+		<![CDATA[
+			DELETE 	FROM ts_poll_question
+			WHERE 	MASTER_CD = #masterCd#
+		]]>
+	</delete>
+
+	<delete id="pollDAO.deleteMasterA" parameterClass="int">
+	/* pollDAO.deleteMasterA */
+		<![CDATA[
+			DELETE 	FROM ts_poll_master
+			WHERE 	MASTER_CD = #masterCd#
+		]]>
+	</delete>
+
+	<select id="pollDAO.selectRescentPoll" resultClass="zvl">
+	/* pollDAO.selectRescentPoll */
+		<![CDATA[
+			SELECT A.*
+			FROM
+			(
+				SELECT	MASTER_CD, TITLE
+				FROM	ts_poll_master
+			WHERE   DATE_FORMAT(START_DT, '%Y-%m-%d') <= DATE_FORMAT(NOW(), '%Y-%m-%d')
+			AND     DATE_FORMAT(END_DT, '%Y-%m-%d') >= DATE_FORMAT(NOW(), '%Y-%m-%d')
+				ORDER BY INSERT_DT DESC
+			) A
+			WHERE ROWNUM = 1
+
+		]]>
+	</select>
+
+	<select id="pollDAO.selectPollExceptSatisfaction" resultClass="zvl">
+	/* pollDAO.selectPollExceptSatisfaction */
+		<![CDATA[
+			SELECT AA.COMPANY_ID, BB.QUESTION, BB.QUESTION2
+			FROM ts_poll_answer2 AA
+			INNER JOIN
+			(
+			  SELECT A.QUESTION, B.QUESTION2, A.QUESTION_CD, B.QUESTION2_CD, A.MASTER_CD
+			  FROM ts_poll_question A
+			  INNER JOIN ts_poll_question2 B
+			  ON B.QUESTION1_CD = A.QUESTION_CD
+			  WHERE A.QUESTION_CD IN (1,2,3,4,5,6,7)
+			  AND A.MASTER_CD = B.MASTER_CD
+			  AND A.MASTER_CD = 1
+			) BB ON BB.QUESTION_CD = AA.QUESTION_CD
+			AND BB.QUESTION2_CD = AA.QUESTION2_CD
+			AND BB.MASTER_CD = AA.MASTER_CD
+			WHERE AA.COMPANY_ID NOT IN
+			(
+			  SELECT DISTINCT COMPANY_ID FROM ts_poll_answer2
+			  WHERE QUESTION_CD = 66
+			  AND MASTER_CD = 1
+			)
+		]]>
+	</select>
+	
+	<update id="pollDAO.updateInqireCo" parameterClass="zvl">
+	/* pollDAO.updateInqureCo */
+		<![CDATA[
+			UPDATE	ts_poll_master
+			SET		inqire_co = inqire_co + 1
+			WHERE	MASTER_CD = #masterCd#
+		]]>
+	</update>
+	
+</sqlMap>

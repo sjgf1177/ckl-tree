@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="post">
+	<cacheModel id="product-cache" type="MEMORY">
+		<flushInterval hours="24"/>
+		<property name="size" value="1000"/>
+	</cacheModel>
+
+    <typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+   	<typeAlias  alias="zvl" type="kr.co.unp.util.ZValue"/>
+   	<typeAlias  alias="egovPostVO" type="kr.co.unp.post.service.EgovPostVO"/>
+
+   	<sql id="egovPostDAO.sidoTable-where" >
+		<isEqual property="searchSido" compareValue="01">
+	 		<![CDATA[ COMTN_NEWPOST_01  ]]>
+	 	</isEqual>
+	 	<isEqual property="searchSido" compareValue="02">
+	 		<![CDATA[ COMTN_NEWPOST_02  ]]>
+	 	</isEqual>
+	 	<isEqual property="searchSido" compareValue="03">
+	 		<![CDATA[ COMTN_NEWPOST_03  ]]>
+	 	</isEqual>
+	 	<isEqual property="searchSido" compareValue="04">
+	 		<![CDATA[ COMTN_NEWPOST_04  ]]>
+	 	</isEqual>
+	 	<isEqual property="searchSido" compareValue="05">
+	 		<![CDATA[ COMTN_NEWPOST_05  ]]>
+	 	</isEqual>
+	 	<isEqual property="searchSido" compareValue="06">
+	 		<![CDATA[ COMTN_NEWPOST_06  ]]>
+	 	</isEqual>
+	 	<isEqual property="searchSido" compareValue="07">
+	 		<![CDATA[ COMTN_NEWPOST_07  ]]>
+	 	</isEqual>
+	 	<isEqual property="searchSido" compareValue="08">
+	 		<![CDATA[ COMTN_NEWPOST_08  ]]>
+	 	</isEqual>
+	 	<isEqual property="searchSido" compareValue="09">
+	 		<![CDATA[ COMTN_NEWPOST_09  ]]>
+	 	</isEqual>
+	 	<isEqual property="searchSido" compareValue="10">
+	 		<![CDATA[ COMTN_NEWPOST_10  ]]>
+	 	</isEqual>
+	 	<isEqual property="searchSido" compareValue="11">
+	 		<![CDATA[ COMTN_NEWPOST_11  ]]>
+	 	</isEqual>
+	 	<isEqual property="searchSido" compareValue="12">
+	 		<![CDATA[ COMTN_NEWPOST_12  ]]>
+	 	</isEqual>
+	 	<isEqual property="searchSido" compareValue="13">
+	 		<![CDATA[ COMTN_NEWPOST_13  ]]>
+	 	</isEqual>
+	 	<isEqual property="searchSido" compareValue="14">
+	 		<![CDATA[ COMTN_NEWPOST_14  ]]>
+	 	</isEqual>
+	</sql>
+
+	<select id="egovPostDAO.getSiGunguList" parameterClass="egovPostVO" resultClass="zvl" cacheModel="product-cache" >
+    	/*egovPostDAO.getSiGunguList*/
+    	<![CDATA[
+    	SELECT D_GUNGU
+    	FROM
+    	]]>
+		<include refid="egovPostDAO.sidoTable-where" />
+		<![CDATA[
+    	GROUP BY D_GUNGU
+    	ORDER BY D_GUNGU ASC
+    	]]>
+    </select>
+
+	<select id="egovPostDAO.getDongList" parameterClass="egovPostVO" resultClass="zvl" cacheModel="product-cache" >
+    	/*egovPostDAO.getDongList*/
+    	<![CDATA[
+    	SELECT D_DONG
+    	FROM
+    	]]>
+		<include refid="egovPostDAO.sidoTable-where" />
+		<![CDATA[
+    	WHERE D_GUNGU = #searchSiGu#
+    	GROUP BY D_DONG
+    	ORDER BY D_DONG ASC
+    	]]>
+    </select>
+
+	<select id="egovPostDAO.getRiList" parameterClass="egovPostVO" resultClass="zvl" cacheModel="product-cache" >
+    	/*egovPostDAO.getRiList*/
+    	<![CDATA[
+    	SELECT D_RI
+    	FROM
+    	]]>
+		<include refid="egovPostDAO.sidoTable-where" />
+		<![CDATA[
+    	WHERE D_GUNGU = #searchSiGu#
+    	AND  D_DONG = #searchDong#
+        GROUP BY D_RI
+    	ORDER BY D_RI ASC
+    	]]>
+    </select>
+
+    <select id="egovPostDAO.getPostList" parameterClass="egovPostVO" resultClass="zvl">
+    	/*egovPostDAO.getPostList*/
+    	<![CDATA[
+		SELECT D_SIDO,D_GUNGU,TRIM(D_DONG) as D_DONG,D_ETC1,D_ETC2,TRIM(N_NAME) as N_NAME,N_ETC2,N_ETC3,N_POST
+		FROM
+		]]>
+		<include refid="egovPostDAO.sidoTable-where" />
+		<![CDATA[
+		WHERE ROWID IN
+			(	SELECT rid
+				FROM
+				(	SELECT ROWID rid, ROWNUM rn
+					FROM
+					]]>
+					<include refid="egovPostDAO.sidoTable-where" />
+					<![CDATA[
+					WHERE 1 = 1
+					]]>
+				<!-- 도로명 검색 시작 -->
+				<isEqual property="searchGubun" compareValue="1">
+					<isNotEmpty prepend="AND" property="searchSiGu">
+			 			<![CDATA[ D_GUNGU LIKE CONCAT(trim(#searchSiGu#), '%')  ]]>
+			 		</isNotEmpty>
+					<isNotEmpty prepend="AND" property="searchAddr">
+			 			<![CDATA[ N_NAME LIKE CONCAT(trim(#searchAddr#), '%')  ]]>
+			 		</isNotEmpty>
+					<isNotEmpty prepend="AND" property="searchEtc1">
+			 			<![CDATA[ N_ETC2 LIKE CONCAT(trim(#searchEtc1#), '%')  ]]>
+			 		</isNotEmpty>
+					<isNotEmpty prepend="AND" property="searchEtc2">
+			 			<![CDATA[ N_ETC3 LIKE CONCAT(trim(#searchEtc2#), '%') ]]>
+			 		</isNotEmpty>
+			 	</isEqual>
+			 	<!-- 도로명 검색 끝 -->
+
+			 	<!-- 지번 검색 시작 -->
+				<isEqual property="searchGubun" compareValue="2">
+					<isNotEmpty prepend="AND" property="searchSiGu">
+			 			<![CDATA[ D_GUNGU LIKE CONCAT(trim(#searchSiGu#), '%')   ]]>
+			 		</isNotEmpty>
+					<isNotEmpty prepend="AND" property="searchDong">
+			 			<![CDATA[ D_DONG LIKE CONCAT(trim(#searchDong#), '%') ]]>
+			 		</isNotEmpty>
+					<isNotEmpty prepend="AND" property="searchRi">
+			 			<![CDATA[ D_RI LIKE CONCAT(trim(#searchRi#), '%')  ]]>
+			 		</isNotEmpty>
+					<isNotEmpty prepend="AND" property="searchEtc1">
+			 			<![CDATA[ D_ETC1 LIKE CONCAT(trim(#searchEtc1#), '%') ]]>
+			 		</isNotEmpty>
+					<isNotEmpty prepend="AND" property="searchEtc2">
+			 			<![CDATA[ D_ETC2 LIKE CONCAT(trim(#searchEtc2#), '%')  ]]>
+			 		</isNotEmpty>
+			 		<isNotEmpty prepend="AND" property="searchAddr">
+			 			<![CDATA[ N_ETC4 LIKE CONCAT(trim(#searchAddr#), '%')   ]]>
+			 		</isNotEmpty>
+			 	</isEqual>
+			 	<!-- 지번 검색 끝 -->
+			 	<!-- 건물명 검색 시작 -->
+				<isEqual property="searchGubun" compareValue="3">
+					<isNotEmpty prepend="AND" property="searchSiGu">
+			 			<![CDATA[ D_GUNGU LIKE CONCAT(trim(#searchSiGu#), '%')  ]]>
+			 		</isNotEmpty>
+					<isNotEmpty prepend="AND" property="searchDong">
+			 			<![CDATA[ D_DONG LIKE CONCAT(trim(#searchDong#), '%') ]]>
+			 		</isNotEmpty>
+			 		<isNotEmpty prepend="AND" property="searchAddr">
+			 			<![CDATA[ N_ETC4 LIKE CONCAT(trim(#searchAddr#), '%') ]]>
+			 		</isNotEmpty>
+			 	</isEqual>
+			 	<!-- 건물명 검색 끝 -->
+			 	<![CDATA[
+				)
+			WHERE rn>=1
+		)
+		]]>
+    </select>
+
+</sqlMap>

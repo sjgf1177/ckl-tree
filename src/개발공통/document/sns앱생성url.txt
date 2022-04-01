@@ -1,0 +1,48 @@
+---------------------------------------------------------------------------------------
+			* facebook api *
+---------------------------------------------------------------------------------------
+app create url : https://developers.facebook.com/apps/
+
+
+---------------------------------------------------------------------------------------
+
+			* google api *
+---------------------------------------------------------------------------------------
+app description : https://developers.google.com/identity/sign-in/web/devconsole-project
+
+app create url : https://console.developers.google.com/project?authuser=0
+
+(app생성 후 => API 및 인증
+=> 사용자 인증정보 => 사용자 인증정보 추가[OAuth2.0 클라이언트ID] )
+	           => OAuth 동의화면 입력
+=> API => Enable the Google+ API
+---------------------------------------------------------------------------------------
+
+
+			* kakao api *
+---------------------------------------------------------------------------------------
+app description : https://developers.kakao.com/docs/js
+
+app create url : https://developers.kakao.com/apps
+
+---------------------------------------------------------------------------------------
+
+			* naver api *
+---------------------------------------------------------------------------------------
+app description : https://nid.naver.com/devcenter/docs.nhn?menu=Javascript
+
+app create url : https://nid.naver.com/devcenter/main.nhn
+
+---------------------------------------------------------------------------------------
+
+			* twitter api *
+---------------------------------------------------------------------------------------
+app create url : https://twitter.com/?lang=ko
+
+---------------------------------------------------------------------------------------
+
+계정정보
+카카오톡	academy@kocca.kr	kocca!!@@
+페이스북	academy@kocca.or.kr	kocca!!@@345
+구글		koccaedu@gmail.com	kocca12345
+네이버		kocca02	0718h8033

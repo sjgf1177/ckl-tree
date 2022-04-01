@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<title>정규과정(목록) | 온라인교육&lt; 한국콘텐츠아카데미</title>
+<meta charset="UTF-8" />
+<!-- <meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1, maximum-scale=3, minimum-scale=1" /> -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="title" content="정규과정(목록) | 온라인교육&lt; 한국콘텐츠아카데미" />
+<meta name="type" content="website" />
+<link rel="stylesheet" type="text/css" href="/js/bootstrap/css/bootstrap.css"/>
+<link rel="stylesheet" type="text/css" href="/edu/css/bootstrap.reset.css"/>
+<link rel="stylesheet" type="text/css" href="/edu/css/animate.min.css" />
+<link rel="stylesheet" type="text/css" href="/edu/css/common.css" />
+<link rel="stylesheet" type="text/css" href="/edu/css/layout.css" />
+<link rel="stylesheet" type="text/css" href="/edu/css/sub.css" />
+<link rel="stylesheet" type="text/css" href="/js/jquery-ui/jquery-ui.css" />
+<script type="text/javascript" src="/js/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="/js/nwmatcher.js"></script>
+<script type="text/javascript" src="/js/selectivizr-min.js"></script>
+<script type="text/javascript" src="/js/jquery.cookies.js"></script>
+<script type="text/javascript" src="/js/bootstrap/bootstrap.min.js"></script>
+<script type="text/javascript" src="/js/jquery.carouFredSel-6.2.1-packed.js"></script>
+<script type="text/javascript" src="/js/jquery.sticky.js"></script>
+<script type="text/javascript" src="/js/jquery.scrollTo.min.js"></script>
+<script type="text/javascript" src="/js/jquery.easing.1.3.js"></script>
+<script type="text/javascript" src="/js/jquery.appear.js"></script>
+<script type="text/javascript" src="/js/modernizr.min.js"></script>
+<script type="text/javascript" src="/js/mousewheel.js"></script>
+<script type="text/javascript" src="/js/tablesummary.js"></script>
+<script type="text/javascript" src="/js/base64.js"></script>
+<script type="text/javascript" src="/js/ssl.js"></script>
+<script type="text/javascript" src="/js/miya_validator.js"></script>
+<script type="text/javascript" src="/edu/js/sub.js"></script>
+
+<!--[if lt IE 9]>
+	<link rel="stylesheet" href="/edu/css/ie.css" type="text/css" />
+	<script type="text/javascript" src="/js/bootstrap/html5shiv.min.js"></script>
+	<script type="text/javascript" src="/js/respond.min.js"></script>
+	<script type="text/javascript"> $('html').attr('id','ie');</script>
+<![endif]-->
+<!--[if lte IE 8]><script type="text/javascript"> $('html').attr('id','ie8'); </script><![endif]-->
+<!--[if lte IE 7]><script type="text/javascript"> $('html').attr('id','ie7'); </script><![endif]-->
+
+</head>
+
+<body class="sub03">
+<ul class="skip">
+	<li><a href="#content">본문내용 바로가기</a></li>
+	<li><a href="#gnb">주메뉴 바로가기</a></li>
+</ul>
+<div id="wrap" class="sub01Head"> 
+	
+	<!-- //header --> 
+	
+	<script type="text/javascript">
+//<![CDATA[
+
+function search2(form){
+	if(!form.q.value){
+		alert("검색어를 입력하세요.");
+		$("#q2")[0].focus();
+		return false;
+	}
+	return true;
+}
+
+$(function() {
+
+	$(".logoutBtn").click(function() {
+
+		$.get("/edu/member/logout.json",function(data) {
+			var retUrl = "https://sso.ckl.or.kr/sso/member/logoutSSO.do?service=edu";
+			//alert(retUrl);
+			location.href= retUrl;
+		},"json");
+		return false;
+     });
+
+});
+//]]>
+</script>
+	<div id="header"> 
+		<!-- 하위스크롤 경우 // headerTopOn -->
+		<div class="headerCts">
+			<div class="wrapSet clearfix">
+				<h1 class="logo"><a href="/edu/main/main.do"><span class="hidden">한국콘텐츠아카데미</span></a></h1>
+				<div id="global">
+					<ul>
+						<li><a href="/edu/member/forLogin.do?menuNo=500077" class="ico1" title="로그인">로그인</a></li>
+						<li><a href="/edu/member/join01.do?menuNo=500076" class="ico2" title="회원가입">회원가입</a></li>
+						<li class="bgn"><a href="/edu/main/contents.do?menuNo=500074" class="ico3" title="사이트맵">사이트맵</a></li>
+					</ul>
+					<!-- 검색창 -->
+					<div class="globalSchSet">
+						<form name="frmSearch2" method="post" action="/edu/search/list.do?menuNo=500079" onsubmit="return search2(this);">
+							<input type="text" name="q" id="q2" class="schWordInput vt" value="" title="검색어를 입력하세요." />
+							<input type="image" src="/edu/images/common/schGlobalSetOk.gif" alt="검색 확인" class="p0 m0 vt" />
+						</form>
+					</div>
+					<!-- //검색창 --> 
+				</div>
+				
+				<!-- gnb -->
+				
+				<div class="gnbSet">
+					<div id="gnb">
+						<ul>
+							<li id="gnb1" > <a href="/edu/bbs/B0000011/list.do?menuNo=500007" >새소식</a> </li>
+							<li id="gnb2" > <a href="/edu/progrm/master/list.do?prgSe=01&amp;prgCl=13&amp;menuNo=500019" >현장교육</a> </li>
+							<li id="gnb3" class="on"> <a href="/edu/onlineEdu/edumain/list.do?menuNo=500026" >온라인교육</a> </li>
+							<li id="gnb4" > <a href="/edu/dream/dreamMain/main.do?menuNo=500034" >창의인재동반</a> </li>
+							<li id="gnb5" > <a href="/edu/job/cultureMain/main.do?menuNo=500046" >취업정보</a> </li>
+							<li id="gnb6" > <a href="/edu/main/contents.do?menuNo=500001" >아카데미소개</a> </li>
+						</ul>
+					</div>
+					<div class="gnbTotMenu"><a href="javascript:void(0);"><span class="hidden">전체메뉴 열기</span></a></div>
+					<div class="totMenuT">
+						<dl class="tms1">
+							<dt><a href="/edu/bbs/B0000011/list.do?menuNo=500007" >새소식</a></dt>
+							<dd>
+								<ul>
+									<li><a href="/edu/bbs/B0000011/list.do?menuNo=500008" >공지사항</a></li>
+									<li><a href="/edu/bbs/B0000038/list.do?menuNo=500017" >문의하기</a></li>
+									<li><a href="/edu/progrm/master/list.do?prgSe=05&amp;menuNo=500018" >이벤트</a></li>
+									<li><a href="/edu/bbs/B0000023/list.do?menuNo=500010" >스토리</a></li>
+								</ul>
+							</dd>
+						</dl>
+						<dl class="tms2">
+							<dt><a href="/edu/progrm/master/list.do?prgSe=01&amp;prgCl=13&amp;menuNo=500019" >현장교육</a></dt>
+							<dd>
+								<ul>
+									<li><a href="/edu/progrm/master/list.do?prgSe=01&amp;prgCl=13&amp;menuNo=500025" >콘텐츠 인사이트</a></li>
+									<li><a href="/edu/progrm/master/list.do?prgSe=01&amp;prgCl=12&amp;menuNo=500024" >콘텐츠 창의마스터클래스</a></li>
+									<li><a href="/edu/progrm/master/list.do?prgSe=01&amp;prgCl=10&amp;menuNo=500022" >융합아카데미</a></li>
+								</ul>
+							</dd>
+						</dl>
+						<dl class="tms3">
+							<dt><a href="/edu/onlineEdu/edumain/list.do?menuNo=500026" >온라인교육</a></dt>
+							<dd>
+								<ul>
+									<li><a href="/edu/onlineEdu/realm/list.do?p_ordersnm=favorsubjcnt&amp;menuNo=500027" >정규과정</a></li>
+									<li><a href="/edu/onlineEdu/openLecture/list.do?sortOrder=newOrdr&amp;menuNo=500085" >열린강좌</a></li>
+									<li><a href="/edu/main/contents.do?menuNo=500003" >홍보영상</a></li>
+									<li><a href="/edu/onlineEdu/edcsystm/list.do?menuNo=500030" >교육체계도</a></li>
+									<li><a href="/edu/main/contents.do?menuNo=500033" >학습지원</a></li>
+									<li><a href="/edu/main/contents.do?menuNo=500005" >기관(단체) 맞춤교육</a></li>
+								</ul>
+							</dd>
+						</dl>
+						<dl class="tms4">
+							<dt><a href="/edu/dream/dreamMain/main.do?menuNo=500034" >창의인재동반</a></dt>
+							<dd>
+								<ul>
+									<li><a href="/edu/bbs/B0000041/list.do?menuNo=500035" >창의현장</a></li>
+									<li><a href="/edu/dream/mainRsltManage/list.do?menuNo=500039" >창의동반</a></li>
+									<li><a href="/edu/bbs/B0000040/list.do?menuNo=500043" >미디어존</a></li>
+								</ul>
+							</dd>
+						</dl>
+						<dl class="tms5">
+							<dt><a href="/edu/job/cultureMain/main.do?menuNo=500046" >취업정보</a></dt>
+							<dd>
+								<ul>
+									<li><a href="/edu/main/contents.do?menuNo=500047" >취창업지원</a></li>
+									<li><a href="/edu/bbs/B0000047/list.do?menuNo=500096" >컬쳐매거진</a></li>
+									<li><a href="/edu/job/empmnPblanc/list.do?menuNo=500054" >채용정보</a></li>
+								</ul>
+							</dd>
+						</dl>
+						<dl class="tms6">
+							<dt><a href="/edu/main/contents.do?menuNo=500001" >아카데미소개</a></dt>
+							<dd>
+								<ul>
+									<li><a href="/edu/main/contents.do?menuNo=500002" >인사말</a></li>
+									<li><a href="/edu/main/contents.do?menuNo=500004" >교육협력기관</a></li>
+									<li><a href="/edu/main/contents.do?menuNo=500006" >찾아오시는 길</a></li>
+								</ul>
+							</dd>
+						</dl>
+						<a href="javascript:void(0);" class="closetotMenuT"><span class="hidden">전체메뉴 닫기</span></a> </div>
+				</div>
+				<!-- //gnb --> 
+			</div>
+		</div>
+	</div>
+	
+	<!-- //header --> 
+	
+	<!-- <div class="svisualSet"></div> --> 
+	
+	<!--container-->
+	<div id="containerSet">
+		<div class="navSet">
+			<div id="lnb">
+				<div class="lnbHome dib fl"><a href="/edu/main/main.do" class="ico03"><span class="hidden">홈페이지</span></a> </div>
+				<ul class="lnbNav fl">
+					<li class="menu01 on"> <a href="/edu/onlineEdu/realm/list.do?p_ordersnm=favorsubjcnt&amp;menuNo=500027" >정규과정</a> </li>
+					<li class="menu02 "> <a href="/edu/onlineEdu/openLecture/list.do?sortOrder=newOrdr&amp;menuNo=500085" >열린강좌</a> </li>
+					<li class="menu03 "> <a href="/edu/main/contents.do?menuNo=500003" >홍보영상</a> </li>
+					<li class="menu04 "> <a href="/edu/onlineEdu/edcsystm/list.do?menuNo=500030" >교육체계도</a> </li>
+					<li class="menu05 "> <a href="/edu/main/contents.do?menuNo=500033" >학습지원</a>
+						<ul>
+							<li class=""> <a	href="/edu/main/contents.do?menuNo=500086" >학습가이드</a> </li>
+							<li class=""> <a	href="/edu/main/contents.do?menuNo=500087" >학습환경 설정</a> </li>
+							<li class=""> <a	href="/edu/main/contents.do?menuNo=500089" >소프트웨어다운로드</a> </li>
+							<li class=""> <a	href="/edu/main/contents.do?menuNo=500090" >원격지원서비스</a> </li>
+							<li class=""> <a	href="/edu/main/contents.do?menuNo=500091" >모바일앱 서비스</a> </li>
+						</ul>
+						<span class="lnb2arr"></span> </li>
+					<li class="menu06 "> <a href="/edu/main/contents.do?menuNo=500005" >기관(단체) 맞춤교육</a> </li>
+				</ul>
+				
+				<!-- snsSet -->
+				<div class="snsSet snsIco">
+					<ul>
+						<li> <a href="javascript:void(0);" class="ico01 snsToggleOpen"><span class="hidden">SNS 공유하기</span></a>
+							<div class="snsDrop" style="display:none;">
+								<ul>
+									<li><a href="https://www.facebook.com/sharer.php?t=%ec%a0%95%ea%b7%9c%ea%b3%bc%ec%a0%95(%eb%aa%a9%eb%a1%9d)+%7c+%ec%98%a8%eb%9d%bc%ec%9d%b8%ea%b5%90%ec%9c%a1%26lt%3b+%ed%95%9c%ea%b5%ad%ec%bd%98%ed%85%90%ec%b8%a0%ec%95%84%ec%b9%b4%eb%8d%b0%eb%af%b8&amp;u=%2fedu%2fonlineEdu%2fedumain%2flist.do%3fmenuNo%3d500026" class="icos01" onclick="return facebookOpen();" title="(새창열림)페이스북 링크 공유하기" target="_blank"><span class="hidden">페이스북</span></a></li>
+									<li><a href="https://twitter.com/share?text=%ec%a0%95%ea%b7%9c%ea%b3%bc%ec%a0%95(%eb%aa%a9%eb%a1%9d)+%7c+%ec%98%a8%eb%9d%bc%ec%9d%b8%ea%b5%90%ec%9c%a1%26lt%3b+%ed%95%9c%ea%b5%ad%ec%bd%98%ed%85%90%ec%b8%a0%ec%95%84%ec%b9%b4%eb%8d%b0%eb%af%b8&amp;url=%2fedu%2fonlineEdu%2fedumain%2flist.do%3fmenuNo%3d500026" class="icos02" onclick="return twitterOpen();" title="(새창열림)트위터 링크 공유하기" target="_blank"><span class="hidden">트위터</span></a></li>
+								</ul>
+							</div>
+						</li>
+						<li><a Href="#self" Class="ico02 CopyClipOpen"><span Class="hidden">URL 복사하기</span></a> 
+							<script type="text/javascript">
+							//<![CDATA[
+								var linkURL = document.URL;
+								//$("#COPYCP").prop("value", linkURL);
+								function urlLink() {
+								    var IE = (document.all) ? true : false;
+								    if (IE) {
+								         window.clipboardData.setData('Text', linkURL);
+								         alert('주소가 복사되었습니다. 브라우저의 URL 입력창에 Ctrl+V로 붙여 넣기 하세요.');
+								    } else {
+								        temp = prompt("이 글의 트랙백 주소입니다. Ctrl+C를 눌러 클립보드로 복사하세요", linkURL );
+								    }
+								    return false;
+								}
+								$(".snsIco .ico02").click(function(){
+									urlLink();
+									return false;
+								});
+							//]]>
+							</script> 
+						</li>
+						<li><a href="/edu/forPrint.jsp" class="ico03" onclick="window.open(this.href, 'printPage', 'width=1120,height=650,scrollbars=1,toolbar=1,status');return false;" target="_blank" title="(새창열림)내용인쇄하기"><span class="hidden">인쇄하기</span></a></li>
+					</ul>
+				</div>
+				<!-- //snsSet --> 
+				
+			</div>
+		</div>
+		<div id="container" class="clearfix">
+			<div id="locationSet">
+				<div class="hgroup">
+					<h1><span> 온라인교육 </span></h1>
+				</div>
+				<div id="location">
+					<ol>
+						<li class="home">home</li>
+						<li class="current">온라인교육<span class="more"></span></li>
+					</ol>
+				</div>
+			</div>
+			
+			<!--content-->
+			<div id="content"> 
+				
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+				<!--content-->
+				<div class="photoGallery5">
+					<ul id="subjrealm">
+						<li> <a href="#" onclick="fnCmdViewPage('CG12015', '스마트게임 인터페이스 프로그래밍', 'ON', 'C01', '기획', '2015', '0016', '500028'); return false;" class="link"> <img alt="스마트게임 인터페이스 프로그래밍" src="/upload/bulletin/Subject_introducefile_201407171613511_lee1.gif" width="336px;" height="216px;" /> <span>스마트게임 인터페이스 프로그래밍</span> </a>
+							<div class="icoEvent">
+								<img src="/edu/images/common/icoEvent_end.png" alt="완료" />
+								<!-- 세가지중 하나 -->
+								<!-- <img src="/edu/images/common/icoEvent_ing.png" alt="이벤트 진행중" />
+								<img src="/edu/images/common/icoEvent_end.png" alt="이벤트 완료" /> -->
+							</div>
+							<span class="dib date">2015.12.25</span>
+						</li>
+						<li> <a href="#" onclick="fnCmdViewPage('CK12012', '히트하는 뮤지컬, 기획부터 홍보까지', 'ON', 'C01', '기획', '2015', '0024', '500028'); return false;" class="link"> <img alt="히트하는 뮤지컬, 기획부터 홍보까지" src="/upload/bulletin/Subject_introducefile_201407171725281_lee1.gif" width="336px;" height="216px;" /> <span>히트하는 뮤지컬, 기획부터 홍보까지</span> </a>
+							<div class="icoEvent">
+								<img src="/edu/images/common/icoEvent_ing.png" alt="진행중" />
+							</div>
+							<span class="dib date">2015.12.25</span>
+						</li>
+						<li> <a href="#" onclick="fnCmdViewPage('CK12011', '성공사례-문화콘텐츠를 말하다', 'ON', 'C01', '기획', '2015', '0024', '500028'); return false;" class="link"> <img alt="성공사례-문화콘텐츠를 말하다" src="/upload/bulletin/Subject_introducefile_201407171724531_lee1.gif" width="336px;" height="216px;" /> <span>성공사례-문화콘텐츠를 말하다</span> </a>
+							<div class="icoEvent">
+								<img src="/edu/images/common/icoEvent_next.png" alt="예정" />
+							</div>
+							<span class="dib date">2015.12.25</span>
+						</li>
+						<li> <a href="#" onclick="fnCmdViewPage('CK12012', '히트하는 뮤지컬, 기획부터 홍보까지', 'ON', 'C01', '기획', '2015', '0024', '500029'); return false;" class="link"> <img alt="히트하는 뮤지컬, 기획부터 홍보까지" src="/upload/bulletin/Subject_introducefile_201407171725281_lee1.gif" width="336px;" height="216px;" /> <span>히트하는 뮤지컬, 기획부터 홍보까지</span> </a>
+							<div class="icoEvent">
+								<img src="/edu/images/common/icoEvent_end.png" alt="이벤트 완료" />
+							</div>
+							<span class="dib date">2015.12.25</span>
+						</li>
+						<li> <a href="#" onclick="fnCmdViewPage('CG12013', '스케일폼을 활용한 게임 UI개발', 'ON', 'C02', '제작', '2015', '0016', '500029'); return false;" class="link"> <img alt="스케일폼을 활용한 게임 UI개발" src="/upload/bulletin/Subject_introducefile_201407171612391_lee1.gif" width="336px;" height="216px;" /> <span>스케일폼을 활용한 게임 UI개발</span> </a>
+							<div class="icoEvent">
+								<img src="/edu/images/common/icoEvent_end.png" alt="이벤트 완료" />
+							</div>
+							<span class="dib date">2015.12.25</span>
+						</li>
+						<li> <a href="#" onclick="fnCmdViewPage('CG12014', '엔진별로 살펴보는 게임이펙트 실무강좌', 'ON', 'C02', '제작', '2015', '0016', '500029'); return false;" class="link"> <img alt="엔진별로 살펴보는 게임이펙트 실무강좌" src="/upload/bulletin/Subject_introducefile_201407171613141_lee1.gif" width="336px;" height="216px;" /> <span>엔진별로 살펴보는 게임이펙트 실무강좌</span> </a>
+							<div class="icoEvent">
+								<img src="/edu/images/common/icoEvent_end.png" alt="이벤트 완료" />
+							</div>
+							<span class="dib date">2015.12.25</span>
+						</li>
+						<li> <a href="#" onclick="fnCmdViewPage('CK12012', '히트하는 뮤지컬, 기획부터 홍보까지', 'ON', 'C01', '기획', '2015', '0024', '500029'); return false;" class="link"> <img alt="히트하는 뮤지컬, 기획부터 홍보까지" src="/upload/bulletin/Subject_introducefile_201407171725281_lee1.gif" width="336px;" height="216px;" /> <span>히트하는 뮤지컬, 기획부터 홍보까지</span> </a>
+							<div class="icoEvent">
+								<img src="/edu/images/common/icoEvent_end.png" alt="이벤트 완료" />
+							</div>
+							<span class="dib date">2015.12.25</span>
+						</li>
+						<li> <a href="#" onclick="fnCmdViewPage('CG12013', '스케일폼을 활용한 게임 UI개발', 'ON', 'C02', '제작', '2015', '0016', '500029'); return false;" class="link"> <img alt="스케일폼을 활용한 게임 UI개발" src="/upload/bulletin/Subject_introducefile_201407171612391_lee1.gif" width="336px;" height="216px;" /> <span>스케일폼을 활용한 게임 UI개발</span> </a>
+							<div class="icoEvent">
+								<img src="/edu/images/common/icoEvent_end.png" alt="이벤트 완료" />
+							</div>
+							<span class="dib date">2015.12.25</span>
+						</li>
+						<li> <a href="#" onclick="fnCmdViewPage('CG12014', '엔진별로 살펴보는 게임이펙트 실무강좌', 'ON', 'C02', '제작', '2015', '0016', '500029'); return false;" class="link"> <img alt="엔진별로 살펴보는 게임이펙트 실무강좌" src="/upload/bulletin/Subject_introducefile_201407171613141_lee1.gif" width="336px;" height="216px;" /> <span>엔진별로 살펴보는 게임이펙트 실무강좌</span> </a>
+							<div class="icoEvent">
+								<img src="/edu/images/common/icoEvent_end.png" alt="이벤트 완료" />
+							</div>
+							<span class="dib date">2015.12.25</span>
+						</li>
+					</ul>
+				</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			</div>
+			<!--//content-->
+			<hr />
+			<!--<a href="#self" class="pageTop" title="문서 처음으로 이동">TOP</a> </div>--> 
+			
+			<!--//container--> 
+		</div>
+		<hr />
+		<div class="quickSet">
+			<div class="quick" id="quick"> <a href="/edu/main/contents.do?menuNo=500003" class="ico1"><span class="sr-only">홍보영상</span></a> <a href="/edu/bbs/B0000010/list.do?menuNo=500009" class="ico2"><span class="sr-only">보도자료</span></a> <a href="/edu/bbs/B0000038/list.do?menuNo=500017" class="ico3"><span class="sr-only">문의하기</span></a> <a href="/edu/main/contents.do?menuNo=500006" class="ico4"><span class="sr-only">오시는길</span></a> <a href="#wrap" class="ico5"><span class="hidden">맨 처음으로 이동</span></a> </div>
+		</div>
+	</div>
+</div>
+<!-- //wrap --> 
+
+<!-- footer -->
+
+<div class="footerSet">
+	<div id="footer">
+		<div class="fContents">
+			<div class="fLinks"> <a href="/edu/main/contents.do?menuNo=500069" class="ml0"><strong>개인정보처리방침</strong></a> <a href="/edu/main/contents.do?menuNo=500068">이용약관</a> <a href="/edu/bbs/B0000038/list.do?menuNo=500017">문의하기</a> <a href="/edu/main/contents.do?menuNo=500074">사이트맵</a> <a href="/edu/main/contents.do?menuNo=500091" class="linkRed pl0 pr0 fr tar">한국콘텐츠아카데미앱 다운로드<span class="fLinkArr"></span></a> </div>
+			<div class="copyright">
+				<div class="fl fLogoSet">
+					<div class="fImages fLogo"><span class="hidden">한국콘텐츠아카데미(하단로고)</span></div>
+				</div>
+				<p>본 페이지에 게시된 이메일주소가 자동 수집되는 것을 거부하며, 이를 위반시 정보통신법에 의해 처벌됨을 유념하시기 바랍니다.</p>
+				<address>
+				본원 : [58217] 전라남도 나주시 교육길 35 한국콘텐츠진흥원<br />
+				대학로분원 : [03082] 서울시 종로구 대학로 57 콘텐츠코리아랩  사업자번호 : 105-82-17272
+				</address>
+				<div class="copy">Copyright 2015. Korea Creative Content Agency all rights reserved.</div>
+			</div>
+			<div class="footerRt">
+				<div class="selBox tar">
+					<form name="siteGoLink" action="#none" method="post" target="_blank" onsubmit="return fnGoLinkSite(this);">
+						<select class="vm" name="link" title="관련 사이트를 선택해 주세요.">
+							<option value="">관련사이트</option>
+							<option value="http://www.mcst.go.kr/main.jsp">문화체육관광부</option>
+							<option value="http://www.kocca.kr/cop/main.do">한국콘텐츠진흥원</option>
+							<option value="https://www.ckl.or.kr:446/www/main/userMain/main.do">콘텐츠코리아랩</option>
+							<option value="http://www.culturist.or.kr/">종합인력정보</option>
+							<!-- <option value="https://dream.kocca.kr/home.do">창의드림</option> -->
+							<option value="http://www.culturecontent.com/main.do">문화콘텐츠닷컴</option>
+							<option value="http://www.kgq.or.kr/service/pub/IntroServlet">게임국가자격기술검정</option>
+						</select>
+						<input type="image" src="/edu/images/common/siteGo.gif" alt="이동" class="vm" />
+					</form>
+				</div>
+				<div class="logoGroup"> <a href="http://www.ckl.or.kr" class="fImages fLink1" target="_blank" title="새창열림"><span class="hidden"><strong>콘텐츠코리아랩 바로가기</strong></span></a> 
+					<!-- <a href="#self" title="새창열림" class="fImages fLink2"><span class="hidden">e러닝전문기관인증</span></a>
+					<a href="#self" title="새창열림" class="fImages fLink3"><span class="hidden">개인정보보호안전 인증</span></a>
+					<a href="#self" class="fImages fLink4"><span class="hidden">콘텐츠제공서비스 품질인증</span></a> --> 
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- //footer --> 
+
+<!--[if lte IE 7]>
+<script type="text/javascript">
+//<![CDATA[
+	$('*').each(function(index) {
+		if ($(this).css("overflow")=="hidden"){
+			$(this).css("zoom",1);
+		}
+		if ($(this).css("display")=="inline-block"){
+			$(this).css("display",'inline');
+			$(this).css("zoom",1);
+		}
+	});
+//]]>
+</script>
+<![endif]-->
+
+</body>
+</html>

@@ -1,0 +1,480 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:cps="http://www.unpl.co.kr/schema/cmm-program-service"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+			http://www.unpl.co.kr/schema/cmm-program-service http://www.unpl.co.kr/schema/cmm-program-service-1.0.xsd">
+
+	<bean id="antPathMater" class="org.springframework.util.AntPathMatcher" />
+
+	<bean id="defaultCmmProgramManager" class="kr.co.unp.cmm.crud.config.DefaultCmmProgramManager">
+		<property name="serviceNameMap">
+			<map>
+				<entry key="default" value="defaultCmmProgramService" />
+				<entry key="siteMng" value="cacheRefreshSiteMngServiceProxy" />
+				<entry key="comment" value="commentService" />
+				<entry key="member" value="memberService" />
+				<entry key="banner" value="bannerService" />
+				<entry key="ntcnAlert" value="ntcnAlertService" />
+			</map>
+		</property>
+		<property name="mvrNameMap">
+			<map>
+				<entry key="default" value="uriModelAndViewResolver" />
+				<entry key="comment" value="commentModelAndViewResolver" />
+				<entry key="ntcnAlert" value="ntcnAlertModelAndViewResolver" />
+			</map>
+		</property>
+		<property name="validatorNameMap">
+			<map>
+				<entry key="default" value="bbsValidator" />
+			</map>
+		</property>
+	</bean>
+
+	<bean id="uriModelAndViewResolver" class="kr.co.unp.cmm.crud.mvr.UriModelAndViewResolver">
+		<property name="includePageMap">
+			<map>
+				<entry key="/bos/member/forLogin**" value="bos/member/forLogin" />
+
+				<entry key="/bos/ntcnAlert/list**" value="/bos/ntcnAlert/List.jsp" />
+				<entry key="/bos/ntcnAlert/forUpdate**" value="/bos/ntcnAlert/Update.jsp" />
+				<entry key="/bos/ntcnAlert/forInsert**" value="/bos/ntcnAlert/Update.jsp" />
+
+				<entry key="/bos/banner/list**" value="/bos/banner/List.jsp" />
+				<entry key="/bos/banner/view**" value="/bos/banner/Read.jsp" />
+				<entry key="/bos/banner/forInsert**" value="/bos/banner/Update.jsp" />
+				<entry key="/bos/banner/forUpdate**" value="/bos/banner/Update.jsp" />
+
+				<entry key="/bos/archive/list.do**" value="/bos/archive/list.jsp" />
+				<entry key="/bos/archive/view.do**" value="/bos/archive/Read.jsp" />
+				<entry key="/bos/archive/forInsert**" value="/bos/archive/reg.jsp" />
+				<entry key="/bos/archive/forUpdate**" value="/bos/archive/reg.jsp" />
+
+				<entry key="/bos/archive/deptList.do**" value="/bos/archive/deptList.jsp" />
+				<entry key="/bos/archive/deptListView.do**" value="/bos/archive/Read.jsp" />
+				<entry key="/bos/archive/deptListForInsert**" value="/bos/archive/deptReg.jsp" />
+				<entry key="/bos/archive/deptListForUpdate**" value="/bos/archive/deptReg.jsp" />
+				
+				<entry key="/edu/archiveUser/list.do**"    value="/edu/archiveUser/list.jsp" />
+			    <entry key="/edu/archiveUser/contentsList.do**" value="/edu/archiveUser/contentsList.jsp" />
+				<entry key="/edu/archiveUser/contentsDeptList.do**" value="/edu/archiveUser/contentsDeptList.jsp" /> 
+
+				<entry key="/bos/member/forUpdateMy**" value="/bos/member/updateMy.jsp" />
+				<entry key="/bos/userMember/pwdReset**" value="/bos/userMember/pwdReset.jsp" />
+
+				<entry key="/bos/member/listPop**" value="bos/member/listMpmPop" />
+				<entry key="/bos/memberDept/list**" value="/bos/member/deptList" />
+
+				<entry key="/bos/popupMng/list**" value="/bos/popupMng/List.jsp" />
+				<entry key="/bos/popupMng/forInsert**" value="/bos/popupMng/Add.jsp" />
+				<entry key="/bos/popupMng/forUpdate**" value="/bos/popupMng/Add.jsp" />
+				<entry key="/edu/popupMng/script**" value="edu/popupMng/script" />
+				<entry key="/edu/popupMng/popup**" value="edu/popupMng/popup" />
+				<!-- <entry key="/edu/search/list**" value="edu/search/list" /> -->
+				<entry key="/ckl/popupMng/script**" value="edu/popupMng/script" />
+				<entry key="/ckl/popupMng/popup**" value="edu/popupMng/popup" />
+				<!-- <entry key="/ckl/search/list**" value="ckl/search/list" /> -->
+
+				<entry key="/sso/member/forLoginSSO**" value="sso/member/forLoginSSO" />
+				<entry key="/sso/member/incForLoginSSO**" value="sso/member/incForLoginSSO" />
+				<entry key="/sso/member/checkSSO**" value="sso/member/checkSSO" />
+				<entry key="/sso/member/incJoin01**" value="sso/member/incJoin01" />
+				<entry key="/sso/member/incSimpleLogin**" value="sso/member/incSimpleLogin" />
+
+
+
+				<entry key="/*/main/main.do*" value="[siteName]/main/[siteName]Main" />
+
+
+				<!-- 신규 추가페이지 -->
+				<entry key="/edu/main2/main.do*" value="[siteName]/main/[siteName]Main2" />
+				<entry key="/edu/main3/main.do*" value="[siteName]/main/[siteName]Main3" />
+
+			</map>
+		</property>
+	</bean>
+
+	<bean id="ntcnAlertModelAndViewResolver" class="kr.co.unp.ntcn.service.NtcnAlertModelAndViewResolver">
+		<property name="includePageMap">
+			<map>
+				<entry key="/bos/ntcnAlert/list**" value="/bos/ntcnAlert/[type]/List.jsp" />
+				<entry key="/bos/ntcnAlert/view**" value="/bos/ntcnAlert/[type]/List.jsp" />
+				<entry key="/bos/ntcnAlert/forInsert**" value="/bos/ntcnAlert/[type]/Update.jsp" />
+				<entry key="/bos/ntcnAlert/forUpdate**" value="/bos/ntcnAlert/[type]/Update.jsp" />
+			</map>
+		</property>
+	</bean>
+
+	<bean id="commentModelAndViewResolver" class="kr.co.unp.bbs.mvr.CommentModelAndViewResolver">
+		<property name="includePageMap">
+			<map>
+				<entry key="/*/cmmnt/forUpdateComment/**" value="/[siteName]/cmmnt/Reg.jsp" />
+				<entry key="/*/cmmnt/forUpdateCommentPop/**" value="[siteName]/bbs/cmmntUpdate" />
+			</map>
+		</property>
+	</bean>
+
+	<!-- articleAccessor -->
+	<bean id="passThroughArticleAccessor" class="kr.co.unp.bbs.accessor.PassThroughArticleAccessor" />
+
+	<bean id="commentArticleAccessor" class="kr.co.unp.bbs.accessor.DefaultArticleAccessor">
+		<property name="queryId" value="CommentDAO.selectComment" />
+	</bean>
+
+	<bean id="bbsArticleAccessor" class="kr.co.unp.bbs.accessor.BbsArticleAccessor">
+		<property name="queryId" value="optionalBoardDAO.articeByAccess" />
+	</bean>
+
+	<!-- listener -->
+	<bean id="logListener" class="kr.co.unp.cmm.crud.listener.LogCmmProgramListener" />
+
+	<bean id="mainCacheRemoveListener" class="kr.co.ckl.listener.CacheRemoveListener">
+		<property name="cacheName">
+			<util:constant
+				static-field="kr.co.unp.main.service.MainService.PORTAL_MAIN_CACHE_NAME" />
+		</property>
+	</bean>
+	<!-- //listener -->
+
+	<cps:cps id="mainService" class="kr.co.unp.main.service.MainService" />
+
+	<!-- 아카이브 서비스 -->
+	<cps:cps id="archiveUserService" class="kr.co.unp.archive.service.ArchiveUserService" />
+	<cps:cps id="archiveBosService" class="kr.co.unp.archive.service.ArchiveBosService" />
+
+	<!-- 배너서비스 -->
+	<cps:cps id="bannerService" class="kr.co.unp.banner.service.BannerService">
+		<cps:listeners>
+			<cps:listener ref="COM092CmmCodeViewListener" />
+		</cps:listeners>
+	</cps:cps>
+
+	<cps:cps id="adminMemberService" class="kr.co.unp.member.service.AdminMemberService">
+		<cps:listeners>
+			<cps:listener target-methods="insert,update"
+				ref="AuthAccessLogCmmProgramListener" />
+		</cps:listeners>
+	</cps:cps>
+
+	<cps:cps id="memberService" pageQuery="memberPageQuery"
+		class="kr.co.unp.member.service.MemberService">
+		<cps:listeners>
+			<cps:listener target-methods="reg" ref="COM056CmmCodeViewListener" />
+			<cps:listener target-methods="join02" ref="COM063CmmCodeViewListener" />
+			<cps:listener target-methods="join02" ref="COM056CmmCodeViewListener" />
+		</cps:listeners>
+	</cps:cps>
+
+	<cps:cps id="userMemberService" pageQuery="memberPageQuery"
+		class="kr.co.unp.member.service.UserMemberService" scope="prototype">
+		<cps:listeners>
+			<cps:listener target-methods="list,forUpdate" ref="COM088CmmCodeViewListener" />
+			<cps:listener target-methods="view,forInsert,forUpdate"
+				ref="COM056CmmCodeViewListener" />
+			<cps:listener target-methods="view,reg,forUpdate" ref="COM063CmmCodeViewListener" />
+			<cps:listener target-methods="list,view,forUpdate,update,delete"
+				ref="MemberAccessLogCmmProgramListener" />
+		</cps:listeners>
+	</cps:cps>
+
+	<cps:cps id="adminMemberDeptService" class="kr.co.unp.member.service.AdminMemberDeptService" />
+
+	<cps:cps id="commonContentsService"
+		class="kr.co.unp.mpm.service.impl.CommonContentsServiceImpl"
+		pageQuery="commonContentsPageQuery" count-query-id="commonContentsDAO.getMenuUserListTotCnt"
+		list-query-id="commonContentsDAO.getMenuUserList" view-query-id="commonContentsDAO.getMenuUserDetail"
+		delete-query-id="commonContentsDAO.deleteProc" />
+
+	<cps:cps id="popupMngService" class="kr.co.unp.popupMng.service.PopupMngService"
+		pageQuery="popupMngPageQuery">
+		<cps:listeners>
+			<cps:listener target-methods="insert,update,delete" ref="mainCacheRemoveListener" />
+		</cps:listeners>
+	</cps:cps>
+
+	<cps:cps id="ntcnAlertService" class="kr.co.unp.ntcn.service.NtcnAlertProgramService">
+		<cps:listeners>
+			<cps:listener target-methods="insert,update,delete" ref="mainCacheRemoveListener" />
+		</cps:listeners>
+	</cps:cps>
+
+	<cps:cps id="siteMngService" class="kr.co.unp.siteMng.service.SiteMngService">
+		<cps:listeners>
+			<cps:listener target-methods="forUpdate,forInsert" ref="logListener" />
+		</cps:listeners>
+	</cps:cps>
+
+	<cps:cps id="commentService" class="kr.co.unp.bbs.service.CommentService"
+		accessor="commentArticleAccessor" />
+
+	<cps:cps id="searchService" class="kr.co.ckl.search.SearchService"
+		pageQuery="searchPageQuery">
+		<cps:listeners>
+			<cps:listener target-methods="list" ref="COM050CmmCodeViewListener" />
+			<cps:listener target-methods="list" ref="COM052CmmCodeViewListener" />
+		</cps:listeners>
+		<property name="bbsFieldList">
+			<list>
+				<value>nttId</value>
+				<value>bbsId</value>
+				<value>nttSj</value>
+				<value>nttCn</value>
+				<value>relateMenuNmList</value>
+				<value>fullMenuLink</value>
+				<value>regDate</value>
+				<value>frstRegistPnttm</value>
+				<value>lastUpdtPnttm</value>
+				<value>menuNm</value>
+				<value>menuNo</value>
+			</list>
+		</property>
+		<property name="filesFieldList">
+			<list>
+				<value>fileSn</value>
+				<value>atchFileId</value>
+				<value>fileStreCours</value>
+				<value>orignlFileNm</value>
+				<value>fileExtsn</value>
+				<value>fileMg</value>
+				<value>relateMenuNmList</value>
+				<value>fullMenuLink</value>
+				<value>regDate</value>
+				<value>frstRegistPnttm</value>
+				<value>author</value>
+				<value>nttSj</value>
+				<value>text</value>
+			</list>
+		</property>
+		<property name="menuFieldList">
+			<list>
+				<value>menuNo</value>
+				<value>relateMenuNmList</value>
+				<value>fullMenuLink</value>
+				<value>lastUpdtPnttm</value>
+			</list>
+		</property>
+		<property name="webpageFieldList">
+			<list>
+				<value>menuNo</value>
+				<value>relateMenuNmList</value>
+				<value>fullMenuLink</value>
+				<value>lastUpdtPnttm</value>
+				<value>author</value>
+				<value>title</value>
+				<value>text</value>
+			</list>
+		</property>
+		<property name="progrmFieldList">
+			<list>
+				<value>taskSeq</value>
+				<value>prgSn</value>
+				<value>prgNm</value>
+				<value>text</value>
+				<value>prgSe</value>
+				<value>prgSeNm</value>
+				<value>prgCl</value>
+				<value>prgClNm</value>
+				<value>beginDt</value>
+				<value>endDt</value>
+				<value>progrsSttus</value>
+				<value>psncpa</value>
+				<value>reqstMthd</value>
+				<value>reqstMthdNm</value>
+				<value>fullMenuLink</value>
+				<value>siteNm</value>
+			</list>
+		</property>
+		<property name="onlineEduFieldList">
+			<list>
+				<value>id</value>
+				<value>title</value>
+				<value>text</value>
+				<value>gubunSe</value>
+				<value>gubun</value>
+				<value>category</value>
+				<value>categoryNm</value>
+				<value>fullMenuLink</value>
+				<value>regDate</value>
+				<value>siteNm</value>
+			</list>
+		</property>
+	</cps:cps>
+
+	<!-- <cps:cps id="kakaoService" class="kr.co.unp.sns.service.KakaoService" 
+		/> -->
+
+	<cps:cps id="twitterService" class="kr.co.unp.sns.service.TwitterService" />
+
+	<cps:cps id="naverBlogService" class="kr.co.unp.sns.service.NaverBlogService" />
+
+	<cps:cps id="tiStoryService" class="kr.co.unp.sns.service.TiStoryService" />
+
+	<bean id="COM066CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewListener">
+		<constructor-arg index="0" value="COM066" />
+		<constructor-arg index="1" value="option5" />
+		<constructor-arg index="2" value="option5Nm" />
+	</bean>
+
+	<bean id="COM067CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewListener">
+		<constructor-arg index="0" value="COM067" />
+		<constructor-arg index="1" value="option5" />
+		<constructor-arg index="2" value="option5Nm" />
+	</bean>
+
+	<bean id="COM068CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewListener">
+		<constructor-arg index="0" value="COM068" />
+		<constructor-arg index="1" value="option5" />
+		<constructor-arg index="2" value="option5Nm" />
+	</bean>
+
+	<bean id="COM069CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewListener">
+		<constructor-arg index="0" value="COM069" />
+		<constructor-arg index="1" value="option5" />
+		<constructor-arg index="2" value="option5Nm" />
+	</bean>
+
+	<bean id="COM070CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewListener">
+		<constructor-arg index="0" value="COM070" />
+		<constructor-arg index="1" value="option18" />
+		<constructor-arg index="2" value="option18Nm" />
+	</bean>
+
+	<bean id="COM074CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewListener">
+		<constructor-arg index="0" value="COM074" />
+		<constructor-arg index="1" value="option18" />
+		<constructor-arg index="2" value="option18Nm" />
+	</bean>
+
+	<bean id="COM075CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewListener">
+		<constructor-arg index="0" value="COM075" />
+		<constructor-arg index="1" value="option19" />
+		<constructor-arg index="2" value="option19Nm" />
+	</bean>
+
+	<bean id="COM077CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewListener">
+		<constructor-arg index="0" value="COM077" />
+		<constructor-arg index="1" value="option6" />
+		<constructor-arg index="2" value="option6Nm" />
+	</bean>
+
+	<bean id="COM078CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewListener">
+		<constructor-arg index="0" value="COM078" />
+		<constructor-arg index="1" value="option8" />
+		<constructor-arg index="2" value="option8Nm" />
+	</bean>
+
+	<!-- 성별(공통) -->
+	<bean id="COM079CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewListener">
+		<constructor-arg index="0" value="COM079" />
+		<constructor-arg index="1" value="sex" />
+		<constructor-arg index="2" value="sexNm" />
+	</bean>
+
+	<!-- 회원인증방식 -->
+	<bean id="COM088CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewListener">
+		<constructor-arg index="0" value="COM088" />
+		<constructor-arg index="1" value="authSe" />
+		<constructor-arg index="2" value="authSeNm" />
+	</bean>
+
+	<!-- 멘티 멘토 구분 -->
+	<bean id="COM089CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewListener">
+		<constructor-arg index="0" value="COM089" />
+		<constructor-arg index="1" value="option2" />
+		<constructor-arg index="2" value="option2Nm" />
+	</bean>
+
+	<!-- 멘티 멘토 구분 -->
+	<bean id="COM091CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewListener">
+		<constructor-arg index="0" value="COM091" />
+		<constructor-arg index="1" value="option3" />
+		<constructor-arg index="2" value="option3Nm" />
+	</bean>
+
+	<!-- 배너 구분 -->
+	<bean id="COM092CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewListener">
+		<constructor-arg index="0" value="COM092" />
+		<constructor-arg index="1" value="BannerSe" />
+		<constructor-arg index="2" value="BannerSeNm" />
+	</bean>
+
+	<!-- 공지사항 구분 -->
+	<bean id="COM101CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewListener">
+		<constructor-arg index="0" value="COM101" />
+		<constructor-arg index="1" value="option1" />
+		<constructor-arg index="2" value="option1Nm" />
+	</bean>
+
+	<!-- 온라인모의면접 분야 -->
+	<bean id="COM113CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewListener">
+		<constructor-arg index="0" value="COM113" />
+		<constructor-arg index="1" value="option1" />
+		<constructor-arg index="2" value="option1Nm" />
+	</bean>
+
+	<!-- 시연장 - 유실물 게시판 말머리 -->
+	<bean id="COM127CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewListener">
+		<constructor-arg index="0" value="COM127" />
+		<constructor-arg index="1" value="option1" />
+		<constructor-arg index="2" value="option1Nm" />
+	</bean>
+
+	<!-- 기관구분 -->
+	<bean id="COM161CmmCodeViewListener" class="kr.co.unp.cmm.crud.listener.CmmCodeViewListener">
+		<constructor-arg index="0" value="COM161" />
+		<constructor-arg index="1" value="option12" />
+		<constructor-arg index="2" value="option12Nm" />
+	</bean>
+
+	<!-- 데코레이트 패턴을 적용한 SiteMngService -->
+	<bean id="siteMngServiceDecorator"
+		class="kr.co.unp.cmm.crud.service.CacheRemoveProgramServiceDecorator">
+		<property name="service" ref="siteMngService" />
+		<property name="cacheName" value="storedSiteMng" />
+	</bean>
+
+	<!-- 프락시를 적용한 SiteMngService -->
+	<bean id="cacheRefreshAdvice" class="kr.co.unp.cmm.crud.interceptor.CacheRefreshAdvice" />
+
+	<bean id="siteMngServiceClassFilter" class="org.springframework.aop.aspectj.TypePatternClassFilter">
+		<property name="typePattern" value="kr.co.unp.siteMng.service.*" />
+	</bean>
+
+	<bean id="cacheRefreshAdvisor"
+		class="org.springframework.aop.support.NameMatchMethodPointcutAdvisor">
+		<property name="classFilter" ref="siteMngServiceClassFilter" />
+		<property name="advice" ref="cacheRefreshAdvice" />
+		<property name="mappedNames">
+			<list>
+				<value>forUpdate</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="cacheRefreshAjAdvisor"
+		class="org.springframework.aop.aspectj.AspectJExpressionPointcutAdvisor">
+		<property name="advice" ref="cacheRefreshAdvice" />
+		<property name="expression"
+			value="
+			execution(* kr.co.unp.siteMng.service.SiteMngService.update(..)) or
+			execution(* kr.co.unp.siteMng.service.SiteMngService.insert(..)) or
+			execution(* kr.co.unp.siteMng.service.SiteMngService.delete(..))" />
+	</bean>
+
+	<!-- insert, update, delete 메소드 실행시 캐시갱신한 SiteMngService 프락시서비스 -->
+	<bean id="cacheRefreshSiteMngServiceProxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target" ref="siteMngService" />
+		<property name="interceptorNames">
+			<list>
+				<value>cacheRefreshAjAdvisor</value>
+			</list>
+		</property>
+	</bean>
+	<!-- //프락시를 적용한 SiteMngService -->
+
+</beans>

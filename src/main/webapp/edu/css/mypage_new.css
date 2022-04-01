@@ -1,0 +1,35 @@
+	/* 새로운 css */
+	input[type="submit"] {align-items: flex-start;text-align: center;cursor: default;color: buttontext;background-color: buttonface;box-sizing: border-box;padding: 2px 6px 3px;border-width: none;border-style:none;border-top-style: none;border-right-style: none;border-bottom-style: none;border-left-style: none;border-color: none;border-image: initial;box-shadow:none;-webkit-appearance:none;-moz-appearance: none;-o-appearance:none;appearance: none;box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset}
+
+	.photoGallery3 {overflow: hidden;border-top: 2px solid #3e3a39;width: 100%;margin-bottom: 50px;}
+	.photoGallery3 ul {width:100%;}
+	.photoGallery3 ul li {float:left;width:100%;padding:20px 0;border-bottom:1px solid #e9e9e9;}
+	.photoGallery3 ul li span.nimg {float:left;width:270px;}
+	.photoGallery3 ul li span.nimg img {float:left;width:250px;height:150px;}
+	.icoDanger1 {display: inline-block;background: url(/edu/images/mypage/icoRev.png) -210px -8px;width: 24px;height: 24px;vertical-align: middle;}
+	.photoGallery3 ul li .ntitle_all {float:left;width:800px;padding:8px 0 0;border-bottom:1px solid #ccc;}
+	.photoGallery3 ul li p.ntitle {float:left;width:500px;padding:8px 0;}
+	.photoGallery3 ul li p.ntitle span.ntitle_text {font-weight:600;color:#333;}
+	.photoGallery3 ul li p.ntitle2 {float:right;width:165px;font-size:12px;_color:#f76321; text-align:right; margin-top: 5px;}
+	.photoGallery3 ul li p.ntitle2 .subico {float:left;width:25px;height:25px;margin-right:5px;}
+
+	.photoGallery3 ul li p.nbtn {float:left;width:800px;height:30px;text-align:right;padding:5px 0;}
+	.photoGallery3 ul li p.nbtn .nbtn_off {font-size:12px;color:#fff;background-color:#737373;border-radius:5px;padding:3px 10px 4px;box-shadow: 0 0 0 rgba(0, 0, 0, 0) inset;}
+	.photoGallery3 ul li p.nbtn .nbtn_on {font-size:12px;color:#fff;background-color:#3e3a39;border-radius:5px;padding:3px 10px 4px;box-shadow: 0 0 0 rgba(0, 0, 0, 0) inset;}
+	.photoGallery3 .my_progress {float:left;width:800px;position:relative;margin-top:30px;}
+	.photoGallery3 .my_progress span.my_progress_text {float:left;width:105px;}
+	
+	.photoGallery3 .my_progress span.my_progress_pass {float:left;position:absolute;top:-56px;left:490px;z-index:220;text-align:center;}
+	.photoGallery3 .my_progress span.my_progress_pass img {float:left;position:absolute;width:18px;height:29px;left:43px;z-index:220;text-align:center;}
+	.photoGallery3 .my_progress span.my_progress_pass p.pass_text {font-size:11px;font-weight:600;margin-bottom:15px;}
+	
+	.photoGallery3 .my_progress span.my_progress_bar {float:left;width:685px;height:8px;background-color:#e9e9e9;border-radius:5px;position:absolute;top:9px;}
+	.photoGallery3 .my_progress span.my_progress_bar span.my_progress_run img {float:left;position:absolute;width:27px;height:33px;top:-36px;left:21%;z-index:250;}
+	.photoGallery3 .my_progress span.my_progress_bar span.my_progress_per {float:left;width:45px;height:19px;background-color:#784fa0;border-radius:10px;position:absolute;top:-6px;left:20%;z-index:300;text-align:center;color:#fff;font-size:11px;line-height:18px;font-weight:600;}
+	.photoGallery3 .my_progress span.my_progress_bar span.my_progress_complete {float:left;width:21%;height:8px;background-color:#784fa0;border-radius:5px;position:absolute;z-index:200;}
+	
+	.photoGallery3 .re_progress {float:left;width:800px;position:relative;}
+	.photoGallery3 .re_progress span.re_progress_text {float:left;width:105px;}
+	.photoGallery3 .re_progress span.re_progress_bar {float:left;width:685px;height:8px;background-color:#e9e9e9;border-radius:5px;position:absolute;top:9px;}
+	.photoGallery3 .re_progress span.re_progress_bar span.re_progress_per {float:left;width:45px;height:19px;background-color:#959eca;border-radius:10px;position:absolute;top:-6px;left:60%;z-index:300;text-align:center;color:#fff;font-size:11px;line-height:18px;font-weight:600;}
+	.photoGallery3 .re_progress span.re_progress_bar span.re_progress_complete {float:left;width:61%;height:8px;background-color:#959eca;border-radius:5px;position:absolute;z-index:200;} 

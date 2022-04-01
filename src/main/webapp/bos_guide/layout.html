@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=Edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<meta name="robots" content="all" />
+<link rel="stylesheet" type="text/css" href="/js/bootstrap/css/bootstrap.css" />
+<link rel="stylesheet" type="text/css" href="/js/bootstrap/css/bootstrap-theme.css" />
+<link rel="stylesheet" type="text/css" href="/js/jquery-ui/jquery-ui.css">
+<link rel="stylesheet" type="text/css" href="/portal/css/common.css" />
+<link rel="stylesheet" type="text/css" href="/bos/css/common.css" />
+<link rel="stylesheet" type="text/css" href="/bos/css/bosLayout.css" />
+<style>
+body { background-image: none; background-color: #fff; }
+#container { padding: 0; max-width: none; border: none; }
+.cateSet { position: static; text-align: right; }
+.cateSet:after { content: ''; display: block; clear: both; height: 10px; }
+.eventList { clear: both; margin-top: 10px; }
+</style>
+<script type="text/javascript" src="/js/jquery.js"></script>
+<script type="text/javascript" src="/js/bootstrap/bootstrap.js"></script>
+<script type="text/javascript" src="/js/bootstrap/respond.min.js"></script>
+<script type="text/javascript" src="/js/jquery-ui/jquery-ui.js"></script>
+<script type="text/javascript" src="/js/jquery.highlight-4.js"></script>
+<script type="text/javascript" src="/js/miya_validator.js"></script>
+<script type="text/javascript" src="/bos/js/common.js"></script>
+
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+<script type="text/javascript" src="/js/html5shiv.js"></script><script type="text/javascript" src="js/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+<div id="wrap">
+	<div id="header_wrap">
+		<div class="header">
+			<h1><a href="/bos/main/main.do"><img src="/bos/images/common/logo.gif" alt="콘텐츠코리아랩" /></a></h1>
+			<p class="user bold"><span class="color1">[]CKL관리자(ckladmin)</span>님 로그인 접속IP:0:0:0:0:0:0:0:1</p>
+			<div class="util btn-group"> <a href="javascript:openPopup();"class="btn btn-success"><i class="fa fa-power-off"></i>내정보수정</a> <a href="/bos/member/logout.do" class="btn btn-info"><i class="fa fa-power-off"></i> 로그아웃</a> </div>
+		</div>
+		<div id="gnb">
+			<ul class="gnb_width">
+				<li class='on'> <a href="/bos/member/list.do?menuNo=100001" >관리자관리</a> </li>
+				<li > <a href="/bos/bbs/B0000002/list.do?menuNo=100009" >게시물관리</a> </li>
+				<li > <a href="/bos/mpm/commonContents/list.do?siteId=2&amp;menuNo=100020" >콘텐츠관리</a> </li>
+				<li class='pr0'> <a href="/bos/cmmncode/CmmnCodeClList.do?menuNo=100021" >사이트관리</a> </li>
+			</ul>
+		</div>
+	</div>
+	<div id="container" class="clearfix" >
+		<div id="lnb">
+			<h2>관리자관리</h2>
+			<!-- <p><input type="text" name="searchTxt" id="searchTxt" value="" /> <label for="search"><a id="search" href="#search">조회</a></label></p> -->
+			
+			<ul>
+				<li> <a href="/bos/member/list.do?menuNo=100002" title="/bos/member/list.do" >관리자정보</a> </li>
+				<li> <a href="/bos/mpm/MenuCreatManageSelect.do?menuNo=100003" title="/bos/mpm/MenuCreatManageSelect.do" >권한관리</a>
+					<ol>
+						<li> <a href="/bos/cmm/sec/ram/AuthorList.do?menuNo=100004" title="/bos/cmm/sec/ram/AuthorList.do" >권한관리</a> </li>
+						<li> <a href="/bos/mpm/MenuCreatManageSelect.do?menuNo=100005" title="/bos/mpm/MenuCreatManageSelect.do" >권한별 메뉴관리</a> </li>
+					</ol>
+				</li>
+			</ul>
+		</div>
+		<div id="content">
+			<div class="hgroup clearfix">
+				<h3 class="fl">관리자정보</h3>
+				<div class="fr"> <a class="btn btn-sm btn-success" href="/bos/forprint.jsp" id="print" title="새창" onclick="window.open(this.href, 'printPage', 'width=800,height=550,scrollbars,toolbar,status');return false;" alt="인쇄하기 (자바스크립트 미지원시 브라우저은 인쇄기능을 이용하세요)"><i class="fa fa-hover fa-print"></i><span >인쇄하기</span></a> </div>
+			</div>
+			
+			
+
+
+
+
+<input type="text" id="sdate" name="sdate"  class="sdate" title="기간 시작일 입력" style="width:130px"value="" />
+~
+<input type="text" id="edate" name="edate"  class="edate" title="기간 종료일 입력" style="width:130px"value="" />
+
+
+
+
+
+
+			<h4>프로그램 정보</h4>
+			<div class="tbrinfo text-danger clear"><span class="hide_star"><span class="sr-only">(필수입력)</span></span> 표시 항목은 필수 입력 항목입니다.</div>
+			<div class="bdView">
+				<table cellspacing="0" cellpadding="0" class="table table-bordered" summary=" ">
+					<caption>프로그램 정보</caption>
+					<colgroup>
+					<col style="width:15%" />
+					<col style="width:35%" />
+					<col style="width:15%" />
+					<col  />
+					</colgroup>
+					<tbody>
+						<tr>
+							<th scope="row"><label for="SFILE1">대표이미지</label></th>
+							<td colspan="3" > 
+								<input type="file" name="SFILE1" id="SFILE1" title="대표이미지 등록 " class="col-md-8" />
+							</td>
+						</tr>
+						<tr>
+							<th scope="row"><span class="hide_star"><span class="sr-only">(필수입력)</span></span> <label for="GUBUN1">구분</label></th>
+							<td><select name="GUBUN1" id="GUBUN1" title="구분을 선택해 주세요.">
+							<option>구분 선택</option>
+							</select>
+							</td>
+							<th scope="row"><label for="EDUPT">교육분류</label></th>
+							<td><select name="EDUPT" id="EDUPT" title="교육분류를 선택해 주세요.">
+							<option>분류 선택</option>
+							</select>
+							</td>
+						</tr>
+						<tr>
+							<th scope="row"><span class="hide_star"><span class="sr-only">(필수입력)</span></span> <label for="PRGNM">프로그램명</label></th>
+							<td colspan="3" ><input type="text" name="PRGNM" id="PRGNM" value="" class="col-md-12" /></td>
+						</tr>
+						<tr>
+							<th scope="row"><span class="hide_star"><span class="sr-only">(필수입력)</span></span> <label for="DEPTPT">담당부서</label></th>
+							<td><select name="DEPTPT" id="DEPTPT" title="담당부서를 선택해 주세요.">
+							<option>부서 선택</option>
+							</select>
+							</td>
+							<th scope="row" scope="row" ><span class="hide_star"><span class="sr-only">(필수입력)</span></span> 사용여부</th>
+							<td><label for="RDOGp4_0"><input type="radio" name="RDOGp4" value="라디오" id="RDOGp4_0" /> 사용 </label>
+								<label for="RDOGp4_1"><input type="radio" name="RDOGp4" value="라디오" id="RDOGp4_1" /> 미사용 </label></td>
+						</tr>
+						<tr>
+							<th scope="row"><span class="hide_star"><span class="sr-only">(필수입력)</span></span> 교육기간</th>
+							<td>	<input type="text" id="sdate" name="sdate"  class="sdate" title="교육기간 시작일 입력" style="width:130px"value="" />
+								~
+								<input type="text" id="edate" name="edate"  class="edate" title="교육기간 종료일 입력" style="width:130px"value="" /></td>
+							<th scope="row"><label for="TESCHR">강사</label></th>
+							<td><input type="text" name="TESCHR" id="TESCHR" value="" /> <a class="btn btn-default btn-sm" href="#self"><span>찾기</span></a>
+							</td>
+						</tr>
+						<tr>
+							<th scope="row"><label for="TEXTA1"><span class="hide_star"><span class="sr-only">(필수입력)</span></span> 내용</label></th>
+							<td colspan="3" >
+							<textarea name="TEXTA1" id="TEXTA1" cols="120" rows="12" class="col-md-12" onfocus="if(this.value=='내용을 입력하여 주세요.')this.value='';" onkeyup="if(this.value=='내용을 입력하여 주세요.')this.value='';" >내용을 입력하여 주세요.</textarea>
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">첨부파일</th>
+							<td colspan="3" ><div class="row">
+								<div class="col-md-8">
+									<div class="mb5"><input type="file" name="FILE1" id="FILE1" title="대표이미지 등록 " class="col-md-8" /></div>
+									<div><input type="file" name="FILE2" id="FILE2" title="이미지1 등록 " class="col-md-8" /></div>
+								</div>
+								<div class="col-md-4"><a class="btn btn-primary" href="#self"><span>추가</span></a> 
+								<a class="btn btn-default" href="#self"><span>삭제</span></a></div>
+							</div></td>
+						</tr>
+						<tr>
+							<th scope="row"><label for="GOODCT">만족도점수</label></th>
+							<td colspan="3"><input type="text" name="GOODCT" id="GOODCT" value="" /> 점</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<h4>신청정보</h4>
+			<div class="tbrinfo text-danger clear"><span class="hide_star"><span class="sr-only">(필수입력)</span></span> 표시 항목은 필수 입력 항목입니다.</div>
+			<div class="bdView">
+				<table cellspacing="0" cellpadding="0" class="table table-bordered" summary=" ">
+					<caption>
+					</caption>
+					<colgroup>
+					<col  span="3" />
+					<col  />
+					</colgroup>
+					<tbody>
+						<tr>
+							<th scope="row"><span class="hide_star"><span class="sr-only">(필수입력)</span></span> 신청기간</th>
+							<td><div><input type="text" id="sdate" name="sdate"  class="sdate" title="신청기간 시작일 입력" style="width:130px"value="" /> <input type="text" name="SDATEHR1" id="SDATEHR1" value="" title="시간을 입력하세요." /> 시 <input type="text" name="SDATEMT1" id="SDATEMT1" value="" title="분을 입력하세요." /> 분
+									~</div>
+								<div><input type="text" id="edate" name="edate"  class="edate" title="신청기간 종료일 입력" style="width:130px"value="" /> <input type="text" name="SDATEHR1" id="SDATEHR1" value="" title="시간을 입력하세요." /> 시 <input type="text" name="SDATEMT1" id="SDATEMT1" value="" title="분을 입력하세요." /> 분
+								</div>
+								<input type="checkbox" name="ENDTIMES" id="ENDTIMES" />
+								<label for="ENDTIMES"> 모집 완료 시 까지</label>	
+							</td>
+							<th scope="row"><span class="hide_star"><span class="sr-only">(필수입력)</span></span> 신청방식</th>
+							<td><label for="REQPT1_0"><input type="radio" name="REQPT1" value="라디오" id="REQPT1_0" /> 선착순 </label>
+								<label for="REQPT1_1"><input type="radio" name="REQPT1" value="라디오" id="REQPT1_1" /> 기한모집 </label>
+							</td>
+						</tr>
+						<tr>
+							<th scope="row"><span class="hide_star"><span class="sr-only">(필수입력)</span></span> 승인단계 사용</th>
+							<td><label for="PATHDPT_0"><input type="radio" name="PATHDPT" value="라디오" id="PATHDPT_0" /> 사용 </label>
+								<label for="PATHDPT_1"><input type="radio" name="PATHDPT" value="라디오" id="PATHDPT_1" /> 미사용 </label></td>
+							<th><label for="MEMCT1">정원</label></th>
+							<td><input type="text" name="MEMCT1" id="MEMCT1" value="" /> 명</td>
+						</tr>
+						<tr>
+							<th scope="row"><span class="hide_star"><span class="sr-only">(필수입력)</span></span> 접수번호 표시</th>
+							<td><label for="INCETN1_0"><input type="radio" name="INCETN1" value="라디오" id="INCETN1_0" /> 표시</label>
+								<label for="INCETN1_1"><input type="radio" name="INCETN1" value="라디오" id="INCETN1_1" /> 숨김 </label></td>
+							<th scope="row"><span class="hide_star"><span class="sr-only">(필수입력)</span></span> 수료증 발급</th>
+							<td><label for="GRADUM1_0"><input type="radio" name="GRADUM1" value="라디오" id="GRADUM1_0" /> 사용 </label>
+								<label for="GRADUM1_1"><input type="radio" name="GRADUM1" value="라디오" id="GRADUM1_1" /> 미사용 </label></td>
+						</tr>
+						<tr>
+							<th scope="row">대기신청</th>
+							<td colspan="3"><label for="MOMNT1_0"><input type="radio" name="MOMNT1" value="라디오" id="MOMNT1_0" /> 대기신청 불가 </label>
+								<label for="MOMNT1_1"><input type="radio" name="MOMNT1" value="라디오" id="MOMNT1_1" /> 대기신청 가능 </label>
+								<input type="text" name="MOMNTX2" id="MOMNTX2" value="" title="대기 신청 명수를 입력하세요." /> 명	
+							</td>
+						</tr>
+						<tr>
+							<th scope="row"><span class="hide_star"><span class="sr-only">(필수입력)</span></span> 개인정보 제3자 위탁제공 동의사용</th>
+							<td colspan="3"><label for="PRIVAGT_0"><input type="radio" name="PRIVAGT" value="라디오" id="PRIVAGT_0" /> 사용 </label>
+								<label for="PRIVAGT_1"><input type="radio" name="PRIVAGT" value="라디오" id="PRIVAGT_1" /> 미사용 </label>
+
+								<div class="row">
+								<textarea name="TEXTA2" id="TEXTA2" cols="120" rows="12" class="col-md-12" onfocus="if(this.value=='내용을 입력하여 주세요.')this.value='';" onkeyup="if(this.value=='내용을 입력하여 주세요.')this.value='';" title="기타 의견을 입력해 주세요." >내용을 입력하여 주세요.</textarea>
+								</div>
+								</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+
+
+			<div class="row clear mt20">
+				<div class="col-md-11 tac"><a href="#self" class="btn btn-primary">수정</a> 
+					<a href="#self" class="btn btn-danger">삭제</a>
+				</div>
+				<div class="col-md-1"><a href="#self" class="btn btn-primary">목록</a></div>
+			</div>
+	
+
+
+
+
+
+
+<h3>버튼 그룹	</h3>
+<div class="row clear mt20">
+	<div class="col-md-1"><a href="#self" class="btn btn-primary">이전</a></div>
+	<div class="col-md-11 tac"><a href="#self" class="btn btn-primary">저장</a> 
+		<a href="#self" class="btn btn-default">취소</a>
+	</div>
+</div>
+	
+
+
+
+
+
+
+
+		</div>
+	</div>
+	<!-- quick --> 
+	<!-- <div id="quick">
+			<div class="btn-group-vertical" role="group">
+			<a href="/bos/wordDicary/list.do" class="btn btn-default" target="contentFrame"><span class="text-info"><i class="fa fa-book fs25"></i><br />행정용어사전</span></a>
+			<a href="/bos/metaDataSearch/list.do" class="btn btn-default" target="contentFrame"><span class="text-info"><i class="fa fa-search-plus fs25 text-info"></i><br />메타데이터검색</span></a>
+			<a href="/bos/guide/index.html" class="btn btn-default" target="_blank"><span class="text-info"><i class="fa fa-link fs25 text-info"></i><br />GUIDE</span></a>
+			</div>
+		</div>
+		<script type="text/javascript">
+		//퀵메뉴 스크롤링
+		function quick(){
+			var quick_menu = jQuery('#quick');
+			var quick_top = 230;
+
+			quick_menu.css('top', jQuery(window).height);
+			quick_menu.animate({"top": jQuery(document).scrollTop() + quick_top + "px"}, 500);
+
+			$(window).scroll(function(){
+				quick_menu.stop();
+				quick_menu.animate({"top" : jQuery(document).scrollTop() + quick_top + "px"}, 1000);
+			});
+		}
+		quick();
+		</script> --> 
+	<!-- //quick --> 
+	
+</div>
+<div id="footer">
+	<p><span class="bold">콘텐츠코리아랩</span>&nbsp;&nbsp;&nbsp;
+		서울시 영등포구 여의나루로 76(150-010),
+		&nbsp;&nbsp;&nbsp; <span class="bold">전화번호</span>: 02)767-7114 </p>
+	<em>Copyright ⓒ 2012 CKL Corp. All Rights reserved.</em> </div>
+
+<!--[if lte IE 7]>
+<script type="text/javascript">
+//<![CDATA[
+	$('*').each(function(index) {
+		if ($(this).css("overflow")=="hidden"){ $(this).css("zoom",1)}
+		if ($(this).css("display")=="inline-block"){ $(this).css("display",'inline'); $(this).css("zoom",1)}
+	});
+//]]>
+</script>
+<![endif]--> 
+
+<script type="text/javascript" src="/js/zclip/jquery.zclip.js"></script>
+<style>
+	.posr{position: relative;}
+</style>
+<div class="posr">
+	<div class="souceUrl" style="color:#f00">*/WEB-INF/jsp/bos/member/list.jsp</div>
+	<div class="check" style="display: none">복사완료</div>
+	<div class="souceUrl" style="color:#f00">WEB-INF/jsp/bos/member/list.jsp</div>
+	<div class="check" style="display: none">복사완료</div>
+	<script type="text/javascript">
+		$(document).ready(function(){
+		    $(".souceUrl").each(function () {
+				$(this).zclip({
+				    path: "/js/zclip/ZeroClipboard.swf",
+				    copy:$(this).text(),
+				    beforeCopy:function(){
+				        $(this).css('background','yellow');
+				        $(this).css('color','orange');
+				    },
+				    afterCopy:function(){
+				        $(this).css('background','green');
+				        $(this).css('color','purple');
+				        $(this).next('.check').show();
+				        // $(this).width('auto')
+				    }
+				});
+		    })
+		});
+	</script> 
+</div>
+</body>
+</html>

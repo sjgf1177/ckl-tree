@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN"
+    "http://www.ibatis.com/dtd/sql-map-config-2.dtd">
+
+<sqlMapConfig>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/oracle/Banner_SQL_oracle.xml" />
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/oracle/archiveBos_SQL_oracle.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/oracle/archive_SQL_oracle.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/oracle/AuthorManage_SQL_oracle.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/oracle/BasicBoard_SQL_oracle.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/oracle/OptionalBoard_SQL_oracle.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/oracle/BBSMaster_SQL_oracle.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/oracle/CmmnClCodeManage_SQL_oracle.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/oracle/CmmnCodeManage_SQL_oracle.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/oracle/CmmnDetailCodeManage_SQL_oracle.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/oracle/Comment_SQL_oracle.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/oracle/CommonContentsManage_SQL_oracle.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/oracle/DeptAuthor_SQL_oracle.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/oracle/DeptPop_SQL_oracle.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/oracle/loginHistory_SQL_oracle.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/oracle/File_SQL_oracle.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/oracle/member_SQL_oracle.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/oracle/MenuManage_SQL_oracle.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/oracle/migration_SQL_oracle.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/oracle/pageGenerator_SQL_oracle.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/oracle/popupMng_SQL_oracle.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/oracle/NtcnlAlert_SQL_oracle.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/oracle/satisfaction_SQL_oracle.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/oracle/siteMng_SQL_oracle.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/oracle/MenuCreat_SQL_oracle.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/oracle/authoDeptMenu_SQL_oracle.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/oracle/WordDicary_SQL_oracle.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/oracle/MetaDataSearch_SQL_oracle.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/oracle/accessHistory_SQL_oracle.xml"/>
+</sqlMapConfig>

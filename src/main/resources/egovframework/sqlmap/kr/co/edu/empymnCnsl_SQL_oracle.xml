@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="empymnCnsl">
+
+	<typeAlias alias="zvl" type="kr.co.unp.util.ZValue" />
+
+	<sql id="empymnCnslDAO.selectEmpymnCnslList-where">
+		<isNotEmpty prepend="AND" property="sdate">
+			<![CDATA[	TO_CHAR(a.HOPE_ERA, 'YYYYMMDD') >= REPLACE(#sdate#,'-','') 		]]>
+		</isNotEmpty>
+
+		<isNotEmpty prepend="AND" property="edate">
+			<![CDATA[	TO_CHAR(a.HOPE_ERA, 'YYYYMMDD') <= REPLACE(#edate#,'-','') 		]]>
+		</isNotEmpty>
+
+		<isNotEmpty prepend="AND" property="userNm">
+				<![CDATA[	a.USER_NM LIKE '%' || #userNm# || '%' 		]]>
+		</isNotEmpty>
+
+		<isNotEmpty prepend="AND" property="userId">
+				<![CDATA[	b.USER_ID LIKE '%' || #userId# || '%' 		]]>
+		</isNotEmpty>
+
+		<isNotEmpty prepend="AND" property="ablmanSttus">
+				<![CDATA[	c.ABLMAN_STTUS LIKE '%' || #ablmanSttus# || '%' 		]]>
+		</isNotEmpty>
+
+		<isEqual prepend="AND" compareValue="edu" property="siteName" >
+				<![CDATA[	a.USER_SN LIKE  #userSn# ]]>
+		</isEqual>
+
+	</sql>
+
+
+
+
+
+	<!--CLOB 타입을 위한 리절트맵   -->
+	<resultMap id="empymnCnslDAO.selectEmpymnCnslListMap" class="zvl">
+	    <result property="cnslSn" column="CNSL_SN"/>
+		<result property="userSn" column="USER_SN"/>
+		<result property="userNm" column="USER_NM"/>
+		<result property="sex" column="SEX"/>
+		<result property="brthdy" column="BRTHDY"/>
+		<result property="schul" column="SCHUL"/>
+		<result property="subjct" column="SUBJCT"/>
+		<result property="ownhomTelno" column="OWNHOM_TELNO"/>
+		<result property="mbtlnum" column="MBTLNUM"/>
+		<result property="email" column="EMAIL"/>
+		<result property="adres" column="ADRES"/>
+		<result property="hopeJssfc" column="HOPE_JSSFC"/>
+		<result property="hopeEra" column="HOPE_ERA"/>
+		<result property="cnsltReqSe" column="CNSLT_REQ_SE"/>
+		<result property="cnsltReqCn" column="CNSLT_REQ_CN"  jdbcType="CLOB" javaType="java.lang.String"/>
+		<result property="frstRegistPnttm" column="FRST_REGIST_PNTTM"/>
+		<result property="frstRegisterId" column="FRST_REGISTER_ID"/>
+		<result property="lastUpdtPnttm" column="LAST_UPDT_PNTTM"/>
+		<result property="lastUpdusrId" column="LAST_UPDUSR_ID"/>
+		<result property="cnsltDt" column="CNSLT_DT"/>
+		<result property="cnsltNm" column="CNSLT_NM"/>
+		<result property="replyAt" column="REPLY_AT"/>
+		<result property="deleteAt" column="DELETE_AT"/>
+		<result property="userId" column="USER_ID" />
+		<result property="ablmanSttus" column="ABLMAN_STTUS" />
+	</resultMap>
+
+	<select id="empymnCnslDAO.selectEmpymnCnslList" parameterClass="zvl" resultMap="empymnCnslDAO.selectEmpymnCnslListMap">
+
+		<![CDATA[
+		/* empymnCnslDAO.selectEmpymnCnslList */
+
+			SELECT *
+			  FROM
+			       (
+			       SELECT ROWNUM RNUM,
+			              ALL_LIST.*
+			         FROM
+			         (
+					SELECT a.CNSL_SN,
+					       a.USER_SN,
+					       a.USER_NM,
+					       a.SEX,
+					       a.BRTHDY,
+					       a.SCHUL,
+					       a.SUBJCT,
+					       a.OWNHOM_TELNO,
+					       a.MBTLNUM,
+					       a.EMAIL,
+					       a.ADRES,
+					       a.HOPE_JSSFC,
+					       a.HOPE_ERA,
+					       a.CNSLT_REQ_SE,
+					       a.CNSLT_REQ_CN,
+					       a.FRST_REGIST_PNTTM,
+					       a.FRST_REGISTER_ID,
+					       a.LAST_UPDT_PNTTM,
+					       a.LAST_UPDUSR_ID,
+					       a.DELETE_AT,
+					       a.CNSLT_DT,
+					       A.CNSLT_NM,
+					       A.REPLY_AT,
+					       b.USER_ID,
+					       c.ABLMAN_STTUS
+					  FROM TN_EMPYMN_CNSL a
+					   LEFT OUTER JOIN TM_USER b
+					       ON a.USER_SN = b.USER_SN
+					    LEFT OUTER JOIN TN_ABLMAN_EMPYMN_CNSL c
+				          ON a.CNSL_SN = c.CNSL_SN AND c.LAST_VER_AT = 'Y'
+					       WHERE 1=1  AND a.DELETE_AT = '0'
+			     ]]>
+			       <include refid="empymnCnslDAO.selectEmpymnCnslList-where" />
+			        <![CDATA[    ORDER BY a.FRST_REGIST_PNTTM DESC
+			              ) ALL_LIST
+			       )
+
+			 WHERE  RNUM  > #firstIndex#
+			   AND  RNUM <= #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+
+	<insert id="empymnCnslDAO.empymnCnslInsert" parameterClass="zvl">
+		<selectKey resultClass="java.lang.Long" keyProperty="cnslSn">
+			SELECT NVL(MAX(CNSL_SN),0)+1 AS CNSL_SN FROM TN_EMPYMN_CNSL
+		</selectKey>
+ 	 <![CDATA[
+		/* empymnCnslDAO.empymnCnslInsert */
+
+		INSERT
+			INTO TN_EMPYMN_CNSL
+			(
+				CNSL_SN,
+				USER_SN,
+				USER_NM,
+				SEX,
+				BRTHDY,
+				SCHUL,
+				SUBJCT,
+				OWNHOM_TELNO,
+				MBTLNUM,
+				EMAIL,
+				ADRES,
+				HOPE_JSSFC,
+				HOPE_ERA,
+				CNSLT_REQ_SE,
+				CNSLT_REQ_CN,
+				FRST_REGIST_PNTTM,
+				FRST_REGISTER_ID,
+				LAST_UPDT_PNTTM,
+				LAST_UPDUSR_ID,
+				DELETE_AT,
+				SIDO,
+		        CNSLT_JOIN_AT,
+		        INTRVW_JOIN_AT,
+		        ATCH_FILE_ID,
+		        CNSLT_NM,
+		        REPLY_AT,
+		        GUGUN,
+		        RESDNC_SE,
+		        RESDNC_OVSEA,
+		        GRADE,
+		        CNSLT_REQ_CN_SE,
+		        CNSLT_REQ_CN_ETC
+				)
+				VALUES
+				(
+				#cnslSn#,
+				NVL(#userSn#, '0'),
+				#userNm#,
+				#sex#,
+				#brthdy#,
+				#schul#,
+				#subjct#,
+				#ownhomTelno#,
+				#mbtlnum#,
+				#email#,
+				#adres#,
+				#hopeJssfc#,
+				#hopeEra#,
+				#cnsltReqSe#,
+				#cnsltReqCn:CLOB#,
+				SYSDATE,
+				#frstRegisterId#,
+				SYSDATE,
+				#lastUpdusrId#,
+				NVL(#delcode#, '0'),
+				#sido#,
+	            #cnsltJoinAt#,
+	            #intrvwJoinAt#,
+	            #atchFileId#,
+	            #cnsltNm#,
+	            #replyAt#,
+	            #gugun#,
+	            #resdncSe#,
+	            #resdncOvsea#,
+	            #grade#,
+	            #cnsltReqCnSe#,
+	            #cnsltReqCnEtc#
+			)
+			]]>
+	</insert>
+
+
+	<select id="empymnCnslDAO.selectEmpymnCnslListCnt" resultClass="int">
+		<![CDATA[
+		/* empymnCnslDAO.selectEmpymnCnslListCnt */
+			SELECT COUNT(*)
+				  FROM TN_EMPYMN_CNSL a
+					   LEFT OUTER JOIN TM_USER b
+					       ON a.USER_SN = b.USER_SN
+					    LEFT OUTER JOIN TN_ABLMAN_EMPYMN_CNSL c
+				          ON a.CNSL_SN = c.CNSL_SN AND c.LAST_VER_AT = 'Y'
+					       WHERE 1=1 AND a.DELETE_AT = '0'
+		]]>
+		 <include refid="empymnCnslDAO.selectEmpymnCnslList-where" />
+	</select>
+
+	<update id="empymnCnslDAO.updateEmpymnCnsl" parameterClass="zvl">
+ 		<![CDATA[
+ 		/* empymnCnslDAO.updateEmpymnCnsl*/
+			UPDATE TN_EMPYMN_CNSL
+			       SET
+			       USER_NM = #userNm#,
+			       SEX = #sex#,
+			       BRTHDY = #brthdy#,
+			       SCHUL = #schul#,
+			       SUBJCT = #subjct#,
+			       OWNHOM_TELNO = #ownhomTelno#,
+			       MBTLNUM = #mbtlnum#,
+			       EMAIL = #email#,
+			       ADRES = #adres#,
+			       HOPE_JSSFC = #hopeJssfc#,
+			       HOPE_ERA = #hopeEra#,
+			       CNSLT_REQ_SE = #cnsltReqSe#,
+			       CNSLT_REQ_CN = #cnsltReqCn:CLOB#,
+			       LAST_UPDT_PNTTM = SYSDATE,
+			       LAST_UPDUSR_ID = #lastUpdusrId#,
+			       DELETE_AT = NVL(#delcode#, '0'),
+			       SIDO = #sido#,
+			       CNSLT_JOIN_AT = #cnsltJoinAt#,
+			       INTRVW_JOIN_AT = #intrvwJoinAt#,
+			       ATCH_FILE_ID = #atchFileId#,
+			       CNSLT_NM = #cnsltNm#,
+			       REPLY_AT = #replyAt#,
+			       GUGUN = #gugun#,
+			       RESDNC_SE = #resdncSe#,
+			       RESDNC_OVSEA = #resdncOvsea#,
+			       GRADE = #grade#,
+			       CNSLT_REQ_CN_SE = #cnsltReqCnSe#,
+			       CNSLT_REQ_CN_ETC = #cnsltReqCnEtc#
+			 WHERE CNSL_SN = #cnslSn#
+
+ 		]]>
+	</update>
+
+
+	<resultMap id="empymnCnslDAO.selectEmpymnCnslMap" class="zvl">
+	    <result property="cnslSn" column="CNSL_SN"/>
+		<result property="userSn" column="USER_SN"/>
+		<result property="userNm" column="USER_NM"/>
+		<result property="sex" column="SEX"/>
+		<result property="brthdy" column="BRTHDY"/>
+		<result property="schul" column="SCHUL"/>
+		<result property="subjct" column="SUBJCT"/>
+		<result property="ownhomTelno" column="OWNHOM_TELNO"/>
+		<result property="mbtlnum" column="MBTLNUM"/>
+		<result property="email" column="EMAIL"/>
+		<result property="adres" column="ADRES"/>
+		<result property="hopeJssfc" column="HOPE_JSSFC"/>
+		<result property="hopeEra" column="HOPE_ERA"/>
+		<result property="cnsltReqSe" column="CNSLT_REQ_SE"/>
+		<result property="cnsltReqCn" column="CNSLT_REQ_CN"  jdbcType="CLOB" javaType="java.lang.String"/>
+		<result property="frstRegistPnttm" column="FRST_REGIST_PNTTM"/>
+		<result property="frstRegisterId" column="FRST_REGISTER_ID"/>
+		<result property="lastUpdtPnttm" column="LAST_UPDT_PNTTM"/>
+		<result property="lastUpdusrId" column="LAST_UPDUSR_ID"/>
+		<result property="DELETE_AT" column="DELETE_AT"/>
+		<result property="sido" column="SIDO"/>
+		<result property="cnsltJoinAt" column="CNSLT_JOIN_AT"/>
+		<result property="intrvwJoinAt" column="INTRVW_JOIN_AT"/>
+		<result property="atchFileId" column="ATCH_FILE_ID"/>
+		<result property="cnsltDt" column="CNSLT_DT"/>
+		<result property="cnsltNm" column="CNSLT_NM"/>
+		<result property="replyAt" column="REPLY_AT"/>
+		<result property="gugun" column="GUGUN"/>
+		<result property="resdncSe" column="RESDNC_SE"/>
+		<result property="userId" column="USER_ID"/>
+		<result property="sidoNm" column="SIDO_NM"/>
+		<result property="cnsltReqSeNm" column="CNSLT_REQ_SE_NM"/>
+		<result property="gugunNm" column="GUGUN_NM"/>
+		<result property="resdncOvsea" column="RESDNC_OVSEA"/>
+		<result property="grade" column="GRADE"/>
+		<result property="cnsltReqCnEtc" column="CNSLT_REQ_CN_ETC"/>
+		<result property="cnsltReqCnSe" column="CNSLT_REQ_CN_SE"/>
+	</resultMap>
+
+	<select id="empymnCnslDAO.selectEmpymnCnsl" parameterClass="zvl" resultMap="empymnCnslDAO.selectEmpymnCnslMap">
+
+			<![CDATA[
+			/* empymnCnslDAO.selectEmpymnCnsl */
+				SELECT A.CNSL_SN,
+				       A.USER_SN,
+				       A.USER_NM,
+				       A.SEX,
+				       A.BRTHDY,
+				       A.SCHUL,
+				       A.SUBJCT,
+				       A.OWNHOM_TELNO,
+				       A.MBTLNUM,
+				       A.EMAIL,
+				       A.ADRES,
+				       A.HOPE_JSSFC,
+				       A.HOPE_ERA,
+				       A.CNSLT_REQ_SE,
+				       A.CNSLT_REQ_CN,
+				       A.FRST_REGIST_PNTTM,
+				       A.FRST_REGISTER_ID,
+				       A.LAST_UPDT_PNTTM,
+				       A.LAST_UPDUSR_ID,
+				       A.DELETE_AT,
+				       A.SIDO,
+				       A.CNSLT_JOIN_AT,
+				       A.INTRVW_JOIN_AT,
+				       A.ATCH_FILE_ID,
+				       A.CNSLT_DT,
+				       A.CNSLT_NM,
+				       A.REPLY_AT,
+				       A.GUGUN,
+				       A.RESDNC_SE,
+				       A.RESDNC_OVSEA,
+                       A.GRADE,
+		               A.CNSLT_REQ_CN_SE,
+           			   A.CNSLT_REQ_CN_ETC,
+				       b.USER_ID,
+				       FN_CMMNCODE_NM('COM063', a.SIDO) AS SIDO_NM,
+				       FN_CMMNCODE_NM('COM070', a.CNSLT_REQ_SE) AS CNSLT_REQ_SE_NM,
+				       FN_CMMNCODE_NM('COM063', a.GUGUN) AS GUGUN_NM
+				  FROM TN_EMPYMN_CNSL a
+				   LEFT OUTER JOIN TM_USER b
+				       ON a.USER_SN = b.USER_SN
+				 WHERE a.CNSL_SN = #cnslSn#
+			]]>
+		</select>
+
+	<update id="empymnCnslDAO.deleteEmpymnCnsl" parameterClass="zvl" >
+		<![CDATA[
+		/* empymnCnslDAO.deleteEmpymnCnsl*/
+			UPDATE TN_EMPYMN_CNSL
+				       SET
+				       LAST_UPDT_PNTTM = SYSDATE,
+				       LAST_UPDUSR_ID = #lastUpdusrId#,
+				       DELETE_AT = '1'
+				 WHERE CNSL_SN = #cnslSn#
+		]]>
+	</update>
+	<delete id="empymnCnslDAO.deleteEmpymnCnslList" parameterClass="zvl" >
+
+		<![CDATA[
+		/* empymnCnslDAO.deleteEmpymnCnsl*/
+		DELETE TN_ABLMAN_EMPYMN_CNSL
+			WHERE CNSL_SN = #cnslSn#
+		]]>
+	</delete>
+
+
+	<select id="empymnCnslDAO.listExcel" parameterClass="zvl" resultClass="zvl">
+
+		<![CDATA[
+		/* empymnCnslDAO.listExcel */
+		  SELECT
+		  	   nvl2(c.USER_ID, '회원','비회원') MBER_AT,
+		       a.USER_NM,   /* 이름 */
+		        CASE  /* 성별 */
+		           WHEN a.SEX = 'M'
+		           THEN '남'
+		           ELSE '여'
+		       END AS sex ,
+		       a.SCHUL,  /* 학교 */
+		       a.SUBJCT,  /* 학과 */
+		       a.HOPE_ERA, /* 상담일  */
+		       a.FRST_REGIST_PNTTM /* 등록일 */
+		  FROM TN_EMPYMN_CNSL a
+		   LEFT OUTER JOIN TM_USER c
+		       ON a.USER_SN = c.USER_SN
+		   LEFT OUTER JOIN TN_ABLMAN_EMPYMN_CNSL b
+		       ON a.CNSL_SN = b.CNSL_SN
+		       AND b.LAST_VER_AT = 'Y'
+		]]>
+	</select>
+
+	<update id="empymnCnslDAO.updateEmpymnCnslInsert" parameterClass="zvl">
+ 		<![CDATA[
+ 		/* empymnCnslDAO.updateEmpymnCnslInsert*/
+			UPDATE TN_EMPYMN_CNSL
+			       SET
+			       HOPE_JSSFC = #hopeJssfc#,
+			       HOPE_ERA = #hopeEra#,
+			       CNSLT_REQ_SE = #cnsltReqSe#,
+			       CNSLT_REQ_CN = #cnsltReqCn:CLOB#,
+			       LAST_UPDT_PNTTM = SYSDATE,
+			       LAST_UPDUSR_ID = #lastUpdusrId#,
+			       CNSLT_DT = SYSDATE,
+			       CNSLT_NM = #cnsltNm#,
+			       REPLY_AT = #replyAt#
+			 WHERE CNSL_SN = #cnslSn#
+
+ 		]]>
+	</update>
+
+
+</sqlMap>
+

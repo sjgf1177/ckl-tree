@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="WordDicary">
+
+	<typeAlias  alias="zvl" type="kr.co.unp.util.ZValue"/>
+
+	<select id="WordDicaryDAO.selectWordDicary" parameterClass="zvl" resultClass="zvl" >
+
+		/* WordDicaryDAO.selectWordDicary */
+
+		<![CDATA[
+			SELECT
+				   A.SEQ ,
+			       A.WORD_SE ,
+			       A.WORD_NM ,
+			       A.WORD_ENG_NM ,
+			       A.WORD_ENG_ABRV ,
+			       A.WORD_DFN ,
+			       A.THEMA_AREA ,
+			       A.USE_AT ,
+			       A.FRST_REGIST_PNTTM ,
+			       A.DELETE_CODE ,
+			       A.LAST_UPDT_PNTTM
+			  FROM TC_WORD_DICARY A
+			WHERE
+				A.SEQ = #seq# AND USE_AT = 'Y'
+		]]>
+	</select>
+
+	<sql id="WordDicaryDAO.selectWordDicaryList-where">
+
+		<isNotEmpty prepend="AND" property="wordSe">
+			<![CDATA[	A.WORD_SE = #wordSe# 		]]>
+		</isNotEmpty>
+
+		<isNotEmpty prepend="AND" property="searchWrd">
+			<isEqual property="searchCnd" compareValue="1"> <![CDATA[	A.WORD_NM LIKE CONCAT('%',trim(#searchWrd#), '%')		]]> </isEqual>
+			<isEqual property="searchCnd" compareValue="2"> <![CDATA[	A.WORD_ENG_NM LIKE CONCAT('%',trim(#searchWrd#), '%')		]]> </isEqual>
+			<isEqual property="searchCnd" compareValue="3"> <![CDATA[	A.WORD_ENG_ABRV LIKE CONCAT('%',trim(#searchWrd#), '%')		]]> </isEqual>
+		</isNotEmpty>
+	</sql>
+
+	<select id="WordDicaryDAO.selectWordDicaryListCnt" parameterClass="zvl" resultClass="int" >
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM
+				TC_WORD_DICARY A WHERE 1=1
+		]]>
+		<include refid="WordDicaryDAO.selectWordDicaryList-where" />
+	</select>
+
+	<select id="WordDicaryDAO.selectWordDicaryList" parameterClass="zvl" resultClass="zvl" >
+		<![CDATA[
+
+			SELECT  *
+			  FROM  (
+			SELECT @RN:=@RN+1 AS  RNUM, ALL_LIST.*
+		            FROM (
+
+			SELECT
+				   A.SEQ ,
+			       A.WORD_SE ,
+			       A.WORD_NM ,
+			       A.WORD_ENG_NM ,
+			       A.WORD_ENG_ABRV ,
+			       A.WORD_DFN ,
+			       A.THEMA_AREA ,
+			       A.USE_AT ,
+			       A.FRST_REGIST_PNTTM ,
+			       A.DELETE_CODE ,
+			       A.LAST_UPDT_PNTTM
+			  FROM TC_WORD_DICARY A
+			WHERE USE_AT = 'Y'
+
+		]]>
+		<include refid="WordDicaryDAO.selectWordDicaryList-where" />
+		<![CDATA[
+				ORDER BY SEQ DESC
+		            ) ALL_LIST
+			    ) ALL_LIST
+			 limit #firstIndex#, #recordCountPerPage#
+		]]>
+	</select>
+
+	<insert id="WordDicaryDAO.insertWordDicary" parameterClass="zvl" >
+		<selectKey resultClass="java.lang.Long" keyProperty="seq">
+			SELECT IFNULL(MAX(SEQ),0)+1 AS SEQ  FROM TC_WORD_DICARY
+		</selectKey>
+		<![CDATA[
+			INSERT INTO TC_WORD_DICARY (
+				SEQ ,WORD_SE ,WORD_NM ,WORD_ENG_NM ,WORD_ENG_ABRV
+				,WORD_DFN ,THEMA_AREA ,FRST_REGIST_PNTTM )
+			VALUES (
+				#seq# ,#wordSe# ,#wordNm# ,#wordEngNm# ,#wordEngAbrv#
+				,#wordDfn# ,#themaArea# , NOW() )
+
+		]]>
+	</insert>
+
+	<delete id="WordDicaryDAO.delPermanentlyWordDicary" parameterClass="zvl">
+	<![CDATA[
+			DELETE TC_WORD_DICARY
+			WHERE SEQ = #seq#
+	 		]]>
+	</delete>
+
+	<update id="WordDicaryDAO.deleteWordDicary" parameterClass="zvl">
+ 			UPDATE TC_WORD_DICARY SET
+				LAST_UPDT_PNTTM = NOW(),
+				DELETE_CODE = #deleteAt#
+			WHERE SEQ = #seq#
+ 	</update>
+
+	<update id="WordDicaryDAO.updateWordDicary" parameterClass="zvl">
+ 		<![CDATA[
+			UPDATE TC_WORD_DICARY
+				SET
+					WORD_SE = #wordSe#,
+					WORD_NM = #wordNm#,
+					WORD_ENG_NM = #wordEngNm#,
+					WORD_ENG_ABRV = #wordEngAbrv#,
+					WORD_DFN = #wordDfn#,
+					THEMA_AREA = #themaArea#,
+					LAST_UPDT_PNTTM = NOW()
+			WHERE
+				SEQ = #seq#
+ 		]]>
+ 	</update>
+
+ 	<update id="WordDicaryDAO.restoreWordDicary" parameterClass="zvl">
+ 		<![CDATA[
+			UPDATE TC_WORD_DICARY SET
+				LAST_UPDT_PNTTM = NOW(),
+				DELETE_CODE = #deleteAt#
+			WHERE SEQ = #seq#
+ 		]]>
+ 	</update>
+
+</sqlMap>

@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="contents">
+
+	<typeAlias  alias="zValue" type="egovframework.kr.go.mw.portal.util.service.ZValue"/>
+	<typeAlias  alias="Integer" type="java.lang.Integer"/>
+	<typeAlias  alias="Object" type="java.lang.Object"/>
+	<typeAlias  alias="cmmnDetailCodeVO" type="egovframework.com.sym.ccm.cde.service.CmmnDetailCodeVO"/>
+	
+	<resultMap id="contents" class="zValue">
+		<result property="code_nm"				column="CODE_NM" />
+		<result property="code"					column="CODE"/>
+		<result property="pcode"				column="PCODE"/>
+		<result property="LANG_ID"				column="LANG_ID"/>
+		<result property="U_ID"					column="U_ID" />
+		<result property="CON_NM"				column="CON_NM" />
+		<result property="CON_CLASS"			column="CON_CLASS" />
+		<result property="CON_ADDR"				column="CON_ADDR" />
+		<result property="CON_TEL"				column="CON_TEL" />		
+		<result property="CON_HP"				column="CON_HP" />		
+		<result property="CON_DONG"				column="CON_DONG" />
+		<result property="CON_REINFO"			column="CON_REINFO" />
+		<result property="CON_PARKINFO"			column="CON_PARKINFO" />
+		<result property="CON_PRIINFO"			column="CON_PRIINFO" />
+		<result property="CON_LOCATION"			column="CON_LOCATION" />
+		<result property="CON_INFO"				column="CON_INFO" />
+		<result property="CON_DCL1"				column="CON_DCL1" />
+		<result property="CON_DCL2"				column="CON_DCL2" />
+		<result property="CON_DCL3"				column="CON_DCL3" />
+		<result property="CON_DCL4"				column="CON_DCL4" />
+		<result property="CON_DCL5"				column="CON_DCL5" />
+		<result property="CON_DCL6"				column="CON_DCL6" />
+		<result property="CON_DCL7"				column="CON_DCL7" />
+		<result property="CON_DCL8"				column="CON_DCL8" />
+		<result property="CON_DCL9"				column="CON_DCL9" />
+		<result property="CON_DCL10"			column="CON_DCL10" jdbcType="CLOB" javaType="java.lang.String"/>
+		<result property="CON_ETC"				column="CON_ETC" />
+		<result property="CON_DC"				column="CON_DC"  jdbcType="CLOB" javaType="java.lang.String" />
+		<result property="USE_AT"				column="USE_AT" />
+		<result property="SAV"					column="SAV" />
+		<result property="HIT"					column="HIT" />
+		<result property="REG_DTTM"				column="REG_DTTM" />
+		<result property="REG_ID"				column="REG_ID" />
+	</resultMap>
+	
+	<resultMap id="userContents" class="zValue">
+		<result property="pcode"				column="PCODE"/>
+		<result property="LANG_ID"				column="LANG_ID"/>
+		<result property="U_ID"					column="U_ID" />
+		<result property="CON_NM"				column="CON_NM" />
+		<result property="CON_CLASS"			column="CON_CLASS" />
+		<result property="CON_ADDR"				column="CON_ADDR" />
+		<result property="CON_TEL"				column="CON_TEL" />		
+		<result property="CON_HP"				column="CON_HP" />		
+		<result property="CON_DONG"				column="CON_DONG" />
+		<result property="CON_REINFO"			column="CON_REINFO" />
+		<result property="CON_PARKINFO"			column="CON_PARKINFO" />
+		<result property="CON_PRIINFO"			column="CON_PRIINFO" />
+		<result property="CON_LOCATION"			column="CON_LOCATION" />
+		<result property="CON_INFO"				column="CON_INFO" />
+		<result property="CON_DCL1"				column="CON_DCL1" />
+		<result property="CON_DCL2"				column="CON_DCL2" />
+		<result property="CON_DCL3"				column="CON_DCL3" />
+		<result property="CON_DCL4"				column="CON_DCL4" />
+		<result property="CON_DCL5"				column="CON_DCL5" />
+		<result property="CON_DCL6"				column="CON_DCL6" />
+		<result property="CON_DCL7"				column="CON_DCL7" />
+		<result property="CON_DCL8"				column="CON_DCL8" />
+		<result property="CON_DCL9"				column="CON_DCL9" />
+		<result property="CON_DCL10"			column="CON_DCL10" jdbcType="CLOB" javaType="java.lang.String"/>
+		<result property="CON_ETC"				column="CON_ETC" />
+		<result property="CON_DC"				column="CON_DC"  jdbcType="CLOB" javaType="java.lang.String" />
+		<result property="USE_AT"				column="USE_AT" />
+		<result property="SAV"					column="SAV" />
+		<result property="HIT"					column="HIT" />
+		<result property="REG_DTTM"				column="REG_DTTM" />
+		<result property="REG_ID"				column="REG_ID" />
+		<result property="CODE_NM"				column="CODE_NM" />
+		<result property="FILE_NM"				column="FILE_NM" />
+	</resultMap>
+	
+	<select id="ContentsDAO.getCount" parameterClass="zValue" resultClass="Integer" >
+		<![CDATA[
+			SELECT 
+				COUNT(*) as cnt
+			FROM 
+				TBG_CONTENTS 
+			WHERE 
+				PCODE=#pcode#  AND USE_AT='Y' 
+		]]>
+		<isNotEmpty prepend="AND" property="sLangId">
+			<![CDATA[	LANG_ID=#sLangId#	]]>
+		</isNotEmpty>
+		<isEmpty prepend="AND" property="sLangId">
+			<![CDATA[	LANG_ID='ko'	]]>
+		</isEmpty>
+		<isNotEmpty prepend="AND" property="searchStr">
+			<![CDATA[	$searchKey$ LIKE '%' || #searchStr# || '%'	]]>
+		</isNotEmpty>
+	</select>
+	
+	<select id="ContentsDAO.getList" parameterClass="zValue" resultClass="zValue" >
+		<![CDATA[
+			SELECT 
+	              PCODE, 
+	              U_ID, 
+	              LANG_ID, 
+	              CON_NM, 
+	              REG_DTTM, 
+	              REG_ID,
+	              HIT,
+	              MOD_DTTM
+			  FROM 
+			       (SELECT /*+ INDEX_DESC(TBG_CONTENTS PK_TBG_CONTENTS) */ROWNUM rn, 
+			              PCODE, 
+			              U_ID, 
+			              LANG_ID, 
+			              CON_NM, 
+			              REG_DTTM, 
+			              REG_ID, 
+			              HIT,
+			              MOD_DTTM
+			         FROM TBG_CONTENTS 
+			        WHERE PCODE=#pcode# 
+			              AND USE_AT='Y' 
+		]]>
+		<isNotEmpty prepend="AND" property="sLangId">
+			<![CDATA[	LANG_ID=#sLangId#	]]>
+		</isNotEmpty>
+		<isEmpty prepend="AND" property="sLangId">
+			<![CDATA[	LANG_ID='ko'	]]>
+		</isEmpty>
+		<isNotEmpty prepend="AND" property="searchStr">
+			<![CDATA[	$searchKey$ LIKE '%' || #searchStr# || '%'	]]>
+		</isNotEmpty>
+		<![CDATA[
+			              AND ROWNUM<=#enRn# 
+			       ) a 
+			 WHERE rn>#stRn#
+			 ORDER BY PCODE DESC, LANG_ID DESC, U_ID DESC
+		]]>
+	</select>
+	
+	
+	<select id="ContentsDAO.getComCodeList" parameterClass="zValue" resultClass="cmmnDetailCodeVO" >
+		<![CDATA[
+			SELECT CODE,CODE_NM as codeNm
+			  FROM TC_CMMNCODE_DETAIL 
+			 WHERE code_id=#codeId#
+		]]>
+	</select>
+
+	<select id="ContentsDAO.setRegMaxId" parameterClass="zValue" resultClass="Object">
+		<![CDATA[
+			SELECT 
+			       /*+ INDEX_DESC(TBG_CONTENTS PK_TBG_CONTENTS) */ 
+			       NVL(U_ID,0)+1 AS maxId 
+			  FROM TBG_CONTENTS 
+			 WHERE PCODE=#pcode# AND LANG_ID='ko' AND ROWNUM=1
+		]]>
+	</select>
+
+	<insert id="ContentsDAO.setRegProc" parameterClass="zValue">
+		<![CDATA[
+			INSERT INTO TBG_CONTENTS
+			(
+				PCODE, U_ID, LANG_ID,
+				$insertFlds$
+				CON_DCL10,CON_DC,
+				USE_AT, HIT, REG_DTTM, REG_ID
+			)
+			VALUES
+			(
+				#pcode#, #uId#, #langId#,
+				$insertValus$
+				#conDcl10:CLOB#, #conDc:CLOB#,
+				#useAt#, 0, SYSDATE, #userId#
+			)
+		]]>
+	</insert>
+	
+	<select id="ContentsDAO.isCheckContents" parameterClass="zValue" resultClass="zValue">
+		<![CDATA[
+			SELECT U_ID
+			  FROM TBG_CONTENTS
+			WHERE
+				PCODE=#pcode# AND U_ID=#uId# AND LANG_ID=#langId#
+		]]>
+	</select> 
+	
+	<update id="ContentsDAO.modifyProc" parameterClass="zValue">
+		<![CDATA[
+	    UPDATE TBG_CONTENTS
+	           SET 
+				CON_DC = #conDc:CLOB#
+				,CON_DCL10 = #conDcl10:CLOB#
+				$updateFlds$
+			    ,USE_AT = #useAt#
+			    ,MOD_DTTM = SYSDATE
+			    ,MOD_ID = #userId# 
+	    WHERE
+	    	 PCODE=#pcode# AND U_ID=#uId# AND LANG_ID=#langId#
+		]]>
+	</update>
+	
+	<select id="ContentsDAO.getViewList" parameterClass="zValue" resultClass="zValue">
+		<![CDATA[
+			SELECT * 
+			  FROM 
+			       (SELECT CODE_NM,CODE 
+			         FROM TC_CMMNCODE_DETAIL 
+			        WHERE CODE_ID='GLAN01' 
+			       ) a, 
+			       (SELECT 
+				       PCODE,LANG_ID,U_ID,CON_NM,USE_AT,SAV,HIT,REG_DTTM,REG_ID, MOD_DTTM, MOD_ID
+			         FROM TBG_CONTENTS 
+			        WHERE PCODE=#pcode#
+			              AND U_ID=#uId#
+			       ) b 
+			 WHERE a.CODE=b.LANG_ID(+)
+		]]>
+	</select> 
+	
+	<select id="ContentsDAO.getView" parameterClass="zValue" resultMap="contents">
+		<![CDATA[
+			SELECT * 
+			  FROM 
+			       (SELECT CODE_NM,CODE 
+			         FROM TC_CMMNCODE_DETAIL 
+			        WHERE CODE_ID='GLAN01' 
+			       ) a, 
+			       (SELECT 
+				       PCODE,LANG_ID,U_ID,CON_NM,CON_CLASS,CON_ADDR,CON_TEL,CON_HP,
+						CON_DONG,CON_REINFO,CON_PARKINFO,CON_PRIINFO,CON_LOCATION,CON_INFO,
+						CON_DCL1,CON_DCL2,CON_DCL3,CON_DCL4,CON_DCL5,CON_DCL6,CON_DCL7,CON_DCL8,
+						CON_DCL9,CON_DCL10,CON_ETC,CON_DC,USE_AT,SAV,HIT,REG_DTTM,REG_ID
+			         FROM TBG_CONTENTS 
+			        WHERE PCODE=#pcode#
+			              AND U_ID=#uId#
+			              AND LANG_ID=#langId#
+			       ) b 
+			 WHERE a.CODE=b.LANG_ID
+		]]>
+	</select> 
+	
+	<delete id="ContentsDAO.fileDeleteAtt" parameterClass="zValue">
+		<![CDATA[
+			DELETE
+			  FROM TBC_ATTACH_FILE 
+			 WHERE PCODE=#pcode#
+			       AND LANG_ID=#langId# 
+			       AND U_ID=#uId#
+		]]>
+	</delete>
+	
+	<delete id="ContentsDAO.subDelete" parameterClass="zValue">
+		<![CDATA[
+			DELETE 
+			  FROM TBG_CONTENTS_SUB 
+			 WHERE PCODE=#pcode#
+			       AND LANG_ID=#langId# 
+			       AND U_ID=#uId#
+		]]>
+	</delete>
+	
+	<delete id="ContentsDAO.delete" parameterClass="zValue">
+		<![CDATA[
+			DELETE 
+			  FROM TBG_CONTENTS
+			 WHERE PCODE=#pcode#
+			       AND U_ID=#uId#
+		]]>
+	</delete>
+	
+	<select id="ContentsDAO.getContentInfo" parameterClass="zValue" resultClass="zValue">
+		<![CDATA[
+			SELECT PCODE, 
+			       BOARD_TYPE, 
+			       ATT_FLAG 
+			  FROM TBG_CONTENTS_INFO 
+			 WHERE PCODE=#pcode#
+		]]>
+	</select> 
+	
+	<select id="ContentsDAO.getUserCount" parameterClass="zValue" resultClass="Integer" >
+		<![CDATA[
+			SELECT 
+				COUNT(*) as cnt
+			FROM 
+				TBG_CONTENTS 
+			WHERE 
+				PCODE=#pcode#  AND USE_AT='Y' 
+		]]>
+		<isNotEmpty prepend="AND" property="lang">
+			<![CDATA[	LANG_ID=#lang#	]]>
+		</isNotEmpty>
+		<isEmpty prepend="AND" property="lang">
+			<![CDATA[	LANG_ID='ko'	]]>
+		</isEmpty>
+		<isNotEmpty prepend="AND" property="scode">
+			<![CDATA[	CON_CLASS=#scode#	]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchStr">
+			<![CDATA[	$searchKey$ LIKE '%' || #searchStr# || '%'	]]>
+		</isNotEmpty>
+	</select>
+	
+	<select id="ContentsDAO.getUserList" parameterClass="zValue" resultMap="userContents" >
+		<![CDATA[
+			SELECT 
+			       PCODE,LANG_ID,U_ID,CON_NM,CON_CLASS,CON_ADDR,CON_TEL,CON_HP,
+					CON_DONG,CON_REINFO,CON_PARKINFO,CON_PRIINFO,CON_LOCATION,CON_INFO,
+					CON_DCL1,CON_DCL2,CON_DCL3,CON_DCL4,CON_DCL5,CON_DCL6,CON_DCL7,CON_DCL8,
+					CON_DCL9,CON_DCL10,CON_ETC,CON_DC,USE_AT,SAV,HIT,REG_DTTM,REG_ID
+					, (SELECT CODE_NM FROM TC_CMMNCODE_DETAIL WHERE code=CON_CLASS AND ROWNUM =1) AS CODE_NM
+					, '' as FILE_NM
+			  FROM 
+			       (SELECT
+			    ]]>
+			    <isEqual property="pcode" compareValue="GTS017"><![CDATA[	/*+ INDEX_ASC(TBG_CONTENTS PK_TBG_CONTENTS) */	]]></isEqual>
+			    <isNotEqual property="pcode" compareValue="GTS017"><![CDATA[	/*+ INDEX_DESC(TBG_CONTENTS PK_TBG_CONTENTS) */	]]></isNotEqual>
+			    <![CDATA[
+			       
+			       ROWNUM rn, 
+				       PCODE,LANG_ID,U_ID,CON_NM,CON_CLASS,CON_ADDR,CON_TEL,CON_HP,
+						CON_DONG,CON_REINFO,CON_PARKINFO,CON_PRIINFO,CON_LOCATION,CON_INFO,
+						CON_DCL1,CON_DCL2,CON_DCL3,CON_DCL4,CON_DCL5,CON_DCL6,CON_DCL7,CON_DCL8,
+						CON_DCL9,CON_DCL10,CON_ETC,CON_DC,USE_AT,SAV,HIT,REG_DTTM,REG_ID
+			         FROM TBG_CONTENTS 
+			        WHERE PCODE=#pcode# 
+			              AND USE_AT='Y' 
+		]]>
+		<isNotEmpty prepend="AND" property="lang">
+			<![CDATA[	LANG_ID=#lang#	]]>
+		</isNotEmpty>
+		<isEmpty prepend="AND" property="lang">
+			<![CDATA[	LANG_ID='ko'	]]>
+		</isEmpty>
+		<isNotEmpty prepend="AND" property="scode">
+			<![CDATA[	CON_CLASS=#scode#	]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchStr">
+			<![CDATA[	$searchKey$ LIKE '%' || #searchStr# || '%'	]]>
+		</isNotEmpty>
+		<![CDATA[
+			              AND ROWNUM<=#enRn# 
+			       ) a 
+			 WHERE rn>#stRn#
+			 ORDER BY PCODE DESC, LANG_ID DESC, U_ID DESC
+		]]>
+	</select>
+	
+	<select id="ContentsDAO.getUserView" parameterClass="zValue" resultMap="userContents">
+		<![CDATA[
+			SELECT 
+		       PCODE,LANG_ID,U_ID,CON_NM,CON_CLASS,CON_ADDR,CON_TEL,CON_HP,
+				CON_DONG,CON_REINFO,CON_PARKINFO,CON_PRIINFO,CON_LOCATION,CON_INFO,
+				CON_DCL1,CON_DCL2,CON_DCL3,CON_DCL4,CON_DCL5,CON_DCL6,CON_DCL7,CON_DCL8,
+				CON_DCL9,CON_DCL10,CON_ETC,CON_DC,USE_AT,SAV,HIT,REG_DTTM,REG_ID, 
+				(SELECT CODE_NM FROM TC_CMMNCODE_DETAIL WHERE code=CON_CLASS AND ROWNUM =1) AS CODE_NM,
+				(SELECT FILE_NM FROM TBC_ATTACH_FILE WHERE PCODE='GCTS301' AND U_ID='20' AND USE_AT='Y' AND FILE_MODE='M' AND ROWNUM=1) AS FILE_NM
+	         FROM TBG_CONTENTS 
+	        WHERE PCODE=#pcode#
+	              AND U_ID=#uId#
+	              AND LANG_ID=#lang#
+	              AND USE_AT='Y'
+		]]>
+	</select> 
+	
+	<select id="ContentsDAO.getUserMapView" parameterClass="zValue" resultMap="userContents">
+		<![CDATA[
+			SELECT 
+		       PCODE,LANG_ID,U_ID,CON_NM,CON_CLASS,
+		       (select CON_ADDR from TBG_CONTENTS where PCODE=main.PCODE AND U_ID=main.U_ID and LANG_ID='ko') as CON_ADDR
+		       ,CON_TEL,CON_HP,
+				CON_DONG,CON_REINFO,CON_PARKINFO,CON_PRIINFO,CON_LOCATION,CON_INFO,
+				CON_DCL1,CON_DCL2,CON_DCL3,CON_DCL4,CON_DCL5,CON_DCL6,CON_DCL7,CON_DCL8,
+				CON_DCL9,CON_DCL10,CON_ETC,CON_DC,USE_AT,SAV,HIT,REG_DTTM,REG_ID, 
+				(SELECT CODE_NM FROM TC_CMMNCODE_DETAIL WHERE code=CON_CLASS AND ROWNUM =1) AS CODE_NM
+				, '' as FILE_NM
+	         FROM TBG_CONTENTS main
+	        WHERE PCODE=#pcode#
+	              AND U_ID=#uId#
+	              AND LANG_ID=#lang#
+	              AND USE_AT='Y'
+		]]>
+	</select> 
+	
+	<update id="ContentsDAO.hitUp" parameterClass="zValue">
+		<![CDATA[
+	    UPDATE TBG_CONTENTS
+	           SET 
+				HIT = HIT+1
+	    WHERE
+	    	 PCODE=#pcode# AND U_ID=#uId# AND LANG_ID=#lang#
+		]]>
+	</update>
+	
+	<update id="ContentsDAO.savUp" parameterClass="zValue">
+		<![CDATA[
+	    UPDATE TBG_CONTENTS
+	           SET 
+				SAV = nvl(SAV,0)+1
+	    WHERE
+	    	 PCODE=#pcode# AND U_ID=#uId# AND LANG_ID=#lang#
+		]]>
+	</update>
+</sqlMap>

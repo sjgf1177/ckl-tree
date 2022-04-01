@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="loginHistory">
+
+	<typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+
+	<insert id="loginHistoryDAO.insert" parameterClass="egovMap" >
+		<![CDATA[
+			INSERT INTO TM_LOGIN_HISTORY (
+			    USER_ID,USER_IP,LOGIN_TRY_DATE,LOGIN_YN
+			)
+			VALUES (
+			    #userId#,#userIp#,now(),#loginYn#
+			)
+		]]>
+	</insert>
+
+	<sql id="loginHistoryDAO.list-where">
+		<isNotEmpty prepend="AND" property="searchWrd">
+			<isEqual property="searchCnd" compareValue="1">
+				<![CDATA[	category_name2 LIKE CONCAT('%',trim(#searchWrd#), '%') 		]]>
+			</isEqual>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="userId">
+			<![CDATA[	USER_ID = #userId#		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="interval">
+			<![CDATA[	DATE_ADD(NOW(), INTERVAL #interval# MINUTE) <= LOGIN_TRY_DATE		]]>
+		</isNotEmpty>
+	</sql>
+
+	<select id="loginHistoryDAO.list" parameterClass="egovMap" resultClass="egovMap" >
+		<![CDATA[
+			SELECT  *
+			  FROM  (
+			SELECT @RN:=@RN+1 AS RNUM, ALL_LIST.*
+			  FROM  (
+			  
+			SELECT 
+			    HSTR_NO,
+			    USER_ID,
+			    USER_IP,
+			    LOGIN_TRY_DATE,
+			    LOGIN_YN
+			FROM TM_LOGIN_HISTORY
+			WHERE 1=1
+		]]>
+		<include refid="loginHistoryDAO.list-where" />
+		<![CDATA[
+			ORDER BY HSTR_NO DESC
+			
+				    ) ALL_LIST
+			    ) ALL_LIST
+			limit #firstIndex#, #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="loginHistoryDAO.view" parameterClass="egovMap" resultClass="egovMap" >
+		<![CDATA[
+			SELECT 
+			    HSTR_NO,
+			    USER_ID,
+			    USER_IP,
+			    LOGIN_TRY_DATE,
+			    LOGIN_YN
+			FROM TM_LOGIN_HISTORY
+			WHERE HSTR_NO = #hstrNo#
+		]]>
+	</select>
+
+ 	<update id="loginHistoryDAO.update" parameterClass="egovMap">
+ 		<![CDATA[
+			UPDATE TM_LOGIN_HISTORY
+			SET 
+			    USER_ID = #userId#,
+			    USER_IP = #userIp#,
+			    LOGIN_TRY_DATE = #loginTryDate#,
+			    LOGIN_YN = #loginYn#
+			WHERE HSTR_NO = #hstrNo#
+ 		]]>
+ 	</update>
+
+ 	<delete id="loginHistoryDAO.delete" parameterClass="egovMap">
+ 		<![CDATA[
+			DELETE TM_LOGIN_HISTORY
+			WHERE HSTR_NO = #hstrNo#
+ 		]]>
+ 	</delete>
+
+</sqlMap>

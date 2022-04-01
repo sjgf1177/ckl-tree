@@ -1,0 +1,13 @@
+gis_camera.png : 방범용
+unknown.png : 알수 없는 카메라
+gis_load.png : 도로 방범용 카메라
+fire.png : 화재감시
+gis_tracking.png : 지능형영상분석 카메라
+gis_forestfire.png : 산불 감시 카메라
+gis_recognition.png : 불법주정차단속 카메라
+gis_park.png : 공원방범용 카메라
+gis_multipurpose.png : 다목적 카메라
+gis_waste.png : 쓰레기무단투기단속 카메라
+gis_childrenProtection.png : 어린이보호구역 카메라
+gis_disaster.png : 재난재해 카메라
+gis_governmentOffice.png : 청사관리 카메라

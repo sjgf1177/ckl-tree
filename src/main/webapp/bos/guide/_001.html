@@ -1,0 +1,361 @@
+
+
+
+
+
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ko" lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+<title>코스콤 관리자페이지 </title>
+
+<link rel="stylesheet" type="text/css" href="/fonts/css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css" href="/js/bootstrap/css/bootstrap.css" />
+<link rel="stylesheet" type="text/css" href="/bos/css/reset.css" /><link rel="stylesheet" type="text/css" href="/bos/css/common.css" />
+
+  <!--icheck-->
+  <link href="/js/iCheck/skins/minimal/minimal.css" rel="stylesheet">
+  <link href="/js/iCheck/skins/square/square.css" rel="stylesheet">
+  <link href="/js/iCheck/skins/square/red.css" rel="stylesheet">
+  <link href="/js/iCheck/skins/square/blue.css" rel="stylesheet">
+  <!--dashboard calendar-->
+  <link href="css/clndr.css" rel="stylesheet">
+  <!--Morris Chart CSS -->
+  <link rel="stylesheet" href="/js/morris-chart/morris.css">
+  <link href="/bos/css/bos.css" rel="stylesheet">
+
+
+
+
+<script type="text/javascript" src="/js/jquery.js"></script>
+<script type="text/javascript" src="/js/bootstrap/bootstrap.min.js"></script>
+<script type="text/javascript" src="/bos/js/common.js"></script>
+<script type="text/javascript" src="/bos/js/sub.js"></script>
+
+
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+<script type="text/javascript" src="/js/html5shiv.js"></script><script type="text/javascript" src="js/respond.min.js"></script>
+<![endif]-->
+
+<script type="text/javascript">
+	$(function(){
+		$("#search").click(function(){
+			search();
+		});
+		$("#searchTxt").bind("keyup", function(event){
+			search();
+		});
+	});
+	function search(){
+		var searchTxt = $("#searchTxt").val();
+		if(searchTxt)
+		{
+			$("#lnb ul li").each(function(){
+				var text = $(this).text();
+				var showMenu = (text.indexOf(searchTxt) != -1) || (cho_hangul(text).indexOf(searchTxt) != -1);
+				if( showMenu ){
+					$(this).show();
+				} else {
+					if($(this).parent())
+						$(this).hide();
+				}
+			});
+		} else {
+			$("#lnb ul li").show();
+		}
+	}
+
+	function cho_hangul(str) {
+	  cho = ["ㄱ","ㄲ","ㄴ","ㄷ","ㄸ","ㄹ","ㅁ","ㅂ","ㅃ","ㅅ","ㅆ","ㅇ","ㅈ","ㅉ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"];
+	  result = "";
+	  for(i=0;i<str.length;i++) {
+	    code = str.charCodeAt(i)-44032;
+	    if(code>-1 && code<11172) result += cho[Math.floor(code/588)];
+	  }
+	  return result;
+	}
+
+	function doResize()
+	{
+		var min_Height = 0;
+		if (min_Height < contentFrame.document.body.scrollHeight+10)
+		min_Height = contentFrame.document.body.scrollHeight+10;
+		document.all.contentFrame.height = min_Height;
+	}
+
+	function goPage(page)
+	{
+		$("#contentFrame").attr("src", page);
+		location.href = "#";
+		//document.getElementById("tmp").innerHTML = page;
+	}
+
+
+	function autoResize(i){
+	     var iframeHeight=
+	     (i).contentWindow.document.body.scrollHeight;
+	     var iframeWidth=
+	     (i).contentWindow.document.body.scrollWidth;
+	     (i).height=iframeWidth+20;
+	     (i).height=iframeHeight+300;
+	 }
+
+	var roleMsg = "";
+	if(roleMsg) alert(roleMsg);
+
+	function pagePrint(Obj) {
+		alert(Obj);
+	    var W = Obj.offsetWidth;        //screen.availWidth;
+	    var H = Obj.offsetHeight;        //screen.availHeight;
+	    var features
+	= "menubar=no,toolbar=no,location=no,directories=no,status=no,scrollbars=yes,resizable=yes,width=" + W
+	+ ",height=" + H + ",left=0,top=0";
+	    var PrintPage = window.open("about:blank",Obj.id,features);
+	    PrintPage.document.open();
+	    PrintPage.document.write("\n\n" + Obj.innerHTML + "\n");
+	    PrintPage.document.close();
+	    PrintPage.document.title = document.domain;
+	    PrintPage.print(PrintPage.location.reload());
+	}
+
+	//pagePrint(document.getElementById('content'));
+	 function print_area()
+	 {
+		  var W=document.documentElement.clientWidth; if(!W){W=document.body.clientWidth;}
+		  var H=document.documentElement.clientHeight; if(!H){H=document.body.clientHeight;}
+		  var features = "menubar=no,toolbar=no,location=no,directories=no,status=no,scrollbars=yes,resizable=yes,width=" + W + ",height=" + H + ",left=0,top=0";
+		  var PrintPage = window.open("about:blank","tmp_print",features);
+		  PrintPage.document.open();
+		  PrintPage.document.write("<html><head><title></title></head><body>" + document.getElementById('content').innerHTML + "</body></html>");
+		  PrintPage.document.close();
+		  PrintPage.print();
+		  PrintPage.close();
+	 }
+
+	 function printf(){
+		 document.frames['contentFrame'].focus();
+		 document.frames['contentFrame'].print();
+		 //document.frames['contentFrame'].contentWindow.location.href="/bos/forprint.jsp";
+	 }
+
+	 function println(){
+		 window.open('/bos/forprint.jsp', 'popwin', 'left=20,top=20,width=616,height=700');
+		 document.frames['contentFrame'].focus();
+		 //document.frames['contentFrame'].print();
+	 }
+
+</script>
+</head>
+<body>
+	<div id="wrap">
+		<div id="header_wrap">
+			<div class="header">
+				<h1><img src="/bos/images/common/logo.gif" alt="ckl" /></h1>
+				<p class="user bold"><span class="color1">테스트[test]</span>님</p>
+
+
+
+
+
+			<div class="util btn-group">
+
+
+
+
+
+
+
+
+						<a href="/bos/main/main.do?menuNo=100001" class="btn btn-primary"><i class="fa fa-male"></i> 관리자</a>
+
+
+
+
+
+
+
+
+						<a href="/bos/main/main.do?menuNo=100039" class="btn btn-primary"><i class="fa fa-laptop"></i> 통합검색관리</a>
+
+
+					<a href="/bos/member/logout.do" class="btn btn-info"><i class="fa fa-power-off"></i> 로그아웃</a>
+
+				<!-- <ul class="login">
+					<li class="btn"><a href="#"><img src="/bos/images/common/btn_login.gif" alt="로그인" /></a></li>
+					<li class="btn"><a href="javascript:goPage('/bos/member/forUpdateMy.do?programId=adminMember');"><img src="/bos/images/common/btn_myinform.gif" alt="내정보수정" /></a></li>
+				</ul> -->
+			</div>
+		</div>
+
+
+
+			<div id="gnb">
+
+				<ul class="gnb_width">
+
+
+
+
+
+
+	 			<li >
+
+
+						<a href="/bos/main/main.do?menuNo=100010" >게시물관리</a>
+
+		 		</li>
+
+
+
+
+
+
+	 			<li class='on'>
+
+
+						<a href="/bos/main/main.do?menuNo=100019" >사용자관리</a>
+
+		 		</li>
+
+
+
+
+
+
+	 			<li class='pr0'>
+
+
+						<a href="/bos/main/main.do?menuNo=100027" >사이트관리</a>
+
+		 		</li>
+
+				</ul>
+
+			</div>
+
+
+
+
+
+
+		</div>
+		<div id="container" class="clearfix">
+			<div id="lnb">
+
+				<h2>사용자관리</h2>
+				<!-- <p><input type="text" name="searchTxt" id="searchTxt" value="" /> <label for="search"><a id="search" href="#search">조회</a></label></p> -->
+
+
+
+
+				<ul>
+
+
+
+
+
+
+				<li>
+
+
+						<a href="/bos/main/main.do?menuNo=100020" title="/bos/member/list.do" >관리자정보</a>
+
+
+
+
+					</li>
+
+
+
+
+
+
+				<li>
+
+
+						<a href="/bos/main/main.do?menuNo=100021" title="/bos/cmm/sec/ram/AuthorList.do" >권한관리</a>
+
+
+
+
+						<ol>
+
+
+
+
+
+
+							<li>
+
+
+								<a href="/bos/main/main.do?menuNo=100022" title="/bos/cmm/sec/ram/AuthorList.do" >권한관리</a>
+
+
+
+
+							</li>
+
+
+
+
+
+
+							<li>
+
+
+								<a href="/bos/main/main.do?menuNo=100024" title="/bos/sym/mpm/MenuCreatManageSelect.do" >권한별메뉴관리</a>
+
+
+
+
+							</li>
+
+						</ol>
+
+					</li>
+
+				</ul>
+
+
+			</div>
+			<div id="content">
+
+			<iframe src="/bos/member/list.do" width="100%" scrolling="no" frameborder="0" id="contentFrame" name="contentFrame" title="본문내용 프레임" onload='javascript:autoResize(this);'></iframe>
+			</div>
+		</div>
+	</div>
+	<div id="footer">
+		<p><span class="bold">코스콤</span>&nbsp;&nbsp;&nbsp;
+		서울시 영등포구 여의나루로 76(150-010),
+		&nbsp;&nbsp;&nbsp;  <span class="bold">전화번호</span>: 02)767-7114 </p>
+		<em>Copyright ⓒ 2012 CKL Corp. All Rights reserved.</em>
+	</div>
+
+
+<!--[if lte IE 7]>
+<script type="text/javascript">
+//<![CDATA[
+	$('*').each(function(index) {
+		if ($(this).css("overflow")=="hidden"){ $(this).css("zoom",1)}
+		if ($(this).css("display")=="inline-block"){ $(this).css("display",'inline'); $(this).css("zoom",1)}
+	});
+//]]>
+</script>
+<![endif]-->
+<!--[if lte IE 7]>
+<script type="text/javascript">
+//<![CDATA[
+	$('*').each(function(index) {
+		if ($(this).css("overflow")=="hidden"){ $(this).css("zoom",1)}
+		if ($(this).css("display")=="inline-block"){ $(this).css("display",'inline'); $(this).css("zoom",1)}
+	});
+//]]>
+</script>
+<![endif]-->
+
+</body>
+</html>

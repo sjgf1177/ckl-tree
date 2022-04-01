@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<bean id="egov.propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:/egovframework/egovProps/globals.properties</value>
+            </list>
+        </property>
+    </bean>
+
+	<!-- DataSource -->
+	<alias name="dataSource-${Globals.DbType}" alias="egov.dataSource" />
+
+	<bean id="dataSource-oracle" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="${Globals.driverClassName}"/>
+		<property name="url" value="${Globals.url}" />
+		<property name="username" value="${Globals.username}" />
+		<property name="password" value="${Globals.password}" />
+	</bean>
+
+	<!-- lms db접속 -->
+	<bean id="dataSource-lms" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="${Globals.driverClassName}"/>
+		<property name="url" value="${Globals.urlOnlineEdu}" />
+		<property name="username" value="${Globals.usernameOnlineEdu}" />
+		<property name="password" value="${Globals.passwordOnlineEdu}" />
+	</bean>
+
+	<!-- 창의드림 db접속 -->
+	<bean id="dataSource-intranet" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="${Globals.driverClassName}"/>
+		<property name="url" value="${Globals.Intranet.url}" />
+		<property name="username" value="${Globals.Intranet.username}" />
+		<property name="password" value="${Globals.Intranet.password}" />
+	</bean>
+
+</beans>

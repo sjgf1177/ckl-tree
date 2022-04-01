@@ -1,0 +1,901 @@
+
+body { color: #3e3a39; font-size:0.875em; margin: 0 !important; padding: 0 !important}
+a:focus, a:hover, a:active { text-decoration: underline; }
+h6 { color: #3f444a; font-size: 12px; margin: 5px 0; }
+h5 { color: #3f444a; font-size: 14px; margin: 7px 0; }
+h4 { color: #3f444a; font-size: 16px; margin: 8px 0;line-height: 20px}
+h3 { color: #3f444a; font-size: 16px; line-height: 22px;}
+h2 { color: #3f444a; font-size: 17px; line-height: 24px; margin-bottom: 5px; clear: both;}
+h1 { color: #3f444a; font-size: 22px; line-height: 26px;display: block;}
+em{font-weight:600;font-style: normal}
+.paging, .heading{text-align: center}
+
+/* subLayout */
+#wrap {position:relative;z-index:10;margin: 0 auto;min-height: 400px;;}
+
+.totMenuF{margin-top:0}
+
+.nav{}
+.nav .h{overflow: hidden;background-color:#fff;border-bottom: 1px solid #e6e6e6;}
+.nav .h h1{font-size:18px;color: #303030;font-weight: bold;line-height: 40px;float: left;margin-left: 10px;}
+.nav .h button{background:url(/cklmobile/images/common/gnb1m.png) no-repeat 100% 50%;background-size: 100%; width:40px;height:40px;float: right;}
+.nav .h button.on{background:url(/cklmobile/images/common/gnb1m.png) no-repeat 100% 50%;background-size: 100%;}
+.nav .navList{position: relative;display: none;z-index: 200;}
+.nav .navList.active{display: block;}
+.nav .navList ul{width: 100%;overflow: hidden;background-color: #505050;margin:0 0 10px 0;padding: 0;}
+.nav .navList ul li{float: left;list-style: none;width:100%;}
+.nav .navList ul li.last{width: 100%;}
+.nav .navList ul li a{display: block;color: #aaaaaa;font-size: 12px;font-weight: bold;text-align: center;padding: 8px 0;}
+.nav .navList ul li.on a{background-color: #303030;color: #fff;}
+
+.subNav{}
+.subNav h1{font-size: 17px;font-weight: bold;color: #303030;margin: 0;padding: 10px}
+.subNav ul{overflow: hidden;list-style: none;display:table;width: 100%;}
+.subNav ul li{display:table-cell;}
+.subNav ul li a{text-align: center;font-weight: bold;font-size: 13px;
+	height: 40px;line-height: 40px;display: block;position: relative;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
+.subNav ul li.on a{background-color:#3e3a39;color:#fff;}
+.subNav ul li.end a{border-right: none;}
+.subNav div{width: 100%;height: 100%;background-color: #909090;border-collapse: collapse;margin: -1px 0 10px;}
+.subNav div>span{display: table;width: 100%;}
+.subNav div>span>span{/*float: left;*/display: table-cell;width: 50%;vertical-align: middle;height: 100%;border: 1px solid #fff;border-width: 0 1px 1px 0;}
+.subNav div>span.last{width: 100%;display: table;}
+.subNav div>span>span:last-child{border-right-width:0}
+/*.subNav div>span>span:first-child{border-right-width:1px}*/
+.subNav div>span:last-child > span{border-bottom: none;}
+.subNav div>span>span>a{
+		font-size: 13px;
+		display: block;box-sizing:border-box;
+		padding: 4px 0;
+		vertical-align: middle;line-height: 1.25;
+		background-color: transparent;color: #fff;text-align: center;font-weight: bold;}
+.subNav div>span>span>a span{}
+.subNav div>span>span.on{background-color: #ec6452;}
+
+.tMapInfoDesc p{margin-top:10px}
+
+
+
+/* sub pages */
+ol, ul { list-style: none;/* line-height: 20px */}
+label, th{font-weight: normal}
+input{line-height: 16px;padding:3px 5px}
+.fn{font-weight: normal !important}
+span.hide_star {display: inline-block; font-size: 0; overflow: hidden; width: 15px; height: 15px; background: url(/cklmobile/images/common/hidechk.png) no-repeat 0 50%; vertical-align: middle }
+th.hide_star{  background:#eee url(/cklmobile/images/common/hidechk.png) no-repeat 100% 50% !important}
+th.hide_star label {font-weight:500 ;vertical-align: middle}
+
+.orgSite a {color:#eb1c24;}
+
+.table{border:none;}
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th{border-left-width:0;border-right:1px solid #ddd;}
+.table>tbody>tr>td:last-child, .table>tbody>tr>th:last-child, .table>tfoot>tr>td:last-child, .table>tfoot>tr>th:last-child, .table>thead>tr>td:last-child,
+.table>thead>tr>th:last-child{border-right-width:0;}
+
+
+
+.cel{background:url(/cklmobile/images/common/barHr.png) no-repeat 0 100%;padding-bottom: 5px;width: 100%;float: left}
+
+/* tab */
+.tab{position: relative; min-height: 400px}
+.tab h2, .tab h2 a{display:inline-block;padding:5px 10px}
+.tab h2{float:left;font-weight:600;padding-top:2px;border:1px solid #d6d6d6;border-left:none;background:#f2f2f2}
+.tab h2 a{font-size:16px;padding-left:9px;margin-left:-1px;color:#535353}
+.tab h2.on{border-bottom:none;background:none}
+.tab h2.on a{font-size:16px;color:#145797;text-decoration:underline}
+.tab .tab-pane{margin-top: 60px;position: absolute;display: none}
+.tab .active, .tab .on{display: block}
+.nav-tabs>li>a{border:1px solid #ddd}
+.nav-tabs>li>a:hover, .nav-tabs>li>a:focus, .nav-tabs>li>a:active{background:#204d74;color:#fff}
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus {background:#204d74;color:#fff}
+
+.nav-pills>li>a{border:1px solid #ddd}
+.nav-pills>li>a:hover, .nav-pills>li>a:focus, .nav-pills>li>a:active{background:#204d74;color:#fff}
+.nav-pills>li.active>a, .nav-pills>li.active>a:hover, .nav-pills>li.active>a:focus {background:#204d74;color:#fff}
+.navSm > li > a{padding:5px 10px}
+
+
+
+/* board */
+.bdListInfo {clear:both;padding-left:10px;}
+.bdList .info2{float: right;}
+.bdList{background-color: #fff;}
+.bdList > table > thead > tr > th,
+.bdList table .th{ background:#666;color:#fff; text-align: center;padding: 13px 5px 12px 5px;border-right:1px solid #ddd;}
+.bdList > table > tbody > tr > td{text-align: center;vertical-align: middle;border-right:1px solid #ddd;}
+.bdList > table > tbody > tr > td:last-child{border-right:none;}
+.bdList{border-bottom:1px solid #204d74;margin-bottom:10px}
+.bdList table .th{}
+.bdList .table>thead>tr>th{}
+
+.bdLastest{position:relative;width:100%;height:290px;clear:both}
+.bdLastest li{float:left;width:100%;height:290px}
+.bdLastest dl{margin-left:444px;float:left;width:586px}
+.bdLastest dt{font-size: 18px;background:url(/cklmobile/images/sub/bdLastest04.gif) no-repeat 0 bottom; line-height: 50px; padding-bottom:15px}
+.bdLastest .lastestUl .imageBg{position:absolute;left:101px}
+.bdLitestCtrl button{position:absolute;z-index:1;top:0;width:50px;height:290px}
+.bdLitestCtrl .bdLastLeft{background:url(/cklmobile/images/sub/bdLastest02.gif) no-repeat}
+.bdLitestCtrl .bdLastRight{background:url(/cklmobile/images/sub/bdLastest03.gif) no-repeat;right:0}
+
+
+.bdView{background-color: #fff;}
+.bdView table{border-bottom:1px solid #204d74}
+.bdView table{}
+.bdView > table > tbody > tr > th, .bdView > table > tbody > tr > td{padding-left: 5px; padding-right: 5px;border-right:1px solid #ddd;}
+.bdView > table > tbody > tr > th:last-child, .bdView > table > tbody > tr > td:last-child{border-right: none;}
+.bdView > table > tbody > tr > th{ background:#666;color:#fff; text-align:left;border-left:none;}
+.bdView > table > tbody > tr > td{text-align:left;vertical-align: middle;border-left:none;}
+.bdView{margin-bottom: 30px}
+.dlViewTable { border-top: 1px solid #777;border-bottom: 1px solid #777 }
+.dlViewTable dl { border-bottom: 1px solid #777;background:#fff; display:table; width:100%; margin: 0; padding: 0;clear:both}
+.dlViewTable dl:last-child{border-bottom:none;}
+.dlViewTable dl dt, .dlViewTable dl dd { display: table-cell; padding: 10px 5px }
+.dlViewTable dl dt { text-align: center; }
+.bdViewNext{display: inline-block;width: 40px;height: 40px;background:#f5f5f5 url(/cklmobile/images/common/bdNext.png) no-repeat 50% 50%;}
+.bdViewPrev{display: inline-block;width: 40px;height: 40px;background:#f5f5f5 url(/cklmobile/images/common/bdPrev.png) no-repeat 50% 50%;}
+
+.tableUl{border-top:2px solid #204d74}
+.tableUl li{display:block;border-bottom:1px solid #777;padding:6px 10px;}
+.tableUl li:active, .tableUl li:focus{background-color:#d8d9d9}
+.tableUl li:last-child{border-bottom:none;}
+.tableUl .title{display: block;}
+.tableUl .info1, .tableUl .info2{font-size: 0.875em;}
+.tableUl a:focus .info1,
+.tableUl a:active .info1,
+.tableUl a:focus .info2,
+.tableUl a:active .info2{text-decoration:none;}
+dl.inline{float: left;width: 100%;	}
+dl.inline dt, dl.inline dd{display: inline-block;}
+
+
+
+.bdMoreTable { border-top: 2px solid #204d74 }
+.bdMoreTable dl { border-bottom: 1px solid #e5e5e5; display:table; width:100%; margin: 0; padding: 0;clear:both}
+.bdMoreTable dl dt, .bdMoreTable dl dd { display: table-cell; padding:4px 0px}
+.bdMoreTable dl dd{padding-left: 30px;overflow:hidden;white-space: nowrap;text-overflow:ellipsis}
+.bdMoreTable dl dt { width: 120px}
+.bdMoreTable span{display: inline-block}
+.bgGray{background-color:#d1d1d1 !important}
+.bgBlack{background-color:#3e3a39 !important}
+.bdMore{width:130px;padding: 12px 27px;-o-border-radius: 20px;-moz-border-radius: 20px;-webkit-border-radius: 20px;border-radius: 20px}
+
+/* dl List Table */
+.dlListTable { border-top: 2px solid #204d74;margin-top: 8px;margin-bottom: 30px;}
+.dlListTable dl { border-bottom: 1px solid #e5e5e5; display:table; width:100%; margin: 0; padding: 0;clear:both}
+.dlListTable dl dt, .dlListTable dl dd { display: table-cell; padding: 10px 5px }
+.dlListTable dl dt { width: 120px; background: #f5f5f5; text-align: center}
+
+.icoSecreat{display:inline-block;width:20px;height:20px; background:url(/images/common/ico_lock.gif) no-repeat 50% 50%; vertical-align:middle}
+
+.editDB{margin: 10px 0 20px 0;padding:10px; min-height: 400px;float: left;border-top:2px solid #204d74;
+	border-bottom: 1px solid #204d74;clear: both;width: 100%;background:#fff}
+.editDB img{height:auto !important;}
+
+.btnSet{text-align: center;margin:10px 0 20px 0}
+.btnSetRt{margin-top:-60px !important}
+
+.tabVertical{ position:relative;float:left;width:240px; height:231px;clear:both;border-top:1px solid #e0e0e0; /* padding:14px 0 6px 18px */}
+.tabVertical>a{padding:0;margin:0;display:block;width:68px;height:57px;border:none}
+.tabVertical div{position:absolute;top:-1px;left: 68px;width:185px;height:229px;border:1px solid #e0e0e0; border-left-color:#fff;overflow:hidden}
+
+
+
+.visualSysSet{position:relative;z-index:10;float:left}
+.visualSysSet .thumbs{position:relative;z-index:10;width:100%;float:left;}
+.visualSysSet .thumbs>div{position:relative;z-index:10;width:100%;height:auto;float:left;}
+.visualSysSet .thumbs a{margin-bottom: 10px;display: block;}
+.visualSysSet .thumbs img{width:100%;height:auto;border:1px solid #c8c8c8;}
+.revInfo{float:left;border-top:2px solid #231f20;height:auto;padding-top:5px;width: 100%;}
+.revInfo li{display: block}
+
+
+.schPanel{padding: 15px;background:#e1e1e1;clear:both}
+.schPanel table{background:#fff}
+.schPanel th{background:#666; color:#fff}
+.schPanel thead>tr>th,
+.schPanel tbody>tr>th,
+.schPanel tfoot>tr>th,
+.schPanel thead>tr>td, .schPanel tbody>tr>td,
+.schPanel tfoot>tr>td { padding: 8px 20px}
+.schPanel .btn-sm{padding:0 16px 0 0; line-height:23px;margin-left:3px}
+.schPanel .col-md-11{width:90%}
+.schPanel .btn-primary{background-color: #3e3a39; border-color:#3e3a39}
+.schPanel label{margin-right:17px}
+.schPanel .row label{margin-right: 0}
+.schPanel .btnLgSch{padding:9px 35px 8px 55px;background:#666 url(/cklmobile/images/common/icoBtns.png) no-repeat 20px -40px; border-radius: 25px; -webkit-border-radius:25px; -moz-border-radius:25px}
+
+
+
+/* form Line  */
+.formLine{margin:0 0 10px 0;padding:15px 0;background:url(/cklmobile/images/common/formline.png) no-repeat;height: 60px}
+.formLineSch{background:#eee}
+.formLineSch input[type=text]{background-color:#fff}
+.formLine .btn-primary{background: url(/cklmobile/images/sub/formLine1Ok.png) no-repeat; width:32px;height:30px;padding:0;
+	text-indent:100%;overflow:hidden;white-space:nowrap;border:none}
+.formLine .bar{height: 25px; vertical-align: middle}
+
+.formLine1{background:#d9d9d9;padding:10px;float: left;text-align: right;border: none; 
+	-o-border-radius:0;-moz-border-radius:0;-webkit-border-radius:0;border-radius:0;width:100%;}
+.formLine1 input[type=text]{}
+.formLine1 .btn-primary,
+.formLine1 .btn-primary:focus,
+.formLine1 .btn-primary:active,
+.formLine1 .btn-primary:hover{background:url(/cklmobile/images/sub/formLine1Ok.gif) no-repeat 50% 50%; background-size:24px 24px; width:24px;height:24px;padding:0;text-indent:100%;overflow:hidden;white-space:nowrap;border:none;padding:0}
+
+
+
+
+
+
+
+
+.stepInline{text-align: center; margin-bottom: 10px;}
+.stepInline>ol,.stepInline>ul{ list-style: none;display:table;width: 100%; margin:0 auto;border-left:1px solid #d1d1d1;border-top:1px solid #d1d1d1; }
+.stepInline>ol>li, .stepInline>ul>li{line-height: 38px;height: 38px;display:table-cell;margin-right: 10px;border-right:1px solid #d1d1d1;border-bottom:1px solid #d1d1d1; padding: 0 60px;text-align: center;background:#fff; font-size: 13px }
+.stepInline>ol>li.on, .stepInline>ol>li.on a, .stepInline>ul>li.on, .stepInline>ul>li.on a{background: #3e3a39;color:#fff}
+.stepInline>ol>li:last-child, .stepInline>ol>li.last, .stepInline>ul>li:last-child, .stepInline>ul>li.last{margin-right: 0}
+.stepInlineSm>ol>li, .stepInlineSm>ul>li{padding: 0 23px}
+
+
+.step{position: relative;z-index: 10; background: url(/cklmobile/images/common/gline.gif) repeat-x 0 20px}
+.step>ul>li{ list-style: none;display:inline-block}
+.step>ul>li>.sub{position: absolute;top:60px;border:2px solid #3e3a39}
+.step>ul>li>a{display: inline-block;height:60px}
+.step>ul>li>a>span{display: inline-block;line-height: 38px;height: 38px;width: 168px;margin-right: 10px;border:1px solid #d1d1d1;
+border-radius: 20px; -webkit-border-radius: 20px; -moz-border-radius:20px; text-align: center;background:#fff; font-size: 13px }
+.step>ul.len5>li>a>span{width: 203px; margin-right:10px}
+.step>ul.len5>li.mr0>a>span{width:212px}
+.step>ul>li.on>a>span{background: #3e3a39 url(/cklmobile/images/common/steparr.png) no-repeat right 50%;color:#fff}
+.step>ul>li.on>a{background: url(/cklmobile/images/common/stepsub.gif) no-repeat 50% 100%}
+
+
+.step a:hover>span>span,
+.step a:focus>span>span,
+.step a:active>span>span{background-image:url(/cklmobile/images/common/icoBtnsO.png)}
+
+.step span span{display:inline-block;width: 40px; height: 40px;vertical-align: middle}
+.step span>span.ico01{ background-position: 50% -93px}
+.step span>span.ico02{ background-position: 50% -133px}
+.step span>span.ico03{ background-position: 50% -173px}
+.step span>span.ico04{ background-position: 50% -213px}
+.step span>span.ico05{ background-position: 50% -250px}
+.step span>span.ico06{ background-position: 50% -290px}
+
+.step>ul>li>div{position: absolute;top:60px;left:0;width:100%;border:2px solid #3e3a39;background: #fff;padding: 13px;border-radius:10px;-webkit-border-radius:10px; -moz-border-radius:10px}
+.step dl.table{border-bottom: 1px solid #fff;display: block;height:36px;background-color: #efefef}
+.step dl.table dt {display:block;width: 80px;padding:0 20px;float: left; background-color: #3e3a39;color: #fff;height:35px; line-height: 35px}
+.step dl.table dd{display:inline-block; float: left;height:35px;width:927px; line-height: 35px;padding:0 10px}
+
+.step dl.desc{background-color:#fff;padding:0 20px;height: auto}
+.step dl.desc dt{display:block;width:100%;padding:0;background:none;height:35px; line-height:35px}
+.step dl.desc dd{display:block; float: left;width:100%; line-height:normal;padding:0;height: auto}
+.step dl.grayBox{background:#efefef;padding:5px 20px; margin-top: 10px;clear:both; height: auto}
+.step dl.grayBox dt{display:block;width:100%;padding:0;background:none;height:auto; line-height:35px;color:#333}
+.step dl.grayBox dd{display:block; float: left;width:100%; line-height:normal;padding:0}
+
+dl.inlineList dt{display: inline-block; background: url(/cklmobile/images/common/bull.png) no-repeat 0 16px; padding-left: 10px}
+dl.inlineList dd{display: inline-block}
+
+.step .closer{display:block;position: absolute;bottom:-32px;left:50%;width:70px; height: 30px;margin-left: -15px;background: url(/cklmobile/images/common/stepsub.png) no-repeat 0 0}
+.step .box{display: none}
+.step .box>dl{width:100%;background:#efefef;float:left;line-height:35px;border-bottom:1px solid #fff}
+.step .box>dl>dt{width:120px;background:#000;color:#fff;padding-left:20px;float:left}
+.step .box>dl>dd{padding-left:20px;float:left;border-bottom:1px solid #fff}
+.step .box>dl>dt, .step .box>dl>dd{line-height:35px}
+.sorting li{padding:0;background: url(/cklmobile/images/common/bar.gif) no-repeat 100% 50%}
+.sorting a{display: inline-block;padding:3px 18px;  }
+.sorting a:hover, .sorting a:focus, .sorting a:active{background: url(/cklmobile/images/common/sortarr.gif) no-repeat 95% 50%}
+
+
+
+.boxBtm1 ul{height: 144px; text-align: center; margin:30px 0}
+.boxBtm1 ul li{display: inline-block;width:19%}
+.boxBtm1 ul li a{ display: block;border-right: 1px solid #eaeaea}
+
+
+#content .photoGallery2 img{max-width:none}
+.photoGallery2{overflow:hidden;border-top:2px solid #3e3a39;width:100%;margin-bottom:50px}
+.photoGallery2 h3{display:block;float: left;width: 250px;height: 245px;margin-top:27px; text-align:center}
+.photoGallery2 h3 a span{font-size: 18px;display: inline-block;padding-top: 185px}
+.photoGallery2 .case1{background: url(/cklmobile/images/cklmobilepro/gallery2case_01.gif) no-repeat; width:200px; height: 245px;display: block}
+.photoGallery2 .case2{background: url(/cklmobile/images/cklmobilepro/gallery2case_02.gif) no-repeat; width:200px; height: 245px;display: block}
+.photoGallery2 .case3{background: url(/cklmobile/images/cklmobilepro/gallery2case_03.gif) no-repeat; width:200px; height: 245px;display: block}
+.photoGallery2 .cel{background: url(/cklmobile/images/common/barHr.png) no-repeat 0 100%}
+.photoGallery2>ul{width: 830px;float: left;margin:0;background: url(/cklmobile/images/cklmobilepro/li_pat.png) repeat-x 0 50%}
+.photoGallery2>ul>li{position:relative;width: 50%;float:left}
+.photoGallery2>ul>li span, .photoGallery2>ul>li>a{display: inline-block}
+.photoGallery2>ul>li>a span.db{height:62px;overflow:hidden}
+.photoGallery2 .img{float:left;border:1px solid #cfcfcf;margin-right: 30px;width: 150px;height: 102px}
+.photoGallery2 .linkers{position: absolute;right:0; top:20px}
+.photoGallery2>ul>li:nth-child(odd) .linkers{right:30px}
+.photoGallery2 .category{display:block; overflow:hidden; white-space: nowrap; text-overflow:ellipsis; font-size:13px;height:50px; line-height: 50px; width: 100px}
+.photoGallery2>ul>li>a{margin:20px 0;width:390px}
+
+.photoLine1 li:nth-child(odd) .linkers{right:0}
+.photoLine1>ul{ background:none;padding-bottom: 10px; border-bottom: 1px solid #e5e5e5}
+.photoLine1>ul>li{ background: url(/cklmobile/images/cklmobilepro/li_pat.png) repeat-x 100% 0}
+.photoLine1>ul, .photoLine1>ul>li, .photoLine1>ul>li>a{width:100%}
+.photoLine1 .category{width: 80%}
+.photoLine1 .img{}
+.photoLine1 .title{font-size:1em;display:block;border-bottom:1px solid #ddd;margin-bottom: 10px; overflow:hidden; white-space: nowrap; text-overflow:ellipsis; height:34px; line-height: 34px}
+/* 세줄라인 갤러리 */
+.photoLineDate .img{width:300px;height:150px}
+.photoLineDate .title{line-height: 40px;height:40px;margin-bottom:5px}
+.photoLineDate .desc{overflow:hidden;max-height:60px;height:auto}
+
+/* 이미지 게시판 내부 목록 */
+.photo_01{margin-bottom:0;border:none}
+.photo_01>ul{width:100%}
+.photo_01>ul>li{width:100%;border-bottom:thin dashed #d5d5d5;padding:20px 0 10px}
+.photo_01 .img{float:left;border:1px solid #cfcfcf;margin-right: 30px;width:152px;height:auto}
+.photo_01 ul ul.bull>li{margin-bottom: 2px}
+.popBx .photo_01>ul>li>dl{width:515px}
+
+/* image 2Pic Gallery */
+.photo_02{margin-bottom:0;border:none}
+.photo_02 ul{width:100%}
+.photo_02 .img{float:left;border:1px solid #cfcfcf;margin-right: 30px;width:260px;height:auto}
+
+
+.photoGallery4{overflow:hidden;border-top:1px solid #8d0004;border-bottom:1px solid #8d0004;width:100%;/* margin-bottom:20px */}
+.photoGallery4 li{width:20%;float:left;border-bottom:1px solid #e4e4e4;padding:20px 0; text-align:left}
+.photoGallery4 a{font-size:15px;font-weight:500;margin:0 auto; display: inline-block;/* margin-bottom:10px; */width:152px}
+.photoGallery4 a:hover, .photoGallery4 a:focus, .photoGallery4 a:active{color:#fff}
+.photoGallery4 dl{width:100%;float:left; text-align: left}
+.photoGallery4 dl p{color:#757575;margin-top:18px}
+.photoGallery4 dt, .photoGallery4 dd{display: inline-block}
+.photoGallery4 dt{width:20%}
+.photoGallery4 dd{width: 70%}
+.photoGallery4 strong{color:#757575}
+.photoGallery4 img{float:left;border:1px solid #cfcfcf;margin-top:6px;margin-bottom: 10px}
+.photoGallery4 .db{display: block}
+.photoGallery4 .db strong, .photoGallery4 .db span{display: inline-block; text-align: left; line-height: 25px;font-weight: normal}
+.photoGallery4 .db strong{width: 20%}
+.photoGallery4 .db .dd{width: 70%}
+
+/* profile Gallery */
+
+.photo3 ul{width:100%}
+.photo3 li{width: 33.333%;text-align: center;border:none}
+.photo3 a{width:300px; color: #fff}
+.photo3 img{margin: 0}
+.photo3 .db{display: block;clear:both;padding:20px;text-align: left;background:#34546b}
+.photo3 .db .title{display:block;border-bottom: 1px solid #fff;font-weight:500}
+.photo3 .db .desc{min-height:40px;height:40px;overflow:hidden}
+.photo3 .bdn{border:none !important}
+.photo3 .db2{display: block;clear:both;padding:20px;text-align: left;background:#e6e6e6 url(/cklmobile/images/sub4/040201_bg.gif) repeat-x;color:#000}
+.photo3 .db2 .desc{display:block;overflow:hidden;font-weight: normal}
+
+.photo3Lk ul{width:100%}
+.photo3Lk li{width:33.333%;text-align: center;border:none;float: left}
+.photo3Lk a{color:#3e3a39}
+.photo3Lk img{margin:0;border:none}
+
+.photo4 {border:none}
+.photo4 ul{width:1050px}
+.photo4 li{width:25%;text-align:left;border:none}
+.photo4 a{width:250px; color: #fff;overflow:hidden}
+.photo4 img{margin: 0}
+.photo4 a>.db{background-color:#e2e2e2;color:#3e3a39;height: 82px;overflow: hidden}
+.photo4 .db{padding: 20px;text-align: left}
+.photo4 .db .title{display:block;border-bottom: 1px solid #fff}
+.photo4 .db span.bdb1{line-height:15px;margin-bottom: 10px;padding:5px 0}
+.photo4 .db .fs13{line-height:140%;margin-top:5px;margin-bottom: 15px}
+.photo4 .db .icoMd{width:100%;line-height: 50px}
+
+.bdb1{border-bottom: 1px solid #fff}
+
+
+.bgcolor1{background:#7d6857;color:#fff}
+.bgcolor2{background:#888888;color:#fff}
+.bgcolor3{background:#86b303;color:#fff}
+.bgcolor4{background:#d4711a;color:#fff}
+.bgcolor5{background:#eb9855;color:#fff}
+.bgcolor6{background:#eabf2a;color:#fff}
+
+
+.boxT{position: relative}
+.boxT .btncklmobiles{position: absolute;right: 0;bottom: 0}
+.hrBg{background: url(/cklmobile/images/common/location_bg.gif) repeat-x 0 100% }
+.boxT dl{display: block;height: 190px;width: 770px}
+.boxT dl dt{line-height: 40px; font-size: 1em;margin-top: 10px}
+
+
+/* file icon
+.icoDown{display:inline-block;background: url(/images/common/ico_down.gif) no-repeat right 0;padding-right: 30px;line-height: 18px;font-weight: 500} */
+.icoXls,.icoHwp,.icoZip,.icoMidea,.icoPdf,.icoWord,.icoPpt,.icoImg,.icoFile,.boardList a.icoFile{height: 16px;background: url(/images/common/file_bg.png) no-repeat 0 0;padding-left: 34px;line-height: 16px;display:inline-block}
+.icoXls{background-position:0 -48px}
+.icoHwp{background-position:0 -130px}
+.icoZip{background-position:0 -291px !important}
+.icoMidea{background-position:0 -213px}
+.icoPdf{background-position:0 -172px}
+.icoWord{background-position:0 -89px}
+.icoPpt{background-position:0 -6px}
+.icoImg{background-position:0 -251px}
+.icoFile,.boardList a.icoFile{background-position:0 -322px !important}
+.icoMd{background:url(/cklmobile/images/sub4/icoSub4.png) no-repeat 0 0;width: 40px;height: 40px;vertical-align: middle}
+.icoMento{background-position:0 0;width: 100%;padding-left: 40px;border-right:1px solid #fff}
+.icoMenti{background-position:0 -40px;width: 100%;padding-left: 60px}
+
+.lectList li{display: block;width:100%;position: relative;padding:15px 5px; border-bottom: 1px solid #eaeaea}
+.lectList li.on{ background: #784fa0;color:#fff}
+.lectList li.on a{ background: #784fa0;color:#fff; font-weight: 500}
+.lectList .date, .lectList a{display: block}
+
+/* 시설예약 */
+.panelBox{margin: 50px auto 0 auto;width:800px;border:none; text-align: left;position: relative}
+.panelBoxCloser{position: absolute;right: 0;top: 0}
+.panelBoxCloser a{display:inline-block;width: 60px;height: 50px;background:url(/cklmobile/images/common/layerCloser.png) no-repeat}
+.reservSysSet{position:absolute;z-index:1000;top:0;left:0;background:#fff;width: 100%;height: 100%; text-align: center}
+.reservSys{position: relative;top:20px;width: 1180px;height: 735px;border-top:2px solid #3e3a39;border-bottom:2px solid #3e3a39; background: #fff;margin: 0 auto}
+.reservSys .head{height: 60px; line-height: 60px;background:#fff}
+.reservSys .btnSm{padding:3px 5px; font-weight: 500;
+	-o-border-radius: 3px;-moz-border-radius: 3px;-webkit-border-radius: 3px;border-radius: 3px}
+.reservSet{float: left;width:1180px;margin-top: 20px;padding:10px !important}
+.reservSet>ul>li{background: #fff;width:168px;overflow:hidden;float:left;margin-right:3px}
+.reservSet>ul>li.on{width:227px}
+.reservSet>ul>li.stp03{width: 412px}
+.reservSet>ul>li.stp03.on{width: 468px}
+.stp04 .scrollY{text-align: left; line-height: 18px}
+
+.agreeScr{position:relative;overflow: hidden;overflow-y:auto;height: 270px; background:#fff; border:1px solid #c2c2c2;padding:10px}
+.reservSet .scrollY{position:relative;overflow: hidden;overflow-y:auto;height: 476px; background:#fff; border:1px solid #c2c2c2;padding:10px}
+.reservSet .graybox{position:absolute;z-index:20;left:0;top:0;display:block;width:100%;height:100%;background: #fff}
+.reservSet .on .graybox,
+.reservSet .off .graybox{display:none}
+.stp03 .graybox{opacity: 0.8}
+.stp03 .month{font-size: 36px;font-weight:500;vertical-align: middle}
+.reservSet h4{position: relative;background:#333;color:#fff;padding:0;margin:0;height: 39px; line-height: 39px;
+-o-border-top-left-radius: 5px;-moz-border-top-left-radius: 5px;-webkit-border-top-left-radius: 5px;border-top-left-radius: 5px;
+-o-border-top-right-radius: 5px;-moz-border-top-right-radius: 5px;-webkit-border-top-right-radius: 5px;border-top-right-radius: 5px}
+.reservSet h4 .icoArr1{position: absolute;right: 0;bottom: -19px;z-index:10}
+
+.reservSet .on h4 .icoArr1{background-position: -40px -136px}
+.reservSet .on h4{background-color: #eb1c24;color:#fff}
+
+
+.reserv_ltbx>li{border-bottom: 1px dashed #c2c2c2;padding:10px 0;text-align: left}
+.stp02 .reserv_ltbx>li{border-bottom:none}
+.reserv_ltbx>li>a{font-size: 15px;font-weight: 400}
+.reserv_ltbx>li li{font-size:13px}
+.reserv_ltbx>li li a{display:block;background: url(/cklmobile/images/common/bull.png) no-repeat 10px 50%;padding-left:20px; font-size: 13px; text-align: left; line-height:26px}
+.reserv_ltbx>li li a.on,
+.reserv_ltbx>li li a.on:hover,
+.reserv_ltbx>li li a.on:focus,
+.reserv_ltbx>li li a.on:active {color:#fff;background:#eb1c24 url(/cklmobile/images/common/bull_on.png) no-repeat 10px 50%}
+.reserv_ltbx2>li{position: relative}
+.reserv_ltbx2>li .spceViewBtn{position: absolute;right:0;top:0; background: none}
+.reserv_ltbx2>li>a{display:block;background: url(/cklmobile/images/common/bull.png) no-repeat 10px 50%;padding-left:20px; font-size: 13px; text-align: left; line-height:26px}
+.reserv_ltbx2>li a.on,
+.reserv_ltbx2>li a:hover,
+.reserv_ltbx2>li a:focus,
+.reserv_ltbx2>li a:active {color:#fff;background:#eb1c24 url(/cklmobile/images/common/bull_on.png) no-repeat 10px 50%}
+
+.cal_mtable .on{display:block;padding:0;width:100%}
+.cal_timer .resve_end{border:1px solid #d5d5d5;background:#F2F2F2}
+.stp05 ul>li{border-bottom: 1px dashed #c2c2c2;text-align: left;padding:10px 0}
+.stp05 ul>li label{line-height: 30px}
+.top_mcal_month {text-align:center;margin:13px 0 5px}
+.top_mcal_month a{vertical-align:middle}
+.top_mcal_month .tx_ym{ font-size:30px;font-weight:500;vertical-align:middle;margin:0 25px}
+.cal_mtable_con{position:relative;width:750px}
+.cal_mtable .cal_layer_bx{position:absolute;z-index:1;border-bottom:3px solid #00d7de;padding:0 0 20px;background:#fff url(/images/common/cal_box_img_bg.gif) no-repeat left;left:0;top:222px;width:750px}
+.cal_mtable .cal_layer_bx a strong{margin-left:40px;display:inline-block}
+.cal_mtable .cal_layer_bx .close_cal{position:absolute;right:0;top:3px;display:block;width:40px;height:40px;background:url(/images/common/close_cal.gif) no-repeat right top;font-size:0;line-height:0;text-indent:-9999em;overflow:hidden}
+.cal_mtable .bg1{background-position:-642px 0}
+.cal_mtable .bg2{background-position:-533px 0}
+.cal_mtable .bg3{background-position:-427px 0}
+.cal_mtable .bg4{background-position:-320px 0}
+.cal_mtable .bg5{background-position:-212px 0}
+.cal_mtable .bg6{background-position:-105px 0}
+.cal_mtable .bg7{background-position:2px 0}
+.cal_mtable .ju1{top:150px !important}
+.cal_mtable .ju2{top:260px !important}
+.cal_mtable .ju3{top:370px !important}
+.cal_mtable .ju4{top:480px !important}
+.cal_mtable .ju5{top:590px !important}
+.cal_mtable .ju6{top:700px !important}
+.cal_mtable .cal_layer_bx h3{font-size:20px}
+
+
+
+.cal_mtable{width:100%;margin:0 auto;padding:2px}
+.cal_mtable th, .cal_mtable td{ border-left:2px solid #fff;border-right:2px solid #fff}
+.cal_mtable th{ font-size:13px;text-align:center;margin:0;padding:8px 0 0;height:31px;width:14%; border-bottom:2px solid #3e3a39}
+.cal_mtable td{ padding:0;margin:0;vertical-align:top;font-size:12px;width:36px;height:30px;line-height:30px;text-align:center; border-bottom:1px solid #c2c2c2}
+.cal_mtable td.off{background:#f4f4f4 url(/images/common/cal_img_end_bg.gif) no-repeat bottom center}
+.cal_mtable td a{font-size:12px;display:block;width:100%;height:50px;line-height:20px; text-align: left; text-indent:5px;color:#3e3a39}
+.cal_mtable .c_date{display:block}
+.cal_mtable ul {}
+.cal_mtable ul li{background:url(/images/common/cal_img_li.gif) no-repeat left top;padding-left:18px;font-size:12px}
+.cal_mtable .cnt{background:url(/images/common/cal_img_li.gif) no-repeat left top;padding-left:18px}
+.cal_mtable td.on{border:3px solid #00d7de;border-bottom:none}
+.cal_mtable col.cal_cel{ width:14.2%}
+
+.reserve_dot1, .reserve_dot2{display:inline-block;width:20px;height:20px;vertical-align:middle;margin-right:4px}
+.reserve_dot2{background: #abd8e8 url(/cklmobile/images/common/icoRev.png) no-repeat -113px -190px}
+.timerBox .reserve_dot2{background-position: -82px -168px}
+
+.timerBox li a{display: block}
+.resve_ok{background:#fff;border:1px solid #b1dca2}
+.reserve_dot1{border:1px solid #b1dca2}
+.resve_ok a.on{background:#51a832 url(/cklmobile/images/common/icoRev.png) no-repeat -76px -86px;color:#fff}
+.reserve_dot2 a.on,
+.reserve_dot2 a:hover,
+.reserve_dot2 a:focus,
+.reserve_dot2 a:active{background:#2484c6 url(/cklmobile/images/common/icoRev.png) no-repeat -76px -86px;color:#fff}
+
+.timerHead{margin-top:18px; margin-bottom: 18px}
+.timerBox li{width:46px;height:38px; line-height: 38px; text-align: center; display:block;float:left;margin-right:1px; margin-bottom: 1px;list-style: none}
+.on .timerBox li{width:50px}
+.cal_timer h4{width:30px}
+.timerHTxt{display:none}
+.on .timerHTxt{display:block}
+
+.reservRt li label{display:inline-block;width:140px}
+
+.cal_ico{text-align:center;margin:10px}
+.cal_ico li span{width:15px;height:15px; margin-right: 10px;display:inline-block;float:none;margin-right:3px;vertical-align:middle}
+.cal_ico li{display:inline-block}
+.cal_reserv_ok{background:#b1dca2 url(/cklmobile/images/common/icoRev.png) no-repeat -160px -160px;text-decoration:underline}
+.cal_reserv_end{background: #ebbcbe url(/cklmobile/images/common/icoRev.png) no-repeat 0 -160px}
+.cal_reserv_ing{background: #abd8e8 url(/cklmobile/images/common/icoRev.png) no-repeat -80px -160px}
+.headStep3_ico{background:#f9f9f9;text-align: center;width: 100%;padding:5px 0;margin: 0}
+.headStep3_ico .cal_reserv_ok{background: #b1dca2 url(/cklmobile/images/common/icoRev.png) no-repeat -194px -192px}
+.headStep3_ico .cal_reserv_end{background: #ebbcbe url(/cklmobile/images/common/icoRev.png) no-repeat -35px -192px}
+.headStep3_ico .cal_reserv_ing{background: #abd8e8 url(/cklmobile/images/common/icoRev.png) no-repeat -115px -192px}
+.cal_reserv_ok .on{background: #51a832 url(/cklmobile/images/common/icoRev.png) no-repeat -154px 6px}
+.cal_reserv_ing .on{background: #2484c6 url(/cklmobile/images/common/icoRev.png) no-repeat -150px 4px}
+
+
+.reservSys .cal_today a, .reservSys .cal_ico .cal_today{border:2px solid #000 !important}
+.noSpace [class^=col-]{padding:0}
+
+.icoSm{display: inline-block;width:20px;height: 20px;vertical-align: middle;background: url(/cklmobile/images/common/icoRev.png) no-repeat}
+.icoMd{width: 40px;height: 40px}
+.icoMap{ background-position: -11px -12px}
+.icoArrOpen{ background-position: -52px -12px;width:20px}
+.icoArrClose{ background-position: -87px -12px;width:20px}
+.icoCir{ background-position: -51px -12px}
+.icoArr1{ background-position: 0px -136px;width: 40px;height:20px}
+.icoPic{ background-position: -80px -129px;width:30px;height:26px}
+.on .icoPic{ background-position: -126px -129px}
+.prevYear{background-position: -80px -45px; height: 30px}
+.nextYear{background-position: -120px -45px; height: 30px}
+.prevMonth{background-position: 0 -40px}
+.nextMonth{background-position: -40px -40px}
+.btnIcZoom{background-position: -170px -50px}
+.icoInfo{background-position: -213px -10px}
+.icoBacks{background-position: -80px 0; margin-top: 90px}
+.icoStory{background-position: -170px -130px}
+.icoPrev{background-position: -90px -13px}
+.icoNext{background-position: -210px -133px}
+.icoCheck{background-position: -132px -10px;height:16px;}
+
+
+/* photoRev */
+.photoRev{border:none}
+.photoRev li{width:100%;border:none;padding-top:0}
+.photoRev .box1{border:1px solid #c8c8c8;width: 100%;padding:19px;position: relative;background:#f5f5f5}
+.photoRev .box1 img{border:none;display:block;margin:0;width: 100%;height: auto;}
+.photoRev .box1>span{display:block;line-height:27px}
+.photoRev strong{clear:both;border-bottom: 1px solid #c8c8c8;line-height:20px;margin-bottom:7px;padding:10px 0;}
+.photoRev .box1 strong.db a, .photoRev .box1 strong.db a:hover, .photoRev .box1 strong.db a:focus, .photoRev .box1 strong.db a:active{color:#3e3a39}
+.photoRev .box1 a.btn, .photoRev .box1 a.btn:hover, .photoRev .box1 a.btn:active, .photoRev .box1 a.btn:focus{position: absolute;right:19px;bottom:19px;font-weight: 400;width: auto; -o-border-radius: 0;-moz-border-radius: 0;-webkit-border-radius: 0;
+border-radius: 0;margin: 0;padding:3px 10px 3px 7px;font-size:12px}
+.photoRev .box1 a.btn-gray, .photoRev .box1 a.btn-gray:hover, .photoRev .box1 a.btn-gray:active, .photoRev .box1 a.btn-gray:focus{color:#3c3837}
+.photoRev .box1:hover, .photoRev .box1:focus, .photoRev .box1:active{border-color:#3e3a39}
+.icons{display: inline-block;width:20px;height:16px;vertical-align: middle;background: url(/cklmobile/images/common/icoRevCkl.png) no-repeat 0 0}
+.ico2{background-position: -40px 0}
+.ico3{background-position: -80px 0}
+.ico4{background-position: -120px 0}
+.ico5{background-position: -160px 0}
+.ico7{background-position: -200px 0}
+.ico6{background-position: 0 -40px}
+.ico8{background-position: -200px -40px}
+.ico9{background-position: -40px -40px}
+.ico10{background-position:-80px -40px}
+.ico11{background-position:-120px -40px}
+.ico13{background-position: 0 -80px}
+
+.ico21{background-position:0 -120px}
+.ico22{background-position:-40px -120px}
+.ico23{background-position:-80px -120px;height: 18px}
+.ico24{background-position:-120px -120px}
+
+.icoDetail{background-position:-80px -80px}
+.icoAlert{background-position:-40px -80px}
+.icoChk{background-position:-120px -40px;width:35px}
+.icoChk2{background-position:-160px -120px}
+
+.icoTime{background-position:-160px -40px;width:25px;height:18px}
+.icoTimeG{background-position:-200px -120px;height:18px}
+.icoTimeR{background-position:-200px -80px;height:18px}
+.icoSecret{background-position:-120px -80px;width:25px;height:18px} /* 비밀글 */
+.icoNew{background-position:-160px -80px;width:25px;height:18px} /* 새글 */
+.icoLink{background-position:0 -160px}
+
+/*.icoSearch, .icoSearch:hover, .icoSearch:focus, .icoSearch:active{background:#3e3a39 url(/cklmobile/images/common/icoRevCklmobile.png) no-repeat -190px 6px;
+	padding:5px 24px 5px 32px !important}*/
+
+.well-danger{background:#f1f2f2 url(/cklmobile/images/common/well-danger.png) no-repeat 30px 50%;padding-left: 120px}
+
+.faq{border-bottom: 1px solid #d4d4d4}
+.faq dt, .faq dd{padding: 13px 13px 13px 80px ;position: relative}
+.faq dt{border-top: 2px solid #3e3a39;background: #f8f8f8;border-bottom: 1px dotted #d4d4d4}
+.faq dd{display:none;width:100%;}
+.faq .icos{position: absolute;left:9px;top:13px;width: 60px;height: 23px;color:#fff;padding-left: 5px;
+-o-border-radius: 5px;-moz-border-radius: 5px;-webkit-border-radius: 5px;
+border-radius: 5px}
+
+
+
+/* 달력 */
+.calendarzone { display: inline; position: relative;z-index:10}
+.calendarzone .calendarSLayer { display: none; position: absolute;z-index:10;top:30px}
+.calendarzone input[type="button"] { background:url(/images/common/cal.gif) no-repeat scroll 50% 50%; border: medium none; height:31px; margin: 0; padding: 0; text-indent: -9999em; width:31px; vertical-align: middle}
+.calendarzone .calendar-frame { border: 1px solid #999999; height:300px; width:350px}
+.field_area { overflow: visible}
+.calendar_txt { background: #ffffff; color: #8a8a8a; border: 0.08em solid #d1d1d1; height: 1.17em; font-size: 1em; padding: 0.25em 0 0 0.25em}
+.monthGab{display:inline-block;width:32px}
+
+
+/* 로그인 */
+.member{width:90%;margin:30px 5%;}
+.box1Line{border:1px solid #ddd; border-radius: 10px;padding:45px 13px}
+.memberLogin h2{font-size: 20px;margin-bottom:10px}
+.member .idLogin label{display:inline-block;width: 40px;text-align: left;vertical-align: top;}
+.member .idLogin input{margin-bottom:5px;clear: right;width:70% !important;padding:6px 5px;border:2px solid #d5d5d5;}
+.memberLogin form, .memberLogin .snsIcos{height: 110px}
+.memberLogin form{position: relative;left:0;width: 100%;top:20px;}
+.memberLogin button{position: absolute;right:0;top:20px;height:68px;background:#666;color: #fff;font-weight: 500;padding:8px 20px;}
+#loginForm{border-top:1px solid #d5d5d5;border-bottom:1px solid #d5d5d5; padding:20px 0;width: 100%}
+#loginForm fieldset{float: left;width: 70%}
+.memberLogin .idIcos{display: inline-block;background:url(/cklmobile/images/member/idIcos_off.gif) no-repeat; width: 40px;height: 34px;}
+.memberLogin .pwIcos{display: inline-block;background:url(/cklmobile/images/member/pwIcos_off.gif) no-repeat; width: 40px;height: 34px;}
+.memberLogin .on .idIcos{background:url(/cklmobile/images/member/idIcos_on.gif) no-repeat;}
+.memberLogin .on .pwIcos{background:url(/cklmobile/images/member/pwIcos_on.gif) no-repeat;}
+.memberLogin .on #username{border-color:#ec656a;}
+.memberLogin .on #password{border-color:#ec656a;}
+
+
+.snsIcos a{display: inline-block;width: 100px;margin-right: 7px;height: 100px;background: url(/cklmobile/images/member/snsicon.png) no-repeat}
+.snsIcos .snsico01{background-position: 0 0}
+.snsIcos .snsico02{background-position: -120px 0}
+.snsIcos .snsico03{background-position: -240px 0}
+.snsIcos .snsico04{background-position: -360px 0}
+
+.loginLinks{position: relative;z-index: 10;border-top: 1px solid #ddd; padding-top:20px;}
+.loginLinks a{display: inline-block;margin:0 5px; font-weight: 600;}
+.authPhone{width: 410px;height: 300px;float: left;margin-right: 10px;background-color: #f5f5f5;}
+.authSns{width: 680px;height: 300px;float: left;background-color: #f5f5f5;}
+.ml60{margin-left: 60px;}
+.snsIcos1{display: inline-block;width: 100px;height: 107px;background: url(/cklmobile/images/member/snsicon.png) no-repeat}
+.snsico101{background-position: 0 0}
+.snsico102{background-position: -240px 0}
+.snsico105{background-position: -500px 0;width: 150px;}
+.authFrom{width: 100%;float: left;margin-bottom: 50px;	}
+
+
+
+
+.popBx{width:550px;position: absolute;z-index:100;left:50%;top:20%;margin-left:-275px; background:#fff url(/cklmobile/images/common/popbxheader.gif) repeat-x}
+.popBx h2{height:40px;line-height:30px;background: #fff;border: 2px solid #71a42f;margin:70px 0 20px 0;padding: 0 20px; border-radius: 20px;font-size:18px}
+/* window Popup */
+.winPop{width:100%;position: relative;left: 0;top: 0;margin: 0}
+.winPop .photo_01>ul>li>dl{float:left; margin-left:180px;width:70%}
+.winPop .photo_01>ul>li .img{position: absolute;left: 0;top:25px;float:left}
+
+.popBoxIn{padding: 0 30px}
+.popLogo{display: block;background: url(/cklmobile/images/common/logo_sm.png) no-repeat;width: 102px;height: 69px}
+.popClose{display: block;position: absolute;right: 0;top: 0;width: 70px;height: 87px;background:url(/cklmobile/images/common/popCloser.png) no-repeat}
+.popFooterSet{position: relative;margin-top: 20px;background: url(/cklmobile/images/common/popbxftBg.gif) repeat-x;height: 60px; padding-top:5px; color:#9a9a9a}
+.popFooterSet span{display:block;width: 15px;height: 60px; position: absolute;top: 0}
+.popLfBx{background: url(/cklmobile/images/common/popbxftLeft.gif) repeat-x;left: 0}
+.popRtBx{background: url(/cklmobile/images/common/popbxftRt.gif) repeat-x;right: 0}
+
+.bullSm>li{background: url(/cklmobile/images/common/bull_dotGreen.gif) no-repeat 0 8px; padding-left:10px;text-align: left; font-size: 12px; line-height: 18px}
+.popBx .pathM01, .popBx .pathM02{line-height: 30px}
+.popBx strong, .popBx strong a{font-size: 18px; letter-spacing:0}
+.boxGray{background:#efefef;padding:15px; text-align: center; border-radius: 5px}
+.lh36{line-height: 36px}
+
+.icoPE{display: inline-block;padding:20px 55px; margin: 22px 0;background-color: #666; color:#fff}
+
+
+.vdoInfo{width:360px}
+.vdoInfo ul{width: 332px}
+.vdoInfo dt{display: inline-block;float: left;width: 70px;text-align: center}
+.vdoInfo .icoMd{display:block;height:40px;width: 60px;padding:0;border:none}
+.vdoPlayBx{}
+
+.vodBxSet{background:#3e3a39;width:100%;height:240px;padding:15px;}
+.vodBxTxt{width:96%;height:210px;overflow:hidden;overflow-y:auto;color:#fff}
+
+
+
+
+.infoBox{background:#888;clear:both;width:100%; float: left;overflow:hidden}
+.infoBox dt, .infoBox dd{display:block;float: left;color: #fff}
+
+.infoBox dd{border-right:1px solid #fff;width: 145px;padding: 32px 0}
+
+/* 통합검색 */
+.hotkeyword{background:#efefef; -o-border-radius: 5px;-moz-border-radius: 5px;-webkit-border-radius: 5px; border-radius: 5px;display: inline-block;padding-right: 10px}
+.hotkeyword h2{padding-left:20px;background: url(/cklmobile/images/search/star.png) no-repeat 0 50%;line-height: 35px}
+.hotkeyword li{display: inline-block;margin-right: 5px; line-height: 35px}
+.hotkeyword li .num{display: inline-block;text-align: center;font-size:11px;vertical-align: middle;width: 16px;height: 16px; line-height: 16px;background: #2b5a08;color:#fff;
+-o-border-radius: 3px;-moz-border-radius: 3px;-webkit-border-radius: 3px;
+border-radius: 3px}
+
+
+#tNavmap{overflow:hidden;}
+
+
+
+/* 통합검색 */
+.hotkeyword{background:#efefef; -o-border-radius: 5px;-moz-border-radius: 5px;-webkit-border-radius: 5px; border-radius: 5px;display: inline-block;padding-right: 10px}
+.hotkeyword h2{padding-left:20px;background: url(/cklmobile/images/search/star.png) no-repeat 0 50%;line-height: 35px}
+.hotkeyword li{display: inline-block;margin-right: 5px; line-height: 35px}
+.hotkeyword li .num{display: inline-block;text-align: center;font-size:11px;vertical-align: middle;width: 16px;height: 16px; line-height: 16px;background: #2b5a08;color:#fff;
+-o-border-radius: 3px;-moz-border-radius: 3px;-webkit-border-radius: 3px;
+border-radius: 3px}
+
+
+.searchSet{margin-bottom:70px}
+.searchSet>ul>li{margin-bottom: 17px}
+.searchSet .hgroup{background:#666;color:#fff;position: relative;height: 45px;margin-top: 10px}
+.searchSet .hgroup h2{font-size: 1em;background: none;color:#fff;margin: 0;padding: 0 0 0 20px;line-height: 45px}
+.searchSet .moreBtn{position: absolute;right: 10px; top:0}
+.searchSet .moreBtn .more{color:#fff;line-height: 45px}
+.searchSet .tit{display: block;font-size:1em; line-height:20px;font-weight: 600;color:#000}
+.searchSet .txt{display: block}
+.searchSet .statSet .txt{margin-left: 80px}
+.searchSet .status{display: inline-block;background:#e1e1e1;font-size:0.875em;padding:2px 5px;width: 70px;text-align: center;margin-right: 10px;
+-o-border-radius: 3px;-moz-border-radius: 3px;-webkit-border-radius: 3px;border-radius: 3px;
+}
+.searchSet em{color:#C9181F}
+.newWin{background: url(/cklmobile/images/search/blank.gif) no-repeat 0 50%;width: 30px;height: 16px;vertical-align: middle}
+
+.detailSch{width:100%}
+.detailSch .con_sh_more *{color: #666}
+.detailSch .hgroup{height: auto}
+.con_sh_more{background-color: #f8f8f8;border-bottom:2px solid #3e3a39;display: none}
+.con_sh_more .set{padding: 22px 39px}
+.con_sh_more .set dl{font-size: 13px;display: block;clear: both}
+.con_sh_more .set dl>*{line-height:30px}
+.con_sh_more .set dl dt{width:100px;float: left; background:url(/cklmobile/images/common/bullDt.gif) no-repeat 0 50%;padding-left: 15px}
+.con_sh_more .set dl dd{width: 380px;float: left}
+.con_sh_more .set dl input[type=text]{border:1px solid #000}
+
+/* table Details */
+tr.details{border:2px solid #db121a !important}
+tr.details td{position: relative}
+tr.details .arr{position: absolute;left:33px;top:-10px;display:block;background:url(/cklmobile/images/sub/arrDetails.png) no-repeat;width: 16px;height: 10px}
+
+.hgroup{position: relative;width:100%}
+.hgroup h2{display: inline-block;padding-left: 10px;}
+.hgroup .fr{position: absolute;right: 0;bottom: 10px}
+
+/* table Details */
+tr.details{border:2px solid #db121a !important}
+tr.details td{position: relative}
+tr.details .arr{position: absolute;left:33px;top:-10px;display:block;background:url(/cklmobile/images/sub/arrDetails.png) no-repeat;width: 16px;height: 10px}
+
+.con_sh_more .set .btn{-o-border-radius: 5px;-moz-border-radius: 5px;-webkit-border-radius: 5px;border-radius: 5px;color:#fff}
+
+.icoZoom{background:#3e3a39 url(/cklmobile/images/common/icoZoom.png) no-repeat 10px 50%;padding-left: 30px}
+
+.vodBxTxt{float: left;padding:25px 0; margin-left:10px}
+
+.sm {display:table;width: 100%}
+.sm dl{position: relative;display:table-cell;float:left;background:#f6f6f6;padding:5px 0 20px 0;margin: 0 5px;width: 200px}
+.sm dl dt{color:#eee;background:#3e3a39;font-size:17px;font-weight:600;padding:7px 5px;margin-bottom: 10px;border-bottom:1px solid #ddd;text-align: center}
+.sm dl dt a, .sm dl dt:hover, .sm dl dt:focus, .sm dl dt:active{color:#eee}
+.sm dd>ul>li{padding:4px 0 4px 12px;background: url(/cklmobile/images/common/bull.png) no-repeat 0 12px;margin-left: 10px;}
+.sm dd li li{padding: 3px 0;}
+.sm dl span{position: absolute;left: 0;top: 5px;display: inline-block;width: 10px;height: 10px;background-color:#eb1c24;border:2px solid #fff}
+
+.lineLeft{border-left:6px solid #3e3a39; padding-left: 10px}
+
+.movPlayer {position: absolute;z-index:10;display:block;width:250px;height:210px;background: url(/cklmobile/images/common/player.png) no-repeat 50% 50%;}
+
+/* history */
+.hisLt{width: 460px;float: left;}
+.historySet{float: left; margin-top: 21px;;}
+.historySet h2{display:block;font-size: 30px;height: 40px;line-height:40px;padding-left: 12px;margin-top:-4px;background: none;}
+.historySet>ol>li.top{padding-top:22px;background: url(/cklmobile/images/sub1/hisTp.gif) no-repeat 0 0;}
+.historySet>ol>li{padding:20px 0;border-bottom:1px solid #d5d5d5;display:block;float:left;width:100%;}
+.historySet>ol ol{ padding: 0 10px;}
+.historySet>ol ol li{display: block;width: 100%;clear: both;}
+.historySet .month{display: block;width:50px; text-align: left;color:#eb1c24;margin:0 5px;height:28px;float:left;}
+
+
+
+/* greeting */
+.greetingSet{float: left;width: 100%;height:690px;background:url(/cklmobile/images/sub1/greeting_02.jpg) no-repeat 100% 0;}
+.greetingSet .greetTxt{ text-align: justify;float: left;}
+.greetingSet .greetingInfo{float: left;width:520px;height: 690px}
+.greetingSet .greetTxt p{line-height:1.8em}
+.greetingInfo2{text-align:right;}
+
+.subWay{display: inline-block;margin-right: 5px;vertical-align: middle;width: 22px;height: 22px;line-height: 22px;text-align: center;color:#fff;
+	-o-border-radius: 15px;-moz-border-radius: 15px;-webkit-border-radius: 15px;border-radius: 15px;}
+.subWay1{background:#00308c;}
+.subWay1t{color:#00308c}
+.subWay4{background:#2e8fd3;}
+.subWay4t{color:#2e8fd3;}
+
+
+/* facilities_gallery */
+.facilities_gallery{margin:35px 0 0 0;}
+.facilities_gallery .g_img img{height:200px;}
+.facilities_gallery .g_img{position:relative;}
+.facilities_gallery .g_img a{ position:absolute; display:block; background:none; font-size:0; overflow:hidden; text-indent:-1000px; z-index:90;}
+.facilities_gallery .g_img a:hover, .facilities_gallery .g_img a:focus, .facilities_gallery .g_img a:active {border:1px dotted #000;background:url(/cklmobile/images/common/op40.png);}
+.facilities_gallery .g_img .gof2_1{left:372px;top:0px;width:68px;height:80px;}
+.facilities_gallery .g_img .gof2_2{left:464px;top:56px;width:79px;height:49px;}
+.facilities_gallery .g_img .gof2_3{left:496px;top:128px;width:72px;height:72px;}
+.facilities_gallery .g_img .gof2_4{left:628px;top:128px;width:72px;height:72px;}
+.facilities_gallery .g_img .gof2_5{left:700px;top:137px;width:98px;height:63px;}
+.facilities_gallery .g_img .gof2_6{left:814px;top:137px;width:98px;height:63px;}
+.facilities_gallery .g_img .gof2_6_2{left:862px;top:74px;width:71px;height:63px;}
+.facilities_gallery .g_img .gof2_7{left:933px;top:74px;width:66px;height:126px;}
+.facilities_gallery .g_img .gof2_8{left:440px;top:0px;width:73px;height:56px;}
+.facilities_gallery .g_img .gof2_9{left:543px;top:90px;width:96px;height:38px;}
+
+.facilities_gallery .g_img .gof10_1{left:882px;top:47px;width:117px;height:153px;}
+.facilities_gallery .g_img .gof10_2{left:373px;top:0px;width:103px;height:89px;}
+.facilities_gallery .g_img .gof10_3{left:726px;top:47px;width:101px;height:153px;}
+.facilities_gallery .g_img .gof10_4{left:538px;top:89px;width:79px;height:111px;}
+
+.facilities_gallery .g_img .gof14_1{left:389px;top:40px;width:73px;height:41px;}
+.facilities_gallery .g_img .gof14_2{left:389px;top:81px;width:60px;height:45px;}
+.facilities_gallery .g_img .gof14_3{left:449px;top:45px;width:64px;height:43px;}
+.facilities_gallery .g_img .gof14_4{left:432px;top:0px;width:74px;height:45px;}
+.facilities_gallery .g_img .gof14_5{left:650px;top:137px;width:80px;height:45px;}
+.facilities_gallery .g_img .gof14_6{left:746px;top:137px;width:80px;height:45px;}
+.facilities_gallery .g_img .gof14_7{left:897px;top:96px;width:89px;height:57px;}
+.facilities_gallery .g_img .gof14_8{left:570px;top:137px;width:80px;height:45px;}
+.facilities_gallery .g_img .gof14_9{left:826px;top:137px;width:68px;height:45px;}
+
+.facilities_gallery .g_img .gof15_1{ left:530px;top:82px;width:103px;height:91px;}
+.facilities_gallery .g_img .gof15_2{ left:678px;top:82px;width:103px;height:91px;}
+.facilities_gallery .g_img .gof15_3{ left:819px;top:82px;width:83px;height:118px;}
+.facilities_gallery .g_img .gof15_4{ left:902px;top:82px;width:83px;height:118px;}
+
+
+#ssoAuthFrame{position: absolute;left:0;bottom:0;}
+
+
+
+
+.btnIc{width: 14px;height: 14px;display: inline-block;vertical-align: middle;font-size:14px;font-weight: bold;}
+.btnWrite{background:url(/cklmobile/images/btn/btnWrite.gif) no-repeat 50% 50%;}
+.btnList{background:url(/cklmobile/images/btn/btnList.gif) no-repeat 50% 50%;}
+
+.reservTable{}
+.reservTable>ul>li{border-top:2px solid #3e3a39;border-bottom:1px solid #777;margin-bottom:10px;}
+.reservTable .bull>li{margin-bottom: 5px;}
+.infoTop{background:#f1f2f2;border-bottom:1px solid #777;padding:10px}
+.infoTop .btn{vertical-align: middle;}
+.infoTop .title{line-height:30px;}
+.reservTable .reservMore{background:#f1f2f2;}
+.reservTable .reservMore a{display: block;padding:8px 10px;text-align: center;}
+.reservTable .list{padding-bottom: 10px;}
+.detailReserv{display:none;}
+.detailReserv.on{display:block;}
+.vdoInfoSets {}
+
+.resionTime{background: url(/cklmobile/images/sub1/resionMpTime.gif) no-repeat;width: 100%;height: 670px;padding:12px 0;}
+.resionTime .resionMpMonth{display: block;float: left;background: url(/cklmobile/images/sub1/resionMpMonth.png) no-repeat;
+width: 37px;height: 35px;font-weight: bold;color:#fff;text-align: center;line-height: 35px;}
+.resionTime .boxs1{ position: relative;border:1px solid #d5d5d5;padding:8px 5px;margin-left: 40px;
+	-o-border-radius:5px 5px;-moz-border-radius:5px 5px;-webkit-border-radius:5px 5px;border-radius:5px 5px;margin-bottom: 1px;}
+.resionTime .boxs1::before{content:url(/cklmobile/images/sub1/resionMpTimeArr.gif);position: absolute;left: -9px;top: 6px;width: 20px;height: 20px;}
+.icoGroup a>span{display: inline-block;background: url(/cklmobile/images/sub1/resionMpIcos.png) no-repeat;width: 100%;width: 27px;height: 33px;}
+.icoGroup{position: absolute;right: 5px;top: 0;}
+.resionTime .icoHM{background-position:0 0;width: 29px;}
+.resionTime .icoFB{background-position:-29px 0}
+.resionTime .icoKK{background-position:-56px 0}
+.resionTime .icoHp{background-position:-83px 0}

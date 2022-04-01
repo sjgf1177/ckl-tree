@@ -1,0 +1,1166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<krpano version="1.20.8">
+
+    
+
+
+  <style name="Iconmove"
+         url="%FIRSTXML%/spots/arrow-button-7_user_defaultpoint67.png"
+         visible="false"
+         edge="center"
+         alpha="0.8"
+         onloaded="showPermanentTooltip(touch);"
+         onhover="onhoverIconmove"
+         onover="onoverIconmove"
+         onout="onoutIconmove"
+
+
+         width="40"
+         height="prop"
+         />
+  <action name="onhoverIconmove">
+    showtooltip('hotspot');
+  </action>
+  <action name="onoverIconmove">
+tween(scale, 1.2);
+tween(alpha, 1);
+pauseautorotation(forcehotspot);
+
+  </action>
+  <action name="onoutIconmove">
+    hideTooltip();
+    tween(scale, 1);
+    tween(alpha, 0.8);
+resumeautorotation(forcehotspot);
+
+  </action>
+
+
+
+    
+
+
+  <style name="Iconplay1"
+         url="%FIRSTXML%/spots/_0154532471965122953944_4826053948_user_defaultpoint5.png"
+         visible="false"
+         edge="center"
+         onhover="onhoverIconplay1"
+         onover="onoverIconplay1"
+         onout="onoutIconplay1"
+
+
+         />
+  <action name="onhoverIconplay1">
+    showtooltip('hotspot');
+  </action>
+  <action name="onoverIconplay1">
+
+
+pauseautorotation(forcehotspot);
+
+  </action>
+  <action name="onoutIconplay1">
+    hideTooltip();
+
+
+resumeautorotation(forcehotspot);
+
+  </action>
+
+
+
+    
+
+
+  <style name="Iconplay2"
+         url="%FIRSTXML%/spots/_0254532471965122953944_4826053948_user_defaultpoint6.png"
+         visible="false"
+         edge="center"
+         onhover="onhoverIconplay2"
+         onover="onoverIconplay2"
+         onout="onoutIconplay2"
+
+
+         />
+  <action name="onhoverIconplay2">
+    showtooltip('hotspot');
+  </action>
+  <action name="onoverIconplay2">
+
+
+pauseautorotation(forcehotspot);
+
+  </action>
+  <action name="onoutIconplay2">
+    hideTooltip();
+
+
+resumeautorotation(forcehotspot);
+
+  </action>
+
+
+
+    
+
+
+  <style name="Iconplay0"
+         url="%FIRSTXML%/spots/_0054532471965122953944_4826053948_user_defaultpoint8.png"
+         visible="false"
+         edge="center"
+         onhover="onhoverIconplay0"
+         onover="onoverIconplay0"
+         onout="onoutIconplay0"
+
+
+         />
+  <action name="onhoverIconplay0">
+    showtooltip('hotspot');
+  </action>
+  <action name="onoverIconplay0">
+
+
+pauseautorotation(forcehotspot);
+
+  </action>
+  <action name="onoutIconplay0">
+    hideTooltip();
+
+
+resumeautorotation(forcehotspot);
+
+  </action>
+
+
+
+  <contextmenu fullscreen="false" versioninfo="false" touch="true">
+    <item name="website1" onclick="getmessage(urltoopen,contextmenuwebsiteurl1);openurl(get(urltoopen),_blank);" />
+    <item name="fullscreenentry" onclick="enterFullscreen();
+" separator="true"/>
+  </contextmenu>
+
+  <events name="contextmenuevents" keep="true" 
+    onenterfullscreen="updateContextMenu" onexitfullscreen="updateContextMenu" 
+    onxmlcomplete="updateContextMenu" 
+    changetourlanguage="updateContextMenu" 
+    />
+  <events name="contextmenuvrevents" keep="true" 
+    onvravailable="updateContextMenu();" onvrunavailable="updateContextMenu();"
+    devices="html5"
+    />
+  <action name="updateContextMenu">
+    getmessage(contextmenu.item[website1].caption, contextmenuopenwebsitelabel1);
+    if (device.fullscreensupport,
+      if(tour_fullscreen,
+        getmessage(contextmenu.item[fullscreenentry].caption, contextmenucloseFsLabel);
+        set(contextmenu.item[fullscreenentry].onclick, exitFullscreen();
+);
+       ,
+        getmessage(contextmenu.item[fullscreenentry].caption, contextmenuopenFsLabel);
+        set(contextmenu.item[fullscreenentry].onclick, enterFullscreen();
+);
+      );
+     ,
+      set(contextmenu.item[fullscreenentry].visible, false);
+    );
+  </action>
+
+
+  <progress showwait.flash="loopings(
+				0xffffff,
+				15,15,
+				0,0,
+				0xffffff,8,
+				0,0,center
+				)"
+			showreloads.flash="false"
+			parent=""
+			/>
+
+
+  <action name="progressbar_start">
+    if(scene[get(xml.scene)].video,
+      progressbar_stop();
+    ,
+    if (device.html5, 
+      mul(xcrop, layer[progressbarwheel].frame, 64);
+      txtadd(layer[progressbarwheel].crop, get(xcrop), '|0|64|64');
+      
+      inc(layer[progressbarwheel].frame);
+      if(layer[progressbarwheel].frame GE layer[progressbarwheel].frames, set(layer[progressbarwheel].frame,0));
+    );
+      delayedcall(progressbar_progresscall, 0.1,progressbar_start());
+      if(progress_val == 100,
+        progressbar_stop();
+      );
+    );
+  </action>
+  <action name="progressbar_stop">
+    stopdelayedcall(progressbar_progresscall);
+    if (device.html5, set(layer[progressbarwheel].visible, false););
+  </action>
+  <events name="progressbar_events" onloadcomplete="progressbar_stop();" onxmlcomplete="if (device.html5,set(layer[progressbarwheel].visible, true););progressbar_start();" keep="true" />
+
+  <!-- loading wheel -->
+  <layer name="progressbarwheel"
+         keep="true"
+         devices="html5"
+         visible="false"
+         url="%FIRSTXML%/graphics/progressbarandloopings/loadingwheel.png"
+         crop="0|0|64|64"
+         align="center"
+         x="0" y="0"
+         frame="0" frames="12"
+         width="30"
+         height="30" />
+
+	<action name="blendmode_prepareblendmode" autorun="preinit">
+
+		if(device.html5 AND device.webgl,
+
+			set(ptblendmode, 'ZOOMBLEND(1, 2.0, easeInOutSine)');
+
+		,
+			set(ptblendmode, 'BLEND(1.0, easeInCubic)');
+		);
+
+	</action>
+
+
+  <style name="prevnexttheme8ArrowStyle" keep="true" x="10" alpha="0.5"
+               crop="0| 0|38|38"
+         onovercrop="0|38|38|38"
+         ondowncrop="0|76|38|38"
+         />
+  <layer name="prevnexttheme8prevPanoramaArrow" style="prevnexttheme8ArrowStyle"
+         url="%FIRSTXML%/graphics/prevnextdots/btn_scroll_left.png" align="left" 
+         tooltip="prevnexttheme8prevSceneTip"
+         onhover="set(alpha, 1);showTooltip('plugin',prevnexttheme8TooltipStyle,left);"
+         onout="set(alpha, 0.5);hideTooltip();"
+         onclick="loadPreviousScene();
+"
+         visible="false"
+         zorder="4" />
+
+  <layer name="prevnexttheme8nextPanoramaArrow" style="prevnexttheme8ArrowStyle"
+         url="%FIRSTXML%/graphics/prevnextdots/btn_scroll_right.png" align="right"
+         tooltip="prevnexttheme8nextSceneTip"
+         onhover="set(alpha, 1);showTooltip('plugin',prevnexttheme8TooltipStyle,right);"
+         onout="set(alpha, 0.5);hideTooltip();"
+         onclick="loadNextScene();
+"
+         visible="false"
+         zorder="4" />
+
+  <events name="prevnexttheme8hideshowcontrolsevent" 
+    onTourStart="prevnexttheme8showPrevNextControls();"
+    hidetourcontrols="prevnexttheme8hidePrevNextControls();" 
+    showtourcontrols="prevnexttheme8showPrevNextControls();" 
+    keep="true"/>
+  <action name="prevnexttheme8hidePrevNextControls">
+    set(layer[prevnexttheme8prevPanoramaArrow].visible, false);
+    set(layer[prevnexttheme8nextPanoramaArrow].visible, false);
+  </action>
+  <action name="prevnexttheme8showPrevNextControls">
+    set(layer[prevnexttheme8prevPanoramaArrow].visible, true);
+    set(layer[prevnexttheme8nextPanoramaArrow].visible, true);
+  </action>
+
+<layer name="prevnexttheme8TooltipStyle"
+	keep="true"
+	enabled="false"
+	capture="false"
+	type="text"
+	align="center"
+	bg="true"
+	bgcolor="0x000000"
+	bgalpha="0.59999999999999998"
+	bgborder="0"
+	css="color:#ffffff;font-family:나눔고딕;font-size:12px;text-align:left;"
+	interactivecontent="false"
+	zorder="0"
+	padding="2"
+	xoffset="0"
+	yoffset="0"
+	visible="false"
+	html=""
+/>
+
+
+<ptplugin name="webVideoViewer" engine="kolorBox">
+	<settings>
+		<option name="position" value="center" type="string" />
+		<option name="margin_x" value="0" type="int" />
+		<option name="margin_y" value="0" type="int" />
+		<option name="external_padding" value="5" type="int" />
+		<option name="draggable_box" value="false" type="bool" />
+		<option name="container_auto_size" value="false" type="bool" />
+		<option name="container_width" value="100" type="int" />
+		<option name="container_width_unit" value="percent" type="string" />
+		<option name="container_height" value="100" type="int" />
+		<option name="container_height_unit" value="percent" type="string" />
+		<option name="container_color" value="000000" type="string" />
+		<option name="container_alpha" value="0.80000000000000004" type="float" />
+		<option name="container_topleft_border_radius" value="15" type="int" />
+		<option name="container_topright_border_radius" value="15" type="int" />
+		<option name="container_bottomleft_border_radius" value="15" type="int" />
+		<option name="container_bottomright_border_radius" value="15" type="int" />
+		<option name="container_border_width" value="0" type="int" />
+		<option name="container_border_color" value="ffffff" type="string" />
+		<option name="container_border_alpha" value="1" type="float" />
+		<option name="overlay_displayed" value="true" type="bool" />
+		<option name="overlay_color" value="000000" type="string" />
+		<option name="overlay_alpha" value="0.7000076295109483" type="float" />
+
+		<option name="title_displayed" value="false" type="bool" />
+		<option name="title_position" value="top" type="string" />
+		<option name="title_font" value="Verdana" type="string" />
+		<option name="title_size" value="14" type="int" />
+		<option name="title_weight" value="normal" type="string" />
+		<option name="title_style" value="normal" type="string" />
+		<option name="title_decoration" value="none" type="string" />
+		<option name="title_color" value="000000" type="string" />
+		<option name="caption_displayed" value="false" type="bool" />
+		<option name="video_autoplay" value="true" type="bool" />
+		<option name="fullscreen_displayed" value="false" type="bool" />
+		<option name="fullscreen_position" value="topleft" type="string" />
+		<option name="fullscreen_text" value="webVideoViewerfullscreen_text" type="string" />
+
+
+
+
+		<option name="close_displayed" value="true" type="bool" />
+		<option name="close_position" value="topright" type="string" />
+		<option name="close_text" value="webVideoViewerclose_text" type="string" />
+
+		<option name="close_callback" value="invokeKrFunction('closeKolorBoxCallback_webVideoViewer')" type="string" />
+		<option name="zorder" value="5" type="int" />
+		<option name="use_i18n" value="true" type="bool" />
+	</settings>
+	<internaldata>
+		
+	</internaldata>
+</ptplugin>
+
+<action name="kolorBoxJsReady_webVideoViewer">
+	set(ptplugin[webVideoViewer].jsready, true);
+</action>
+
+<action name="openWebVideo_webVideoViewer">
+	ifnot(ptplugin[webVideoViewer].isOpen,
+		set(ptplugin[webVideoViewer].isOpen, true);
+		set(ptplugin[webVideoViewer].doNotDeleteMe, false);
+		pauseautorotation(forceplugin);
+
+		
+		getmessage(webVideoViewer_boxurl, %1);
+		js(invokePluginFunction(webVideoViewer, loadSingleArrayItem, get(webVideoViewer_boxurl), %2));
+		events.dispatch(onremovedisplayedobject);
+	,
+		if('%1' != webVideoViewer_boxurl,
+			closeKolorBox_webVideoViewer();
+			delayedcall(0.3,openWebVideo_webVideoViewer(%1,%2););
+		);
+	);
+</action>
+
+<action name="toggleWebVideo_webVideoViewer">
+	js(invokePluginFunction(webVideoViewer, toggleKolorBox, %1));
+</action>
+
+
+<action name="closeKolorBox_webVideoViewer">
+	js(invokePluginFunction(webVideoViewer, closeKolorBox));
+</action>
+
+<action name="closeKolorBoxCallback_webVideoViewer">
+	resumeautorotation(forceplugin);
+
+	
+	set(ptplugin[webVideoViewer].isOpen, false);
+</action>
+
+<action name="changeLanguage_webVideoViewer">
+	if(ptplugin[webVideoViewer].jsready,
+		stopdelayedcall(delay_webVideoViewer);
+		js(invokePluginFunction(webVideoViewer, changeLanguage));
+	,
+		delayedcall(delay_webVideoViewer, 0.1, changeLanguage_webVideoViewer(););
+	);
+</action>
+
+<events name="kolorBoxEvents_webVideoViewer" 
+	keep="true" 
+	changetourlanguage="changeLanguage_webVideoViewer();"
+	/>
+
+
+  <krpano CirclesControlBarbarbuilt="false" CirclesControlBarbackgroundwidthwhenclosed="0" CirclesControlBarbackgroundwidthwhenopened="0" CirclesControlBarIsOpened="false" />
+  <events name="CirclesControlBarevents" 
+    onxmlcomplete="CirclesControlBarbuildMenuBar();" 
+
+
+    keep="true" />
+
+
+
+  <action name="CirclesControlBarbuildMenuBar">
+    ifnot (CirclesControlBarbarbuilt, CirclesControlBarbuildMenu(); set(CirclesControlBarbarbuilt, true););
+  </action>
+
+  <style name="CirclesControlBar_btn_style"
+         keep="true"
+         edge="right"
+         align="right"
+         x="0" y="0"
+         width="40" height="40"
+         crop="0|0|60|60"
+         onovercrop="0|60|60|60"
+         ondowncrop="0|120|60|60"
+         onhover="showTooltip('plugin', NULL, bottom);"
+         onout="hideTooltip();"
+         />
+  <style name="CirclesControlBar_btn_style_off"
+         keep="true"
+         edge="right"
+         align="right"
+         x="0" y="0"
+         width="40" height="40"
+         onhover="showTooltip('plugin', NULL, bottom);"
+         onout="hideTooltip();"
+         />
+
+  <layer name="CirclesControlBar_menu_bg"
+         keep="true"
+         type="container"
+         zorder="6"
+         width="40"
+         height="40"
+         align="bottom"
+         x="0" y="5"
+         maskchildren="true"
+         rotate="0"
+         visible="false"
+         >
+
+
+    <layer name="CirclesControlBarbtn_in"
+            url="%FIRSTXML%/graphics/circlescontrolbar/btn_zoom_in.png"
+            ondown="viewControlZoomIn(false);"
+            onup="viewControlZoomStop();
+"
+            style="CirclesControlBar_btn_style"
+            visible="false"
+            tooltip="CirclesControlBarzoomInTip"
+            devices="desktop"
+            />
+    <layer name="CirclesControlBarbtn_out"
+            url="%FIRSTXML%/graphics/circlescontrolbar/btn_zoom_out.png"
+            ondown="viewControlZoomOut(false);
+"
+            onup="viewControlZoomStop();
+"
+            style="CirclesControlBar_btn_style"
+            visible="false"
+            tooltip="CirclesControlBarzoomOutTip"
+            devices="desktop"
+            />
+
+
+
+
+
+    <layer name="CirclesControlBarbtn_openfs"
+            url="%FIRSTXML%/graphics/circlescontrolbar/btn_enter_fs.png"
+            onclick="enterFullscreen();
+"
+            style="CirclesControlBar_btn_style"
+            visible="false"
+            devices="fullscreensupport"
+            tooltip="CirclesControlBaropenFsTip"
+            />
+    <layer name="CirclesControlBarbtn_closefs"
+            url="%FIRSTXML%/graphics/circlescontrolbar/btn_close_fs.png"
+            onclick="exitFullscreen();
+"
+            style="CirclesControlBar_btn_style"
+            visible="false"
+            devices="fullscreensupport"
+            tooltip="CirclesControlBarcloseFsTip"
+            />
+
+    <layer name="CirclesControlBarbtn_autorotate_on"
+            url="%FIRSTXML%/graphics/circlescontrolbar/btn_start_autorotation.png"
+            onclick="resumeautorotation();
+"
+            style="CirclesControlBar_btn_style"
+            visible="false"
+            tooltip="CirclesControlBarautorotateOnTip"
+            />
+    <layer name="CirclesControlBarbtn_autorotate_off"
+            url="%FIRSTXML%/graphics/circlescontrolbar/btn_stop_autorotation.png"
+            onclick="pauseautorotation();
+"
+            style="CirclesControlBar_btn_style"
+            visible="false"
+            tooltip="CirclesControlBarautorotateOffTip"
+            />
+
+
+
+
+
+    <layer name="CirclesControlBarbtn_hidecontrols"
+           url="%FIRSTXML%/graphics/circlescontrolbar/btn_hide_controls.png"
+           style="CirclesControlBar_btn_style"
+           onclick="hideTourControls();
+"
+           visible="false"
+           tooltip="CirclesControlBarhideControlsTip"
+           />
+    <layer name="CirclesControlBarbtn_showcontrols"
+           url="%FIRSTXML%/graphics/circlescontrolbar/btn_show_controls.png"
+           style="CirclesControlBar_btn_style"
+           onclick="showTourControls();
+"
+           tooltip="CirclesControlBardisplayControlsTip"
+           visible="false"
+           />
+ </layer>
+
+
+
+
+
+	<events name="CirclesControlBarhideshowcontrolsevent" 
+		hidetourcontrols="CirclesControlBarhideMenuControls();" 
+		showtourcontrols="CirclesControlBarshowMenuControls();" 
+		keep="true" />
+
+  <action name="CirclesControlBarhideMenuControls">
+    set(CirclesControlBarIsOpened, false);
+    set(layer[CirclesControlBarbtn_hidecontrols].visible, false);
+    set(layer[CirclesControlBarbtn_showcontrols].visible, true);
+
+
+if (device.desktop,
+	set(layer[CirclesControlBarbtn_in].visible, false);
+	set(layer[CirclesControlBarbtn_out].visible, false);
+);
+	CirclesControlBarupdateFullscreenButtons();
+
+
+	CirclesControlBarupdateAutorotationButtons();
+
+
+
+
+
+
+	set(layer[CirclesControlBar_menu_bg].width, get(CirclesControlBarbackgroundwidthwhenclosed));
+
+	set(layer[CirclesControlBar_menu_bg].visible, true);
+  </action>
+  <action name="CirclesControlBarshowMenuControls">
+    set(CirclesControlBarIsOpened, true);
+    set(layer[CirclesControlBarbtn_hidecontrols].visible, true);
+    set(layer[CirclesControlBarbtn_showcontrols].visible, false);
+	set(layer[CirclesControlBar_menu_bg].visible, true);
+
+
+if (device.desktop,
+	set(layer[CirclesControlBarbtn_in].visible, true);
+	set(layer[CirclesControlBarbtn_out].visible, true);
+);
+	CirclesControlBarupdateFullscreenButtons();
+
+
+	CirclesControlBarupdateAutorotationButtons();
+
+
+
+
+
+    set(layer[CirclesControlBar_menu_bg].width, get(CirclesControlBarbackgroundwidthwhenopened));
+  </action>
+
+
+
+
+  <events name="CirclesControlBarmenufullscreenchangeevent"
+          onenterfullscreen="CirclesControlBarupdateFullscreenButtons();"
+          onexitfullscreen="CirclesControlBarupdateFullscreenButtons();"
+          keep="true"/>
+	<action name="CirclesControlBarHideFullscreenButtons">
+		set(layer[CirclesControlBarbtn_openfs].visible , false);
+		set(layer[CirclesControlBarbtn_closefs].visible, false);
+	</action>
+	<action name="CirclesControlBarShowFullscreenButtons">
+		if (device.fullscreensupport,
+			if(tour_fullscreen,
+				set(layer[CirclesControlBarbtn_openfs].visible , false);
+				set(layer[CirclesControlBarbtn_closefs].visible, true);
+			,
+				set(layer[CirclesControlBarbtn_openfs].visible ,true);
+				set(layer[CirclesControlBarbtn_closefs].visible,false);
+			);
+		,
+			CirclesControlBarHideFullscreenButtons();
+		);
+	</action>
+	<action name="CirclesControlBarupdateFullscreenButtons">
+		if (tour_displaycontrols,
+			CirclesControlBarShowFullscreenButtons();
+		,
+			CirclesControlBarHideFullscreenButtons();
+		);
+	</action>
+
+	<events name="CirclesControlBarAutorotationEvents"
+		onstartautorotation="CirclesControlBarupdateAutorotationButtons();"
+		onresumeautorotation="CirclesControlBarupdateAutorotationButtons();"
+		onstopautorotation="CirclesControlBarupdateAutorotationButtons();"
+		onpauseautorotation="CirclesControlBarupdateAutorotationButtons();"
+		keep="true"/>
+	<action name="CirclesControlBarHideAutorotationButtons">
+		set(layer[CirclesControlBarbtn_autorotate_off].visible, false);
+		set(layer[CirclesControlBarbtn_autorotate_on].visible , false);
+	</action>
+	<action name="CirclesControlBarShowAutorotationButtons">
+		if(autorotate.enabled == false,
+			set(layer[CirclesControlBarbtn_autorotate_off].visible, false);
+			set(layer[CirclesControlBarbtn_autorotate_on].visible , true);
+		,
+			set(layer[CirclesControlBarbtn_autorotate_off].visible, true);
+			set(layer[CirclesControlBarbtn_autorotate_on].visible , false);
+		);
+	</action>
+	<action name="CirclesControlBarupdateAutorotationButtons">
+		if (tour_displaycontrols,
+			CirclesControlBarShowAutorotationButtons();
+		,
+			CirclesControlBarHideAutorotationButtons();
+		);
+	</action>
+
+
+
+  <action name="CirclesControlBarbuildMenu">
+    
+    set(CirclesControlBarbutton_pos, 0);
+
+	set(CirclesControlBarbackgroundwidthwhenclosed, 40);
+    set(layer[CirclesControlBarbtn_hidecontrols].x, get(CirclesControlBarbutton_pos));
+    set(layer[CirclesControlBarbtn_showcontrols].x, get(CirclesControlBarbutton_pos));
+    inc(CirclesControlBarbutton_pos, 45);
+
+
+
+      if (device.fullscreensupport,
+        set(layer[CirclesControlBarbtn_openfs].x , get(CirclesControlBarbutton_pos));
+        set(layer[CirclesControlBarbtn_closefs].x, get(CirclesControlBarbutton_pos));
+        inc(CirclesControlBarbutton_pos, 45);
+      );
+
+
+
+      set(layer[CirclesControlBarbtn_autorotate_on].x , get(CirclesControlBarbutton_pos));
+      set(layer[CirclesControlBarbtn_autorotate_off].x, get(CirclesControlBarbutton_pos));
+      inc(CirclesControlBarbutton_pos, 45);
+
+
+
+
+
+
+
+      if (device.desktop,
+        set(layer[CirclesControlBarbtn_out].x, get(CirclesControlBarbutton_pos));
+        inc(CirclesControlBarbutton_pos, 45);
+        set(layer[CirclesControlBarbtn_in].x, get(CirclesControlBarbutton_pos));
+        inc(CirclesControlBarbutton_pos, 45);
+      );
+
+
+
+      dec(CirclesControlBarbutton_pos, 5);
+
+      set(CirclesControlBarbackgroundwidthwhenopened, get(CirclesControlBarbutton_pos));
+
+
+    
+      set(layer[CirclesControlBar_menu_bg].width, get(CirclesControlBarbackgroundwidthwhenopened));
+	
+	
+	
+    </action>
+
+	<events name="CirclesControlBarStartTourEvents" onTourStart="CirclesControlBarCallOnStartTour();" keep="true" />
+	
+	<action name="CirclesControlBarCallOnStartTour">
+		
+		showTourControls();
+
+	</action>
+
+
+
+
+
+<plugin name="easy_html_lightbox" url="%FIRSTXML%/graphics/easyhtmllightbox/easy_html_lightbox.js" keep="true" devices="html5" include_reset="false"  include_jquery="false" 
+	theme="light" 
+	background_color="#000000"
+	background_alpha="0.80000000000000004"
+/>
+
+
+
+
+<action name="kolorboxjsready_easyhtmllightbox"></action>
+
+<ptplugin name="gallery65" engine="kolorBox">
+	<settings>
+		<option name="position" value="center" type="string" />
+		<option name="margin_x" value="0" type="int" />
+		<option name="margin_y" value="0" type="int" />
+		<option name="external_padding" value="5" type="int" />
+		<option name="draggable_box" value="true" type="bool" />
+		<option name="slideshow_autoplay" value="false" type="bool" />
+		<option name="slideshow" value="5000" type="int" />
+		<option name="container_auto_size" value="true" type="bool" />
+		<option name="container_width" value="90" type="int" />
+		<option name="container_width_unit" value="percent" type="string" />
+		<option name="container_height" value="0" type="int" />
+		<option name="container_height_unit" value="percent" type="string" />
+		<option name="container_color" value="ffffff" type="string" />
+		<option name="container_alpha" value="0.80000000000000004" type="float" />
+		<option name="container_topleft_border_radius" value="15" type="int" />
+		<option name="container_topright_border_radius" value="15" type="int" />
+		<option name="container_bottomleft_border_radius" value="15" type="int" />
+		<option name="container_bottomright_border_radius" value="15" type="int" />
+		<option name="container_border_width" value="0" type="int" />
+		<option name="container_border_color" value="ffffff" type="string" />
+		<option name="container_border_alpha" value="1" type="float" />
+		<option name="overlay_displayed" value="true" type="bool" />
+		<option name="overlay_color" value="030303" type="string" />
+		<option name="overlay_alpha" value="0.7000076295109483" type="float" />
+
+		<option name="item_border_width" value="0" type="int" />
+		<option name="item_border_color" value="ffffff" type="string" />
+		<option name="item_border_alpha" value="1" type="float" />
+		
+		<option name="title_displayed" value="false" type="bool" />
+		
+		<option name="caption_displayed" value="false" type="bool" />
+		
+		<option name="play_displayed" value="false" type="bool" />
+		<option name="play_position" value="bottomleft" type="string" />
+		<option name="play_text" value="gallery65play_text" type="string" />
+
+
+
+
+		<option name="navigation_displayed" value="false" type="bool" />
+		<option name="navigation_position" value="bottom" type="string" />
+		<option name="counter_color" value="666666" type="string" />
+		<option name="navprev_text" value="gallery65navprev_text" type="string" />
+		<option name="navnext_text" value="gallery65navnext_text" type="string" />
+
+
+
+
+		<option name="navigation_arrows" value="false" type="bool" />
+
+
+
+
+		<option name="fullscreen_displayed" value="false" type="bool" />
+		<option name="fullscreen_position" value="topleft" type="string" />
+		<option name="fullscreen_text" value="gallery65fullscreen_text" type="string" />
+
+
+
+
+		<option name="close_displayed" value="true" type="bool" />
+		<option name="close_position" value="topright" type="string" />
+		<option name="close_text" value="gallery65close_text" type="string" />
+
+		<option name="close_callback" value="invokeKrFunction('closeKolorBoxCallback_gallery65')" type="string" />
+		<option name="zorder" value="9" type="int" />
+		<option name="use_i18n" value="true" type="bool" />
+	</settings>
+	<internaldata>
+		<item name="item_1" title="gallery61picture_title4" caption="gallery61picture_caption4" value="indexdata/graphics/gallery65/_494575487251060_4453647536_442564814850864_4602051088445921.jpg"/>
+	</internaldata>
+</ptplugin>
+
+<action name="kolorBoxJsReady_gallery65">
+	set(ptplugin[gallery65].jsready, true);
+</action>
+
+<action name="showGallery_gallery65">
+	ifnot(ptplugin[gallery65].isOpen,
+		set(ptplugin[gallery65].isOpen, true);
+		set(ptplugin[gallery65].doNotDeleteMe, false);
+		set(gallery65_boxurl, %1);
+		pauseautorotation(forceplugin);
+
+		js(invokePluginFunction(gallery65, openKolorBox, %1));
+		events.dispatch(onremovedisplayedobject);
+	,
+		if(%1 !== null AND %1 != gallery65_boxurl,
+			closeKolorBox_gallery65();
+			delayedcall(0.3,showGallery_gallery65(%1););
+		);
+	);
+</action>
+
+<action name="toggleGallery_gallery65">
+	js(invokePluginFunction(gallery65, toggleKolorBox, %1));
+</action>
+
+
+<action name="closeKolorBox_gallery65">
+	js(invokePluginFunction(gallery65, closeKolorBox));
+</action>
+
+<action name="closeKolorBoxCallback_gallery65">
+	resumeautorotation(forceplugin);
+
+	set(ptplugin[gallery65].isOpen, false);
+</action>
+
+<action name="changeLanguage_gallery65">
+	if(ptplugin[gallery65].jsready,
+		js(invokePluginFunction(gallery65, changeLanguage));
+	,
+		delayedcall(delay_gallery65, 0.1, changeLanguage_gallery65(););
+	);
+</action>
+
+<events name="kolorBoxEvents_gallery65" 
+	keep="true"
+	onremovepano="if(ptplugin[gallery65].isOpen,closeKolorBox_gallery65(););"
+	changetourlanguage="changeLanguage_gallery65();"
+	/>
+
+
+<ptplugin name="gallery68" engine="kolorBox">
+	<settings>
+		<option name="position" value="center" type="string" />
+		<option name="margin_x" value="0" type="int" />
+		<option name="margin_y" value="0" type="int" />
+		<option name="external_padding" value="5" type="int" />
+		<option name="draggable_box" value="true" type="bool" />
+		<option name="slideshow_autoplay" value="false" type="bool" />
+		<option name="slideshow" value="5000" type="int" />
+		<option name="container_auto_size" value="true" type="bool" />
+		<option name="container_width" value="90" type="int" />
+		<option name="container_width_unit" value="percent" type="string" />
+		<option name="container_height" value="0" type="int" />
+		<option name="container_height_unit" value="percent" type="string" />
+		<option name="container_color" value="ffffff" type="string" />
+		<option name="container_alpha" value="0.80000000000000004" type="float" />
+		<option name="container_topleft_border_radius" value="15" type="int" />
+		<option name="container_topright_border_radius" value="15" type="int" />
+		<option name="container_bottomleft_border_radius" value="15" type="int" />
+		<option name="container_bottomright_border_radius" value="15" type="int" />
+		<option name="container_border_width" value="0" type="int" />
+		<option name="container_border_color" value="ffffff" type="string" />
+		<option name="container_border_alpha" value="1" type="float" />
+		<option name="overlay_displayed" value="true" type="bool" />
+		<option name="overlay_color" value="030303" type="string" />
+		<option name="overlay_alpha" value="0.7000076295109483" type="float" />
+
+		<option name="item_border_width" value="0" type="int" />
+		<option name="item_border_color" value="ffffff" type="string" />
+		<option name="item_border_alpha" value="1" type="float" />
+		
+		<option name="title_displayed" value="false" type="bool" />
+		
+		<option name="caption_displayed" value="false" type="bool" />
+		
+		<option name="play_displayed" value="false" type="bool" />
+		<option name="play_position" value="bottomleft" type="string" />
+		<option name="play_text" value="gallery68play_text" type="string" />
+
+
+
+
+		<option name="navigation_displayed" value="false" type="bool" />
+		<option name="navigation_position" value="bottom" type="string" />
+		<option name="counter_color" value="666666" type="string" />
+		<option name="navprev_text" value="gallery68navprev_text" type="string" />
+		<option name="navnext_text" value="gallery68navnext_text" type="string" />
+
+
+
+
+		<option name="navigation_arrows" value="false" type="bool" />
+
+
+
+
+		<option name="fullscreen_displayed" value="false" type="bool" />
+		<option name="fullscreen_position" value="topleft" type="string" />
+		<option name="fullscreen_text" value="gallery68fullscreen_text" type="string" />
+
+
+
+
+		<option name="close_displayed" value="true" type="bool" />
+		<option name="close_position" value="topright" type="string" />
+		<option name="close_text" value="gallery68close_text" type="string" />
+
+		<option name="close_callback" value="invokeKrFunction('closeKolorBoxCallback_gallery68')" type="string" />
+		<option name="zorder" value="10" type="int" />
+		<option name="use_i18n" value="true" type="bool" />
+	</settings>
+	<internaldata>
+		<item name="item_1" title="gallery61picture_title4" caption="gallery61picture_caption4" value="indexdata/graphics/gallery68/_494575487251060_4453647536_442564814850864_4602051088445922.jpg"/>
+	</internaldata>
+</ptplugin>
+
+<action name="kolorBoxJsReady_gallery68">
+	set(ptplugin[gallery68].jsready, true);
+</action>
+
+<action name="showGallery_gallery68">
+	ifnot(ptplugin[gallery68].isOpen,
+		set(ptplugin[gallery68].isOpen, true);
+		set(ptplugin[gallery68].doNotDeleteMe, false);
+		set(gallery68_boxurl, %1);
+		pauseautorotation(forceplugin);
+
+		js(invokePluginFunction(gallery68, openKolorBox, %1));
+		events.dispatch(onremovedisplayedobject);
+	,
+		if(%1 !== null AND %1 != gallery68_boxurl,
+			closeKolorBox_gallery68();
+			delayedcall(0.3,showGallery_gallery68(%1););
+		);
+	);
+</action>
+
+<action name="toggleGallery_gallery68">
+	js(invokePluginFunction(gallery68, toggleKolorBox, %1));
+</action>
+
+
+<action name="closeKolorBox_gallery68">
+	js(invokePluginFunction(gallery68, closeKolorBox));
+</action>
+
+<action name="closeKolorBoxCallback_gallery68">
+	resumeautorotation(forceplugin);
+
+	set(ptplugin[gallery68].isOpen, false);
+</action>
+
+<action name="changeLanguage_gallery68">
+	if(ptplugin[gallery68].jsready,
+		js(invokePluginFunction(gallery68, changeLanguage));
+	,
+		delayedcall(delay_gallery68, 0.1, changeLanguage_gallery68(););
+	);
+</action>
+
+<events name="kolorBoxEvents_gallery68" 
+	keep="true"
+	onremovepano="if(ptplugin[gallery68].isOpen,closeKolorBox_gallery68(););"
+	changetourlanguage="changeLanguage_gallery68();"
+	/>
+<krpano  >
+<include url="%FIRSTXML%/graphics/alpo.sidebar-v1.0.9/sidebar.xml" /> <sidebar name="settings"  groupCount="7"     isRealGroup_0="false" totalPanos0="1"  groupName0="get:data[ko_pano8330_title].content" group0Contents="pano8330|" group0MainPano="pano8330" SceneName0="pano8330" groupMessage0="pano8330_title"      isRealGroup_1="false" totalPanos1="1"  groupName1="get:data[ko_pano8331_title].content" group1Contents="pano8331|" group1MainPano="pano8331" SceneName1="pano8331" groupMessage1="pano8331_title"      isRealGroup_2="false" totalPanos2="1"  groupName2="get:data[ko_pano8332_title].content" group2Contents="pano8332|" group2MainPano="pano8332" SceneName2="pano8332" groupMessage2="pano8332_title"      isRealGroup_3="false" totalPanos3="1"  groupName3="get:data[ko_pano8333_title].content" group3Contents="pano8333|" group3MainPano="pano8333" SceneName3="pano8333" groupMessage3="pano8333_title"      isRealGroup_4="false" totalPanos4="1"  groupName4="get:data[ko_pano8334_title].content" group4Contents="pano8334|" group4MainPano="pano8334" SceneName4="pano8334" groupMessage4="pano8334_title"      isRealGroup_5="false" totalPanos5="1"  groupName5="get:data[ko_pano8335_title].content" group5Contents="pano8335|" group5MainPano="pano8335" SceneName5="pano8335" groupMessage5="pano8335_title"      isRealGroup_6="false" totalPanos6="1"  groupName6="get:data[ko_pano8336_title].content" group6Contents="pano8336|" group6MainPano="pano8336" SceneName6="pano8336" groupMessage6="pano8336_title"    sbColor="030303" sbColorAlpha="0.00" sbWidth="210" sbAlign="left" startOpened="true" startOpenedMob="true" sbCloseIfnew="true" sbCloseIfnewMob="true" sbIconPosition="top" sbIconAlpha="80" sbIconAlphaSep="false" sbIconAlphaSepVal="90" sbIconOverState="false" sbIconOpenedState="true" sbIconOpenedOverState="false" sbIconPositionX="-5" sbIconPositionY="120" sbIconPositionOpenUse="false" sbIconPositionOpen="top" sbIconPositionOpenX="0" sbIconPositionOpenY="0" sbIconHideShowDelay="false" sbIconDelay="6" sbOpenActions="0" sbCloseActions="0" sbMenuType="hierarchical"  sbIconUrl="%FIRSTXML%/graphics/alpo.sidebar-v1.0.9/menu2.png"      sbOpenedIconUrl="%FIRSTXML%/graphics/alpo.sidebar-v1.0.9/close2.png"     textFieldUrl="%FIRSTXML%/graphics/textfield.swf"   scrollAltUrl="%FIRSTXML%/graphics/scrollarea.js"  sbcurrent_PanoTxt="alpo_sidebar_fullsbcurrent_PanoTxt" sbcurrent_PanoTxtFont="trebuchet ms" sbcurrent_PanoTxtFontSize="14" sbcurrent_PanoTxtColor="b7b7b7" sbcurrent_PanoTxtAlpha="0.70" sbcurrent_PanoTxtAlign="center"  sbcurrent_PanoTxtFontItalic=""   sbcurrent_PanoTxtFontBold=""   sbcurrent_PanoTxtFontTD=""  sbcurrent_PanoNameTxtColor="eeeeee" sbcurrent_PanoNameTxtSize="18"  sbcurrent_PanoNameTxtDecorU1="" sbcurrent_PanoNameTxtDecorU2=""   sbcurrent_PanoNameTxtDecorB1="" sbcurrent_PanoNameTxtDecorB2=""   sbcurrent_PanoNameTxtDecorI1="" sbcurrent_PanoNameTxtDecorI2=""  sbOpenCloseUseOpener="true" sbOpenCloseUseButton="true" sbContextMenuItem="false" sbZorder="98" /> <style name="sbBlocks" keep="true" type="container" bgcapture="false" bgalpha="0.0" width="100%" accuracy="1" />  <style name="sbOpenerST" keep="true" align="left" />  <style name="sbIconST" visible="true" /> <style name="scrollareaDescr" keep="true" devices="html5" url="get:sidebar[settings].scrollAltUrl" direction="v" draggable="true" mwheel="true" onhover_autoscrolling="false" overscroll="0.5" friction="0.95" acceleration="0.08" returnacceleration="0.15" momentum="0.06" accuracy= "1" align="top" width="100%" /> <events name="sbBlocksHEv" keep="true" onxmlcomplete="delayedcall(0, sbBlocksHEvAct());" /><action name="sbBlocksHEvAct">    calcBlock1H();       if(layer[backBtn].visible, calc(layer[scrolLayer].height, layer[calc(layer[scrolLayer].parent)].height - layer[backBtn].height - (layer[scrolLayer].y - layer[backBtn].height) ); , set(layer[scrolLayer].height, 100%); ); set(events[sbBlocksHEv].onresize, sbBlocksHEvAct()); </action>  <style name="sbBlock1ST" parent="sb" align="top" minheight="0" maxheight="0" y="110"  /> <layer name="sbBlock1" style="sbBlocks|sbBlock1ST" /> <action name="calcBlock1H"> calc(layer[sbBlock1].height, 60 * stageheight * 0.01); if(layer[sbBlock1].height LT layer[sbBlock1].minheight AND layer[sbBlock1].minheight != 0, copy(layer[sbBlock1].height, layer[sbBlock1].minheight); ); if(layer[sbBlock1].height GT layer[sbBlock1].maxheight AND layer[sbBlock1].maxheight != 0, copy(layer[sbBlock1].height, layer[sbBlock1].maxheight); ); calc(layer[sbBlock1].realBlockY, 0 + 110); </action>                              <style name="current_PanoNameUseST" url="" keep="false" />            <include url="%FIRSTXML%/graphics/alpo.sidebar-v1.0.9/menutype/hierarchical.xml" /> <style name="scrolLayerST" keep="true" type="container" align="top" parent="sbBlock1" accuracy="1" width="0" height="100%"/>           <!-- ////////////// Description (PANO) usage block--> <!--Description (PROJECT) usage block-->                   <sidebar name="settings" sbUseMainMenu="true" /> <sidebar name="settings" sbUseLogo="false"  /> <sidebar name="settings" sbUseLogo2="false"  /> <sidebar name="settings" current_PanoNameUse="false" /> <sidebar name="settings" useButtons="false" /> <!-- *********************** --> <events devices="html5" name="alpoSBinitEV" keep="true" onxmlcomplete="alpoSBinit" /> <plugin devices="html5" name="alpoSB" keep="true" url="%FIRSTXML%/graphics/alpo.sidebar-v1.0.9/js/alpo.sidebar.js" /> <action devices="html5" name="alpoSBinit" type="Javascript"><![CDATA[ window.alpoSB = { plugID : 'alpo_sidebar_full', plugDir : 'indexdata/graphics/alpo.sidebar-v1.0.9', flags : {}, font : '', jsonData : '{ "project" : { "data" : { "dataDir" : "indexdata", "bgClr" : "#ffffff", "fgClr" : "#000000", "groupsCount" : 7 }, "groups" : [  { "id" : "panogroup8337", "title" : "panogroup8337_title", "description" : "panogroup8337_description", "url" : "%FIRSTXML%/pano_8330/thumbnail.jpg", "urlAlt" : "%FIRSTXML%/graphics/alpo.sidebar-v1.0.9/assets/--/panogroup8337.png", "color" : "#3c3c3c", "real" : false, "panoCount" : 1, "mainPano" : "pano8330", "panoramas" : [  { "id" : "pano8330", "parentID" : "panogroup8337", "title" : "pano8330_title", "description" : "pano8330_description", "urlAlt" : "%FIRSTXML%/graphics/alpo.sidebar-v1.0.9/assets/--/pano8330.png", "url" : "%FIRSTXML%/pano_8330/thumbnail.jpg" }  ] },  { "id" : "panogroup8338", "title" : "panogroup8338_title", "description" : "panogroup8338_description", "url" : "%FIRSTXML%/pano_8331/thumbnail.jpg", "urlAlt" : "%FIRSTXML%/graphics/alpo.sidebar-v1.0.9/assets/--/panogroup8338.png", "color" : "#c8c8c8", "real" : false, "panoCount" : 1, "mainPano" : "pano8331", "panoramas" : [  { "id" : "pano8331", "parentID" : "panogroup8338", "title" : "pano8331_title", "description" : "pano8331_description", "urlAlt" : "%FIRSTXML%/graphics/alpo.sidebar-v1.0.9/assets/--/pano8331.png", "url" : "%FIRSTXML%/pano_8331/thumbnail.jpg" }  ] },  { "id" : "panogroup8339", "title" : "panogroup8339_title", "description" : "panogroup8339_description", "url" : "%FIRSTXML%/pano_8332/thumbnail.jpg", "urlAlt" : "%FIRSTXML%/graphics/alpo.sidebar-v1.0.9/assets/--/panogroup8339.png", "color" : "#b4b4b4", "real" : false, "panoCount" : 1, "mainPano" : "pano8332", "panoramas" : [  { "id" : "pano8332", "parentID" : "panogroup8339", "title" : "pano8332_title", "description" : "pano8332_description", "urlAlt" : "%FIRSTXML%/graphics/alpo.sidebar-v1.0.9/assets/--/pano8332.png", "url" : "%FIRSTXML%/pano_8332/thumbnail.jpg" }  ] },  { "id" : "panogroup8340", "title" : "panogroup8340_title", "description" : "panogroup8340_description", "url" : "%FIRSTXML%/pano_8333/thumbnail.jpg", "urlAlt" : "%FIRSTXML%/graphics/alpo.sidebar-v1.0.9/assets/--/panogroup8340.png", "color" : "#a0a0a0", "real" : false, "panoCount" : 1, "mainPano" : "pano8333", "panoramas" : [  { "id" : "pano8333", "parentID" : "panogroup8340", "title" : "pano8333_title", "description" : "pano8333_description", "urlAlt" : "%FIRSTXML%/graphics/alpo.sidebar-v1.0.9/assets/--/pano8333.png", "url" : "%FIRSTXML%/pano_8333/thumbnail.jpg" }  ] },  { "id" : "panogroup8341", "title" : "panogroup8341_title", "description" : "panogroup8341_description", "url" : "%FIRSTXML%/pano_8334/thumbnail.jpg", "urlAlt" : "%FIRSTXML%/graphics/alpo.sidebar-v1.0.9/assets/--/panogroup8341.png", "color" : "#8c8c8c", "real" : false, "panoCount" : 1, "mainPano" : "pano8334", "panoramas" : [  { "id" : "pano8334", "parentID" : "panogroup8341", "title" : "pano8334_title", "description" : "pano8334_description", "urlAlt" : "%FIRSTXML%/graphics/alpo.sidebar-v1.0.9/assets/--/pano8334.png", "url" : "%FIRSTXML%/pano_8334/thumbnail.jpg" }  ] },  { "id" : "panogroup8342", "title" : "panogroup8342_title", "description" : "panogroup8342_description", "url" : "%FIRSTXML%/pano_8335/thumbnail.jpg", "urlAlt" : "%FIRSTXML%/graphics/alpo.sidebar-v1.0.9/assets/--/panogroup8342.png", "color" : "#787878", "real" : false, "panoCount" : 1, "mainPano" : "pano8335", "panoramas" : [  { "id" : "pano8335", "parentID" : "panogroup8342", "title" : "pano8335_title", "description" : "pano8335_description", "urlAlt" : "%FIRSTXML%/graphics/alpo.sidebar-v1.0.9/assets/--/pano8335.png", "url" : "%FIRSTXML%/pano_8335/thumbnail.jpg" }  ] },  { "id" : "panogroup8343", "title" : "panogroup8343_title", "description" : "panogroup8343_description", "url" : "%FIRSTXML%/pano_8336/thumbnail.jpg", "urlAlt" : "%FIRSTXML%/graphics/alpo.sidebar-v1.0.9/assets/--/panogroup8343.png", "color" : "#646464", "real" : false, "panoCount" : 1, "mainPano" : "pano8336", "panoramas" : [  { "id" : "pano8336", "parentID" : "panogroup8343", "title" : "pano8336_title", "description" : "pano8336_description", "urlAlt" : "%FIRSTXML%/graphics/alpo.sidebar-v1.0.9/assets/--/pano8336.png", "url" : "%FIRSTXML%/pano_8336/thumbnail.jpg" }  ] }  ] }, "plugin" : { "includes" : { "textfield" : "%FIRSTXML%/graphics/textfield.swf", "scrollarea" : "%FIRSTXML%/graphics/scrollarea.js" }, "settings" : { "sb" : { "width" : 210, "specifyWidth" : false,  "color" : "030303", "alpha" : 0.00, "align" : "left", "zorder" : 98, "startOpened" : true, "startOpenedMob" : true, "closeIfnew" : true, "closeIfnewMob" : true, "menuType" : "hierarchical", "openerUse" : true, "sbCloseOnClick" : false, "contextMenuUse" : false }, "btn" : { "use" : true, "position" : "top", "alpha" : 80, "alphaOpenUse" : false, "alphaOpen" : 90, "overStateUse" : false, "openStateUse" : true, "openOverStateUse": false, "posX" : "-5", "posY" : "120", "posOpenUse" : false, "posOpen" : "top", "posXOpen" : "0", "posYOpen" : "0", "showHideDelayUse": false, "showHideDelay" : 6, "sbOpenActions" : 0, "sbCloseActions" : 0, "url" :  "%FIRSTXML%/graphics/alpo.sidebar-v1.0.9/menu2.png" , "urlOver" : "", "urlOpen" : "  %FIRSTXML%/graphics/alpo.sidebar-v1.0.9/close2.png  ", "urlOpenOver" : "" }, "currentPano" : { "text" : "alpo_sidebar_fullsbcurrent_PanoTxt", "font" : "trebuchet ms", "fontSize" : 14, "color" : "b7b7b7", "alpha" : "0.70", "align" : "center", "italic" : "", "bold" : "", "underline" : "", "colorName" : "eeeeee", "fontSizeName" : "18", "italicNameUse" : "false", "boldNameUse" : "false", "underlineNameUse" : "false" }, "menu" : [ { "menuType" : "thumbscont", "thumbsContMargin" : 5, "tcScrollHeight" : 56, "tcScrollVSpace" : 5, "tcScrollXOffset": 0, "tcScrollMenuW" : 243   }, { "menuType" : "hierarchical", "activeMenuHr" : true,  "activeMenuOnstart" : true, "closeSbOnExcluded" : true, "returnOnExcluded" : true, "HLOptions": { "bgborder": "0,0,1,0 0x0cffa2 0.60", "bgcolor": "0x7d8081", "bgalpha": 0.60 },  "excludePano" : "", "orderItems" : " ", "groupAsText" : true, "panoAsText" : true, "custAsText" : false, "width" : 207, "height" : 30, "vSpace" : 5, "xOffset" : 0,   "loadMainPano" : false, "loadMainOpen" : false, "bgrColor" : "0xffffff", "bgrAlpha" : 0.90, "txtOffsetL" : 10, "txtOffsetR" : 0, "txtAlign" : "left", "font" : "arial", "fontSize" : 13, "color" : "000000", "italic" : " font-style:normal; ", "bold" : " font-weight:normal; ", "underline" : " text-decoration:none; ", "overStateUse" : false, "overColorUse" : true, "overColor" : "0x000000", "overAlpha" : 0.30, "itemIconUse" : false, "itemIconDflt" : true, "itemIcon" : "", "itemIconOffsetX" : "0", "itemIconOffsetY" : "0", "itemIconScale" : 100, "itemIconAlign" : "right", "itemIconSpecify" : false,  "itemBorderUse" : false, "itemBorder" : "0,0,1,0 0xeeeeee 0.60", "itemBorderT" : 0, "itemBorderR" : 0, "itemBorderB" : 1, "itemBorderL" : 0, "hrBgroundedge" : "0 0 0 0", "thumbPos" : "only", "thumbTxtPadT" : 0, "thumbTxtPadB" : 0, "thumbHeight" : 35, "thumbVStxtMarg" : 0, "thumbAlign" : "left", "thumbHorizOff" : 0,   "backBtn" : { "height" : 32, "width" : 245,   "bottomMarg" : 0, "align" : "lefttop", "bgrUse" : true, "bgrColor" : "0x0b0b0b", "bgrAlpha" : 0.40, "bgrChange" : true, "bgrChangeColor" : "0x0cffa2", "bgrChangeAlpha" : 0.50, "txtUse" : true, "txtSrc" : "group", "font" : "arial", "fontSize" : 14, "fontColor" : "eeeeee", "txtAlign" : "left", "txtVcenter" : true, "paddingT" :  0 , "paddingB" :  0 , "paddingR" : 8, "paddingL" : 30, "iconUse" : true, "iconWidth" : 24, "iconHeight" : 24, "iconUrl" : "  %FIRSTXML%/graphics/alpo.sidebar-v1.0.9/graphics/arr_back_left.png  ", "italic" : "  font-style:normal;  ", "bold" : "  font-weight:normal;  ", "underline" : "  text-decoration:none;  " }, "scrollInd" : { "use" : false, "color" : "0x505050", "alpha" : 1.00, "width" : 8, "zorder" : 98, "barUse" : false, "barColor" : "0x353526", "barAlpha" : 0.50 }, "scrollBtns" : { "use" : false, "width" : "20", "height" : "18", "scale" : 100, "bgcolor" : "0x505050", "bgalpha" : 1.00, "align" : "left", "zorder" : 98, "overStateUse" : true, "bgrOverColor" : "0x1a1a1a", "bgrOverAlpha" : 0.90, "iconOverAlpha" : 30, "iconDflt" : true, "iconFileT" : "", "iconFileB" : "", "iconAlpha" : 50 } } ], "customItemsSet" : { "menuOrganize" : "custom", "ignoreRest" : true } }, "customSet" : [  { "title" : "alpo_sidebar_fullitemName0", "image" : "_0351076540575394448169_0151064442775164845733.png", "elemIndex" : 0, "custom" : true, "isChild" : false, "subItemsInd" : "", "subGroupsColor" : "808080", "subPanoIDs" : "", "itemActions" :  "itemClick0();"  },  { "title" : "alpo_sidebar_fullitemName1", "image" : "_0351076540575394448169_0244284546174459249696.png", "elemIndex" : 1, "custom" : true, "isChild" : false, "subItemsInd" : "", "subGroupsColor" : "808080", "subPanoIDs" : "", "itemActions" :  "itemClick1();"  },  { "title" : "alpo_sidebar_fullitemName2", "image" : "_0351076540575394448169_03440484945751064498854459249696.png", "elemIndex" : 2, "custom" : true, "isChild" : false, "subItemsInd" : "", "subGroupsColor" : "808080", "subPanoIDs" : "", "itemActions" :  "itemClick2();"  },  { "title" : "alpo_sidebar_fullitemName3", "image" : "_0351076540575394448169_0451064442775164845733.png", "elemIndex" : 3, "custom" : true, "isChild" : false, "subItemsInd" : "", "subGroupsColor" : "808080", "subPanoIDs" : "", "itemActions" :  "itemClick3();"  },  { "title" : "alpo_sidebar_fullitemName4", "image" : "_0351076540575394448169_055g498924404854805.png", "elemIndex" : 4, "custom" : true, "isChild" : false, "subItemsInd" : "", "subGroupsColor" : "808080", "subPanoIDs" : "", "itemActions" :  "itemClick4();"  },  { "title" : "alpo_sidebar_fullitemName5", "image" : "_0351076540575394448169_0644277506724459249696.png", "elemIndex" : 5, "custom" : true, "isChild" : false, "subItemsInd" : "", "subGroupsColor" : "808080", "subPanoIDs" : "", "itemActions" :  "itemClick5();"  }  ] } }' }; krpano.set('events[alpoSBinitEV].onxmlcomplete', null); ]]></action>   <action name="itemClick0">  
+          mainloadscene(pano8333);
+
+			tween(view.fov,     90, 3.0, easeInOutQuad );
+			tween(view.fisheye, 0.0, 0.0, easeInOutQuad );
+			set(display.flash10,on);
+
+      lookat(get(panoview.h), get(panoview.v), get(panoview.fov));
+    
+
+  </action>    <action name="itemClick1">  
+          mainloadscene(pano8335);
+
+			tween(view.fov,     90, 3.0, easeInOutQuad );
+			tween(view.fisheye, 0.0, 0.0, easeInOutQuad );
+			set(display.flash10,on);
+
+      lookat(get(panoview.h), get(panoview.v), get(panoview.fov));
+    
+
+  </action>    <action name="itemClick2">  
+          mainloadscene(pano8334);
+
+			tween(view.fov,     90, 3.0, easeInOutQuad );
+			tween(view.fisheye, 0.0, 0.0, easeInOutQuad );
+			set(display.flash10,on);
+
+      lookat(get(panoview.h), get(panoview.v), get(panoview.fov));
+    
+
+  </action>    <action name="itemClick3">  
+          mainloadscene(pano8336);
+
+			tween(view.fov,     90, 3.0, easeInOutQuad );
+			tween(view.fisheye, 0.0, 0.0, easeInOutQuad );
+			set(display.flash10,on);
+
+      lookat(get(panoview.h), get(panoview.v), get(panoview.fov));
+    
+
+  </action>    <action name="itemClick4">  
+          mainloadscene(pano8332);
+
+			tween(view.fov,     90, 3.0, easeInOutQuad );
+			tween(view.fisheye, 0.0, 0.0, easeInOutQuad );
+			set(display.flash10,on);
+
+      lookat(get(panoview.h), get(panoview.v), get(panoview.fov));
+    
+
+  </action>    <action name="itemClick5">  
+          mainloadscene(pano8331);
+
+			tween(view.fov,     90, 3.0, easeInOutQuad );
+			tween(view.fisheye, 0.0, 0.0, easeInOutQuad );
+			set(display.flash10,on);
+
+      lookat(get(panoview.h), get(panoview.v), get(panoview.fov));
+    
+
+  </action>      </krpano> 
+
+
+  <layer align="topleft"
+         x="5"
+         y="10"
+         zorder="12"
+         name="logo"
+         keep="true"
+         visible="false"
+         capture="false"
+
+         url="%FIRSTXML%/graphics/logo/_5358452768510765405753944205.png" 
+         handcursor="false"
+
+
+         />
+
+  <events name="logoevents" 
+    onTourStart="showlogo();"
+    keep="true" />
+
+  <action name="hidelogo">
+    set(layer[logo].visible, false);
+  </action>
+  <action name="showlogo">
+      set(layer[logo].visible, true);
+  </action>
+
+
+
+
+
+
+  <events name="title_events" 
+    onTourStart="showtitle();"
+    hidetourcontrols="hidetitle();" 
+    showtourcontrols="showtitle();" 
+    onnewpano="updatetitle();"
+    changetourlanguage="changeLanguagetitle"
+    keep="true" />
+
+  <action name="hidetitle">set(layer[title].visible, false);</action>
+  <action name="showtitle">set(layer[title].visible, true );</action>
+
+  <action name="changeLanguagetitle">
+    updatetitle();
+  </action>
+
+  <action name="updatetitle">
+    getmessage(layer[title].html, get(scene[get(xml.scene)].titleid));
+    escape(layer[title].html);
+  </action>
+  <layer name="title" keep="true" zorder="13"
+         type="text"
+         align="bottom" x="0" y="45"
+         bg="false"
+         bgborder="0"
+         alpha="1"
+         visible="false"
+         capture="false" handcursor="false" enabled="false"
+         interactivecontent="false" 
+         css="text-align:center;
+              color:#ffffff;
+              font-family:NanumSquare;
+              font-weight:bold;
+              font-size:18px;"/>
+
+  <action name="hideTourControls">set(tour_displaycontrols, false);events.dispatch(hidetourcontrols);</action>
+  <action name="showTourControls">set(tour_displaycontrols, true); events.dispatch(showtourcontrols);</action>
+
+
+<action name="viewControlZoomIn">
+	if(%1,
+		if(%2,
+			if(%2 LT view.fovmin,
+				zoomto(get(view.fovmin));
+			,
+				if(%2 LT view.fov,
+					zoomto(%2);
+				);
+			);
+		,
+			set(fov_moveforce, -1);
+			delayedcall(0.1, viewControlZoomStop());
+		);
+	,
+		set(fov_moveforce, -1);
+	);
+</action>
+<action name="viewControlZoomOut">
+	if(%1,
+		if(%2,
+			if(%2 GT view.fovmax,
+				zoomto(get(view.fovmax));
+			,
+				if(%2 GT view.fov,
+					zoomto(%2);
+				);
+			);
+		,
+			set(fov_moveforce, +1);
+			delayedcall(0.1, viewControlZoomStop());
+		);
+	,
+		set(fov_moveforce, +1);
+	);
+</action>
+<action name="viewControlZoomStop">
+	set(fov_moveforce, 0);
+</action>
+
+  <action name="exitFullScreen" devices="fullscreensupport">set(tour_fullscreen,false);js(setFullscreen(false));</action>
+  <action name="enterFullScreen" devices="fullscreensupport">set(tour_fullscreen,true);js(setFullscreen(true));</action>
+  <action name="switchFullScreen">if(tour_fullscreen,exitFullScreen();,enterFullScreen(););</action>
+
+  
+  <events name="krpanoExitFullscreenEvent"
+    onexitfullscreen="if(tour_fullscreen,exitFullScreenChangeEvent(););"
+    keep="true" />
+
+  <action name="exitFullScreenChangeEvent" devices="fullscreensupport">set(tour_fullscreen,false);events.dispatch(onexitfullscreen);</action>
+  <action name="enterFullScreenChangeEvent" devices="fullscreensupport">set(tour_fullscreen,true);events.dispatch(onenterfullscreen);</action>
+  <action name="exitFullScreenFallback">set(fullscreen,false);</action>
+  <action name="enterFullScreenFallback">set(fullscreen,true);</action>
+  
+  <action name="resizeFullScreenEvent">delayedcall(0,updatescreen(););</action>
+
+  <action name="hideFloorplan">set(tour_displayfloorplan, false);events.dispatch(onhidetourfloorplan);</action>
+  <action name="showFloorplan">set(tour_displayfloorplan, true); events.dispatch(onshowtourfloorplan);</action>
+
+
+</krpano>

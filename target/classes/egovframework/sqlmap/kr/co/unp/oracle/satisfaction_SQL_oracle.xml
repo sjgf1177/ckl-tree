@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="satisfaction">
+
+	<typeAlias  alias="zvl" type="kr.co.unp.util.ZValue"/>
+
+	<select id="satisfactionDAO.existsUserIp" parameterClass="zvl" resultClass="int">
+		SELECT COUNT(*)
+		FROM TC_STSFDG
+		WHERE USER_KEY = #userKey# AND MENU_NO = #menuNo#
+	</select>
+
+	<insert id="satisfactionDAO.saveSatisfaction" parameterClass="zvl">
+		<![CDATA[
+		     INSERT INTO TC_STSFDG (
+		     	SID,MENU_NO,STATUS,OPINION,REG_DATE,USER_KEY
+		     )
+			VALUES ( (SELECT To_Number('0' || Max(SID))+1 FROM TC_STSFDG), #menuNo#, #status#, #opinion#, SYSDATE, #userKey#)
+		]]>
+	</insert>
+
+	<sql id="satisfactionDAO.selectOpinionList-where">
+		<isNotEmpty prepend="AND" property="sdate">
+			<![CDATA[	TO_CHAR(A.REG_DATE, 'YYYYMMDD') >= REPLACE(#sdate#,'-','') 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="edate">
+			<![CDATA[	TO_CHAR(A.REG_DATE, 'YYYYMMDD') <= REPLACE(#edate#,'-','') 		]]>
+		</isNotEmpty>
+		<isEqual property="searchType" compareValue="0">
+			<isNotEmpty prepend="AND" property="searchTxt">
+				<![CDATA[	B.MENU_NM LIKE '%' || #searchTxt# || '%'	]]>
+			</isNotEmpty>
+		</isEqual>
+		<isEqual property="searchType" compareValue="1">
+			<isNotEmpty prepend="AND" property="searchTxt">
+				<![CDATA[	B.CNTNTS_FILE_PATH LIKE '%' || #searchTxt# || '%'	]]>
+			</isNotEmpty>
+		</isEqual>
+		<isNotEmpty prepend="AND" property="menuNo">
+			<![CDATA[	A.MENU_NO = #menuNo#	]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="status">
+			<![CDATA[	A.STATUS = #status#	]]>
+		</isNotEmpty>
+	</sql>
+
+	<sql id="satisfactionDAO.menuStatusList-where">
+		<isNotEmpty prepend="AND" property="sdate">
+			<![CDATA[	TO_CHAR(A.REG_DATE, 'YYYYMMDD') >= REPLACE(#sdate#,'-','') 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="edate">
+			<![CDATA[	TO_CHAR(A.REG_DATE, 'YYYYMMDD') <= REPLACE(#edate#,'-','') 		]]>
+		</isNotEmpty>
+	</sql>
+
+	<select id="satisfactionDAO.selectOpinionList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+			SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+			SELECT
+				A.SID
+				,A.MENU_NO
+				,B.MENU_NM
+				,B.FULL_MENU_LINK
+				,A.STATUS
+				,A.OPINION
+				,TO_CHAR(A.REG_DATE, 'YYYY-MM-DD') AS REG_DATE
+				,B.CNTNTS_FILE_PATH PATH
+			FROM TC_STSFDG A
+			INNER JOIN TC_MENUINFO B ON B.MENU_NO = A.MENU_NO
+			WHERE B.SITE_ID = #siteId#
+		 ]]>
+		<include refid="satisfactionDAO.selectOpinionList-where" />
+		<![CDATA[
+			ORDER BY
+				A.REG_DATE DESC
+		       ) TB )  WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		 ]]>
+	</select>
+
+	<select id="satisfactionDAO.selectOpinionListCnt" parameterClass="zvl" resultClass="int">
+		<![CDATA[
+			SELECT COUNT(*)
+			FROM TC_STSFDG A
+			INNER JOIN TC_MENUINFO B ON B.MENU_NO = A.MENU_NO
+			WHERE B.SITE_ID = #siteId#
+		 ]]>
+		<include refid="satisfactionDAO.selectOpinionList-where" />
+	</select>
+
+	<select id="satisfactionDAO.selectStatusList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+			SELECT
+				A1.SITE_ID
+				,A1.MENU_NM
+			    ,A1.STATUS
+                ,CASE WHEN A1.STATUS = '5' THEN '매우만족'
+                      WHEN A1.STATUS = '4' THEN '만족'
+                      WHEN A1.STATUS = '3' THEN '보통'
+                      WHEN A1.STATUS = '2' THEN '불만'
+                      WHEN A1.STATUS = '1' THEN '매우불만'
+                 END AS STATUS_NAME
+			    ,NVL(A1.CNT,0) AS STATUS_CNT
+			    ,NVL(A2.TOT_CNT,0) AS TOT_CNT
+			    ,ROUND(A1.CNT*100/A2.TOT_CNT) AS  STATUS_PERCENT
+			FROM (
+			  	SELECT
+			      b.SITE_ID, b.MENU_NO, b.MENU_NM, STATUS, COUNT(*) AS CNT
+			  	FROM TC_STSFDG a
+			  	inner JOIN TC_MENUINFO b ON b.MENU_NO = a.MENU_NO
+		 ]]>
+		<isNotEmpty prepend="AND" property="sdate">
+			<![CDATA[	TO_CHAR(a.REG_DATE, 'YYYYMMDD') >= REPLACE(#sdate#,'-','') 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="edate">
+			<![CDATA[	TO_CHAR(a.REG_DATE, 'YYYYMMDD') <= REPLACE(#edate#,'-','') 		]]>
+		</isNotEmpty>
+		<![CDATA[
+			  	GROUP BY b.SITE_ID, b.MENU_NO, b.MENU_NM, STATUS
+			) A1
+			LEFT OUTER JOIN (
+				SELECT SITE_ID, COUNT(*) AS TOT_CNT
+			  	FROM TC_STSFDG a
+			  	inner JOIN TC_MENUINFO b ON b.MENU_NO = a.MENU_NO
+		 ]]>
+		<isNotEmpty prepend="AND" property="sdate">
+			<![CDATA[	TO_CHAR(a.REG_DATE, 'YYYYMMDD') >= REPLACE(#sdate#,'-','') 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="edate">
+			<![CDATA[	TO_CHAR(a.REG_DATE, 'YYYYMMDD') <= REPLACE(#edate#,'-','') 		]]>
+		</isNotEmpty>
+		<![CDATA[
+			  	GROUP BY b.SITE_ID
+			) A2 ON A2.SITE_ID = A1.SITE_ID
+			WHERE A1.SITE_ID = #siteId#
+		 ]]>
+		 <isNotEmpty prepend="AND" property="cMenuNo">
+		 	A1.MENU_NO = #cMenuNo#
+		 </isNotEmpty>
+	</select>
+
+	<select id="satisfactionDAO.menuStatusList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+
+		SELECT * FROM
+		( SELECT a.*, rownum+rnum-1 as totalRows
+		   FROM ( SELECT a.*, rownum rnum
+		            FROM (
+
+		SELECT SITE_ID,
+              MENU_NM,
+              MAX(DECODE(STATUS,'5',STATUS)) AS STATUS5,
+              MAX(DECODE(STATUS,'5',STATUS_NAME)) AS STATUS_NAME5,
+              MAX(DECODE(STATUS,'5',STATUS_CNT)) AS STATUS_CNT5,
+              MAX(DECODE(STATUS,'5',TOT_CNT)) AS TOT_CNT5,
+              MAX(DECODE(STATUS,'5',STATUS_PERCENT)) AS STATUS_PERCENT5,
+              MAX(DECODE(STATUS,'4',STATUS)) AS STATUS4,
+              MAX(DECODE(STATUS,'4',STATUS_NAME)) AS STATUS_NAME4,
+              MAX(DECODE(STATUS,'4',STATUS_CNT)) AS STATUS_CNT4,
+              MAX(DECODE(STATUS,'4',TOT_CNT)) AS TOT_CNT4,
+              MAX(DECODE(STATUS,'4',STATUS_PERCENT)) AS STATUS_PERCENT4,
+              MAX(DECODE(STATUS,'3',STATUS)) AS STATUS3,
+              MAX(DECODE(STATUS,'3',STATUS_NAME)) AS STATUS_NAME3,
+              MAX(DECODE(STATUS,'3',STATUS_CNT)) AS STATUS_CNT3,
+              MAX(DECODE(STATUS,'3',TOT_CNT)) AS TOT_CNT3,
+              MAX(DECODE(STATUS,'3',STATUS_PERCENT)) AS STATUS_PERCENT3,
+              MAX(DECODE(STATUS,'2',STATUS)) AS STATUS2,
+              MAX(DECODE(STATUS,'2',STATUS_NAME)) AS STATUS_NAME2,
+              MAX(DECODE(STATUS,'2',STATUS_CNT)) AS STATUS_CNT2,
+              MAX(DECODE(STATUS,'2',TOT_CNT)) AS TOT_CNT2,
+              MAX(DECODE(STATUS,'2',STATUS_PERCENT)) AS STATUS_PERCENT2,
+              MAX(DECODE(STATUS,'1',STATUS)) AS STATUS1,
+              MAX(DECODE(STATUS,'1',STATUS_NAME)) AS STATUS_NAME1,
+              MAX(DECODE(STATUS,'1',STATUS_CNT)) AS STATUS_CNT1,
+              MAX(DECODE(STATUS,'1',TOT_CNT)) AS TOT_CNT1,
+              MAX(DECODE(STATUS,'1',STATUS_PERCENT)) AS STATUS_PERCENT1
+         FROM
+              (SELECT A1.SITE_ID ,
+                     A1.MENU_NM ,
+                     A1.STATUS ,
+                     CASE
+                         WHEN A1.STATUS = '5'
+                         THEN '매우만족'
+                         WHEN A1.STATUS = '4'
+                         THEN '만족'
+                         WHEN A1.STATUS = '3'
+                         THEN '보통'
+                         WHEN A1.STATUS = '2'
+                         THEN '불만'
+                         WHEN A1.STATUS = '1'
+                         THEN '매우불만'
+                     END AS STATUS_NAME ,
+                     NVL(A1.CNT,0) AS STATUS_CNT ,
+                     NVL(A2.TOT_CNT,0) AS TOT_CNT ,
+                     ROUND(A1.CNT*100/A2.TOT_CNT) AS STATUS_PERCENT
+                FROM
+                     (SELECT b.SITE_ID,
+                            b.MENU_NO,
+                            b.MENU_NM,
+                            STATUS,
+                            COUNT(*) AS CNT
+                       FROM TC_STSFDG a
+                        INNER JOIN TC_MENUINFO b
+                            ON b.MENU_NO = a.MENU_NO
+			]]>
+			<isNotEmpty prepend="AND" property="sdate">
+				<![CDATA[	TO_CHAR(a.REG_DATE, 'YYYYMMDD') >= REPLACE(#sdate#,'-','') 		]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="edate">
+				<![CDATA[	TO_CHAR(a.REG_DATE, 'YYYYMMDD') <= REPLACE(#edate#,'-','') 		]]>
+			</isNotEmpty>
+			<![CDATA[
+                      GROUP BY b.SITE_ID,
+                            b.MENU_NO,
+                            b.MENU_NM,
+                            STATUS
+                     ) A1
+                 LEFT OUTER JOIN
+                     (SELECT SITE_ID,
+                            COUNT(*) AS TOT_CNT
+                       FROM TC_STSFDG a
+                        INNER JOIN TC_MENUINFO b
+                            ON b.MENU_NO = a.MENU_NO
+             ]]>
+             <isNotEmpty prepend="AND" property="sdate">
+				<![CDATA[	TO_CHAR(a.REG_DATE, 'YYYYMMDD') >= REPLACE(#sdate#,'-','') 		]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="edate">
+				<![CDATA[	TO_CHAR(a.REG_DATE, 'YYYYMMDD') <= REPLACE(#edate#,'-','') 		]]>
+			</isNotEmpty>
+			<![CDATA[
+                      GROUP BY b.SITE_ID
+                     ) A2
+                     ON A2.SITE_ID = A1.SITE_ID
+               WHERE A1.SITE_ID = #siteId#
+
+            ORDER BY A1.STATUS DESC
+              )
+        GROUP BY SITE_ID,
+              MENU_NM
+		]]>
+
+		<![CDATA[
+
+		            ) a
+		          ORDER BY rnum DESC ) a
+		  ORDER BY rnum )
+		WHERE rnum BETWEEN #firstIndex# + 1 AND #lastIndex#
+		]]>
+	</select>
+
+	<select id="satisfactionDAO.menuStatusListCnt" parameterClass="zvl" resultClass="int">
+		<![CDATA[
+			SELECT COUNT(*) FROM(SELECT B.MENU_NM
+			FROM TC_STSFDG A
+			INNER JOIN TC_MENUINFO B ON B.MENU_NO = A.MENU_NO
+			]]>
+			<include refid="satisfactionDAO.menuStatusList-where" />
+		<![CDATA[
+			WHERE B.SITE_ID = #siteId# GROUP BY B.MENU_NM)
+		]]>
+
+	</select>
+
+	<select id="satisfactionDAO.menuStatusListExcel" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+
+		SELECT
+			MENU_NM,
+            MAX(DECODE(STATUS,'5',STATUS_CNT)) || '/' || MAX(DECODE(STATUS,'5',TOT_CNT)) || '(' || MAX(DECODE(STATUS,'5',STATUS_PERCENT) || '%)' ) AS SATISFACTION5,
+            MAX(DECODE(STATUS,'4',STATUS_CNT)) || '/' || MAX(DECODE(STATUS,'4',TOT_CNT)) || '(' || MAX(DECODE(STATUS,'4',STATUS_PERCENT) || '%)' ) AS SATISFACTION4,
+            MAX(DECODE(STATUS,'3',STATUS_CNT)) || '/' || MAX(DECODE(STATUS,'3',TOT_CNT)) || '(' || MAX(DECODE(STATUS,'3',STATUS_PERCENT) || '%)' ) AS SATISFACTION3,
+            MAX(DECODE(STATUS,'2',STATUS_CNT)) || '/' || MAX(DECODE(STATUS,'2',TOT_CNT)) || '(' || MAX(DECODE(STATUS,'2',STATUS_PERCENT) || '%)' ) AS SATISFACTION2,
+            MAX(DECODE(STATUS,'1',STATUS_CNT)) || '/' || MAX(DECODE(STATUS,'1',TOT_CNT)) || '(' || MAX(DECODE(STATUS,'1',STATUS_PERCENT) || '%)' ) AS SATISFACTION1
+         FROM
+              (SELECT A1.SITE_ID ,
+                     A1.MENU_NM ,
+                     A1.STATUS ,
+                     CASE
+                         WHEN A1.STATUS = '5'
+                         THEN '매우만족'
+                         WHEN A1.STATUS = '4'
+                         THEN '만족'
+                         WHEN A1.STATUS = '3'
+                         THEN '보통'
+                         WHEN A1.STATUS = '2'
+                         THEN '불만'
+                         WHEN A1.STATUS = '1'
+                         THEN '매우불만'
+                     END AS STATUS_NAME ,
+                     NVL(A1.CNT,0) AS STATUS_CNT ,
+                     NVL(A2.TOT_CNT,0) AS TOT_CNT ,
+                     ROUND(A1.CNT*100/A2.TOT_CNT) AS STATUS_PERCENT
+                FROM
+                     (SELECT b.SITE_ID,
+                            b.MENU_NO,
+                            b.MENU_NM,
+                            STATUS,
+                            COUNT(*) AS CNT
+                       FROM TC_STSFDG a
+                        INNER JOIN TC_MENUINFO b
+                            ON b.MENU_NO = a.MENU_NO
+			]]>
+			<isNotEmpty prepend="AND" property="sdate">
+				<![CDATA[	TO_CHAR(a.REG_DATE, 'YYYYMMDD') >= REPLACE(#sdate#,'-','') 		]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="edate">
+				<![CDATA[	TO_CHAR(a.REG_DATE, 'YYYYMMDD') <= REPLACE(#edate#,'-','') 		]]>
+			</isNotEmpty>
+			<![CDATA[
+                      GROUP BY b.SITE_ID,
+                            b.MENU_NO,
+                            b.MENU_NM,
+                            STATUS
+                     ) A1
+                 LEFT OUTER JOIN
+                     (SELECT SITE_ID,
+                            COUNT(*) AS TOT_CNT
+                       FROM TC_STSFDG a
+                        INNER JOIN TC_MENUINFO b
+                            ON b.MENU_NO = a.MENU_NO
+             ]]>
+             <isNotEmpty prepend="AND" property="sdate">
+				<![CDATA[	TO_CHAR(a.REG_DATE, 'YYYYMMDD') >= REPLACE(#sdate#,'-','') 		]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="edate">
+				<![CDATA[	TO_CHAR(a.REG_DATE, 'YYYYMMDD') <= REPLACE(#edate#,'-','') 		]]>
+			</isNotEmpty>
+			<![CDATA[
+                      GROUP BY b.SITE_ID
+                     ) A2
+                     ON A2.SITE_ID = A1.SITE_ID
+               WHERE A1.SITE_ID = #siteId#
+
+            ORDER BY A1.STATUS DESC
+              )
+        GROUP BY MENU_NM
+		]]>
+	</select>
+
+</sqlMap>

@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="StationCourse">
+
+	<typeAlias  alias="zValue" type="egovframework.kr.go.mw.portal.util.service.ZValue"/>
+	<typeAlias  alias="Integer" type="java.lang.Integer"/>
+	<typeAlias  alias="langVo" type="egovframework.kr.go.mw.global.cts.service.LangVO"/>
+	
+	<select id="ContentsMngDAO.getResultCnt" parameterClass="zValue" resultClass="Integer" >
+		<![CDATA[
+			SELECT COUNT(*) AS cnt
+	        FROM TC_CMMNCODE_DETAIL 
+	        WHERE CODE IN 
+	              (SELECT PCODE 
+	                FROM TBG_CONTENTS_MNG 
+	               GROUP BY PCODE 
+	              ) 
+	              AND USE_AT='Y' 
+		]]>
+		<isNotEmpty prepend="AND" property="searchStr">
+			<![CDATA[	$searchKey$ LIKE '%' || #searchStr# || '%'	]]>
+		</isNotEmpty>
+	</select>
+	
+	<select id="ContentsMngDAO.getList" parameterClass="zValue" resultClass="zValue" >
+		<![CDATA[
+			SELECT * 
+			  FROM 
+			       (SELECT ROWNUM rn, 
+			              CODE_NM, 
+			              CODE_DC, 
+			              CODE, 
+			              CODE_ID, 
+			              FRST_REGISTER_PNTTM 
+			         FROM TC_CMMNCODE_DETAIL a 
+			        WHERE CODE IN 
+			              (SELECT PCODE 
+			                FROM TBG_CONTENTS_MNG 
+			               GROUP BY PCODE 
+			              ) 
+			              AND USE_AT='Y' 
+			              ]]>
+							<isNotEmpty prepend="AND" property="searchStr">
+								<![CDATA[	$searchKey$ LIKE '%' || #searchStr# || '%'	]]>
+							</isNotEmpty>
+			              <![CDATA[
+			              AND ROWNUM<=#enRn# 
+			       ) 
+			 WHERE rn>#stRn# 
+		]]>
+
+	</select>
+	
+	
+	<select id="ContentsMngDAO.getMetaDataList" parameterClass="zValue" resultClass="zValue" >
+		<![CDATA[
+			SELECT a.COLUMN_NAME,
+			       a.DATA_TYPE,
+			       a.DATA_LENGTH, 
+			       b.COMMENTS 
+			  FROM 
+			       (SELECT COLUMN_NAME,
+			              DATA_TYPE,
+			              DATA_LENGTH 
+			         FROM ALL_TAB_COLUMNS 
+			        WHERE OWNER='GN2010' 
+			              AND TABLE_NAME = 'TBG_CONTENTS' 
+			              ORDER BY COLUMN_ID asc
+			       ) a ,
+			       (SELECT COLUMN_NAME,
+			              COMMENTS 
+			         FROM ALL_COL_COMMENTS 
+			        WHERE OWNER='GN2010' 
+			              AND TABLE_NAME = 'TBG_CONTENTS' 
+			       ) b 
+			 WHERE a.COLUMN_NAME=b.COLUMN_NAME 
+			       AND a.COLUMN_NAME NOT IN('PCODE','U_ID','LANG_ID','USE_AT','REG_DTTM','REG_ID','MOD_DTTM','MOD_ID','HIT','SAV')
+		]]>
+	</select>
+	
+	<select id="ContentsMngDAO.isPCodeCheck" parameterClass="zValue" resultClass="Integer">
+		<![CDATA[
+			SELECT COUNT(*) AS cnt 
+			  FROM TBG_CONTENTS_MNG 
+			 WHERE PCODE=#codeId#
+		]]>
+	</select>
+
+	<insert id="ContentsMngDAO.setRegist" parameterClass="zValue" >
+		<![CDATA[
+		INSERT 
+		  INTO TBG_CONTENTS_MNG 
+		       ( 
+		           PCODE,
+		           COLUMN_FLD,
+		           COLUMN_YN,
+		           COLUMN_NM,
+		           COLUMN_TYPE,
+		           COLUMN_VALI,
+		           COLUMN_DATA 
+		       ) 
+		       VALUES 
+		       ( 
+		           #codeId#, 
+		           #columnFld#, 
+		           #columnYn#, 
+		           #columnNm#, 
+		           #columnType#, 
+		           #columnVali#,
+		           #columnData# 
+		       ) 
+		]]>
+	</insert>
+	
+	<select id="ContentsMngDAO.getView" parameterClass="zValue" resultClass="zValue">
+		<![CDATA[			 
+			SELECT ta.*, 
+			       tb.PCODE, 
+			       (SELECT code_nm FROM TC_CMMNCODE_DETAIL WHERE CODE=tb.PCODE) as pcode_nm ,
+			       (SELECT code FROM TC_CMMNCODE_DETAIL WHERE CODE_ID='CONTP' AND CODE=(SELECT board_type FROM TBG_CONTENTS_INFO WHERE  pcode=tb.PCODE and ROWNUM=1)) as board_type ,
+			       (SELECT code FROM TC_CMMNCODE_DETAIL WHERE CODE_ID='GCOM01' AND CODE=(SELECT att_flag FROM TBG_CONTENTS_INFO WHERE  pcode=tb.PCODE and ROWNUM=1)) as att_flag ,
+			       tb.COLUMN_FLD, 
+			       tb.COLUMN_YN, 
+			       tb.COLUMN_NM, 
+			       tb.COLUMN_TYPE, 
+			       tb.COLUMN_VALI, 
+			       tb.COLUMN_DATA 
+			  FROM 
+			       (SELECT a.COLUMN_NAME, 
+			              a.DATA_TYPE, 
+			              a.DATA_LENGTH, 
+			              b.COMMENTS 
+			         FROM 
+			              (SELECT COLUMN_NAME, 
+			                     DATA_TYPE, 
+			                     DATA_LENGTH 
+			                FROM ALL_TAB_COLUMNS 
+			               WHERE OWNER='GN2010' 
+			                     AND TABLE_NAME = 'TBG_CONTENTS' 
+			                      ORDER BY COLUMN_ID asc
+			              ) a , 
+			              (SELECT COLUMN_NAME, 
+			                     COMMENTS 
+			                FROM ALL_COL_COMMENTS 
+			               WHERE OWNER='GN2010' 
+			                     AND TABLE_NAME = 'TBG_CONTENTS' 
+			              ) b 
+			        WHERE a.COLUMN_NAME=b.COLUMN_NAME 
+			              AND a.COLUMN_NAME NOT IN('PCODE','U_ID','LANG_ID','USE_AT','REG_DTTM','REG_ID','MOD_DTTM','MOD_ID','HIT') 
+			       ) ta 
+			   , (SELECT * FROM TBG_CONTENTS_MNG WHERE  PCODE=#pcodeId#) tb 
+			       WHERE ta.COLUMN_NAME=tb.COLUMN_FLD(+)
+		]]>
+	</select>
+	
+	<update id="ContentsMngDAO.setModify" parameterClass="zValue">
+		<![CDATA[
+			MERGE INTO TBG_CONTENTS_MNG mng USING DUAL ON (mng.PCODE=#codeId# AND mng.COLUMN_FLD=#columnFld#) 
+			WHEN MATCHED THEN 
+			
+			    UPDATE 
+			           SET 
+			           	COLUMN_YN = #columnYn#,
+			           	COLUMN_NM = #columnNm#,
+			           	COLUMN_TYPE = #columnType#,
+			           	COLUMN_VALI = #columnVali#,
+			           	COLUMN_DATA = #columnData#
+			           	 
+			    WHEN NOT MATCHED THEN 
+			    INSERT 
+			           (
+			               PCODE,
+			               COLUMN_FLD,
+			               COLUMN_YN,
+			               COLUMN_NM,
+			               COLUMN_TYPE,
+			               COLUMN_VALI,
+			               COLUMN_DATA
+			           ) 
+			           VALUES 
+			           (
+				           #codeId#, 
+				           #columnFld#, 
+				           #columnYn#, 
+				           #columnNm#, 
+				           #columnType#, 
+				           #columnVali#,
+				           #columnData# 
+			           ) 
+		]]>
+	</update>
+	
+	<delete id="ContentsMngDAO.delete">
+		<![CDATA[
+			DELETE 
+			  FROM TBG_CONTENTS_MNG 
+			 WHERE PCODE=#codeId#
+		]]>
+	</delete>
+	
+	<select id="ContentsMngDAO.getUseView" parameterClass="zValue" resultClass="zValue">
+		<![CDATA[			 
+			SELECT ta.*, 
+			       tb.PCODE, 
+			       (SELECT code_nm FROM TC_CMMNCODE_DETAIL WHERE CODE=tb.PCODE) as pcode_nm ,
+			       tb.COLUMN_FLD, 
+			       tb.COLUMN_YN, 
+			       tb.COLUMN_NM, 
+			       tb.COLUMN_TYPE, 
+			       tb.COLUMN_VALI, 
+			       tb.COLUMN_DATA 
+			  FROM 
+			       (SELECT a.COLUMN_NAME, 
+			              a.DATA_TYPE, 
+			              a.DATA_LENGTH, 
+			              b.COMMENTS 
+			         FROM 
+			              (SELECT COLUMN_NAME, 
+			                     DATA_TYPE, 
+			                     DATA_LENGTH 
+			                FROM ALL_TAB_COLUMNS 
+			               WHERE OWNER='GN2010' 
+			                     AND TABLE_NAME = 'TBG_CONTENTS' 
+			                      ORDER BY COLUMN_ID asc
+			              ) a , 
+			              (SELECT COLUMN_NAME, 
+			                     COMMENTS 
+			                FROM ALL_COL_COMMENTS 
+			               WHERE OWNER='GN2010' 
+			                     AND TABLE_NAME = 'TBG_CONTENTS' 
+			              ) b 
+			        WHERE a.COLUMN_NAME=b.COLUMN_NAME 
+			              AND a.COLUMN_NAME NOT IN('PCODE','U_ID','LANG_ID','USE_AT','REG_DTTM','REG_ID','MOD_DTTM','MOD_ID','HIT') 
+			       ) ta 
+			   , (SELECT * FROM TBG_CONTENTS_MNG WHERE  PCODE=#pcode# AND COLUMN_YN='Y') tb 
+			       WHERE ta.COLUMN_NAME=tb.COLUMN_FLD
+		]]>
+	</select>
+	
+	<insert id="ContentsMngDAO.setContentsInfoRegist" parameterClass="zValue" >
+		<![CDATA[
+			INSERT INTO TBG_CONTENTS_INFO
+			  VALUES (#pcodeId#,#boardType#,#attFlag#)
+		]]>
+	</insert>
+	
+	<update id="ContentsMngDAO.setContentsInfoModify" parameterClass="zValue">
+		<![CDATA[
+			UPDATE TBG_CONTENTS_INFO SET BOARD_TYPE=#boardType#, ATT_FLAG=#attFlag#
+			 WHERE PCODE=#pcodeId#
+		]]>
+	</update>
+	
+	<delete id="ContentsMngDAO.contentsInfoDelete" parameterClass="zValue">
+		<![CDATA[
+			DELETE 
+			  FROM TBG_CONTENTS_INFO 
+			 WHERE PCODE=#pcodeId#
+		]]>
+	</delete>
+	
+</sqlMap>

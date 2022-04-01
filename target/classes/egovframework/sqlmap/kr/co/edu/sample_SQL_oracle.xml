@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="sample">
+
+	<typeAlias alias="zvl" type="kr.co.unp.util.ZValue" />
+
+	<!--CLOB 타입을 위한 리절트맵   -->
+	<resultMap id="listResultMap" class="zvl">
+		<result property="cnsltReqSe" column="CNSLT_REQ_SE"/>
+		<result property="cnsltReqCn" column="CNSLT_REQ_CN"  jdbcType="CLOB" javaType="java.lang.String"/>
+	</resultMap>
+
+	<select id="SamplelDAO.list" parameterClass="zvl" resultMap="listResultMap">
+		<![CDATA[
+			SELECT
+                a.CNSLT_REQ_SE,
+                a.CNSLT_REQ_CN
+			  FROM TN_EMPYMN_CNSL a
+		]]>
+	</select>
+
+</sqlMap>
+

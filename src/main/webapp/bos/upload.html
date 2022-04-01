@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>UCC Upload </title>
+	</head>
+
+	<body>
+		<div>
+			<ul>
+				<li><h3>User's Guide</h3></li>
+				<li>필수 항목 : upurl 은 파일 업로드하는 URL. ex) http://211.42.94.77/cms/api/file_ucc_upload.xml.php</li>
+				<li>필수 항목 : catidx 은 카테고리 값. </li>
+				<li><h3>Functions</h3> </li>
+				<li>loadedComplete(tf); object (fileuploader) 가 페이지에 로드되었는지 여부. false 일 경우, 실제 응답하지 않는다</li>
+				<li>uploadcomplete(str); VOD 파일이 서버에 업로드되고 데이터베이스에 데이터를 갖게되었을 경우 응답한 vod index 값</li>
+				<li>getPV(); object (fileuploader) 를 로드하는 함수</li>
+				<li>fileSubmit(); object (fileuploader) 에서 파일을 선택한 후 서버로 올리게 하는 함수</li>
+			</ul>
+		</div>
+		<div id="uccuploader" style="width:100%;height:100%;">
+			<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="100%" height="100%" id="UccUploaderGW" name="UccUploaderGW" bgcolor="#ff0000">
+                <param name="movie" value="./UccUploaderGW.swf" />
+                <param name="quality" value="high" />
+                <param name="bgcolor" value="#000000" />
+                <param name="allowScriptAccess" value="always" />
+                <param name="allowFullScreen" value="true" />
+				<param name="flashvars" value="upurl=http://211.42.94.77/cms/api/file_ucc_upload.xml.php&catidx=1" />
+                <embed id="UccUploaderGW" name="UccUploaderGW" src="./UccUploaderGW.swf" width="100%" height="100%" bgcolor="#ff0000" allowscriptaccess="always" allowfullscreen="true" wmode="gpu" flashvars="upurl=http://211.42.94.77/cms/api/file_ucc_upload.xml.php&catidx=1" />
+            </object>
+		</div>
+		<div>
+			<input type="button" value="Send" onclick="fileSubmit()"/>
+		</div>
+		<script>
+		var objLoaded = false;
+		var uploader;
+
+		function loadedComplete(tf){
+			if (tf == "true")
+			{
+				objLoaded = true;
+			}
+		}
+
+		function uploadcomplete(str){ // uploader 에서 파일을 업로드 후 호출하는 자바스크립트 함수.  str 값이 서버 디비에 저장된 값임.
+			alert(str);
+		}
+
+		function getPV(){
+			if (navigator.appName.indexOf("Microsoft") != -1)
+			{
+				uploader = document.getElementById("UccUploaderGW");
+			}else{
+				uploader = document.embeds["UccUploaderGW"];
+			}
+		}
+
+		function fileSubmit(){
+			getPV();
+
+			if (uploader)
+			{
+				uploader.vodSend();
+			}else{
+				alert('업로더가 로드되지 않았습니다. 잠시 후 이용하세요');
+				return;
+			}
+
+		}
+		</script>
+	</body>
+</html>

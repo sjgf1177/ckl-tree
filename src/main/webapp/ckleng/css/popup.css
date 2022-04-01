@@ -1,0 +1,8 @@
+﻿@charset "utf-8";
+/* CSS Document */
+body{background:#fff}
+.panelBox{margin:0 auto;}
+.popWin h1{margin:5px 0;color:#fff;font-size:18px;line-height:30px; padding:0;}
+.panel-heading{height: 50px}
+.panel-body{padding:5px 15px}
+.popFooterSet{background:#eee;color:#444;}

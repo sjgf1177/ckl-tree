@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:p="http://www.springframework.org/schema/p" 
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:util="http://www.springframework.org/schema/util"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	        http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	        http://www.springframework.org/schema/util
+	        http://www.springframework.org/schema/util/spring-util-2.5.xsd
+			http://www.springframework.org/schema/context 
+			http://www.springframework.org/schema/context/spring-context-2.5.xsd">
+	    
+    <bean id="pageGenerator" class="kr.co.unp.pg.service.XmlPageGenerator">
+    	<property name="beanNameMap">
+    		<!-- 
+				각 페이지타입별 실행할 템블릿정의
+				key = 페이지타입(pageType), value = ','로 구분한 각 페이지템플릿 
+				실제 페이지템플릿명은 사이트명 + ','로 구분한 각 페이지템플릿 
+			-->
+			<map>
+	            <entry key="bbsList" value="BbsListPageTemplate"/><!-- 목록 -->
+	            <entry key="bbsNews" value="BbsListPageTemplate,BbsReadPageTemplate,BbsRegPageTemplate"/><!-- 공지형 -->
+	            <entry key="bbsPhoto" value="BbsPhotoListPageTemplate,BbsReadPageTemplate,BbsRegPageTemplate"/><!-- 포토 (목록, 뷰, 등록) -->
+	            <entry key="bbsPhotoList" value="BbsPhotoListPageTemplate,BbsPhotoReadPageTemplate,BbsRegPageTemplate"/><!-- 포토 (목록, 뷰) -->
+	            <entry key="bbsRead" value="BbsListPageTemplate,BbsReadPageTemplate,BbsRegPageTemplate"/> <!-- 등록형(목록, 뷰, 등록) -->
+	            <entry key="bbsReRead" value="BbsListPageTemplate,BbsReReadPageTemplate,BbsRegPageTemplate,BbsReplyRegPageTemplate"/><!-- 민원(목록,뷰,등록,답변) -->
+			</map>
+    	</property>
+    </bean>
+    
+    <bean id="bosBbsListPageTemplate" class="kr.co.unp.pg.service.BbsPageTemplate">
+    	<property name="templatePath">
+			<value><![CDATA[${Globals.webRootPath}/src/main/java/kr/co/unp/pg/xml/bbsList/bosList.xml]]></value>
+    	</property>
+    	<property name="outputPath">
+			<value><![CDATA[${Globals.webRootPath}/src/main/webapp/WEB-INF/jsp/bos/bbs/[pageCode]/List.jsp]]></value>
+    	</property>
+    </bean>
+    
+    <bean id="bosBbsReadPageTemplate" class="kr.co.unp.pg.service.BbsPageTemplate">
+    	<property name="templatePath">
+			<value><![CDATA[${Globals.webRootPath}/src/main/java/kr/co/unp/pg/xml/bbsRead/bosRead.xml]]></value>
+    	</property>
+    	<property name="outputPath">
+			<value><![CDATA[${Globals.webRootPath}/src/main/webapp/WEB-INF/jsp/bos/bbs/[pageCode]/Read.jsp]]></value>
+    	</property>
+    </bean>
+    
+    <bean id="bosBbsRegPageTemplate" class="kr.co.unp.pg.service.BbsPageTemplate">
+    	<property name="templatePath">
+			<value><![CDATA[${Globals.webRootPath}/src/main/java/kr/co/unp/pg/xml/bbsRead/bosReg.xml]]></value>
+    	</property>
+    	<property name="outputPath">
+			<value><![CDATA[${Globals.webRootPath}/src/main/webapp/WEB-INF/jsp/bos/bbs/[pageCode]/Reg.jsp]]></value>
+    	</property>
+    </bean>
+    
+    <bean id="bosBbsReReadPageTemplate" class="kr.co.unp.pg.service.BbsPageTemplate">
+    	<property name="templatePath">
+			<value><![CDATA[${Globals.webRootPath}/src/main/java/kr/co/unp/pg/xml/bbsReRead/bosReRead.xml]]></value>
+    	</property>
+    	<property name="outputPath">
+			<value><![CDATA[${Globals.webRootPath}/src/main/webapp/WEB-INF/jsp/bos/bbs/[pageCode]/Read.jsp]]></value>
+    	</property>
+    </bean>
+    
+    <bean id="bosBbsReplyRegPageTemplate" class="kr.co.unp.pg.service.BbsPageTemplate">
+    	<property name="templatePath">
+			<value><![CDATA[${Globals.webRootPath}/src/main/java/kr/co/unp/pg/xml/bbsRead/bosReplyReg.xml]]></value>
+    	</property>
+    	<property name="outputPath">
+			<value><![CDATA[${Globals.webRootPath}/src/main/webapp/WEB-INF/jsp/bos/bbs/[pageCode]/replyReg.jsp]]></value>
+    	</property>
+    </bean>
+    
+    <bean id="bosBbsPhotoListPageTemplate" class="kr.co.unp.pg.service.BbsPageTemplate">
+    	<property name="templatePath">
+			<value><![CDATA[${Globals.webRootPath}/src/main/java/kr/co/unp/pg/xml/bbsPhotoList/bosList.xml]]></value>
+    	</property>
+    	<property name="outputPath">
+			<value><![CDATA[${Globals.webRootPath}/src/main/webapp/WEB-INF/jsp/bos/bbs/[pageCode]/List.jsp]]></value>
+    	</property>
+    </bean>
+    
+    <bean id="portalBbsListPageTemplate" class="kr.co.unp.pg.service.BbsPageTemplate">
+    	<property name="templatePath">
+			<value><![CDATA[${Globals.webRootPath}/src/main/java/kr/co/unp/pg/xml/bbsList/portalList.xml]]></value>
+    	</property>
+    	<property name="outputPath">
+			<value><![CDATA[${Globals.webRootPath}/src/main/webapp/WEB-INF/jsp/portal/bbs/[pageCode]/List.jsp]]></value>
+    	</property>
+    </bean>
+    
+    <bean id="portalBbsReadPageTemplate" class="kr.co.unp.pg.service.BbsPageTemplate">
+    	<property name="templatePath">
+			<value><![CDATA[${Globals.webRootPath}/src/main/java/kr/co/unp/pg/xml/bbsRead/portalRead.xml]]></value>
+    	</property>
+    	<property name="outputPath">
+			<value><![CDATA[${Globals.webRootPath}/src/main/webapp/WEB-INF/jsp/portal/bbs/[pageCode]/Read.jsp]]></value>
+    	</property>
+    </bean>
+    
+    <bean id="portalBbsRegPageTemplate" class="kr.co.unp.pg.service.BbsPageTemplate">
+    	<property name="templatePath">
+			<value><![CDATA[${Globals.webRootPath}/src/main/java/kr/co/unp/pg/xml/bbsRead/portalReg.xml]]></value>
+    	</property>
+    	<property name="outputPath">
+			<value><![CDATA[${Globals.webRootPath}/src/main/webapp/WEB-INF/jsp/portal/bbs/[pageCode]/Reg.jsp]]></value>
+    	</property>
+    </bean>
+    
+    <bean id="portalBbsPhotoListPageTemplate" class="kr.co.unp.pg.service.BbsPageTemplate">
+    	<property name="templatePath">
+			<value><![CDATA[${Globals.webRootPath}/src/main/java/kr/co/unp/pg/xml/bbsPhotoList/portalList.xml]]></value>
+    	</property>
+    	<property name="outputPath">
+			<value><![CDATA[${Globals.webRootPath}/src/main/webapp/WEB-INF/jsp/portal/bbs/[pageCode]/List.jsp]]></value>
+    	</property>
+    </bean>
+	
+</beans>

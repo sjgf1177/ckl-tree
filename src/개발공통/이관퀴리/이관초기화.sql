@@ -1,0 +1,138 @@
+DELETE FROM TC_COMMNFILE_DETAIL;
+DELETE FROM TC_COMMNFILE;
+DELETE FROM TB_BBS_ESTN;
+UPDATE TRAN_TABLESN SET MAX_SN = 0 WHERE TABLE_NAME = 'TB_BBS_ESTN';
+UPDATE TC_CMMNSN SET NEXT_ID = 1 WHERE TABLE_NAME = 'TC_COMMNFILE';
+DELETE FROM TN_JOB_DICARY_CN;
+DELETE FROM TN_JOB_DICARY;
+
+
+BEGIN
+	CKL_TREE.PR_TRAN_CMMN_BBS('B0000017');
+    CKL_TREE.PR_TRAN_CMMN_BBS('B0000018');
+    CKL_TREE.PR_TRAN_QNA_BBS;
+    CKL_TREE.PR_TRAN_EDU_NOTICE_BBS;
+    CKL_TREE.PR_TRAN_EDU_CMU_BBS;
+    CKL_TREE.PR_TRAN_DREAM_STORY_BBS('B0000041');
+    CKL_TREE.PR_TRAN_DREAM_STORY_BBS('B0000042');
+    CKL_TREE.PR_TRAN_DREAM_STORY_BBS('B0000044');
+    CKL_TREE.PR_TRAN_DREAM_STORY_BBS('B0000040');
+    CKL_TREE.PR_TRAN_DREAM_STORY_BBS('B0000043');
+    CKL_TREE.PR_TRAN_EDU_TALK_BBS;
+    CKL_TREE.PR_TRAN_EDU_FURTURE_BBS;
+    CKL_TREE.PR_TRAN_ITVW_BBS;
+    CKL_TREE.PR_TRAN_PDS_BBS;
+    CKL_TREE.PR_TRAN_EDU_JOB_DIC;
+    CKL_TREE.PR_TRAN_EDU_EMPGUIDE_BBS;
+    COMMIT;
+END;
+
+
+INSERT INTO TRAN_TABLESN VALUES ( 'TB_BBS_ESTN', 0 ,SYSDATE);
+
+
+DELETE FROM TC_ACCESS_HISTORY;
+
+
+
+DELETE FROM TM_LOGIN_HISTORY;
+DELETE FROM TM_OLD_DREAM_USER;
+DELETE FROM TM_OLD_CKL_USER;
+DELETE FROM TM_USER_SECSN;
+DELETE FROM TM_SIMPLE_LOGIN;
+DELETE FROM TM_USER;
+delete FROM EDUUSER_BIRTH;
+
+
+BEGIN
+CKL_TREE.PR_TRAN_CKL_USER;
+CKL_TREE.PR_TRAN_DREAM_USER;
+CKL_TREE.PR_TRAN_EDU_USER;
+END;
+
+
+INSERT INTO EDUUSER_BIRTH
+SELECT
+  USERID,
+  MEMBERYEAR || LPAD(A.MEMBERMONTH,2,'0') || LPAD(A.MEMBERDAY,2,'0') AS BRTHDY,
+  NULL
+
+FROM kocca.TZ_MEMBER A
+WHERE  GRCODE = 'N000001' AND STATE = 'Y'
+AND LENGTH(MEMBERYEAR || LPAD(A.MEMBERMONTH,2,'0') || LPAD(A.MEMBERDAY,2,'0')) = 8
+
+AND (
+(
+  MEMBERMONTH > 0
+  AND MEMBERYEAR > 1930
+  AND MEMBERDAY <= 31
+  AND MEMBERMONTH <> 2
+) OR (MEMBERMONTH =2 AND MEMBERYEAR > 1930 AND MEMBERDAY <= 28)
+) ;
+
+UPDATE TM_USER A SET
+A.BRTHDY = (SELECT TO_DATE(BIRTH,'YYYYMMDD') FROM EDUUSER_BIRTH WHERE USERID = A.USER_ID)
+WHERE BRTHDY IS NULL
+AND USER_ID IN (SELECT USERID FROM EDUUSER_BIRTH);
+
+
+SELECT CODE, LPAD(CODE,3,'0') FROM TC_CMMNCODE_DETAIL A WHERE CODE_ID = 'COM093'
+SELECT LPAD(CHRG_JOB,3,'0'), LPAD(CHRG_JOB2,3,'0') FROM TN_EMPMN_PBLANC;
+UPDATE TC_CMMNCODE_DETAIL SET CODE = LPAD(CODE,3,'0') WHERE CODE_ID = 'COM093';
+UPDATE TN_EMPMN_PBLANC SET CHRG_JOB=LPAD(CHRG_JOB,3,'0'), CHRG_JOB2=LPAD(CHRG_JOB2,3,'0');
+DELETE FROM TN_EMPMN_PBLANC WHERE CHRG_JOB IN ('잡업무','작가','담당업무입니다','IT관련');
+
+
+SELECT ntt_id , ntt_cn FROM TB_BBS_ESTN WHERE bbs_id = 'B0000011'
+AND INSTR(NTT_CN,'/upload/culturist/banner') > 0
+
+
+begin
+
+UPDATE TB_BBS_ESTN SET NTT_CN = REPLACE(NTT_CN, '<HTML><HEAD><TITLE></TITLE>','') WHERE bbs_id = 'B0000023';
+UPDATE TB_BBS_ESTN SET NTT_CN = REPLACE(NTT_CN, '<META content="text/html; charset=euc-kr" http-equiv=Content-Type>','') WHERE bbs_id = 'B0000023';
+UPDATE TB_BBS_ESTN SET NTT_CN = REPLACE(NTT_CN, '<META name=GENERATOR content=ActiveSquare></HEAD>','') WHERE bbs_id = 'B0000023';
+UPDATE TB_BBS_ESTN SET NTT_CN = REPLACE(NTT_CN, '<BODY style="FONT-FAMILY: 굴림; FONT-SIZE: 10pt">','') WHERE bbs_id = 'B0000023';
+UPDATE TB_BBS_ESTN SET NTT_CN = REPLACE(NTT_CN, '</BODY></HTML>','') WHERE bbs_id = 'B0000023';
+UPDATE TB_BBS_ESTN SET NTT_CN = REPLACE(NTT_CN, '<html><head><title></title><meta http-equiv="Content-Type" content="text/html; charset=euc-kr"><meta name="GENERATOR" content="ActiveSquare"></head><body style="font-family: 굴림; font-size: 10pt;">','') WHERE bbs_id = 'B0000023';
+UPDATE TB_BBS_ESTN SET NTT_CN = REPLACE(NTT_CN, '</body></html>.','') WHERE bbs_id = 'B0000023';
+
+
+
+UPDATE TB_BBS_ESTN SET NTT_CN = REPLACE(NTT_CN, 'http://edu.kocca.kr/upload/namo','/upload/namo') WHERE bbs_id = 'B0000011';
+UPDATE TB_BBS_ESTN SET NTT_CN = REPLACE(NTT_CN, 'http://edu.kocca.or.kr/upload/namo','/upload/namo') WHERE bbs_id = 'B0000011';
+
+
+UPDATE TB_BBS_ESTN SET NTT_CN = REPLACE(NTT_CN, 'http://old.mediajob.co.kr/images/banner','/upload/culturist/banner') WHERE bbs_id = 'B0000011';
+UPDATE TB_BBS_ESTN SET NTT_CN = REPLACE(NTT_CN, 'http://file.mediajob.co.kr/cms','/upload/culturist/cms') WHERE bbs_id = 'B0000011';
+UPDATE TB_BBS_ESTN SET NTT_CN = REPLACE(NTT_CN, 'http://img.hunet.co.kr/event','/upload/culturist/event') WHERE bbs_id = 'B0000011';
+
+UPDATE TB_BBS_ESTN SET NTT_CN = REPLACE(NTT_CN, 'http://www.culturist.or.kr/2015_image','/upload/culturist/2015_image') WHERE bbs_id = 'B0000011';
+UPDATE TB_BBS_ESTN SET NTT_CN = REPLACE(NTT_CN, 'src="/2015_image','src="/upload/culturist/2015_image') WHERE bbs_id = 'B0000011';
+UPDATE TB_BBS_ESTN SET NTT_CN = REPLACE(NTT_CN, 'http://www.culturist.or.kr/2015_image','/upload/culturist/2015_image') WHERE bbs_id = 'B0000011';
+UPDATE TB_BBS_ESTN SET NTT_CN = REPLACE(NTT_CN, 'https://www.culturist.or.kr/2015_image','/upload/culturist/2015_image') WHERE bbs_id = 'B0000011';
+UPDATE TB_BBS_ESTN SET NTT_CN = REPLACE(NTT_CN, 'http://www.culturist.or.kr/upload/board','/upload/culturist/upload/board') WHERE bbs_id = 'B0000011';
+UPDATE TB_BBS_ESTN SET NTT_CN = REPLACE(NTT_CN, 'http://www.culturist.co.kr/img','/upload/culturist/img') WHERE bbs_id = 'B0000011';
+UPDATE TB_BBS_ESTN SET NTT_CN = REPLACE(NTT_CN, 'http://www.culturist.co.kr/images','/upload/culturist/images') WHERE bbs_id = 'B0000011';
+UPDATE TB_BBS_ESTN SET NTT_CN = REPLACE(NTT_CN, 'http://www.culturist.or.kr/front','/upload/culturist/front') WHERE bbs_id = 'B0000011';
+
+
+UPDATE TB_BBS_ESTN SET NTT_CN = REPLACE(NTT_CN, '.JPG','.jpg') WHERE bbs_id = 'B0000011'
+AND INSTR(NTT_CN,'/upload/culturist/banner') > 0
+
+UPDATE TB_BBS_ESTN SET NTT_CN = REPLACE(NTT_CN, 'http://edu.kocca.kr/upload/namo','/upload/namo') WHERE bbs_id = 'B0000023';
+UPDATE TB_BBS_ESTN SET NTT_CN = REPLACE(NTT_CN, 'http://edu.kocca.or.kr/upload/namo','/upload/namo') WHERE bbs_id = 'B0000023';
+
+UPDATE TB_BBS_ESTN SET NTT_CN = REPLACE(NTT_CN, 'http://edu.kocca.kr/upload/namo','/upload/namo') WHERE bbs_id = 'B0000016';
+UPDATE TB_BBS_ESTN SET NTT_CN = REPLACE(NTT_CN, 'http://edu.kocca.or.kr/upload/namo','/upload/namo') WHERE bbs_id = 'B0000016';
+
+UPDATE TB_BBS_ESTN SET NTT_CN = REPLACE(NTT_CN, 'http://edutest.kocca.kr/','/');
+UPDATE TB_BBS_ESTN SET NTT_CN = REPLACE(NTT_CN, 'https://edutest.kocca.kr/','/');
+UPDATE TB_BBS_ESTN SET NTT_CN = REPLACE(NTT_CN, 'http://wtest.ckl.or.kr/','/');
+UPDATE TB_BBS_ESTN SET NTT_CN = REPLACE(NTT_CN, 'https://wtest.ckl.or.kr/','/');
+
+
+END;
+
+
+

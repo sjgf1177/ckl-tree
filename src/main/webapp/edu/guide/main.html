@@ -1,0 +1,1903 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>한국콘텐츠아카데미 korea creative content agency</title>
+<script type="text/javascript">
+//<![CDATA[
+if (/(iphone|ipod|ipad|android|blackberry|windows ce|palm|symbian)/i.test(navigator.userAgent)) {
+	location.href="https://medu.kocca.kr/edumobile/main/main.do";
+}
+//]]>
+</script>
+<link rel="stylesheet" type="text/css" href="/edu/css/base.css"  />
+<link rel="stylesheet" type="text/css" href="/edu/css/animate.min.css" />
+<link rel="stylesheet" type="text/css" href="/edu/css/common.css"  />
+<link rel="stylesheet" type="text/css" href="/edu/css/layout.css"  />
+<link rel="stylesheet" type="text/css" href="/edu/css/main.css"  />
+<script type="text/javascript" src="/js/jquery-1.11.1.min.js"></script>
+<script type="text/javascript"  src="/js/jquery.carouFredSel-6.2.1-packed.js"></script>
+<script type="text/javascript" src="/edu/js/common.js"></script>
+<script type="text/javascript"> subMenuOpenIng=true; </script>
+<!-- Script Begins -->
+<script type="text/javascript" src="/js/bootstrap/bootstrap.min.js"></script>
+<!-- Slider -->
+<script type="text/javascript" src="/js/jquery.sticky.js"></script>
+<script type="text/javascript" src="/js/jquery.scrollTo.min.js"></script>
+<script type="text/javascript" src="/js/jquery.easing.1.3.js"></script>
+<script type="text/javascript" src="/js/jquery.appear.js"></script>
+<script type="text/javascript" src="/js/modernizr.min.js"></script>
+<script type="text/javascript" src="/edu/js/main.js"></script>
+<!--[if lt IE 9]>
+	<link rel="stylesheet" href="/edu/css/ie.css" type="text/css" />
+	<script type="text/javascript" src="/js/bootstrap/html5shiv.min.js"></script>
+	<script type="text/javascript" src="/js/respond.min.js"></script>
+	<script type="text/javascript"> $('html').attr('id','ie');</script>
+<![endif]-->
+</head>
+<body>
+<!-- <div class="ad"><img src="/edu/images/ad1.png" alt="" /></div> -->
+<!-- <a href="javascript:void(0);" class="adClose"><img src="/edu/images/adOpen.png" alt="" /></a> -->
+<script type="text/javascript">
+//<![CDATA[
+$(function() {
+	$("#empmnForm").submit(function() {
+        $("#keyword").val(encodeURIComponent($("#keywordStr").val()));
+	});
+});
+	$('.adClose').click(function(event) {
+		$('.ad').slideToggle()
+		$(this).toggleClass('off');
+	});
+//]]>
+</script>
+<ul class="skip">
+	<li><a href="#home">본문내용 바로가기</a></li>
+	<li><a href="#gnb">주메뉴 바로가기</a></li>
+</ul>
+<div id="wrap">
+<!-- Header Begins -->
+<div id="menu1" class="header-section">
+	<!-- Top Section Begins -->
+	<div id="sticky-section" class="sticky-navigation default">
+		<!-- //header -->
+			
+<script type="text/javascript">
+//<![CDATA[
+function search2(form){
+	if(!form.q.value){
+		alert("검색어를 입력하세요.");
+		$("#q2")[0].focus();
+		return false;
+	}
+	return true;
+}
+function logoutSSO() {
+	$.get("/edu/member/logout.json",function(data) {
+		var retUrl = "https://edusso.kocca.kr/sso/member/logoutSSO.do?service=edu";
+		//alert(retUrl);
+		location.href= retUrl;
+	},"json");
+	return false;
+}
+$(function() {
+	$(".logoutBtn").click(function() {
+		logoutSSO();
+		return false;
+     });
+});
+//]]>
+</script>
+		<div id="header">
+		<!-- 하위스크롤 경우 // headerTopOn -->
+			<div class="headerCts">
+				<div class="wrapSet clearfix">
+					<h1 class="logo"><a href="/edu/main/main.do"><span class="hidden">KOCCA(Create NeWave) 한국콘텐츠아카데미 (대한민국 영도, 콘텐츠로 넓힌다!)</span></a></h1>
+					<div id="global">
+						<ul>
+						
+						
+							
+							<li><a href="/edu/member/forLogin.do?menuNo=500077" class="ico1" title="로그인">로그인</a></li>
+							<li><a href="/edu/member/join01.do?menuNo=500076" class="ico2" title="회원가입">회원가입</a></li>
+						
+							<li class="bgn"><a href="/edu/main/contents.do?menuNo=500074" class="ico3" title="사이트맵">사이트맵</a></li>
+						</ul>
+						<!-- 검색창 -->
+						<div class="globalSchSet">
+							<form name="frmSearch2" method="post" action="/edu/search/list.do?menuNo=500079" onsubmit="return search2(this);">
+								<input type="text" name="q" id="q2" class="schWordInput vt" value="" title="검색어를 입력하세요." />
+								<input type="image" src="/edu/images/common/schGlobalSetOk.gif" alt="검색 확인" class="p0 m0 vt" />
+							</form>
+						</div>
+						<!-- //검색창 -->
+					</div>
+					<!-- gnb -->
+					
+					<div class="gnbSet">
+						<div id="gnb">
+							<ul>
+								
+									<li id="gnb1" >
+										<a href="/edu/bbs/B0000011/list.do?menuNo=500007" >새소식</a>
+									</li>
+								
+									<li id="gnb2" >
+										<a href="/edu/progrm/master/list.do?prgSe=01&amp;prgCl=13&amp;menuNo=500019" >현장교육</a>
+									</li>
+								
+									<li id="gnb3" >
+										<a href="/edu/onlineEdu/edumain/list.do?menuNo=500026" >온라인교육</a>
+									</li>
+								
+									<li id="gnb4" >
+										<a href="/edu/dream/dreamMain/main.do?menuNo=500034" >창의인재동반</a>
+									</li>
+								
+									<li id="gnb5" >
+										<a href="/edu/job/cultureMain/main.do?menuNo=500046" >취업정보</a>
+									</li>
+								
+									<li id="gnb6" >
+										<a href="/edu/main/contents.do?menuNo=500001" >아카데미소개</a>
+									</li>
+								
+							</ul>
+						</div>
+						<div class="gnbTotMenu"><a href="javascript:void(0);"><span class="hidden">전체메뉴 열기</span></a></div>
+						<div class="totMenuT">
+							
+								<dl class="tms1">
+									<dt><a href="/edu/bbs/B0000011/list.do?menuNo=500007" >새소식</a></dt>
+									<dd>
+											<ul>
+													<li><a href="/edu/bbs/B0000011/list.do?menuNo=500008" >공지사항</a></li>
+												
+													<li><a href="/edu/bbs/B0000038/list.do?menuNo=500017" >문의하기</a></li>
+												
+													<li><a href="/edu/bbs/B0000048/list.do?menuNo=500018" >이벤트</a></li>
+												
+													<li><a href="/edu/bbs/B0000023/list.do?menuNo=500010" >스토리</a></li>
+											</ul>
+										
+									</dd>
+								</dl>
+							
+								<dl class="tms2">
+									<dt><a href="/edu/progrm/master/list.do?prgSe=01&amp;prgCl=13&amp;menuNo=500019" >현장교육</a></dt>
+									<dd>
+											<ul>
+												
+													<li><a href="/edu/progrm/master/list.do?prgSe=01&amp;prgCl=13&amp;menuNo=500025" >콘텐츠 인사이트</a></li>
+												
+													<li><a href="/edu/progrm/master/list.do?prgSe=01&amp;prgCl=12&amp;menuNo=500024" >콘텐츠 창의마스터클래스</a></li>
+												
+													<li><a href="/edu/progrm/master/list.do?prgSe=01&amp;prgCl=10&amp;menuNo=500022" >융합아카데미</a></li>
+												
+											</ul>
+										
+									</dd>
+								</dl>
+							
+								<dl class="tms3">
+									<dt><a href="/edu/onlineEdu/edumain/list.do?menuNo=500026" >온라인교육</a></dt>
+									<dd>
+										
+										
+										
+											<ul>
+												
+													<li><a href="/edu/onlineEdu/realm/list.do?p_ordersnm=favorsubjcnt&amp;p_orders=desc&amp;menuNo=500027" >정규과정</a></li>
+												
+													<li><a href="/edu/onlineEdu/openLecture/list.do?sortOrder=newOrdr&amp;menuNo=500085" >열린강좌</a></li>
+												
+													<li><a href="/edu/onlineEdu/edcsystm/list.do?menuNo=500030" >교육체계도</a></li>
+												
+													<li><a href="/edu/main/contents.do?menuNo=500033" >학습지원</a></li>
+												
+													<li><a href="/edu/main/contents.do?menuNo=500005" >기관(단체) 맞춤교육</a></li>
+												
+											</ul>
+										
+									</dd>
+								</dl>
+							
+								<dl class="tms4">
+									<dt><a href="/edu/dream/dreamMain/main.do?menuNo=500034" >창의인재동반</a></dt>
+									<dd>
+										
+										
+										
+											<ul>
+												
+													<li><a href="/edu/bbs/B0000041/list.do?menuNo=500035" >창의현장</a></li>
+												
+													<li><a href="/edu/dream/mainRsltManage/list.do?menuNo=500039" >창의동반</a></li>
+												
+													<li><a href="/edu/bbs/B0000040/list.do?menuNo=500043" >미디어존</a></li>
+												
+											</ul>
+										
+									</dd>
+								</dl>
+							
+								<dl class="tms5">
+									<dt><a href="/edu/job/cultureMain/main.do?menuNo=500046" >취업정보</a></dt>
+									<dd>
+										
+										
+										
+											<ul>
+												
+													<li><a href="/edu/main/contents.do?menuNo=500047" >취창업지원</a></li>
+												
+													<li><a href="/edu/bbs/B0000047/list.do?menuNo=500096" >컬쳐매거진</a></li>
+												
+													<li><a href="/edu/job/empmnPblanc/list.do?menuNo=500054" >채용정보</a></li>
+												
+											</ul>
+										
+									</dd>
+								</dl>
+							
+								<dl class="tms6">
+									<dt><a href="/edu/main/contents.do?menuNo=500001" >아카데미소개</a></dt>
+									<dd>
+										
+										
+										
+											<ul>
+												
+													<li><a href="/edu/main/contents.do?menuNo=500002" >인사말</a></li>
+												
+													<li><a href="/edu/main/contents.do?menuNo=500004" >교육협력기관</a></li>
+												
+													<li><a href="/edu/main/contents.do?menuNo=500006" >찾아오시는 길</a></li>
+												
+											</ul>
+										
+									</dd>
+								</dl>
+							
+							<a href="javascript:void(0);" class="closetotMenuT"><span class="hidden">전체메뉴 닫기</span></a>
+						</div>
+					</div>
+					<!-- //gnb -->
+				</div>
+			</div>
+		</div>
+		<!-- //header -->
+		<!-- Navigation Menu Begins -->
+		<div id="navigation" class="no-padding navbar top-navbar">
+			<!-- Menu Begins -->
+			<div id="parallax" role="navigation" class="navbar-collapse bs-navbar-collapse no-padding">
+				<div class="paral_menu">
+						<!-- parallax -->
+						<ul class="nav navbar-nav">
+							<li><a href="#menu1" class="scroll">인트로</a></li>
+							<li><a href="#menu2" class="scroll">아카데미</a></li>
+							<li><a href="#menu3" class="scroll">창의동반</a></li>
+							<li><a href="#menu4" class="scroll">취업정보</a></li>
+						</ul><!-- //parallax -->
+				</div>
+			</div><!-- Menu Ends -->
+		</div><!-- Navigation Menu Ends -->
+	</div>
+	<!-- Top Section Ends -->
+	<!-- home -->
+	<div id="home">
+		<div class="home_pattern">
+			<div class="sloganSet">
+				<div class="hidden">창의인재 양성의 요람, 한국콘텐츠아카데미</div>
+			</div>
+			<!-- m1 Rolling -->
+			<div id="m1Rolling">
+				<a id="prevm1Roller" href="javascript:void(0);"><span class="hidden">이전 이미지 보기</span></a>
+				<a id="nextm1Roller" href="javascript:void(0);"><span class="hidden">다음 이미지 보기</span></a>
+				<a id="m1RollerPlay" href="javascript:void(0);"><span class="hidden">이미지 연속보기 시작</span></a>
+				<a id="m1RollerStop" href="javascript:void(0);"><span class="hidden">이미지 연속보기 정지</span></a>
+				
+				<div id="m1Roller">
+					
+						<div class="m1R_1">
+							<a href="https://edu.kocca.kr/edu/bbs/B0000011/view.do?nttId=69461&amp;searchCnd=&amp;searchWrd=&amp;gubun=&amp;delCode=0&amp;useAt=&amp;replyAt=&amp;menuNo=500007&amp;sdate=&amp;edate=&amp;viewType=&amp;type=&amp;siteId=&amp;option1=&amp;option5=&amp;pageIndex=1" target="_blank" title="새창열림">
+								<span class="descTts fs30"><span class="inBoxDsc">100% 선물 당첨!
+<br/>취업성공축하 EVENT</span></span>
+								<img class="thumbLg" src="/cmm/fms/getImage.do?atchFileId=FILE_000000000091325&amp;fileSn=1" title="100% 선물 당첨! 취업성공축하 EVENT 기간: 2016년 1월 6일 수요일부터 2016년 1월 31일 일요일까지" alt="100% 선물 당첨! 취업성공축하 EVENT 기간: 2016년 1월 6일 수요일부터 2016년 1월 31일 일요일까지" />
+							</a>
+						</div>
+					
+						<div class="m1R_2">
+							<a href="/edu/dream/dreamMain/main.do?menuNo=500034"  title="새창열림">
+								<span class="descTts fs30"><span class="inBoxDsc">창의인재동반사업
+<br/>꿈을 위한 
+<br/>아름다운 동행</span></span>
+								<img class="thumbLg" src="/cmm/fms/getImage.do?atchFileId=FILE_000000000091141&amp;fileSn=1" title="창의인재동반 꿈을 위한 아름다운 동행 창의인재동반 The Creative Mentoring Program for Young Professionals" alt="창의인재동반 꿈을 위한 아름다운 동행 창의인재동반 The Creative Mentoring Program for Young Professionals" />
+							</a>
+						</div>
+					
+						<div class="m1R_3">
+							<a href="/edu/job/cultureMain/main.do?menuNo=500046"  title="새창열림">
+								<span class="descTts fs30"><span class="inBoxDsc">너만의 
+<br/>브랜드에 
+<br/>날개를 달아라</span></span>
+								<img class="thumbLg" src="/cmm/fms/getImage.do?atchFileId=FILE_000000000091142&amp;fileSn=1" title="1:1 맞춤형 컨설팅 너만의 브랜드에 날개를 달아라 콘텐츠 분야 다양한 직업정보와 개인별 맞춤 컨설팅으로 취.창업자를 지원합니다" alt="1:1 맞춤형 컨설팅 너만의 브랜드에 날개를 달아라 콘텐츠 분야 다양한 직업정보와 개인별 맞춤 컨설팅으로 취.창업자를 지원합니다" />
+							</a>
+						</div>
+					
+					
+					
+						<div class="m1R_4">
+							<a href="https://edu.kocca.kr/edu/bbs/B0000011/view.do?nttId=69461&amp;searchCnd=&amp;searchWrd=&amp;gubun=&amp;delCode=0&amp;useAt=&amp;replyAt=&amp;menuNo=500007&amp;sdate=&amp;edate=&amp;viewType=&amp;type=&amp;siteId=&amp;option1=&amp;option5=&amp;pageIndex=1" target="_blank" title="새창열림">
+								<span class="descTts fs30"><span class="inBoxDsc">100% 선물 당첨!
+<br/>취업성공축하 EVENT</span></span>
+								<img class="thumbLg" src="/cmm/fms/getImage.do?atchFileId=FILE_000000000091325&amp;fileSn=1" title="100% 선물 당첨! 취업성공축하 EVENT 기간: 2016년 1월 6일 수요일부터 2016년 1월 31일 일요일까지" alt="100% 선물 당첨! 취업성공축하 EVENT 기간: 2016년 1월 6일 수요일부터 2016년 1월 31일 일요일까지" />
+							</a>
+						</div>
+					
+						<div class="m1R_5">
+							<a href="/edu/dream/dreamMain/main.do?menuNo=500034"  title="새창열림">
+								<span class="descTts fs30"><span class="inBoxDsc">창의인재동반사업
+<br/>꿈을 위한 
+<br/>아름다운 동행</span></span>
+								<img class="thumbLg" src="/cmm/fms/getImage.do?atchFileId=FILE_000000000091141&amp;fileSn=1" title="창의인재동반 꿈을 위한 아름다운 동행 창의인재동반 The Creative Mentoring Program for Young Professionals" alt="창의인재동반 꿈을 위한 아름다운 동행 창의인재동반 The Creative Mentoring Program for Young Professionals" />
+							</a>
+						</div>
+					
+						<div class="m1R_6">
+							<a href="/edu/job/cultureMain/main.do?menuNo=500046"  title="새창열림">
+								<span class="descTts fs30"><span class="inBoxDsc">너만의 
+<br/>브랜드에 
+<br/>날개를 달아라</span></span>
+								<img class="thumbLg" src="/cmm/fms/getImage.do?atchFileId=FILE_000000000091142&amp;fileSn=1" title="1:1 맞춤형 컨설팅 너만의 브랜드에 날개를 달아라 콘텐츠 분야 다양한 직업정보와 개인별 맞춤 컨설팅으로 취.창업자를 지원합니다" alt="1:1 맞춤형 컨설팅 너만의 브랜드에 날개를 달아라 콘텐츠 분야 다양한 직업정보와 개인별 맞춤 컨설팅으로 취.창업자를 지원합니다" />
+							</a>
+						</div>
+					
+					
+				</div>
+				<div id="pagerm1Roller"></div>
+			</div>
+			<!-- //m1 Rolling -->
+			<div class="homeScrolling">
+				<a href="#menu2" class="scroll"><img src="/edu/images/main/homeArr.png"  alt="교육 메뉴로 이동하기"/></a>
+			</div>
+			<div class="m1NoticeSet">
+				<div class="contentsWidth">
+					<h2>공지사항</h2>
+					<div class="m1Notice">
+						<ul>
+							
+								<li><a href="/edu/bbs/B0000011/view.do?nttId=69505&amp;menuNo=500008">[안내] 2016 콘텐츠 게임 잡 페어 참가기업 모집</a></li>
+							
+								<li><a href="/edu/bbs/B0000011/view.do?nttId=69461&amp;menuNo=500008">[이벤트] 취업성공축하 이벤트</a></li>
+							
+								<li><a href="/edu/bbs/B0000011/view.do?nttId=69378&amp;menuNo=500008">★아카데미 어워드★ 12월 수료 이벤트 당첨자 발표</a></li>
+							
+						</ul>
+					</div>
+					<a href="/edu/bbs/B0000011/list.do?menuNo=500008" class="m1NoticeMore"><span class="hidden">공지사항 더보기</span></a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- //home -->
+</div>
+<!-- Header Ends -->
+<!-- menu2 -->
+<div id="menu2" class="menu2" style="background:#7bb1df">
+	<div class="contentsWidth">
+		<h2>아카데미</h2>
+		<!-- m2 tabRolling -->
+		<div id="m2RollingSet">
+			<div id="m2Setpager"></div>
+			<div id="m2Tabs">
+				<div>
+					<h3 class="hidden">현장교육</h3>
+					<div class="m20Img">
+						<ul>
+							<li class="m20Ico3"><a href="/edu/progrm/master/list.do?prgSe=01&amp;prgCl=13&amp;menuNo=500025">
+								<h4>콘텐츠인사이트</h4>
+								콘텐츠 분야 선제적 도전사례와 <br />
+								협업노하우를 공유하는 열린 세미나
+							</a></li>
+							<li class="m20Ico2"><a href="/edu/progrm/master/list.do?prgSe=01&amp;prgCl=12&amp;menuNo=500024">
+								<h4>콘텐츠창의 마스터클래스</h4>
+								콘텐츠 산업 종사자의 역량강화를 위해<br />
+								장르심화 &middot; 융합형 집중교육
+							</a></li>
+							<li class="m20Ico1"><a href="/edu/progrm/master/list.do?prgSe=01&amp;prgCl=10&amp;menuNo=500022">
+								<h4>융합아카데미</h4>
+								콘텐츠와 기술을 기반으로 한  <br />
+								융합형 교육을 통해 빅킬러 콘텐츠를 <br />
+								개발 할 수 있는 창업인재양성 교육
+							</a></li>
+						</ul>
+					</div>
+				</div>
+				<div>
+					<h3 class="hidden">온라인 교육</h3>
+					<div id="m21RollingSet">
+						<a href="javascript:void(0);" id="m21prev"><span class="hidden">온라인 교육 이전 보기</span></a>
+						<a href="javascript:void(0);" id="m21next"><span class="hidden">온라인 교육 다음 보기</span></a>
+						<div id="m21Roller">
+							
+								<div>
+									<a href="/edu/onlineEdu/realm/view.do?p_gubun=&amp;p_subj=CK10071&amp;menuNo=500027">
+										<img src='\upload\bulletin\Subject_introducefile_201407171657471_lee1.gif' alt='11가지 법칙으로 끝내는 스토리텔링' />
+										<strong>[방송영상]</strong>
+										<span class="desc pr30">11가지 법칙으로 끝내는 스토리텔링</span>
+									</a>
+								</div>
+							
+								<div>
+									<a href="/edu/onlineEdu/realm/view.do?p_gubun=&amp;p_subj=CB10015&amp;menuNo=500027">
+										<img src='\upload\bulletin\Subject_introducefile_201407171433171_lee1.gif' alt='After Effect CS5' />
+										<strong>[방송영상]</strong>
+										<span class="desc pr30">After Effect CS5</span>
+									</a>
+								</div>
+							
+								<div>
+									<a href="/edu/onlineEdu/realm/view.do?p_gubun=&amp;p_subj=CB10017&amp;menuNo=500027">
+										<img src='\upload\bulletin\Subject_introducefile_201407171434491_lee1.gif' alt='Adobe Premiere Pro CS5' />
+										<strong>[방송영상]</strong>
+										<span class="desc pr30">Adobe Premiere Pro CS5</span>
+									</a>
+								</div>
+							
+								<div>
+									<a href="/edu/onlineEdu/realm/view.do?p_gubun=&amp;p_subj=CB10026&amp;menuNo=500027">
+										<img src='\upload\bulletin\Subject_introducefile_201407171439431_lee1.gif' alt='영상촬영기본' />
+										<strong>[방송영상]</strong>
+										<span class="desc pr30">영상촬영기본</span>
+									</a>
+								</div>
+							
+								<div>
+									<a href="/edu/onlineEdu/realm/view.do?p_gubun=&amp;p_subj=CB12007&amp;menuNo=500027">
+										<img src='\upload\bulletin\Subject_introducefile_201407171449191_lee1.gif' alt='전문가도 부럽지 않은 DSLR 활용하기' />
+										<strong>[방송영상]</strong>
+										<span class="desc pr30">전문가도 부럽지 않은 DSLR 활용하기</span>
+									</a>
+								</div>
+							
+								<div>
+									<a href="/edu/onlineEdu/realm/view.do?p_gubun=&amp;p_subj=CB09156&amp;menuNo=500027">
+										<img src='\upload\bulletin\Subject_introducefile_201407171429151_lee1.gif' alt='파이널컷프로' />
+										<strong>[방송영상]</strong>
+										<span class="desc pr30">파이널컷프로</span>
+									</a>
+								</div>
+							
+								<div>
+									<a href="/edu/onlineEdu/realm/view.do?p_gubun=&amp;p_subj=CB10020&amp;menuNo=500027">
+										<img src='\upload\bulletin\Subject_introducefile_201407171436031_lee1.gif' alt='디지털 영상 색 보정' />
+										<strong>[방송영상]</strong>
+										<span class="desc pr30">디지털 영상 색 보정</span>
+									</a>
+								</div>
+							
+								<div>
+									<a href="/edu/onlineEdu/realm/view.do?p_gubun=&amp;p_subj=CK10074&amp;menuNo=500027">
+										<img src='\upload\bulletin\Subject_introducefile_201407171659101_lee1.gif' alt='분야별로 배우는 콘텐츠 마케팅' />
+										<strong>[방송영상]</strong>
+										<span class="desc pr30">분야별로 배우는 콘텐츠 마케팅</span>
+									</a>
+								</div>
+							
+								<div>
+									<a href="/edu/onlineEdu/realm/view.do?p_gubun=&amp;p_subj=CB12003&amp;menuNo=500027">
+										<img src='\upload\bulletin\Subject_introducefile_201407171446581_lee1.gif' alt='글쓰기를 위한 창조적 사고' />
+										<strong>[방송영상]</strong>
+										<span class="desc pr30">글쓰기를 위한 창조적 사고</span>
+									</a>
+								</div>
+							
+								<div>
+									<a href="/edu/onlineEdu/realm/view.do?p_gubun=&amp;p_subj=CB10012&amp;menuNo=500027">
+										<img src='\upload\bulletin\Subject_introducefile_201407171431101_lee1.gif' alt='방송영상 콘텐츠기획' />
+										<strong>[방송영상]</strong>
+										<span class="desc pr30">방송영상 콘텐츠기획</span>
+									</a>
+								</div>
+							
+								<div>
+									<a href="/edu/onlineEdu/realm/view.do?p_gubun=&amp;p_subj=CB11002&amp;menuNo=500027">
+										<img src='\upload\bulletin\Subject_introducefile_201407171441561_lee1.gif' alt='촬영에서 편집까지 비주얼 스토리텔링' />
+										<strong>[방송영상]</strong>
+										<span class="desc pr30">촬영에서 편집까지 비주얼 스토리텔링</span>
+									</a>
+								</div>
+							
+								<div>
+									<a href="/edu/onlineEdu/realm/view.do?p_gubun=&amp;p_subj=CB12002&amp;menuNo=500027">
+										<img src='\upload\bulletin\Subject_introducefile_201407171446201_lee1.gif' alt='TV다큐멘터리의 이론과 실제' />
+										<strong>[방송영상]</strong>
+										<span class="desc pr30">TV다큐멘터리의 이론과 실제</span>
+									</a>
+								</div>
+							
+						</div>
+						<a href="/edu/onlineEdu/realm/list.do?menuNo=500027" class="moreList"><span class="hidden">온라인 교육 더보기</span></a>
+					</div>
+				</div>
+				<div>
+					<h3 class="hidden">열린강좌</h3>
+					<div id="m22RollingSet">
+						<a href="javascript:void(0);" id="m22prev"><span class="hidden">열린강좌 이전 보기</span></a>
+						<a href="javascript:void(0);" id="m22next"><span class="hidden">열린강좌 다음 보기</span></a>
+						<div id="m22Roller">
+							
+								<div>
+									<a href="/edu/onlineEdu/openLecture/view.do?pSeq=33&amp;menuNo=500085">
+									<img src='/upload/accept/GoldClassAdmin_img_file_201405231613031_lee1.gif' alt='1박2일 연출노트, 예능의 정석?!' />
+									<strong>[방송영상]</strong>
+									<span class="db desc pr20">1박2일 연출노트, 예능의 정석?!</span>
+									</a>
+								</div>
+							
+								<div>
+									<a href="/edu/onlineEdu/openLecture/view.do?pSeq=62&amp;menuNo=500085">
+									<img src='/upload/accept/GoldClassAdmin_img_file_201405231538561_lee1.gif' alt='현대는 스토리텔링 시대(1)' />
+									<strong>[기타]</strong>
+									<span class="db desc pr20">현대는 스토리텔링 시대(1)</span>
+									</a>
+								</div>
+							
+								<div>
+									<a href="/edu/onlineEdu/openLecture/view.do?pSeq=129&amp;menuNo=500085">
+									<img src='/upload/accept/GoldClassAdmin_img_file/129.jpg' alt='이종범의 디지털로 웹툰 제작하기 1 - 스토리의 기본 개념' />
+									<strong>[만화애니캐릭터]</strong>
+									<span class="db desc pr20">이종범의 디지털로 웹툰 제작하기 1 - 스토리의 기본 개념</span>
+									</a>
+								</div>
+							
+								<div>
+									<a href="/edu/onlineEdu/openLecture/view.do?pSeq=384&amp;menuNo=500085">
+									<img src='/upload/bulletin/2015/GoldClassAdmin_img_file_201512141702301_lee1.jpg' alt='방송분야 직업의 이해 &amp;#8211; 특수영상 디자이너' />
+									<strong>[방송영상]</strong>
+									<span class="db desc pr20">방송분야 직업의 이해 &amp;#8211; 특수영상 디자이너</span>
+									</a>
+								</div>
+							
+								<div>
+									<a href="/edu/onlineEdu/openLecture/view.do?pSeq=406&amp;menuNo=500085">
+									<img src='/upload/bulletin/2015/GoldClassAdmin_img_file_201505291128181_lee1.jpg' alt='공격적인 미디어 전략을 바탕으로 다양한 연령대를 사로잡은 라바' />
+									<strong>[만화애니캐릭터]</strong>
+									<span class="db desc pr20">공격적인 미디어 전략을 바탕으로 다양한 연령대를 사로잡은 라바</span>
+									</a>
+								</div>
+							
+								<div>
+									<a href="/edu/onlineEdu/openLecture/view.do?pSeq=225&amp;menuNo=500085">
+									<img src='/upload/accept/GoldClassAdmin_img_file_201407011600225.jpg' alt='파워 블로그를 만드는 20가지 방법' />
+									<strong>[휴넷열린강좌]</strong>
+									<span class="db desc pr20">파워 블로그를 만드는 20가지 방법</span>
+									</a>
+								</div>
+							
+								<div>
+									<a href="/edu/onlineEdu/openLecture/view.do?pSeq=132&amp;menuNo=500085">
+									<img src='/upload/accept/GoldClassAdmin_img_file/132.jpg' alt='이종범의 디지털로 웹툰 제작하기 4 - 코믹 스튜디오와 포토샵을 활용한 원고 작업' />
+									<strong>[만화애니캐릭터]</strong>
+									<span class="db desc pr20">이종범의 디지털로 웹툰 제작하기 4 - 코믹 스튜디오와 포토샵을 활용한 원고 작업</span>
+									</a>
+								</div>
+							
+								<div>
+									<a href="/edu/onlineEdu/openLecture/view.do?pSeq=92&amp;menuNo=500085">
+									<img src='/upload/accept/GoldClassAdmin_img_file/92.jpg' alt='Unity3D 5 - 에셋 번들(AssetBundle)' />
+									<strong>[게임]</strong>
+									<span class="db desc pr20">Unity3D 5 - 에셋 번들(AssetBundle)</span>
+									</a>
+								</div>
+							
+								<div>
+									<a href="/edu/onlineEdu/openLecture/view.do?pSeq=425&amp;menuNo=500085">
+									<img src='/upload/bulletin/2015/GoldClassAdmin_img_file_201507211318551_lee1.jpg' alt='사물인터넷(IoT) 1 - 사물인터넷의 분야별 활용사례' />
+									<strong>[마스터 클래스]</strong>
+									<span class="db desc pr20">사물인터넷(IoT) 1 - 사물인터넷의 분야별 활용사례</span>
+									</a>
+								</div>
+							
+								<div>
+									<a href="/edu/onlineEdu/openLecture/view.do?pSeq=131&amp;menuNo=500085">
+									<img src='/upload/accept/GoldClassAdmin_img_file/131.jpg' alt='이종범의 디지털로 웹툰 제작하기 3 - 시나리오부터 콘티까지' />
+									<strong>[만화애니캐릭터]</strong>
+									<span class="db desc pr20">이종범의 디지털로 웹툰 제작하기 3 - 시나리오부터 콘티까지</span>
+									</a>
+								</div>
+							
+								<div>
+									<a href="/edu/onlineEdu/openLecture/view.do?pSeq=397&amp;menuNo=500085">
+									<img src='/upload/bulletin/2015/GoldClassAdmin_img_file_201512141653081_lee1.jpg' alt='애니메이션 제작을 위한 직업의 이해 - 웹툰작가' />
+									<strong>[만화애니캐릭터]</strong>
+									<span class="db desc pr20">애니메이션 제작을 위한 직업의 이해 - 웹툰작가</span>
+									</a>
+								</div>
+							
+								<div>
+									<a href="/edu/onlineEdu/openLecture/view.do?pSeq=120&amp;menuNo=500085">
+									<img src='/upload/accept/GoldClassAdmin_img_file/120.jpg' alt='애니메이션 기획제작 워크숍 1 - 애니메이션 기획과 프로듀서' />
+									<strong>[만화애니캐릭터]</strong>
+									<span class="db desc pr20">애니메이션 기획제작 워크숍 1 - 애니메이션 기획과 프로듀서</span>
+									</a>
+								</div>
+							
+							<!-- <div>
+								<a href="#self"><img src="/edu/images/main/m21Img_03.jpg" alt="" />
+									<strong>Shirt 4</strong></a>
+							</div>
+							<div>
+								<img src="/edu/images/main/m21Img_04.jpg" alt="" />
+								<strong>Shirt 5</strong>
+							</div>
+							<div>
+								<img src="/edu/images/main/m21Img_01.jpg" alt="" />
+								<strong>Shirt 6</strong>
+							</div> -->
+						</div>
+						<a href="/edu/onlineEdu/openLecture/list.do?menuNo=500085" class="moreList"><span class="hidden">열린강좌 더보기</span></a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- //m2 tabRolling -->
+	</div>
+</div>
+<!-- //menu2 -->
+<!-- menu3  url(/edu/images/main/section03.jpg) no-repeat 50% 0; -->
+<div id="menu3" class="menu3" style="background:#8698da">
+<div class="contentsWidth">
+		<h2>창의인재동반</h2>
+		<!-- m2 tabRolling -->
+		<div id="m3RollingSet">
+			<div id="m3Setpager"></div>
+			<div id="m3Tabs">
+				<div>
+					<h3 class="hidden">현장스토리</h3>
+					<div id="m30RollingSet">
+						<a href="javascript:void(0);" id="m30prev"><span class="hidden">현장스토리 이전 보기</span></a>
+						<a href="javascript:void(0);" id="m30next"><span class="hidden">현장스토리 다음 보기</span></a>
+						<div id="m30Roller">
+							
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+										
+									
+								
+									
+								
+									
+								
+									
+								
+								<div>
+									<a href="/edu/bbs/B0000041/view.do?nttId=69509&amp;menuNo=500036">
+									
+										
+											<img src="/cmm/fms/getImage.do?atchFileId=FILE_000000000091396&amp;fileSn=1" alt="" />
+										
+										
+									
+									<span class="db m3boxArr">
+										<strong>세종대 마지막 워크숍, &#034;만화창작 지옥캠프&#034;현장 속으로</strong>
+										<span class="desc db">
+											2015 창의인재 동반사업도 마무리 되어가는 1월, 세종대학교 산학협력단에서 마지막 워크숍인 '지옥캠프'를 진행했습니다. 1월 5일(화)부터 10일(일)까지 5박 6일간 진행된 이번 '만화창작 지옥캠프'는 경기도 양평군에 위치한 코바코 연수원에서 이루어졌는데요. 캠프를 마무리하며 그동안의 작업물을 발표하고 피드백 시간을 갖는 워크숍 현장을 창의인재 기자단에서 다녀왔습니다.&nbsp;
+&nbsp;
+세종대학교 산학협력단에서 진행한 '...
+										</span>
+										<span class="m3boxTpArr"></span>
+									</span>
+									</a>
+								</div>
+							
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+								<div>
+									<a href="/edu/bbs/B0000041/view.do?nttId=69485&amp;menuNo=500036">
+									
+										
+											<img src="/cmm/fms/getImage.do?atchFileId=FILE_000000000091349&amp;fileSn=1" alt="" />
+										
+										
+									
+									<span class="db m3boxArr">
+										<strong>키덜트 &amp; 하비 엑스포 2016에서, 더 다양한, 더 넓은 연령대가 즐기는 캐릭터 콘텐츠를 확인하다. </strong>
+										<span class="desc db">
+											
+&nbsp;지난 1월 7일 목요일부터 10일 일요일까지, '키덜트 &amp; 하비 엑스포 2016'이 서울 코엑스에서&nbsp;열렸습니다. 올해로 3회째를 맞는 이번 행사는 120여 곳 600여 개의 부스를 통해 더 세분화되고, 더로워진 전시회로 관객들은 맞이했는데요, 전시 규모 또한 전년도보다 30%나 더 커졌다고 합니다. 그 중에서도&nbsp;한국종이모형페스티벌, RC카 레이싱 대회, 마블스토어 헐스버스터 포토존 그리고 보드게임존 등...
+										</span>
+										<span class="m3boxTpArr"></span>
+									</span>
+									</a>
+								</div>
+							
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+								<div>
+									<a href="/edu/bbs/B0000041/view.do?nttId=69470&amp;menuNo=500036">
+									
+										
+											<img src="/cmm/fms/getImage.do?atchFileId=FILE_000000000091329&amp;fileSn=1" alt="" />
+										
+										
+									
+									<span class="db m3boxArr">
+										<strong>뮤지컬 &lt;오! 그대가 잠든 사이&gt;를 소개합니다.</strong>
+										<span class="desc db">
+											
+&nbsp;2015년이 가고 2016년 새해가 밝았습니다. 다들 새해 목표는 세우셨나요? 저는 올해에는 영화, 연극, 뮤지컬 등 다양한 문화생활을 더 많이 해야겠다고 다짐했는데요, 그래서 오늘은 연인, 친구, 가족들과 함께 보면 좋을 뮤지컬 한 편을 추천하는 시간을 갖고자 합니다.
+창작뮤지컬 &lt;오! 당신이 잠든 사이에&gt; 포스터
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;뮤지컬 &lt;오! 당신이 잠...
+										</span>
+										<span class="m3boxTpArr"></span>
+									</span>
+									</a>
+								</div>
+							
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+										
+									
+								
+									
+								
+									
+								
+								<div>
+									<a href="/edu/bbs/B0000041/view.do?nttId=69434&amp;menuNo=500036">
+									
+										
+											<img src="/cmm/fms/getImage.do?atchFileId=FILE_000000000091258&amp;fileSn=1" alt="" />
+										
+										
+									
+									<span class="db m3boxArr">
+										<strong>한 해를 마무리하다, 아이엠티브이 홈커밍데이!</strong>
+										<span class="desc db">
+											
+&nbsp;2015년 12월, 창의인재 멘티들에게 한 통의 초대장이 전해졌는데요, 바로 실력 있는 방송작가를 길러내는 아이엠티브이 플랫폼에서 준비한 홈커밍데이 행사 때문이었습니다.
+&nbsp;방송작가 창의인재들의 한 해를 되돌아보는 것은 물론, 창의인재 선배와의 만남까지 이루어진 생생한 정보와 활기찬 웃음의 현장으로 여러분을 초대합니다!
+ 
+&nbsp;&nbsp;
+&nbsp;지난 12월 18일, 방송작가 뉴웨이브 프로젝트를...
+										</span>
+										<span class="m3boxTpArr"></span>
+									</span>
+									</a>
+								</div>
+							
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+										
+									
+								
+									
+								
+									
+								
+									
+								
+								<div>
+									<a href="/edu/bbs/B0000041/view.do?nttId=69408&amp;menuNo=500036">
+									
+										
+											<img src="/cmm/fms/getImage.do?atchFileId=FILE_000000000091187&amp;fileSn=1" alt="" />
+										
+										
+									
+									<span class="db m3boxArr">
+										<strong>신&amp;구의 만남! 선배 멘티와 함께하는 세종대 네트워크 파티</strong>
+										<span class="desc db">
+											&nbsp;
+&nbsp;따뜻한 날씨 덕분에&nbsp;외출하기 좋았던 12월 22일 화요일, 애슐리 건대점에서 세종대학교 플랫폼의 네트워크 파티가 있었습니다. 창의인재 지난 기수와 현기수 멘티들, 그리고 멘토들이 한 자리에 모인 그 현장을 창의인재 기자단에서 다녀왔습니다.
+&nbsp;
+&nbsp;오늘 진행되었던 네트워크 파티는 지난&nbsp;창의인재동반사업에 참여했던&nbsp;2, 3기 멘티들과 현 기수 멘티들이 만나 친목을 다지고 인맥을 ...
+										</span>
+										<span class="m3boxTpArr"></span>
+									</span>
+									</a>
+								</div>
+							
+								
+									
+										
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+								<div>
+									<a href="/edu/bbs/B0000041/view.do?nttId=69364&amp;menuNo=500036">
+									
+										
+											<img src="/cmm/fms/getImage.do?atchFileId=FILE_000000000091115&amp;fileSn=1" alt="" />
+										
+										
+									
+									<span class="db m3boxArr">
+										<strong>데뷔를 대비하라! 동국대학교 마스터클래스 4차 모임 현장 스케치</strong>
+										<span class="desc db">
+											창의드림 여러분! 2015년 한 해 잘 마무리 하고 계신가요? 창의인재동반사업도 어느덧 막바지를 향해 달려가고 있는데요. 오늘은 쇼케이스형 공연 개발을 위한 동국대학교 플랫폼의 네 번째 마스터클래스 현장을 다녀왔습니다.
+마스터클래스는 이종대 교수님의 감사인사 및 응원의 메시지로 시작되었는데요. 창의인재동반사업을 통해 모든 멘티들이 원하는 일을 하고 자신만의 길을 걸어갔으면 좋겠다는 말씀을 해주셨습니다. 이어서 연우무대 유인수 대표님, HJ...
+										</span>
+										<span class="m3boxTpArr"></span>
+									</span>
+									</a>
+								</div>
+							
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+								<div>
+									<a href="/edu/bbs/B0000041/view.do?nttId=68669&amp;menuNo=500036">
+									
+										
+											<img src="/cmm/fms/getImage.do?atchFileId=FILE_000000000091055&amp;fileSn=1" alt="" />
+										
+										
+									
+									<span class="db m3boxArr">
+										<strong>국가경쟁력은 문화예술에서 온다! -세계의 문화예술 지원사업</strong>
+										<span class="desc db">
+											'문화는 세상을 움직이는 힘'이라는 말이 있습니다. 1960년대 미국을 중심으로 전개된 '문화경제학'을 바탕으로, 문화의 가치가 다시금 주목을 받게 되었죠. 이러한 인식을 바탕으로 전 세계적으로 문화예술 지원사업이 전개되고 있습니다. 오늘은 그 중에서도 영국과 프랑스, 그리고 우리나라의 문화예술지원사업에 대해 살펴보도록 하겠습니다.
+ 
+&nbsp;"예술가는 런던을 사랑하고, 런던은 모든 예술을 사랑한다."
+&nbsp;&nbsp; 
+ (출...
+										</span>
+										<span class="m3boxTpArr"></span>
+									</span>
+									</a>
+								</div>
+							
+								
+									
+								
+									
+										
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+								<div>
+									<a href="/edu/bbs/B0000041/view.do?nttId=68665&amp;menuNo=500036">
+									
+										
+											<img src="/cmm/fms/getImage.do?atchFileId=FILE_000000000091020&amp;fileSn=1" alt="" />
+										
+										
+									
+									<span class="db m3boxArr">
+										<strong>영화는 새로운 것을 보여줄 수 있어야 합니다. &#034;암살&#034; 최동훈 감독의 영화 이야기</strong>
+										<span class="desc db">
+											&nbsp;&lt;범죄의 재구성&gt;, &lt;타짜&gt;, &lt;도둑들&gt;에 이어 제36회 청룡영화제 최우수작품상에 빛나는 &lt;암살&gt;까지. '대한민국을 대표하는 영화감독'이라는 수식어가 아깝지 않은 최동훈 감독님께서 창의인재동반사업 멘티들을 위해 명지전문대학에 등장하셨습니다. 실력 있는 영화인을 꿈꾸는 창의인재멘티들을 위한 감독님의 이야기를 지금 공개합니다.&nbsp; 
+&nbsp; 
+ 
+ 
+ 
+&nbsp; 
+최동훈...
+										</span>
+										<span class="m3boxTpArr"></span>
+									</span>
+									</a>
+								</div>
+							
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+										
+									
+								
+									
+								
+									
+								
+									
+								
+								<div>
+									<a href="/edu/bbs/B0000041/view.do?nttId=68664&amp;menuNo=500036">
+									
+										
+											<img src="/cmm/fms/getImage.do?atchFileId=FILE_000000000091019&amp;fileSn=1" alt="" />
+										
+										
+									
+									<span class="db m3boxArr">
+										<strong>웹툰계의 각 분야 최고들의 총 출동! 세종대 멘토 특강현장 </strong>
+										<span class="desc db">
+											&nbsp; 
+&nbsp;아침부터 눈이 펑펑 내렸던 12월 3일 세종대학교 군자관에서는 마지막 멘토 특강이 진행되었습니다. 마지막 대미를 장식하는 오늘의 특강에는 재담미디어 황남용 대표님, 레진코믹스 김준협 PD님, 만화가 최규석 멘토님이 자리해 멘티들에게 노하우 전수와 조언을 아끼지 않았습니다. 
+&nbsp; 
+ 
+ 
+&nbsp; 
+&nbsp;오늘 특강의 첫 시작은 재담미디어의 황남용 대표님이었습니다. 멘토님은 웹툰의 글로벌시장 진...
+										</span>
+										<span class="m3boxTpArr"></span>
+									</span>
+									</a>
+								</div>
+							
+						</div>
+						<a href="/edu/bbs/B0000041/list.do?menuNo=500036" class="moreList"><span class="hidden">현장스토리 더보기</span></a>
+					</div>
+				</div>
+				<div>
+					<h3 class="hidden">창의인물</h3>
+					<div id="m31RollingSet">
+						<a href="javascript:void(0);" id="m31prev"><span class="hidden">창의인물 이전 보기</span></a>
+						<a href="javascript:void(0);" id="m31next"><span class="hidden">창의인물 다음 보기</span></a>
+						<div id="m31Roller">
+							
+								
+									
+								
+									
+										
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+								<div>
+									<a href="/edu/bbs/B0000042/view.do?nttId=69482&amp;menuNo=500037">
+									
+										
+											<img src="/cmm/fms/getImage.do?atchFileId=FILE_000000000091348&amp;fileSn=1" alt="" />
+										
+										
+									
+									<span class="db m3boxArr">
+										<strong>국제영화제에서 만난 창의인재들의 작품들을 소개합니다!</strong>
+										<span class="desc db">
+											
+안녕하세요! 오늘도 창의인재들의 즐거운 소식을 가지고 돌아왔습니다. &lsquo;실력 있는
+영화 인재&rsquo;를 양성하는 명지전문대학 플랫폼에서는 끊임없이 성과가 쏟아지고 있는데요. 이번 시간에는 부산국제영화제와 전주국제영화제에서 활약한 두 멘티의 작품을 소개합니다! 
+&nbsp;
+ 
+ 
+우리나라를 대표하는 영화제! 바로 부산국제영화제라고 할 수 있는데요. 김의석 멘티의 단편영화 &lt;오명&gt;이2015 부산국제영화제 와이드...
+										</span>
+										<span class="m3boxTpArr"></span>
+									</span>
+									</a>
+								</div>
+							
+								
+									
+								
+									
+								
+									
+								
+									
+										
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+								<div>
+									<a href="/edu/bbs/B0000042/view.do?nttId=69476&amp;menuNo=500037">
+									
+										
+											<img src="/cmm/fms/getImage.do?atchFileId=FILE_000000000091347&amp;fileSn=1" alt="" />
+										
+										
+									
+									<span class="db m3boxArr">
+										<strong>사회 현실을 토대로 한 게임 시나리오 만들기 _ 길영수 멘티</strong>
+										<span class="desc db">
+											
+&nbsp;콘텐츠로 만들고 제작할 수 있는 소재의 범위는 우리의 현실을 뛰어넘습니다. 영화&nbsp;&lt;매트릭스&gt;처럼 먼 미래의 이야기를 콘텐츠로 만들 수도 있고요, 애니메이션 &lt;포켓몬스터&gt;, &lt;디지몬 어드벤처&gt;처럼 상상 속의 세상을 만들고 그곳에 이야기를 입힐 수도 있습니다. 이와 반대로 현실의 이야기를 그대로 옮긴 콘텐츠도 있습니다. 큰 사랑을 받았던 &lt;님아 그 강을 건너지마오&gt;, &lt;춘희...
+										</span>
+										<span class="m3boxTpArr"></span>
+									</span>
+									</a>
+								</div>
+							
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+										
+									
+								
+									
+								
+								<div>
+									<a href="/edu/bbs/B0000042/view.do?nttId=69469&amp;menuNo=500037">
+									
+										
+											<img src="/cmm/fms/getImage.do?atchFileId=FILE_000000000091328&amp;fileSn=1" alt="" />
+										
+										
+									
+									<span class="db m3boxArr">
+										<strong>독특한 작품을 오랫동안 만들고 싶어요 _ 이건희, 박선미멘티</strong>
+										<span class="desc db">
+											
+창의드림 여러분 안녕하세요.&nbsp;오늘은 겨울과 어울리는 디자인 제품을 제작하고 계신 아트센터나비&nbsp;이건희,&nbsp;박선미 멘티의 이야기를 전해드리려고 합니다.&nbsp;특히 이건희 멘티는 멘토링을 통해 제작한 작품(제품)을 텐바이텐(아이디어 상품,&nbsp;인테리어 작품 판매소)에서 판매하고 있다고 합니다.&nbsp;두 멘티의 작품들은 무척 독특하고 호기심을 자극하는 작품들이었습니다.&nbsp;지금부터 두 멘티의 이야기...
+										</span>
+										<span class="m3boxTpArr"></span>
+									</span>
+									</a>
+								</div>
+							
+								
+									
+								
+									
+										
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+								<div>
+									<a href="/edu/bbs/B0000042/view.do?nttId=69428&amp;menuNo=500037">
+									
+										
+											<img src="/cmm/fms/getImage.do?atchFileId=FILE_000000000091225&amp;fileSn=1" alt="" />
+										
+										
+									
+									<span class="db m3boxArr">
+										<strong>“대한민국을 이끌 영화人을 길러내다!”</strong>
+										<span class="desc db">
+											
+&nbsp;세계적인 수준으로 발돋움한 한국영화! 우리나라 영화의 위상이 날로 높아지고 있습니다. 창의인재동반사업에서도 명지전문대학 플랫폼을 통해&nbsp;'영화강국'이라는 이름을 이어나갈 미래 영화인을 육성하고 있는데요, 오늘은 수준 높은 밀착 멘토링으로 큰 호응을 얻고 있는 명지전문대학 플랫폼 멘토분들을 소개하고자 합니다.
+&nbsp;영화 &lt;체포왕&gt;(2012)으로 제48회&nbsp;백상예술대상에서 신인감독상을 수...
+										</span>
+										<span class="m3boxTpArr"></span>
+									</span>
+									</a>
+								</div>
+							
+								
+									
+								
+									
+								
+									
+								
+									
+										
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+								<div>
+									<a href="/edu/bbs/B0000042/view.do?nttId=69376&amp;menuNo=500037">
+									
+										
+											<img src="/cmm/fms/getImage.do?atchFileId=FILE_000000000091135&amp;fileSn=1" alt="" />
+										
+										
+									
+									<span class="db m3boxArr">
+										<strong>캐릭터, 토이와 디저트를 만나다!</strong>
+										<span class="desc db">
+											
+&nbsp;캐릭터를 가지고 표현하는 것에는 별다른 장벽이 없는 것 같습니다. 원하는 것이면 무엇이든 캐릭터를 만들 수 있어요. 사람이나 아기를 포함해서 고양이나 강아지 같은 동물, 상상 속의 동물이나 저 먼 우주의 모습도 나타낼 수 있습니다. 캐릭터를 만드는 제작자의 의견이 적극적으로 반영되기에 현실을 넘어선 그 무엇이든 만들어낼 수 있지요. 
+&nbsp;만들어진 캐릭터에 스토리가 만나면 하나의 재미있는 이야기가 탄생합니다. 캐릭터를 접한...
+										</span>
+										<span class="m3boxTpArr"></span>
+									</span>
+									</a>
+								</div>
+							
+								
+									
+								
+									
+								
+									
+								
+									
+										
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+								<div>
+									<a href="/edu/bbs/B0000042/view.do?nttId=69375&amp;menuNo=500037">
+									
+										
+											<img src="/cmm/fms/getImage.do?atchFileId=FILE_000000000091126&amp;fileSn=1" alt="" />
+										
+										
+									
+									<span class="db m3boxArr">
+										<strong>우리만의 세계관 만들기, 트윙클 유니버스</strong>
+										<span class="desc db">
+											
+&nbsp;단순히 캐릭터 하나를 만들기보다 여러 캐릭터가 함께 존재하는 환경을 만들어나가는 것은 한 층 더 나아간 작업이라 할 수 있습니다. 캐릭터의 탄생부터 현재 살아가는 환경은 물론 캐릭터의 존재 이유까지도 설명을 해야하는 일이기 때문인데요, 그만큼 이래저래 생각해야 할 것이 많은 작업이기도 합니다.&nbsp;
+&nbsp;
+&nbsp;창의인재동반사업 상명대학교 산학협력단 플랫폼 이진용, 이명희 멘티는 이러한 캐릭터 세계관 만들기에...
+										</span>
+										<span class="m3boxTpArr"></span>
+									</span>
+									</a>
+								</div>
+							
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+										
+									
+								
+									
+								
+									
+								
+								<div>
+									<a href="/edu/bbs/B0000042/view.do?nttId=69365&amp;menuNo=500037">
+									
+										
+											<img src="/cmm/fms/getImage.do?atchFileId=FILE_000000000091116&amp;fileSn=1" alt="" />
+										
+										
+									
+									<span class="db m3boxArr">
+										<strong>&#034;창의인재동반사업을 통해 작가의 의미를 배웠습니다!&#034;</strong>
+										<span class="desc db">
+											&nbsp;
+&nbsp;안녕하세요, 창의드림 독자 여러분! 요즘 어떤 드라마를 즐겨보고 계신가요? 아마 많은 분들이 &lt;응답하라 1988&gt;이라고 대답하시지 않을까 싶습니다. 드라마의 인기에 힘입어 '응답하라' 신드롬의 주역, 이우정 작가를 향한 반응 또한 뜨거운데요. 세대를 초월해 많은 시청자들에게 감동을 전할 수 있는 특별한 직업이 바로 방송작가가 아닐까 싶습니다. 미래의 콘텐츠 리더를 지원하는 창의인재동반사업에도 시청자들에게 따뜻...
+										</span>
+										<span class="m3boxTpArr"></span>
+									</span>
+									</a>
+								</div>
+							
+								
+									
+										
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+								<div>
+									<a href="/edu/bbs/B0000042/view.do?nttId=68667&amp;menuNo=500037">
+									
+										
+											<img src="/cmm/fms/getImage.do?atchFileId=FILE_000000000091022&amp;fileSn=1" alt="" />
+										
+										
+									
+									<span class="db m3boxArr">
+										<strong>영화 &#039;초인&#039; 감독, 서은영 멘티와의 인터뷰 </strong>
+										<span class="desc db">
+											&nbsp;'초인'이라는 말, 들어 보셨나요? 저는 처음 이 단어를 보고 신적인 존재, 초능력을 쓰는 사람 등을 떠올렸는데요. 이 단어의 참 뜻을 생각해보게 하는 영화가 있습니다.
+&nbsp;바로 작년 창의인재동반사업의 멘티였던 서은영 감독의 첫 장편영화, &lt;초인&gt;입니다.
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;&lt;초인&gt;은 10대의 풋풋한 사랑 이야기인 동시에 주인...
+										</span>
+										<span class="m3boxTpArr"></span>
+									</span>
+									</a>
+								</div>
+							
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+										
+									
+								
+									
+								
+								<div>
+									<a href="/edu/bbs/B0000042/view.do?nttId=68666&amp;menuNo=500037">
+									
+										
+											<img src="/cmm/fms/getImage.do?atchFileId=FILE_000000000091021&amp;fileSn=1" alt="" />
+										
+										
+									
+									<span class="db m3boxArr">
+										<strong>멘티와 함께 한 이은상 멘토 개인전을 소개합니다</strong>
+										<span class="desc db">
+											&nbsp;
+&nbsp;겨울비가 내리던 지난 2일, 종로구 관훈동에 위치한 토포하우스에서 아주 의미있는 행사가 있었습니다.
+&nbsp;바로 아트센터 나비 이은상 멘토의 개인전&nbsp;？이 있었는데요. 이은상 멘토는 혼합매체 악기 제작 및 공연팀 '이악'에서 활동하신 분으로 전형산, 김애선 멘티의 멘토입니다.
+&nbsp;
+&nbsp;
+&nbsp;전시 첫 날 전시장에는 다양한 악기와 번쩍거리는 작품들이 관객을 맞이할 준비를 마치고...
+										</span>
+										<span class="m3boxTpArr"></span>
+									</span>
+									</a>
+								</div>
+							
+						</div>
+						<a href="/edu/bbs/B0000042/list.do?menuNo=500037" class="moreList"><span class="hidden">창의인물 더보기</span></a>
+					</div>
+				</div>
+				<div>
+					<h3 class="hidden">진행프로젝트</h3>
+					<div id="m32RollingSet">
+						<a href="javascript:void(0);" id="m32prev"><span class="hidden">진행프로젝트 이전 보기</span></a>
+						<a href="javascript:void(0);" id="m32next"><span class="hidden">진행프로젝트 다음 보기</span></a>
+						<div id="m32Roller">
+							
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+										
+									
+								
+								<div>
+									<a href="/edu/bbs/B0000044/view.do?nttId=68304&amp;menuNo=500038">
+									
+										
+											<img src="/cmm/fms/getImage.do?atchFileId=FILE_000000000090192&amp;fileSn=6626" alt="" />
+										
+										
+									
+									<span class="db m3boxArr">
+										<strong>이주영 멘티의 애니메이션 머털도사와 극영화 아내 도둑맞다</strong>
+										<span class="desc db">
+											 
+&nbsp;
+&lt;아내를 도둑맞다&gt;_극장용 장편 극영화 / 코믹 느와르 
+일명 살인 모기라고 불리는 형사 강무, 한번 물면 모든 피를 빨아 먹을 기세로 덤비는 그에게 집안일이 벌어졌다. 아내를 도둑맞은 것이다. 
+그것도 자신이 예전 콩밥을 먹인 얼라 같은 잡놈에게! 
+&nbsp; 
+&lt;머털도사&gt;_극장판 애니메이션 / 코믹 판타지 어드벤처 
+15살 소년이 된 머털이. 하나밖에 없는 스승인, 누덕도사는 도술은커녕...
+										</span>
+										<span class="m3boxTpArr"></span>
+									</span>
+									</a>
+								</div>
+							
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+										
+									
+								
+								<div>
+									<a href="/edu/bbs/B0000044/view.do?nttId=68303&amp;menuNo=500038">
+									
+										
+											<img src="/cmm/fms/getImage.do?atchFileId=FILE_000000000090191&amp;fileSn=6625" alt="" />
+										
+										
+									
+									<span class="db m3boxArr">
+										<strong>이재환 멘티의 장편 상업영화 시나리오 창작 프로젝트</strong>
+										<span class="desc db">
+											&nbsp;
+&nbsp;
+- 기존 웹툰 원작 및 오리지날 시나리오 각색 작업을 통해 장편 상업영화용 시나리오로 완성을 목표로 함.
+&nbsp;
+- 아이템 개발, 선정에서 시나리오 완성과 메이드를 위해 1:1 멘토링을 통해 실무 역량을 기르고,&nbsp;
+&nbsp;&nbsp;시나리오 창작 및 각색을 비롯 창작능력을 향상시키고자 함.&nbsp;
+- OSMU 프로젝트에 참여함으로 프로젝트의 이해와 실무 능력을 향상시키고자 함.
+&nbs...
+										</span>
+										<span class="m3boxTpArr"></span>
+									</span>
+									</a>
+								</div>
+							
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+										
+									
+								
+								<div>
+									<a href="/edu/bbs/B0000044/view.do?nttId=68302&amp;menuNo=500038">
+									
+										
+											<img src="/cmm/fms/getImage.do?atchFileId=FILE_000000000090190&amp;fileSn=6624" alt="" />
+										
+										
+									
+									<span class="db m3boxArr">
+										<strong>이우진 멘티의 웹툰 연재용 콘티 창작 프로젝트 - You &amp; I</strong>
+										<span class="desc db">
+											&nbsp;
+1.1&nbsp;프로젝트&nbsp;개요
+-&nbsp;아이템&nbsp;개발&nbsp;단계인&nbsp;&ldquo;You&nbsp;&amp;&nbsp;I&rdquo;을&nbsp;웹툰으로&nbsp;완성하기&nbsp;위한&nbsp;프로젝트로&nbsp;작품의&nbsp;계약&nbsp;및&nbsp;연재와&nbsp;영화화를&nbsp;최종&nbsp;목표로&nbsp;함.&nbsp;
+시나리오&nbsp;창작&nbsp;1:1&nbsp;코칭을&nbsp...
+										</span>
+										<span class="m3boxTpArr"></span>
+									</span>
+									</a>
+								</div>
+							
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+										
+									
+								
+								<div>
+									<a href="/edu/bbs/B0000044/view.do?nttId=68301&amp;menuNo=500038">
+									
+										
+											<img src="/cmm/fms/getImage.do?atchFileId=FILE_000000000090189&amp;fileSn=6623" alt="" />
+										
+										
+									
+									<span class="db m3boxArr">
+										<strong>이수연 멘티의 멀티 포맷을 위한 컨텐츠 개발 프로젝트</strong>
+										<span class="desc db">
+											&nbsp;
+&nbsp;
+&nbsp;
+1. 프로젝트 개요 
+- 원작 각색, 또는 신규 아이템 기획개발을 통해 극장 개봉, TV 방영, 온라인 동영상 
+스트리밍 서비스 플랫폼 공개용 등 멀티 포맷 기획안을 완성하는 것을 목표로 함.&nbsp;&nbsp;
+&nbsp;
+&nbsp;
+2. 프로젝트 목적 및 배경 
+- 아이템 선정부터 제작까지 단계별 1:1 코칭을 통해 실무 역량을 강화하고자 함. 
+- OSMU 프로젝트 및 멀티...
+										</span>
+										<span class="m3boxTpArr"></span>
+									</span>
+									</a>
+								</div>
+							
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+										
+									
+								
+								<div>
+									<a href="/edu/bbs/B0000044/view.do?nttId=68285&amp;menuNo=500038">
+									
+										
+											<img src="/cmm/fms/getImage.do?atchFileId=FILE_000000000090173&amp;fileSn=6605" alt="" />
+										
+										
+									
+									<span class="db m3boxArr">
+										<strong>이강현 멘티의 웹드라마 기획 및 극본 프로젝트 - &#039;훈남각&#039;</strong>
+										<span class="desc db">
+											&nbsp;
+&nbsp;
+1. 프로젝트 제목 -&nbsp;훈남각
+2. 프로젝트 내용 - 금지구역 없이 어디든 들어가는 철가방. 사건현장도, 범인의 집도 드나드는 짜장면 배달부. 짜장면 한 그릇에는 범인의 목소리, 위치, DNA가 숨겨져 있다. 짜장면 한 그릇에 담긴 사건의 미학!
+&nbsp;
+										</span>
+										<span class="m3boxTpArr"></span>
+									</span>
+									</a>
+								</div>
+							
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+										
+									
+								
+								<div>
+									<a href="/edu/bbs/B0000044/view.do?nttId=68282&amp;menuNo=500038">
+									
+										
+											<img src="/cmm/fms/getImage.do?atchFileId=FILE_000000000090170&amp;fileSn=6604" alt="" />
+										
+										
+									
+									<span class="db m3boxArr">
+										<strong>서혜림 멘티의 웹툰 원작 웹드라마 창작 - A프로젝트</strong>
+										<span class="desc db">
+											&nbsp;
+&nbsp;
+1. 프로젝트 개요 
+- 웹드라마 제작을 위해 검토 중인 웹툰을 각색 작업을 통해 웹드라마용 극본으로 완성하고, 
+네이버 tv캐스트 등 온라인 동영상 스트리밍 플랫폼을 통해 서비스하는 것을 목표로 함. 
+- 담당 멘토 외 기획개발, 제작 실무진과 공동 작업을 통해 OSMU 및 웹드라마 프로젝트를 
+경험하고, 각색 및 극본 창작 능력 향상을 위한 멘토링을 진행하고자 함. 
+2. 프로젝트 목적 및 배경 
+...
+										</span>
+										<span class="m3boxTpArr"></span>
+									</span>
+									</a>
+								</div>
+							
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+										
+									
+								
+								<div>
+									<a href="/edu/bbs/B0000044/view.do?nttId=68281&amp;menuNo=500038">
+									
+										
+											<img src="/cmm/fms/getImage.do?atchFileId=FILE_000000000090169&amp;fileSn=6603" alt="" />
+										
+										
+									
+									<span class="db m3boxArr">
+										<strong>도경민 멘티의 웹툰 원작 웹드라마 창작 프로젝트 　　　　　　　</strong>
+										<span class="desc db">
+											&nbsp;
+&nbsp;
+1. 프로젝트 개요 
+- 웹드라마 제작을 위해 검토 중인 웹툰을 각색하여 웹드라마용 극본으로 완성하고, 
+온라인 동영상 스트리밍 플랫폼을 통해 서비스하는 것을 목표로 함. 
+- 담당 멘토 외에도 실무진과의 공동 작업을 통해 OSMU 및 웹드라마 프로젝트를 경험하고, 창작 능력 향상을 위한 멘토링을 진행하고자 함. &nbsp;
+&nbsp;
+2. 프로젝트 목적 및 배경 
+- 아이템 선정부터 극본 완성까지 ...
+										</span>
+										<span class="m3boxTpArr"></span>
+									</span>
+									</a>
+								</div>
+							
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+										
+									
+								
+								<div>
+									<a href="/edu/bbs/B0000044/view.do?nttId=68268&amp;menuNo=500038">
+									
+										
+											<img src="/cmm/fms/getImage.do?atchFileId=FILE_000000000090156&amp;fileSn=6589" alt="" />
+										
+										
+									
+									<span class="db m3boxArr">
+										<strong>김혜연 멘티의 공주가 될 소년 시나리오 완성하기!</strong>
+										<span class="desc db">
+											&nbsp;
+&nbsp;
+1. 프로젝트 제목 : 공주가 될 소년2. 프로젝트 내용 :&nbsp; 아이템 개발 단계인 &ldquo;공주가 될 소년&rdquo;을 웹툰으로 완성하기 위한&nbsp;프로젝트로, 작품의 계약 및 연재와 영상화를 최종 목표로 함. 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n...
+										</span>
+										<span class="m3boxTpArr"></span>
+									</span>
+									</a>
+								</div>
+							
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+										
+									
+								
+								<div>
+									<a href="/edu/bbs/B0000044/view.do?nttId=68267&amp;menuNo=500038">
+									
+										
+											<img src="/cmm/fms/getImage.do?atchFileId=FILE_000000000090155&amp;fileSn=6588" alt="" />
+										
+										
+									
+									<span class="db m3boxArr">
+										<strong>김민용 멘티의 스물 아홉, 남자의 인생 시나리오 작성 프로젝트</strong>
+										<span class="desc db">
+											&nbsp;
+&nbsp;
+1. 프로젝트 제목 : 스물 아홉, 남자의 인생
+2. 프로젝트 내용 : 
+서른, 청년들이 가장 많은 생각을 하게 되는 나이가 서른인 것 같다.
+우리는 스물 아홉이 되면 서른을 준비하게 된다.
+서른이 되면 안정적인 직업을 가져야 할 것 같고,
+서른이 되면 이상형의 여자친구가 있어야 할 것 같으며,서른이 되면 어른이 되어야만 할 것 같다.
+그렇게 마치 천지가 개벽하게 될 것 같이 서른을 준비하지만
+막상 서른...
+										</span>
+										<span class="m3boxTpArr"></span>
+									</span>
+									</a>
+								</div>
+							
+						</div>
+						<a href="/edu/bbs/B0000044/list.do?menuNo=500038" class="moreList"><span class="hidden">진행프로젝트 더보기</span></a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- //m2 tabRolling -->
+	</div>
+</div>
+<!-- menu3 -->
+<!-- menu4 url(/edu/images/main/section04.jpg) no-repeat 50% 0; -->
+<div id="menu4" class="menu4" style="background:#ee8da3">
+	<div class="contentsWidth">
+		<h2>취업정보</h2>
+		<form action="/edu/job/empmnInfo/list.do" name="empmnForm" id="empmnForm" method="get">
+			<input type="hidden" name="menuNo" value="500054" />
+			<input type="hidden" name="keyword" id="keyword" value="" />
+			<fieldset>
+				<legend>취업정보 검색</legend>
+				<div class="m40Box1">
+					<label for="keywordStr"><span class="hidden">검색어 입력</span></label>
+					<input type="text" class="m40Sch" name="keywordStr" id="keywordStr" value="검색어를 입력하세요. ex) 영상제작" onFocus="if(this.value=='검색어를 입력하세요. ex) 영상제작')this.value='';" onkeyup="if(this.value=='검색어를 입력하세요. ex) 영상제작')this.value='';">
+					<input type="image" class="m40SchOk" src="/edu/images/main/m4SchOk.gif" alt="취업정보 검색확인" />
+				</div>
+			</fieldset>
+		</form>
+		<div class="m40TotalView tar mt5"><a href="/edu/job/empmnInfo/list.do?menuNo=500054">채용정보 전체보기 <span class="m40Arr"></span></a></div>
+		<div class="m40List">
+			<ul>
+				<li class="m40ico ico1"><a href="/edu/main/contents.do?menuNo=500048">1:1 취업컨설팅</a></li>
+				<li class="m40ico ico2"><a href="/edu/bbs/B0000047/list.do?menuNo=500096">발로뛰는 취창업실</a></li>
+				<li class="m40ico ico3"><a href="/edu/bbs/B0000020/list.do?menuNo=500011">콘텐츠의 미래를 만나다</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+<!-- //menu4 -->
+<!-- footer -->
+<div id="menu5" class="menu5">
+	
+<div class="footerSet">
+	<div id="footer">
+		<div class="fContents">
+			<div class="fLinks">
+				<a href="/edu/main/contents.do?menuNo=500069" class="pl0"><strong>개인정보처리방침</strong></a>
+				<a href="/edu/main/contents.do?menuNo=500068">이용약관</a>
+				<a href="/edu/bbs/B0000038/list.do?menuNo=500017">문의하기</a>
+				<a href="/edu/main/contents.do?menuNo=500074">사이트맵</a>
+				<a href="/edu/main/contents.do?menuNo=500091" class="linkRed pl0 pr0 fr tar">한국콘텐츠아카데미앱 다운로드<span class="fLinkArr"></span></a>
+			</div>
+			<div class="copyright">
+				<div class="fl fLogoSet">
+					<div class="fImages fLogo"><span class="hidden">KOCCA(Korea Creative Content Agency) 한국콘텐츠진흥원(하단로고)</span></div>
+				</div>
+				<p class="fs12">본 페이지에 게시된 이메일주소가 자동 수집되는 것을 거부하며, 이를 위반시 정보통신법에 의해 처벌됨을 유념하시기 바랍니다.</p>
+				<address class="fs12">본원 : [58217] 전라남도 나주시 교육길 35 한국콘텐츠진흥원 | 사업자번호 : 105-82-17272<br />
+						대학로분원 : [04521] 서울시 중구 청계천로 40 <br />
+						<span class="dib ml70">현장교육문의 02-6441-3255 / 온라인교육 02-6441-3258</span> </address>
+				<div class="copy fs12">Copyright 2015. Korea Creative Content Agency all rights reserved.</div>
+			</div>
+			<div class="footerRt">
+				<div class="selBox tar">
+					<form name="siteGoLink" action="#none" method="post" target="_blank" onsubmit="return fnGoLinkSite(this);">
+						<select class="vm" name="link" title="관련 사이트를 선택해 주세요.">
+							<option value="">관련사이트</option>
+							<option value="http://www.mcst.go.kr/main.jsp">문화체육관광부</option>
+							<option value="http://www.kocca.kr/cop/main.do">한국콘텐츠진흥원</option>
+							<option value="https://www.ckl.or.kr:446/www/main/userMain/main.do">콘텐츠코리아랩</option>
+							
+							<!-- <option value="https://dream.kocca.kr/home.do">창의드림</option> -->
+							<option value="http://www.culturecontent.com/main.do">문화콘텐츠닷컴</option>
+							<option value="http://www.kgq.or.kr/service/pub/IntroServlet">게임국가자격기술검정</option>
+						</select>
+						<input type="image" src="/edu/images/common/siteGo.gif" alt="관련사이트 이동" class="vm" />
+					</form>
+				</div>
+				<div class="logoGroup">
+					
+					<!-- <span class="fImages fLink2" title="국가 공인 인증기관 : 웹와치"><span class="hidden">미래창조과학부 WEB ACCESSIBILITY 마크(웹 접근성 품질인증 마크)</span></span> -->
+					<a href="javascript:winPopup1('https://www.eprivacy.or.kr:40018/seal/mark.jsp?mark=e&amp;code=2015-R097','','status=yes,scrollbars=no,width=500,height=700');"  title="새창열림" class="fImages fLink3"><span class="hidden">개인정보보호우수사이트(ePrivacy) 인증마크</span></a>
+					 <a href="javascript:winPopup1('https://www.eprivacy.or.kr:40018/seal/mark.jsp?mark=i&amp;code=2015-R044','','status=yes,scrollbars=no,width=500,height=700');"  title="새창열림" class="fImages fLink4"><span class="hidden">인터넷 사이트 안전마크(i-Safe, 개인정보보호, 시스템보안, 소비자 보호)</span></a>
+					<a href="javascript:winPopup1('/contents/temp/07_Good_Contents_certificate.html','','status=yes,scrollbars=no,width=430,height=560');" title="새창열림" class="fImages fLink5"><span class="hidden">콘텐츠제공서비스 품질인증마크(Good Content Service)</span></a>
+					<a href="javascript:winPopup1('/contents/temp/04_elearning.html','','status=yes,scrollbars=no,width=430,height=560');" title="새창열림" class="fImages fLink6"><span class="hidden">한국u러닝연합회 e러닝전문기관인증 마크</span></a>
+					<a href="javascript:winPopup1('/contents/temp/01_contents_certificate.html','','status=yes,scrollbars=no,width=430,height=560');" title="새창열림" class="fImages fLink7"><span class="hidden">교육기부기관 교육부 Donation for Education 마크</span></a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<iframe name="ssoAuthFrame" id="ssoAuthFrame" style="width:0px;height:0px;border:0;" src="https://edusso.kocca.kr/sso/member/checkSSO.do?service=edu&amp;menuNo=&amp;userTp=0" title="SSO 로그인 유무확인 프레임 입니다."></iframe>
+<!-- //footer -->
+<!--footer_wrap-->
+<!--
+<div id="footer_wrap" class="clearfix">
+	<div id="footer"> </div>
+</div>
+-->
+<!--//footer_wrap-->
+<div class="scrolling animated" data-animation="shake" data-animation-delay="800"><a href="#menu1" class="scroll"><img src="/edu/images/main/btn_Top.png"  alt="문서 맨 처음으로 이동"/></a></div>
+</div>
+</body>
+</html>

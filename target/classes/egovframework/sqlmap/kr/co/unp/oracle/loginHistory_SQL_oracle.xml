@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="loginHistory">
+
+	<typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+
+	<insert id="loginHistoryDAO.insert" parameterClass="egovMap" >
+		<![CDATA[
+			INSERT INTO TM_LOGIN_HISTORY (
+			    HSTR_NO, USER_ID,USER_IP,LOGIN_TRY_DATE,LOGIN_YN,SITE_NM
+			)
+			VALUES (
+			   (SELECT NVL(MAX(HSTR_NO),0)+1 AS HSTR_NO  FROM TM_LOGIN_HISTORY), #userId#,#userIp#,SYSDATE,#loginYn#,#siteNm#
+			)
+		]]>
+	</insert>
+
+	<sql id="loginHistoryDAO.list-where">
+		<isNotEmpty prepend="AND" property="searchWrd">
+			<isEqual property="searchCnd" compareValue="1">
+				<![CDATA[	category_name2 LIKE  '%' || #searchWrd# || '%'  		]]>
+			</isEqual>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="userId">
+			<![CDATA[	USER_ID = #userId#		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="siteNm">
+			<![CDATA[	SITE_NM = #siteNm#		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="interval">
+			<![CDATA[	DATE_ADD(NOW(), INTERVAL #interval# MINUTE) <= LOGIN_TRY_DATE		]]>
+		</isNotEmpty>
+	</sql>
+
+	<select id="loginHistoryDAO.list" parameterClass="egovMap" resultClass="egovMap" >
+		<![CDATA[
+			SELECT  *
+			  FROM  (
+			SELECT ROWNUM RNUM, ALL_LIST.*
+			  FROM  (
+
+			SELECT
+			    HSTR_NO,
+			    USER_ID,
+			    USER_IP,
+			    LOGIN_TRY_DATE,
+                CASE WHEN SYSDATE > LOGIN_TRY_DATE + (INTERVAL '30' MINUTE) THEN 'Y'
+                ELSE 'N'
+                END AS LOGIN_TRY_AT,
+			    LOGIN_YN,
+			    SITE_NM
+			FROM TM_LOGIN_HISTORY
+			WHERE 1=1
+		]]>
+		<include refid="loginHistoryDAO.list-where" />
+		<![CDATA[
+			ORDER BY HSTR_NO DESC
+
+				   ) ALL_LIST
+				    )
+			 WHERE  RNUM  > #firstIndex#
+			   AND  RNUM <= #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="loginHistoryDAO.view" parameterClass="egovMap" resultClass="egovMap" >
+		<![CDATA[
+			SELECT
+			    HSTR_NO,
+			    USER_ID,
+			    USER_IP,
+			    LOGIN_TRY_DATE,
+			    LOGIN_YN,
+			    SITE_NM
+			FROM TM_LOGIN_HISTORY
+			WHERE HSTR_NO = #hstrNo#
+		]]>
+	</select>
+
+ 	<update id="loginHistoryDAO.update" parameterClass="egovMap">
+ 		<![CDATA[
+			UPDATE TM_LOGIN_HISTORY
+			SET
+			    USER_ID = #userId#,
+			    USER_IP = #userIp#,
+			    LOGIN_TRY_DATE = #loginTryDate#,
+			    LOGIN_YN = #loginYn#
+			WHERE HSTR_NO = #hstrNo#
+ 		]]>
+ 	</update>
+
+ 	<delete id="loginHistoryDAO.delete" parameterClass="egovMap">
+ 		<![CDATA[
+			DELETE FROM TM_LOGIN_HISTORY
+			WHERE 1 = 1
+ 		]]>
+		<isNotEmpty prepend="AND" property="gubun">
+			<![CDATA[	SITE_NM IN('ckl', 'edu')		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="siteNm">
+			<![CDATA[	SITE_NM = #siteNm#		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="userId">
+			<![CDATA[	USER_ID = #userId#		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="hstrNo">
+			<![CDATA[	HSTR_NO = #hstrNo#		]]>
+		</isNotEmpty>
+ 	</delete>
+
+</sqlMap>

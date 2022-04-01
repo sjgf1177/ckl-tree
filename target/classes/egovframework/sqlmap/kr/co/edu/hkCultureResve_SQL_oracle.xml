@@ -1,0 +1,1798 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="hkCultureResve">
+
+	<typeAlias  alias="zvl" type="kr.co.unp.util.ZValue"/>
+
+
+	<!-- 시설관린 조건 -->
+	<sql id="HkCultureResveDAO.listCulture-where">
+		<isNotEmpty prepend="AND" property="areaSe">
+			<![CDATA[	A.AREA_SE = #areaSe#		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="lcSe">
+			<![CDATA[	A.LC_SE = #lcSe#		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="fcltySe">
+			<![CDATA[	A.FCLTY_SE = #fcltySe#		]]>
+		</isNotEmpty>
+
+		<isNotEmpty prepend="AND" property="prpos">
+			<![CDATA[	A.PRPOS like '%' || #prpos# || '%'	]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="spceNm">
+			<![CDATA[	A.SPCE_NM like '%' || #spceNm# || '%'		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="spceNmEn">
+			<![CDATA[	A.SPCE_NM_EN like '%' || #spceNmEn# || '%'		]]>
+		</isNotEmpty>
+
+		<isNotEqual property="siteName" compareValue="bos">
+			<![CDATA[
+				AND	A.USE_AT = 'Y' AND A.OPEN_AT = 'Y'
+			]]>
+		</isNotEqual>
+	</sql>
+
+	<!-- 시설관리 목록 -->
+	<select id="HkCultureResveDAO.listFclty" parameterClass="zvl" resultClass="zvl" >
+	<![CDATA[
+		/* HkCultureResveDAO.listFclty */
+
+		SELECT
+			TB.*,
+			FN_CMMNCODE_NM('COM061',RESVE_SE) AS RESVE_SE_NM,
+       		FN_CMMNCODE_NM('COM172',AREA_SE) AS AREA_SE_NM,
+	       	FN_CMMNCODE_NM('COM172',LC_SE) AS LC_SE_NM,
+	       	FN_CMMNCODE_NM_EN('COM172',LC_SE) AS LC_SE_NM_EN,
+	       	FN_CMMNCODE_NM('COM172',FCLTY_SE) AS FCLTY_SE_NM
+		FROM  (
+			SELECT ROWNUM RNUM, ALL_LIST.*  FROM (
+
+			SELECT
+				A.FCLTY_SN,
+	       		A.RESVE_SE,
+	       		FN_CMMNCODE_NM('COM061',A.RESVE_SE) AS RESVE_SE_NM,
+	       		A.AREA_SE,
+	       		FN_CMMNCODE_NM('COM172',A.AREA_SE) AS AREA_SE_NM,
+		       	A.LC_SE,
+		       	FN_CMMNCODE_NM('COM172',A.LC_SE) AS LC_SE_NM,
+		       	FN_CMMNCODE_NM_EN('COM172',A.LC_SE) AS LC_SE_NM_EN,
+		       	A.FCLTY_SE,
+		       	FN_CMMNCODE_NM('COM172',A.FCLTY_SE) AS FCLTY_SE_NM,
+		       	A.SPCE_NM,
+		       	A.SPCE_NM_EN,
+		       	A.RESVE_POSBL_AT,
+		       	DECODE(A.RESVE_SE,'I',1,DECODE(RESVE_POSBL_AT,'Y',0,1))  AS RESVE_POSBL_ORDR,
+		       	A.USE_AT,
+		       	A.AR,
+		       	A.NMPR,
+		       	A.PRPOS,
+		       	A.PRPOS_EN,
+		       	A.EQPMN_USE_AT,
+		       	A.RESVE_IMPRTY_RESN,
+		       	A.ATCH_FILE_ID,
+		       	A.WKEND_RESVE_POLSBL_AT,
+		       	TO_CHAR(A.FRST_REGIST_PNTTM, 'YYYY-MM-DD HH24:MI:SS') AS FRST_REGIST_PNTTM,
+		       	A.FRST_REGISTER_ID,
+		       	TO_CHAR(A.LAST_UPDT_PNTTM, 'YYYY-MM-DD HH24:MI:SS') AS LAST_UPDT_PNTTM,
+		       	A.LAST_UPDUSR_ID,
+		       	A.DELETE_AT,
+		       	A.OPEN_AT
+	  		FROM TN_CULT_FCLTY A
+	  		WHERE DELETE_AT = 'N'
+	]]>
+		<include refid="HkCultureResveDAO.listCulture-where" />
+	<![CDATA[
+	  		ORDER BY RESVE_POSBL_ORDR, LC_SE ASC, SPCE_NM ASC
+
+	  		) ALL_LIST
+	  	) TB WHERE  RNUM  > #firstIndex# AND  RNUM <= #firstIndex# + #recordCountPerPage#
+
+	]]>
+	</select>
+
+	<!-- 시설관리 목록카운트 -->
+	<select id="HkCultureResveDAO.listFcltyCnt" parameterClass="zvl" resultClass="java.lang.Integer" >
+	<![CDATA[
+		/* HkCultureResveDAO.istFcltyCnt */
+		SELECT COUNT(*) FROM TN_CULT_FCLTY A
+		WHERE DELETE_AT = 'N'
+	]]>
+		<include refid="HkCultureResveDAO.listCulture-where" />
+	</select>
+
+
+	<!-- 시설관리 상세 -->
+	<select id="HkCultureResveDAO.viewFclty" parameterClass="zvl" resultClass="zvl" >
+	<![CDATA[
+		/* HkCultureResveDAO.viewFclty */
+		SELECT
+			A.FCLTY_SN,
+       		A.RESVE_SE,
+       		FN_CMMNCODE_NM('COM061',A.RESVE_SE) AS RESVE_SE_NM,
+       		A.AREA_SE,
+       		FN_CMMNCODE_NM('COM172',A.AREA_SE) AS AREA_SE_NM,
+	       	A.LC_SE,
+	       	FN_CMMNCODE_NM('COM172',A.LC_SE) AS LC_SE_NM,
+	       	FN_CMMNCODE_NM_EN('COM172',A.LC_SE) AS LC_SE_NM_EN,
+	       	A.FCLTY_SE,
+	       	FN_CMMNCODE_NM('COM172',A.FCLTY_SE) AS FCLTY_SE_NM,
+	       	A.SPCE_NM,
+	       	A.SPCE_NM_EN,
+	       	A.RESVE_POSBL_AT,
+	       	A.USE_AT,
+	       	A.AR,
+	       	A.NMPR,
+	       	A.PRPOS,
+	       	A.PRPOS_EN,
+	       	A.EQPMN_USE_AT,
+	       	A.RESVE_IMPRTY_RESN,
+	       	A.ATCH_FILE_ID,
+	       	A.WKEND_RESVE_POLSBL_AT,
+	       	TO_CHAR(A.FRST_REGIST_PNTTM, 'YYYY-MM-DD HH24:MI:SS') AS FRST_REGIST_PNTTM,
+	       	A.FRST_REGISTER_ID,
+	       	TO_CHAR(A.LAST_UPDT_PNTTM, 'YYYY-MM-DD HH24:MI:SS') AS LAST_UPDT_PNTTM,
+	       	A.LAST_UPDUSR_ID,
+	       	A.DELETE_AT,
+	       	A.OPEN_AT,
+	       	(SELECT TO_CHAR(WM_CONCAT(EQPMN_SN)) FROM TN_CULT_FCLTY_EQPMN AA WHERE AA.FCLTY_SN = #fcltySn#)  AS EQPMN_SNS,
+	       	(SELECT TO_CHAR(WM_CONCAT(EQPMN_NM)) FROM TN_CULT_FCLTY_EQPMN AA, TN_CULT_EQPMN BB WHERE AA.EQPMN_SN = BB.EQPMN_SN AND AA.FCLTY_SN = #fcltySn# AND BB.USE_AT = 'Y' AND BB.DELETE_AT = 'N')  AS EQPMN_NMS
+  		FROM TN_CULT_FCLTY A
+  		WHERE A.DELETE_AT = 'N'
+  		AND A.FCLTY_SN = #fcltySn#
+	]]>
+	</select>
+
+
+	<!-- 시설관리 목록(레이아웃) -->
+	<select id="HkCultureResveDAO.listFcltyForLayout" parameterClass="zvl" resultClass="zvl" >
+	<![CDATA[
+		/* HkCultureResveDAO.listFcltyForLayout */
+		SELECT
+			A.FCLTY_SN,
+       		A.AREA_SE,
+	       	A.LC_SE,
+	       	FN_CMMNCODE_NM('COM172',A.LC_SE) AS LC_SE_NM,
+	       	A.FCLTY_SE,
+	       	A.SPCE_NM,
+	       	A.SPCE_NM_EN,
+	       	A.PRPOS,
+	       	A.PRPOS_EN,
+	       	TO_CHAR(A.FRST_REGIST_PNTTM, 'YYYY-MM-DD HH24:MI:SS') AS FRST_REGIST_PNTTM,
+	       	A.ATCH_FILE_ID
+	]]>
+		<isEqual property="siteName" compareValue="ckl">
+			,NVL(B.NOT_USE_CNT,0) AS NOT_USE_CNT
+		</isEqual>
+	<![CDATA[
+	  	FROM TN_CULT_FCLTY A
+
+	]]>
+		<isEqual property="siteName" compareValue="ckl">
+		<![CDATA[
+	 		 LEFT OUTER JOIN (
+            	SELECT
+                	FCLTY_SN,
+                	SUM( CASE
+                    	WHEN TRUNC(RESVE_DT)+ (1/24)*(RESVE_END_TIME+1) <= SYSDATE AND USE_AT = 'W'   THEN 1 ELSE DECODE(USE_AT, 'N',1,0)
+                    END ) AS NOT_USE_CNT
+                FROM
+            	TN_CULT_FCLTY_RESVE WHERE DELETE_AT = 'N'
+                AND (RESVE_DT - 90) <= SYSDATE
+                AND (RESVE_DT + 30) >= SYSDATE
+                AND USER_SN = #userSn#
+                AND RESVE_STTUS = '02'
+                GROUP BY FCLTY_SN
+            ) B ON B.FCLTY_SN = A.FCLTY_SN
+		 ]]>
+		</isEqual>
+	<![CDATA[
+  		WHERE A.DELETE_AT = 'N'
+  		AND A.RESVE_POSBL_AT = 'Y'
+	    AND	A.USE_AT = 'Y'
+	    ORDER BY A.SPCE_NM ASC
+	]]>
+	</select>
+
+	<!-- 시설 공간명 목록 -->
+	<select id="HkCultureResveDAO.listFcltySpceNm" parameterClass="zvl" resultClass="zvl" >
+	<![CDATA[
+		/* HkCultureResveDAO.listFcltySpceNm */
+		SELECT
+			A.FCLTY_SN,
+	       	A.SPCE_NM,
+	       	A.SPCE_NM_EN
+  		FROM TN_CULT_FCLTY A
+  		WHERE A.DELETE_AT = 'N'
+  		AND A.AREA_SE = #areaSe#
+  		AND A.LC_SE = #lcSe#
+  		AND A.FCLTY_SE = #fcltySe#
+  		AND A.RESVE_POSBL_AT = 'Y'
+  		AND A.USE_AT = 'Y'
+  	]]>
+		<isNotEqual property="siteName" compareValue="bos">
+			<![CDATA[
+				AND RESVE_SE IN ('O','A')
+			]]>
+		</isNotEqual>
+  	<![CDATA[
+  		ORDER BY A.SPCE_NM ASC
+	]]>
+	</select>
+
+	<!-- 시설관리 등록 -->
+	<insert id="HkCultureResveDAO.insertFclty" parameterClass="zvl">
+		<selectKey resultClass="java.lang.Long" keyProperty="fcltySn">
+			SELECT NVL(MAX(FCLTY_SN),0) + 1 AS FCLTY_SN FROM TN_CULT_FCLTY
+		</selectKey>
+	<![CDATA[
+		/* HkCultureResveDAO.insertFclty */
+		INSERT INTO TN_CULT_FCLTY (
+			FCLTY_SN,
+           	RESVE_SE,
+           	AREA_SE,
+           	LC_SE,
+           	FCLTY_SE,
+           	SPCE_NM,
+           	SPCE_NM_EN,
+           	RESVE_POSBL_AT,
+           	USE_AT,
+           	AR,
+           	NMPR,
+           	PRPOS,
+           	PRPOS_EN,
+           	EQPMN_USE_AT,
+           	RESVE_IMPRTY_RESN,
+           	ATCH_FILE_ID,
+           	WKEND_RESVE_POLSBL_AT,
+           	FRST_REGIST_PNTTM,
+           	FRST_REGISTER_ID,
+           	LAST_UPDT_PNTTM,
+           	LAST_UPDUSR_ID,
+           	DELETE_AT,
+           	OPEN_AT
+       )
+       VALUES (
+			#fcltySn#,
+           	#resveSe#,
+           	#areaSe#,
+           	#lcSe#,
+           	#fcltySe#,
+           	#spceNm#,
+           	#spceNmEn#,
+           	#resvePosblAt#,
+           	#useAt#,
+           	#ar#,
+           	#nmpr#,
+           	#prpos#,
+           	#prposEn#,
+           	#eqpmnUseAt#,
+           	#resveImprtyResn#,
+           	#atchFileId#,
+           	#wkendResvePolsblAt#,
+           	SYSDATE,
+           	#frstRegisterId#,
+           	SYSDATE,
+           	#lastUpdusrId#,
+           	'N',
+           	#openAt#
+       )
+	]]>
+	</insert>
+
+
+	<!-- 시설장비관리 등록 -->
+	<insert id="HkCultureResveDAO.insertFcltyEqpmn" parameterClass="zvl">
+	<![CDATA[
+		/* HkCultureResveDAO.insertFcltyEqpmn */
+		INSERT INTO TN_CULT_FCLTY_EQPMN (
+			FCLTY_SN,
+           	EQPMN_SN,
+           	FRST_REGIST_PNTTM,
+           	FRST_REGISTER_ID
+       )
+       VALUES (
+            #fcltySn#,
+           	#eqpmnSn#,
+           	SYSDATE,
+           	#frstRegisterId#
+       )
+	]]>
+	</insert>
+
+	<!-- 시설관리 수정 -->
+	<update id="HkCultureResveDAO.updateFclty" parameterClass="zvl">
+	<![CDATA[
+		/* HkCultureResveDAO.updateFclty */
+		UPDATE TN_CULT_FCLTY SET
+           	RESVE_SE	= #resveSe#,
+           	AREA_SE		= #areaSe#,
+           	LC_SE		= #lcSe#,
+           	FCLTY_SE	= #fcltySe#,
+           	SPCE_NM		= #spceNm#,
+           	SPCE_NM_EN	= #spceNmEn#,
+           	RESVE_POSBL_AT	= #resvePosblAt#,
+           	USE_AT	= #useAt#,
+           	AR		= #ar#,
+           	NMPR	= #nmpr#,
+           	PRPOS	= #prpos#,
+           	PRPOS_EN	= #prposEn#,
+           	EQPMN_USE_AT	= #eqpmnUseAt#,
+           	RESVE_IMPRTY_RESN	= #resveImprtyResn#,
+           	ATCH_FILE_ID		= #atchFileId#,
+           	WKEND_RESVE_POLSBL_AT	= #wkendResvePolsblAt#,
+           	LAST_UPDT_PNTTM	= SYSDATE,
+           	LAST_UPDUSR_ID	= #lastUpdusrId#,
+           	OPEN_AT = #openAt#
+		WHERE FCLTY_SN = #fcltySn#
+	]]>
+	</update>
+
+	<!-- 시설관리 삭제 -->
+	<update id="HkCultureResveDAO.deleteFclty" parameterClass="zvl">
+	<![CDATA[
+		/* HkCultureResveDAO.deleteFclty */
+		UPDATE TN_CULT_FCLTY SET
+           	DELETE_AT = 'Y',
+           	LAST_UPDT_PNTTM	= SYSDATE,
+           	LAST_UPDUSR_ID	= #lastUpdusrId#
+		WHERE FCLTY_SN = #fcltySn#
+	]]>
+	</update>
+
+	<!-- 시설장비관리 삭제 -->
+	<delete id="HkCultureResveDAO.deleteFcltyEqpmnByFcltySn" parameterClass="zvl">
+	<![CDATA[
+		/* HkCultureResveDAO.deleteFcltyEqpmnByFcltySn */
+		DELETE FROM TN_CULT_FCLTY_EQPMN WHERE FCLTY_SN = #fcltySn#
+	]]>
+	</delete>
+
+
+	<!-- 장비관리 조건 -->
+	<sql id="HkCultureResveDAO.listEqpmn-where">
+		<isNotEmpty prepend="AND" property="eqpmnSe">
+			<![CDATA[	EQPMN_SE = #eqpmnSe#	]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="eqpmnNm">
+			<![CDATA[	EQPMN_NM like '%' || #eqpmnNm# || '%'	]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="eqpmnNmEn">
+			<![CDATA[	EQPMN_NM_EN like '%' || #eqpmnNmEn# || '%'	]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="dtlsInfo">
+			<![CDATA[	DTLS_INFO like '%' || #dtlsInfo# || '%'	]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="dtlsInfoEn">
+			<![CDATA[	DTLS_INFO_EN like '%' || #dtlsInfoEn# || '%'	]]>
+		</isNotEmpty>
+		<isNotEqual property="siteName" compareValue="bos">
+			<![CDATA[
+				AND	USE_AT = 'Y' AND RESVE_SE IN ('O','A')
+				AND OPEN_AT = 'Y'
+			]]>
+		</isNotEqual>
+
+	</sql>
+
+	<!-- 선택장비 팝업 목록 -->
+	<select id="HkCultureResveDAO.listEqpmnPopup" parameterClass="zvl" resultClass="zvl" >
+	<![CDATA[
+		/* HkCultureResveDAO.listEqpmnPopup */
+		SELECT
+			A.EQPMN_SN,
+	       	A.EQPMN_NM,
+	       	A.EQPMN_NM_EN,
+	       	A.EQPMN_SE,
+	       	FN_CMMNCODE_NM('COM147',A.EQPMN_SE) AS EQPMN_SE_NM,
+	       	A.RESVE_SE,
+	       	FN_CMMNCODE_NM('COM061',A.RESVE_SE) AS RESVE_SE_NM,
+	       	A.RESVE_POSBL_AT,
+	       	A.RESVE_IMPRTY_RESN,
+	       	A.USE_AT,
+	       	A.DTLS_INFO,
+	       	A.DTLS_INFO_EN,
+	       	A.ATCH_FILE_ID,
+	       	TO_CHAR(A.FRST_REGIST_PNTTM, 'YYYY-MM-DD HH24:MI:SS') AS FRST_REGIST_PNTTM,
+	       	A.FRST_REGISTER_ID,
+	       	TO_CHAR(A.LAST_UPDT_PNTTM, 'YYYY-MM-DD HH24:MI:SS') AS LAST_UPDT_PNTTM,
+	       	A.LAST_UPDUSR_ID,
+	       	A.DELETE_AT,
+	       	A.OPEN_AT,
+	       	(SELECT COUNT(*) FROM TN_CULT_EQPMN_DETAIL WHERE EQPMN_SN = A.EQPMN_SN AND DELETE_AT = '0' ) AS EQPMN_QY
+	  	FROM TN_CULT_EQPMN A
+	  	WHERE A.DELETE_AT = 'N'
+	]]>
+		<include refid="HkCultureResveDAO.listEqpmn-where" />
+	<![CDATA[
+  		ORDER BY A.EQPMN_NM ASC
+
+	]]>
+	</select>
+
+	<!-- 시설별 장비 목록 -->
+	<select id="HkCultureResveDAO.listEqpmnByFclty" parameterClass="zvl" resultClass="zvl" >
+		/* HkCultureResveDAO.listEqpmnByFclty */
+		SELECT
+			A.EQPMN_SN,
+	       	A.EQPMN_NM,
+	       	A.EQPMN_NM_EN,
+	       	A.EQPMN_SE,
+	       	FN_CMMNCODE_NM('COM147',A.EQPMN_SE) AS EQPMN_SE_NM,
+	       	A.RESVE_SE,
+	       	FN_CMMNCODE_NM('COM061',A.RESVE_SE) AS RESVE_SE_NM,
+	       	A.RESVE_POSBL_AT,
+	       	A.RESVE_IMPRTY_RESN,
+	       	A.USE_AT,
+	       	A.DTLS_INFO,
+	       	A.DTLS_INFO_EN,
+	       	A.ATCH_FILE_ID,
+	       	TO_CHAR(A.FRST_REGIST_PNTTM, 'YYYY-MM-DD HH24:MI:SS') AS FRST_REGIST_PNTTM,
+	       	A.FRST_REGISTER_ID,
+	       	TO_CHAR(A.LAST_UPDT_PNTTM, 'YYYY-MM-DD HH24:MI:SS') AS LAST_UPDT_PNTTM,
+	       	A.LAST_UPDUSR_ID,
+	       	A.DELETE_AT,
+	       	(SELECT COUNT(*) FROM TN_CULT_EQPMN_DETAIL WHERE EQPMN_SN = A.EQPMN_SN AND DELETE_AT = '0' ) AS EQPMN_QY,
+	       	(SELECT TO_CHAR(WM_CONCAT(EQPMN_DETAIL_SN)) FROM TN_CULT_EQPMN_DETAIL WHERE EQPMN_SN = A.EQPMN_SN AND DELETE_AT = '0' ) AS EQPMN_DETAIL_SN_LIST,
+	       	B.FCLTY_SN
+	  	FROM TN_CULT_EQPMN A, TN_CULT_FCLTY_EQPMN B, TN_CULT_FCLTY C
+	  	WHERE A.DELETE_AT = 'N'
+	  	AND A.USE_AT = 'Y'
+	  	AND A.RESVE_POSBL_AT='Y'
+	  	<isNotEqual property="siteName" compareValue="bos">
+	  	AND A.OPEN_AT='Y'
+	  	</isNotEqual>
+	  	AND A.EQPMN_SN = B.EQPMN_SN
+		AND B.FCLTY_SN = #fcltySn#
+		AND B.FCLTY_SN = C.FCLTY_SN
+		AND C.EQPMN_USE_AT = 'Y'
+  		ORDER BY A.EQPMN_NM ASC
+	</select>
+
+
+
+	<!-- 장비명  목록 -->
+	<select id="HkCultureResveDAO.listEqpmnNm" parameterClass="zvl" resultClass="zvl" >
+	<![CDATA[
+		/* HkCultureResveDAO.listEqpmnNm */
+		SELECT
+			A.EQPMN_SN,
+	       	A.EQPMN_NM,
+	       	A.EQPMN_NM_EN
+	  	FROM TN_CULT_EQPMN A
+	  	WHERE A.DELETE_AT = 'N'
+	  	AND A.USE_AT = 'Y'
+  		ORDER BY A.EQPMN_NM ASC
+
+	]]>
+	</select>
+
+
+	<!-- 장비관리 목록 -->
+	<select id="HkCultureResveDAO.listEqpmn" parameterClass="zvl" resultClass="zvl" >
+	<![CDATA[
+		/* HkCultureResveDAO.listEqpmn */
+
+		SELECT
+			TB.*,
+			FN_CMMNCODE_NM('COM147',EQPMN_SE) AS EQPMN_SE_NM,
+		    FN_CMMNCODE_NM('COM061',RESVE_SE) AS RESVE_SE_NM
+		FROM  (
+			SELECT ROWNUM RNUM, ALL_LIST.*  FROM (
+
+			SELECT
+				A.EQPMN_SN,
+		       	A.EQPMN_NM,
+		       	A.EQPMN_NM_EN,
+		       	A.EQPMN_SE,
+	       		FN_CMMNCODE_NM('COM147',A.EQPMN_SE) AS EQPMN_SE_NM,
+		       	A.RESVE_SE,
+		       	FN_CMMNCODE_NM('COM061',A.RESVE_SE) AS RESVE_SE_NM,
+		       	A.RESVE_POSBL_AT,
+		       	A.RESVE_IMPRTY_RESN,
+		       	A.USE_AT,
+		       	A.DTLS_INFO,
+		       	A.DTLS_INFO_EN,
+		       	A.ATCH_FILE_ID,
+		       	TO_CHAR(A.FRST_REGIST_PNTTM, 'YYYY-MM-DD HH24:MI:SS') AS FRST_REGIST_PNTTM,
+		       	A.FRST_REGISTER_ID,
+		       	TO_CHAR(A.LAST_UPDT_PNTTM, 'YYYY-MM-DD HH24:MI:SS') AS LAST_UPDT_PNTTM,
+		       	A.LAST_UPDUSR_ID,
+		       	A.DELETE_AT,
+		       	A.OPEN_AT,
+		       	(SELECT COUNT(*) FROM TN_CULT_EQPMN_DETAIL WHERE EQPMN_SN = A.EQPMN_SN AND DELETE_AT = '0' ) AS EQPMN_QY
+	  		FROM TN_CULT_EQPMN A
+	  		WHERE DELETE_AT = 'N'
+	]]>
+		<include refid="HkCultureResveDAO.listEqpmn-where" />
+	<![CDATA[
+	  		ORDER BY A.FRST_REGIST_PNTTM DESC
+
+	  		) ALL_LIST
+	  	) TB WHERE  RNUM  > #firstIndex# AND  RNUM <= #firstIndex# + #recordCountPerPage#
+
+	]]>
+	</select>
+
+	<!-- 장비관리 목록카운트 -->
+	<select id="HkCultureResveDAO.listEqpmnCnt" parameterClass="zvl" resultClass="java.lang.Integer" >
+	<![CDATA[
+		/* HkCultureResveDAO.listEqpmnCnt */
+		SELECT COUNT(*) FROM TN_CULT_EQPMN A
+		WHERE DELETE_AT = 'N'
+	]]>
+		<include refid="HkCultureResveDAO.listEqpmn-where" />
+	</select>
+
+
+	<!-- 장비관리 상세 -->
+	<select id="HkCultureResveDAO.viewEqpmn" parameterClass="zvl" resultClass="zvl" >
+	<![CDATA[
+		/* HkCultureResveDAO.viewEqpmn */
+		SELECT
+			A.EQPMN_SN,
+	       	A.EQPMN_NM,
+	       	A.EQPMN_NM_EN,
+	       	A.EQPMN_SE,
+	       	FN_CMMNCODE_NM('COM147',A.EQPMN_SE) AS EQPMN_SE_NM,
+	       	A.RESVE_SE,
+	       	FN_CMMNCODE_NM('COM061',A.RESVE_SE) AS RESVE_SE_NM,
+	       	A.RESVE_POSBL_AT,
+	       	A.RESVE_IMPRTY_RESN,
+	       	A.USE_AT,
+	       	A.DTLS_INFO,
+	       	A.DTLS_INFO_EN,
+	       	A.ATCH_FILE_ID,
+	       	TO_CHAR(A.FRST_REGIST_PNTTM, 'YYYY-MM-DD HH24:MI:SS') AS FRST_REGIST_PNTTM,
+	       	A.FRST_REGISTER_ID,
+	       	TO_CHAR(A.LAST_UPDT_PNTTM, 'YYYY-MM-DD HH24:MI:SS') AS LAST_UPDT_PNTTM,
+	       	A.LAST_UPDUSR_ID,
+	       	(SELECT COUNT(*) FROM TN_CULT_EQPMN_DETAIL WHERE EQPMN_SN = A.EQPMN_SN AND DELETE_AT = '0' ) AS EQPMN_QY,
+	       	A.DELETE_AT,
+	       	A.OPEN_AT
+  		FROM TN_CULT_EQPMN A
+  		WHERE DELETE_AT = 'N'
+  		AND EQPMN_SN = #eqpmnSn#
+	]]>
+	</select>
+
+	<!-- 장비관리 등록 -->
+	<insert id="HkCultureResveDAO.insertEqpmn" parameterClass="zvl">
+		<selectKey resultClass="java.lang.Long" keyProperty="eqpmnSn">
+			SELECT NVL(MAX(EQPMN_SN),0) + 1 AS EQPMN_SN FROM TN_CULT_EQPMN
+		</selectKey>
+	<![CDATA[
+		/* HkCultureResveDAO.insertEqpmn */
+		INSERT INTO TN_CULT_EQPMN (
+           EQPMN_SN,
+           EQPMN_NM,
+           EQPMN_NM_EN,
+           RESVE_SE,
+           RESVE_POSBL_AT,
+           RESVE_IMPRTY_RESN,
+           USE_AT,
+           DTLS_INFO,
+           DTLS_INFO_EN,
+           ATCH_FILE_ID,
+           FRST_REGIST_PNTTM,
+           FRST_REGISTER_ID,
+           LAST_UPDT_PNTTM,
+           LAST_UPDUSR_ID,
+           DELETE_AT,
+           EQPMN_SE,
+           OPEN_AT
+       )
+       VALUES (
+           #eqpmnSn#,
+           #eqpmnNm#,
+           #eqpmnNmEn#,
+           #resveSe#,
+           #resvePosblAt#,
+           #resveImprtyResn#,
+           #useAt#,
+           #dtlsInfo#,
+           #dtlsInfoEn#,
+           #atchFileId#,
+           SYSDATE,
+           #frstRegisterId#,
+           SYSDATE,
+           #lastUpdusrId#,
+           'N',
+           #eqpmnSe#,
+           #openAt#
+       )
+	]]>
+	</insert>
+
+	<!-- 장비관리 수정 -->
+	<update id="HkCultureResveDAO.updateEqpmn" parameterClass="zvl">
+	<![CDATA[
+		/* HkCultureResveDAO.updateEqpmn */
+		UPDATE TN_CULT_EQPMN SET
+			EQPMN_SN	= #eqpmnSn#,
+           	EQPMN_NM	= #eqpmnNm#,
+           	EQPMN_NM_EN	= #eqpmnNmEn#,
+           	RESVE_SE	= #resveSe#,
+           	RESVE_POSBL_AT	= #resvePosblAt#,
+           	RESVE_IMPRTY_RESN	= #resveImprtyResn#,
+           	USE_AT	= #useAt#,
+           	DTLS_INFO	= #dtlsInfo#,
+           	DTLS_INFO_EN	= #dtlsInfoEn#,
+           	ATCH_FILE_ID	= #atchFileId#,
+           	LAST_UPDT_PNTTM	= SYSDATE,
+           	LAST_UPDUSR_ID	= #lastUpdusrId#,
+           	EQPMN_SE	= 	#eqpmnSe#,
+           	OPEN_AT		= 	#openAt#
+		WHERE EQPMN_SN = #eqpmnSn#
+	]]>
+	</update>
+
+	<!-- 장비관리 삭제 -->
+	<update id="HkCultureResveDAO.deleteEqpmn" parameterClass="zvl">
+	<![CDATA[
+		/* HkCultureResveDAO.deleteEqpmn */
+		UPDATE TN_CULT_EQPMN SET
+           	DELETE_AT = 'Y',
+           	LAST_UPDT_PNTTM	= SYSDATE,
+           	LAST_UPDUSR_ID	= #lastUpdusrId#
+		WHERE EQPMN_SN = #eqpmnSn#
+	]]>
+	</update>
+
+
+
+
+
+	<!-- 장비상세관리 등록 -->
+	<insert id="HkCultureResveDAO.insertEqpmnDetail" parameterClass="zvl">
+	<![CDATA[
+		/* HkCultureResveDAO.insertEqpmnDetail */
+		INSERT INTO TN_CULT_EQPMN_DETAIL (
+			EQPMN_DETAIL_SN,
+			EQPMN_SN,
+           	EQPMN_DETAIL_NM,
+           	USE_AT,
+           	RM,
+           	DELETE_AT
+       )
+       VALUES (
+       		(SELECT NVL(MAX(EQPMN_DETAIL_SN),0) + 1 AS EQPMN_DETAIL_SN FROM TN_CULT_EQPMN_DETAIL),
+            #eqpmnSn#,
+           	#eqpmnDetailNm#,
+           	#useAt#,
+           	#rm#,
+           	'0'
+       )
+	]]>
+	</insert>
+
+	<!-- 장비상세관리 수정 -->
+	<update id="HkCultureResveDAO.updateEqpmnDetail" parameterClass="zvl">
+	<![CDATA[
+		/* HkCultureResveDAO.updateEqpmnDetail */
+		UPDATE TN_CULT_EQPMN_DETAIL SET
+        	EQPMN_DETAIL_NM = #eqpmnDetailNm#,
+        	USE_AT = #useAt#,
+        	RM = #rm#
+		WHERE EQPMN_DETAIL_SN = #eqpmnDetailSn#
+	]]>
+	</update>
+
+	<!-- 장비상세관리 삭제 -->
+	<update id="HkCultureResveDAO.deleteEqpmnDetail" parameterClass="zvl">
+	<![CDATA[
+		/* HkCultureResveDAO.deleteEqpmnDetail */
+		UPDATE TN_CULT_EQPMN_DETAIL SET
+        	DELETE_AT = '1'
+		WHERE EQPMN_DETAIL_SN = #eqpmnDetailSn#
+	]]>
+	</update>
+
+
+
+	<!-- 장비상세관리 목록  -->
+	<select id="HkCultureResveDAO.listEqpmnDetail" parameterClass="zvl" resultClass="zvl" >
+	<![CDATA[
+		/* HkCultureResveDAO.listEqpmnDetail */
+		SELECT
+			A.EQPMN_SN,
+       		A.EQPMN_DETAIL_SN,
+       		A.EQPMN_DETAIL_NM,
+       		A.USE_AT,
+       		A.RM
+  		FROM TN_CULT_EQPMN_DETAIL A
+  		WHERE A.EQPMN_SN = #eqpmnSn#
+  		AND A.DELETE_AT = '0'
+		ORDER BY A.EQPMN_DETAIL_SN ASC
+	]]>
+	</select>
+
+
+	<!-- 장비상세관리 삭제 By EqpmnSn -->
+	<update id="HkCultureResveDAO.deleteEqpmnDetailByEqpmnSn" parameterClass="zvl">
+	<![CDATA[
+		/* HkCultureResveDAO.deleteEqpmnDetailByEqpmnSn */
+		UPDATE TN_CULT_EQPMN_DETAIL A SET
+		DELETE_AT = '1'
+		WHERE EQPMN_SN = #eqpmnSn#
+	]]>
+	</update>
+
+
+
+	<!-- 예약현황관린 조건 -->
+	<sql id="HkCultureResveDAO.listResveSttus-where">
+		<isNotEmpty prepend="AND" property="areaSe">
+			<![CDATA[	AREA_SE = #areaSe#		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="lcSe">
+			<![CDATA[	LC_SE = #lcSe#		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="fcltySe">
+			<![CDATA[	FCLTY_SE = #fcltySe#		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="spceNm">
+			<![CDATA[	SPCE_NM = #spceNm#		]]>
+		</isNotEmpty>
+
+		<isNotEmpty prepend="AND" property="eqpmnSn">
+			<![CDATA[
+				RESVE_SN  IN (
+					SELECT AA.RESVE_SN FROM TN_CULT_RESVE_EQPMN AA, TN_CULT_EQPMN_DETAIL BB
+					WHERE BB.EQPMN_SN = #eqpmnSn#
+					AND AA.EQPMN_DETAIL_SN = BB.EQPMN_DETAIL_SN
+				)
+			]]>
+		</isNotEmpty>
+
+		<isNotEmpty prepend="AND" property="resveNo">
+			<![CDATA[	RESVE_NO = #resveNo#		]]>
+		</isNotEmpty>
+
+		<isNotEmpty prepend="AND" property="resveNm">
+			<![CDATA[	RESVE_NM like '%' || #resveNm# || '%'	]]>
+		</isNotEmpty>
+
+		<isNotEmpty prepend="AND" property="resveSttus">
+			<![CDATA[	RESVE_STTUS = #resveSttus#		]]>
+		</isNotEmpty>
+
+		<isNotEmpty prepend="AND" property="useAt">
+			<![CDATA[	CASE WHEN TRUNC(A.RESVE_DT)+ (1/24)*(A.RESVE_END_TIME+1) <= SYSDATE AND A.USE_AT = 'W'   THEN 'N' ELSE A.USE_AT END  = #useAt#		]]>
+		</isNotEmpty>
+
+		<isNotEmpty prepend="AND" property="resveStDt">
+			<![CDATA[	RESVE_DT >= TO_DATE(#resveStDt#, 'YYYY-MM-DD')		]]>
+		</isNotEmpty>
+
+		<isNotEmpty prepend="AND" property="resveEdDt">
+			<![CDATA[	RESVE_DT <= TO_DATE(#resveEdDt#, 'YYYY-MM-DD')		]]>
+		</isNotEmpty>
+
+		<isNotEmpty prepend="AND" property="resveBeginTime">
+			<![CDATA[	TO_NUMBER(#resveBeginTime#) BETWEEN RESVE_BEGIN_TIME AND  RESVE_END_TIME		]]>
+		</isNotEmpty>
+
+		<isNotEmpty prepend="AND" property="resveEndTime">
+			<![CDATA[	TO_NUMBER(#resveEndTime#) BETWEEN RESVE_BEGIN_TIME AND RESVE_END_TIME 		]]>
+		</isNotEmpty>
+
+		<isEqual prepend="AND" property="myPageTp" compareValue="Y">
+			<![CDATA[	USER_SN = #userSn#		]]>
+		</isEqual>
+
+	</sql>
+
+
+	<!-- 일볋 시설예약현황 목록 -->
+	<select id="HkCultureResveDAO.listDalyResveSttus" parameterClass="zvl" resultClass="zvl" >
+		<![CDATA[
+			/* HkCultureResveDAO.listDalyResveSttus */
+			SELECT
+				B.FCLTY_SN,
+                A.RESVE_SN,
+				TO_CHAR(A.RESVE_DT,'YYYY-MM-DD') AS RESVE_DT,
+			    FN_CMMNCODE_NM('COM172',B.AREA_SE) AS AREA_SE_NM,
+			    FN_CMMNCODE_NM('COM172',B.LC_SE) AS LC_SE_NM,
+			    FN_CMMNCODE_NM('COM172',B.FCLTY_SE) AS FCLTY_SE_NM,
+			    B.SPCE_NM,
+                A.RESVE_BEGIN_TIME,
+                A.RESVE_END_TIME,
+                A.RESVE_END_TIME - A.RESVE_BEGIN_TIME AS TIME_CNT ,
+                A.RESVE_NM,
+                A.USE_NMPR || '명' as USE_NMPR,
+                A.USE_PURPOSE_CN,
+                (SELECT COUNT(*) FROM TN_CULT_RESVE_EQPMN WHERE RESVE_SN = A.RESVE_SN) AS EQPMN_CNT,
+                A.NTSS_AT,
+                0 AS SCHDUL_CNT
+ 			FROM TN_CULT_FCLTY B
+            LEFT OUTER JOIN TN_CULT_FCLTY_RESVE A ON  A.FCLTY_SN = B.FCLTY_SN AND A.DELETE_AT = 'N'
+             	AND A.RESVE_STTUS = '02'
+                AND TO_CHAR(A.RESVE_DT,'YYYY-MM-DD') = #resveDt#
+			WHERE B.DELETE_AT = 'N'
+			ORDER BY B.AREA_SE, B.LC_SE,B.FCLTY_SE, B.SPCE_NM
+		]]>
+	</select>
+
+
+	<!-- 예약현황관리 목록 -->
+	<select id="HkCultureResveDAO.listResveSttus" parameterClass="zvl" resultClass="zvl" >
+	<![CDATA[
+		/* HkCultureResveDAO.listResveSttus */
+		SELECT
+			TB.*,
+			FN_CMMNCODE_NM('COM061',RESVE_SE) AS RESVE_SE_NM,
+       		FN_CMMNCODE_NM('COM172',AREA_SE) AS AREA_SE_NM,
+	       	FN_CMMNCODE_NM('COM172',LC_SE) AS LC_SE_NM,
+	       	FN_CMMNCODE_NM('COM172',FCLTY_SE) AS FCLTY_SE_NM,
+		   	FN_CMMNCODE_NM('COM081',AGE_SE) AS AGE_SE_NM,
+		   	FN_CMMNCODE_NM('COM056',JOB_SE) AS JOB_SE_NM,
+		   	FN_CMMNCODE_NM('COM063',RESDNC_SE) AS RESDNC_SE_NM,
+		   	FN_CMMNCODE_NM('COM173',USE_PURPOSE_SE) AS USE_PURPOSE_SE_NM,
+		   	FN_CMMNCODE_NM('COM146',RESVE_RECPTN_SE) AS RESVE_RECPTN_SE_NM,
+		   	FN_CMMNCODE_NM('COM071',RESVE_STTUS) AS RESVE_STTUS_NM,
+		   	FN_CMMNCODE_NM('COM073',USE_AT) AS USE_AT_NM
+		FROM  (
+			SELECT ROWNUM RNUM, ALL_LIST.*  FROM (
+
+			SELECT
+				B.RESVE_SE,
+	       		B.AREA_SE,
+		       	B.LC_SE,
+		       	B.FCLTY_SE,
+		       	B.SPCE_NM,
+		       	B.SPCE_NM_EN,
+				A.FCLTY_SN,
+			    A.RESVE_SN,
+			    A.USER_SN,
+			   	A.RESVE_NM,
+			   	A.AGE_SE,
+			   	A.JOB_SE,
+			   	A.RESDNC_SE,
+			   	A.USE_NMPR,
+			   	A.USE_PURPOSE_SE,
+			   	A.USE_PURPOSE_CN,
+			   	A.RESVE_RECPTN_SE,
+			   	TO_CHAR(A.RESVE_DT, 'YYYY-MM-DD') AS RESVE_DT,
+			   	A.RESVE_STTUS,
+			   	DECODE(A.RESVE_STTUS,'01',1,'03',2,'02',3,'04',4,'05',5,6) AS RESVE_OROR_SORT,
+			   	CASE
+			   	WHEN TRUNC(A.RESVE_DT)+ (1/24)*(A.RESVE_END_TIME+1) <= SYSDATE AND A.USE_AT = 'W'   THEN 'N'
+			   	ELSE A.USE_AT
+			   	END  AS USE_AT,
+			   	A.RESVE_NO,
+			   	A.RESVE_BEGIN_TIME,
+			   	A.RESVE_END_TIME,
+			   	TO_CHAR(A.FRST_REGIST_PNTTM, 'YYYY-MM-DD HH24:MI:SS') AS FRST_REGIST_PNTTM,
+		       	A.FRST_REGISTER_ID,
+		       	TO_CHAR(A.LAST_UPDT_PNTTM, 'YYYY-MM-DD HH24:MI:SS') AS LAST_UPDT_PNTTM,
+		       	A.LAST_UPDUSR_ID,
+			   	A.DELETE_AT,
+				(
+                	SELECT TO_CHAR(WM_CONCAT(EQPMN_NM || '('|| EQPMN_QY || ')')) FROM (
+                    	SELECT
+                          CC.RESVE_SN, BB.EQPMN_NM, COUNT(AA.EQPMN_DETAIL_SN) AS EQPMN_QY
+                      FROM TN_CULT_EQPMN_DETAIL AA, TN_CULT_EQPMN BB, TN_CULT_RESVE_EQPMN CC
+                      WHERE AA.EQPMN_SN = BB.EQPMN_SN
+                      AND AA.EQPMN_DETAIL_SN = CC.EQPMN_DETAIL_SN
+                      GROUP BY CC.RESVE_SN, BB.EQPMN_NM
+                      ORDER BY BB.EQPMN_NM ASC
+                    ) WHERE RESVE_SN = A.RESVE_SN
+
+                ) AS EQPMN_NMS,
+                CASE WHEN TRUNC(A.RESVE_DT-1) >= TRUNC(SYSDATE) THEN 'Y' ELSE 'N' END AS CANCEL_USE_AT,
+                A.ADM_CMMNT
+			 FROM TN_CULT_FCLTY_RESVE A, TN_CULT_FCLTY B
+			 WHERE A.DELETE_AT = 'N'
+			 AND A.FCLTY_SN = B.FCLTY_SN(+)
+
+
+	]]>
+		<include refid="HkCultureResveDAO.listResveSttus-where" />
+	<![CDATA[
+	  		ORDER BY RESVE_OROR_SORT ASC, A.RESVE_DT DESC, A.RESVE_BEGIN_TIME ASC
+
+	  		) ALL_LIST
+	  	) TB WHERE  RNUM  > #firstIndex# AND  RNUM <= #firstIndex# + #recordCountPerPage#
+
+	]]>
+	</select>
+
+	<!-- 예약현황관리 목록카운트 -->
+	<select id="HkCultureResveDAO.listResveSttusCnt" parameterClass="zvl" resultClass="java.lang.Integer" >
+	<![CDATA[
+		/* HkCultureResveDAO.listResveSttusCnt */
+		SELECT
+			COUNT(*) AS CNT
+		FROM TN_CULT_FCLTY_RESVE A, TN_CULT_FCLTY B
+		WHERE A.DELETE_AT = 'N'
+		AND A.FCLTY_SN = B.FCLTY_SN(+)
+	]]>
+		<include refid="HkCultureResveDAO.listResveSttus-where" />
+	</select>
+
+
+	<!-- 예약현황 엑셀목록 -->
+	<select id="HkCultureResveDAO.listExcelResveSttus" parameterClass="zvl" resultClass="zvl" >
+	<![CDATA[
+		/* HkCultureResveDAO.listExcelResveSttus */
+		SELECT
+			A.RESVE_NO,
+			FN_CMMNCODE_NM('COM061',B.RESVE_SE) AS RESVE_SE_NM,
+       		FN_CMMNCODE_NM('COM172',B.AREA_SE) AS AREA_SE_NM,
+	       	FN_CMMNCODE_NM('COM172',B.LC_SE) AS LC_SE_NM,
+	       	FN_CMMNCODE_NM('COM172',B.FCLTY_SE) AS FCLTY_SE_NM,
+	       	B.SPCE_NM,
+	       	B.SPCE_NM_EN,
+	       	/*
+	       	(
+            	SELECT TO_CHAR(WM_CONCAT(EQPMN_NM || '('|| EQPMN_QY || ')')) FROM (
+                	SELECT
+                      CC.RESVE_SN, BB.EQPMN_NM, COUNT(AA.EQPMN_DETAIL_SN) AS EQPMN_QY
+                  FROM TN_CULT_EQPMN_DETAIL AA, TN_CULT_EQPMN BB, TN_CULT_RESVE_EQPMN CC
+                  WHERE AA.EQPMN_SN = BB.EQPMN_SN
+                  AND AA.EQPMN_DETAIL_SN = CC.EQPMN_DETAIL_SN
+                  GROUP BY CC.RESVE_SN, BB.EQPMN_NM
+                  ORDER BY BB.EQPMN_NM ASC
+                ) WHERE RESVE_SN = A.RESVE_SN
+
+            ) AS EQPMN_NMS,
+            */
+		   	A.RESVE_NM,
+		   	TO_CHAR(A.RESVE_DT, 'YYYY-MM-DD') AS RESVE_DT,
+		   	LPAD(A.RESVE_BEGIN_TIME,2,'0') || ':00 ~' || LPAD(A.RESVE_END_TIME,2,'0') || ':59' AS RESVE_TIME,
+		   	FN_CMMNCODE_NM('COM071',A.RESVE_STTUS) AS RESVE_STTUS_NM,
+		   	A.MBTLNUM,
+		   	A.EMAIL,
+		   	FN_CMMNCODE_NM('COM063',A.RESDNC_SE) AS RESDNC_SE_NM,
+		   	A.USE_NMPR,
+		   	FN_CMMNCODE_NM('COM146',A.RESVE_RECPTN_SE) AS RESVE_RECPTN_SE_NM,
+		   	FN_CMMNCODE_NM('COM173',A.USE_PURPOSE_SE) AS USE_PURPOSE_SE_NM,
+		   	A.USE_PURPOSE_CN,
+		   	CASE
+		   	WHEN TRUNC(A.RESVE_DT)+ (1/24)*(A.RESVE_END_TIME+1) <= SYSDATE AND A.USE_AT = 'W'   THEN FN_CMMNCODE_NM('COM073','N')
+		   	ELSE FN_CMMNCODE_NM('COM073',A.USE_AT)
+		   	END  AS USE_AT_NM,
+		   	TO_CHAR(A.FRST_REGIST_PNTTM, 'YYYY-MM-DD HH24:MI:SS') AS FRST_REGIST_PNTTM,
+		   	A.ADM_CMMNT
+		 FROM TN_CULT_FCLTY_RESVE A, TN_CULT_FCLTY B
+		 WHERE A.DELETE_AT = 'N'
+		 AND A.FCLTY_SN = B.FCLTY_SN(+)
+	]]>
+		<include refid="HkCultureResveDAO.listResveSttus-where" />
+	<![CDATA[
+  		ORDER BY A.RESVE_DT DESC
+	]]>
+	</select>
+
+	<!-- 예약현황관리 상세 -->
+	<select id="HkCultureResveDAO.viewResveSttus" parameterClass="zvl" resultClass="zvl" >
+	<![CDATA[
+		/* HkCultureResveDAO.viewResveSttus */
+		SELECT
+			FN_CMMNCODE_NM('COM061',B.RESVE_SE) AS RESVE_SE_NM,
+       		B.AREA_SE,
+       		FN_CMMNCODE_NM('COM172',B.AREA_SE) AS AREA_SE_NM,
+	       	B.LC_SE,
+	       	FN_CMMNCODE_NM('COM172',B.LC_SE) AS LC_SE_NM,
+	       	B.FCLTY_SE,
+	       	FN_CMMNCODE_NM('COM172',B.FCLTY_SE) AS FCLTY_SE_NM,
+	       	B.SPCE_NM,
+	       	B.SPCE_NM_EN,
+			A.FCLTY_SN,
+		    A.RESVE_SN,
+		    A.USER_SN,
+		   	A.RESVE_NM,
+		   	crypto.dec('normal', A.MBTLNUM) as MBTLNUM,
+		   	crypto.dec('normal', A.EMAIL) as EMAIL,
+		   	A.AGE_SE,
+			FN_CMMNCODE_NM('COM081',A.AGE_SE) AS AGE_SE_NM,
+		   	A.JOB_SE,
+		   	FN_CMMNCODE_NM('COM056',A.JOB_SE) AS JOB_SE_NM,
+		   	A.RESDNC_SE,
+		   	FN_CMMNCODE_NM('COM063',A.RESDNC_SE) AS RESDNC_SE_NM,
+		   	A.USE_NMPR,
+		   	A.USE_PURPOSE_SE,
+		   	FN_CMMNCODE_NM('COM173',A.USE_PURPOSE_SE) AS USE_PURPOSE_SE_NM,
+		   	A.USE_PURPOSE_CN,
+		   	A.RESVE_RECPTN_SE,
+		   	FN_CMMNCODE_NM('COM146',A.RESVE_RECPTN_SE) AS RESVE_RECPTN_SE_NM,
+		   	TO_CHAR(A.RESVE_DT, 'YYYY-MM-DD') AS RESVE_DT,
+		   	A.RESVE_STTUS,
+		   	FN_CMMNCODE_NM('COM071',A.RESVE_STTUS) AS RESVE_STTUS_NM,
+		   	CASE
+		   	WHEN TRUNC(A.RESVE_DT)+ (1/24)*(A.RESVE_END_TIME+1) <= SYSDATE AND A.USE_AT = 'W'   THEN 'N'
+		   	ELSE A.USE_AT
+		   	END  AS USE_AT,
+		   	CASE
+		   	WHEN TRUNC(A.RESVE_DT)+ (1/24)*(A.RESVE_END_TIME+1) <= SYSDATE AND A.USE_AT = 'W'   THEN FN_CMMNCODE_NM('COM073','N')
+		   	ELSE FN_CMMNCODE_NM('COM073',A.USE_AT)
+		   	END  AS USE_AT_NM,
+		   	A.RESVE_NO,
+		   	A.RESVE_BEGIN_TIME,
+		   	A.RESVE_END_TIME,
+		   	A.NTSS_AT,
+	       	TO_CHAR(A.NTSS_DT, 'YYYY-MM-DD HH24:MI:SS') AS NTSS_DT,
+	       	A.RE_NTSS_AT,
+	       	TO_CHAR(A.RE_NTSS_DT, 'YYYY-MM-DD HH24:MI:SS') AS RE_NTSS_DT,
+	       	A.KOSK_IP,
+		   	TO_CHAR(A.FRST_REGIST_PNTTM, 'YYYY-MM-DD HH24:MI:SS') || substr(to_char(A.FRST_REGIST_PNTTM),18,7) AS FRST_REGIST_PNTTM,
+	       	A.FRST_REGISTER_ID,
+	       	TO_CHAR(A.LAST_UPDT_PNTTM, 'YYYY-MM-DD HH24:MI:SS') AS LAST_UPDT_PNTTM,
+	       	A.LAST_UPDUSR_ID,
+		   	A.DELETE_AT,
+		   	A.ADM_CMMNT
+		 FROM TN_CULT_FCLTY_RESVE A, TN_CULT_FCLTY B
+		 WHERE A.DELETE_AT = 'N'
+		 AND A.FCLTY_SN = B.FCLTY_SN(+)
+  		 AND A.RESVE_SN = #resveSn#
+	]]>
+
+		<isNotEqual prepend="AND" property="siteName" compareValue="bos">
+			A.USER_SN = #userSn#
+		</isNotEqual>
+	</select>
+
+	<!-- 사용자 하루 예약건수 제한체크 -->
+	<select id="HkCultureResveDAO.listUserReseveCount" parameterClass="zvl" resultClass="java.lang.Integer">
+		SELECT COUNT(*) CNT FROM TN_CULT_FCLTY_RESVE A
+		WHERE A.USER_SN = #userSn#
+		AND A.DELETE_AT = 'N'
+		AND A.RESVE_STTUS !='02'
+		<isEqual property="resveDtCnt" compareValue="Y">
+		AND TRUNC(A.RESVE_DT) = TRUNC(TO_DATE(#resveDt#,'YYYY-MM-DD'))
+		</isEqual>
+		<isEqual property="resveDtCnt" compareValue="N">
+		AND TRUNC(FRST_REGIST_PNTTM) = TRUNC(SYSDATE)
+		</isEqual>
+	</select>
+
+	<!-- 패널티 적용 건수 체크 -->
+	<select id="HkCultureResveDAO.listUserPenaltyCount" parameterClass="zvl" resultClass="java.lang.Integer">
+	<![CDATA[
+		SELECT
+        	NVL(SUM( CASE
+            	WHEN TRUNC(RESVE_DT)+ (1/24)*(RESVE_END_TIME+1) <= SYSDATE AND USE_AT = 'W'   THEN 1 ELSE DECODE(USE_AT, 'N',1,0)
+            END),0)  AS CNT
+        FROM
+    	TN_CULT_FCLTY_RESVE WHERE DELETE_AT = 'N'
+        AND (RESVE_DT - 90) <= SYSDATE
+        AND (RESVE_DT + 30) >= SYSDATE
+        AND USER_SN = #userSn#
+        AND RESVE_STTUS = '02'
+	]]>
+	</select>
+
+
+	<!-- 예약현황장비 목록  -->
+	<select id="HkCultureResveDAO.listEqpmnByResve" parameterClass="zvl" resultClass="zvl" >
+	<![CDATA[
+		/* HkCultureResveDAO.listEqpmnByResve */
+		SELECT
+			C.RESVE_SN,
+			A.EQPMN_NM,
+			A.EQPMN_SN,
+			COUNT(B.EQPMN_DETAIL_SN) AS EQPMN_QY,
+			TO_CHAR(WM_CONCAT(B.EQPMN_DETAIL_SN)) AS EQPMN_DETAIL_SN_LIST
+		FROM TN_CULT_EQPMN A, TN_CULT_EQPMN_DETAIL B, TN_CULT_RESVE_EQPMN C
+		WHERE A.EQPMN_SN = B.EQPMN_SN
+		AND B.EQPMN_DETAIL_SN = C.EQPMN_DETAIL_SN
+  		AND C.RESVE_SN = #resveSn#
+  		AND A.DELETE_AT = 'N'
+  		AND A.RESVE_POSBL_AT = 'Y'
+  		GROUP BY C.RESVE_SN, A.EQPMN_NM, A.EQPMN_SN
+		ORDER BY A.EQPMN_NM ASC
+	]]>
+	</select>
+
+	<!-- 예약장비 목록 (날짜시간별)  -->
+	<select id="HkCultureResveDAO.listEqpmnByDt" parameterClass="zvl" resultClass="zvl" >
+	<![CDATA[
+		/* HkCultureResveDAO.listEqpmnByDt */
+		SELECT
+			C.RESVE_SN,
+			A.EQPMN_NM,
+			A.EQPMN_SN,
+			COUNT(B.EQPMN_DETAIL_SN) AS EQPMN_QY,
+			TO_CHAR(WM_CONCAT(B.EQPMN_DETAIL_SN)) AS EQPMN_DETAIL_SN_LIST
+		FROM TN_CULT_EQPMN A, TN_CULT_EQPMN_DETAIL B, TN_CULT_RESVE_EQPMN C, TN_CULT_FCLTY_RESVE D
+		WHERE A.EQPMN_SN = B.EQPMN_SN
+		AND B.EQPMN_DETAIL_SN = C.EQPMN_DETAIL_SN
+		AND C.RESVE_SN = D.RESVE_SN
+		AND TO_CHAR(D.RESVE_DT, 'YYYYMMDD') = #resveDt#
+  		AND A.DELETE_AT = 'N'
+  		AND A.RESVE_POSBL_AT = 'Y'
+  		AND D.RESVE_STTUS IN ('01','02','03')
+  		AND (
+  			D.RESVE_BEGIN_TIME BETWEEN #beginTime# AND  #endTime#
+  			OR D.RESVE_END_TIME BETWEEN #beginTime# AND  #endTime#
+  			OR (D.RESVE_BEGIN_TIME <= #beginTime# AND D.RESVE_END_TIME >= #endTime#)
+  		)
+  		GROUP BY C.RESVE_SN, A.EQPMN_NM, A.EQPMN_SN
+		ORDER BY A.EQPMN_NM ASC
+	]]>
+	</select>
+
+
+	<!-- 예약현황관리 등록 -->
+	<insert id="HkCultureResveDAO.insertResve" parameterClass="zvl">
+		<selectKey resultClass="java.lang.Long" keyProperty="resveSn">
+			SELECT NVL(MAX(RESVE_SN),0) + 1 AS RESVE_SN FROM TN_CULT_FCLTY_RESVE
+		</selectKey>
+	<![CDATA[
+		/* HkCultureResveDAO.insertResve */
+		INSERT INTO TN_CULT_FCLTY_RESVE (
+           FCLTY_SN,
+           RESVE_SN,
+           USER_SN,
+           RESVE_NM,
+           MBTLNUM,
+           EMAIL,
+           AGE_SE,
+           JOB_SE,
+           RESDNC_SE,
+           USE_NMPR,
+           USE_PURPOSE_CN,
+           RESVE_RECPTN_SE,
+           RESVE_DT,
+           RESVE_STTUS,
+           USE_AT,
+           RESVE_NO,
+           RESVE_BEGIN_TIME,
+           RESVE_END_TIME,
+           FRST_REGIST_PNTTM,
+           FRST_REGISTER_ID,
+           LAST_UPDT_PNTTM,
+           LAST_UPDUSR_ID,
+           DELETE_AT,
+           USE_PURPOSE_SE
+       )
+       VALUES (
+           #fcltySn#,
+           #resveSn#,
+           #userSn#,
+           #resveNm#,
+           crypto.enc('normal', #mbtlnum#),
+           crypto.enc('normal', #email#),
+           #ageSe#,
+           #jobSe#,
+           #resdncSe#,
+           #useNmpr#,
+           #usePurposeCn#,
+           #resveRecptnSe#,
+           TO_DATE(#resveDt#,'YYYY-MM-DD'),
+           DECODE('bos',#siteName#,'02',#resveSttus#),
+           'W',
+           #resveNo#,
+           #resveBeginTime#,
+           #resveEndTime#,
+           current_timestamp,
+           #frstRegisterId#,
+           SYSDATE,
+           #lastUpdusrId#,
+           'N',
+           #usePurposeSe#
+       )
+	]]>
+	</insert>
+
+
+
+	<!-- 예약현황관리 수정 -->
+	<update id="HkCultureResveDAO.updateResve" parameterClass="zvl">
+	<![CDATA[
+		/* HkCultureResveDAO.updateResve */
+		UPDATE TN_CULT_FCLTY_RESVE SET
+			FCLTY_SN	= #fcltySn#,
+           	USER_SN		= #userSn#,
+           	RESVE_NM	= #resveNm#,
+           	MBTLNUM		= crypto.enc('normal', #mbtlnum#),
+           	EMAIL		= crypto.enc('normal', #email#),
+           	AGE_SE		= #ageSe#,
+           	JOB_SE		= #jobSe#,
+           	RESDNC_SE	= #resdncSe#,
+           	USE_NMPR	= #useNmpr#,
+           	USE_PURPOSE_CN	= #usePurposeCn#,
+           	RESVE_RECPTN_SE	= #resveRecptnSe#,
+           	RESVE_DT	= TO_DATE(#resveDt#,'YYYY-MM-DD'),
+           	RESVE_STTUS	= #resveSttus#,
+           	RESVE_BEGIN_TIME	= #resveBeginTime#,
+           	RESVE_END_TIME	= #resveEndTime#,
+           	USE_PURPOSE_SE	= #usePurposeSe#,
+           	LAST_UPDT_PNTTM	= SYSDATE,
+           	LAST_UPDUSR_ID	= #lastUpdusrId#
+		WHERE RESVE_SN = #resveSn#
+	]]>
+	</update>
+
+	<!-- 예약현황관리 코멘트 수정 -->
+	<update id="HkCultureResveDAO.updateResveCmmnt" parameterClass="zvl">
+	<![CDATA[
+		/* HkCultureResveDAO.updateResveCmmnt */
+		UPDATE TN_CULT_FCLTY_RESVE SET
+			ADM_CMMNT = #admCmmnt#
+		WHERE RESVE_SN = #resveSn#
+	]]>
+	</update>
+
+	<!-- 예약현황관리 삭제 -->
+	<update id="HkCultureResveDAO.deleteResveSttus" parameterClass="zvl">
+	<![CDATA[
+		/* HkCultureResveDAO.deleteResveSttus */
+		UPDATE TN_CULT_FCLTY_RESVE SET
+           	DELETE_AT = 'Y',
+           	LAST_UPDT_PNTTM	= SYSDATE,
+           	LAST_UPDUSR_ID	= #lastUpdusrId#
+		WHERE RESVE_SN = #resveSn#
+	]]>
+	</update>
+
+	<!-- 예약 신청상세장비 등록 -->
+	<insert id="HkCultureResveDAO.insertResveEqpmn" parameterClass="zvl">
+	<![CDATA[
+		/* HkCultureResveDAO.insertResveEqpmn */
+		INSERT INTO TN_CULT_RESVE_EQPMN (
+           RESVE_SN,
+           EQPMN_DETAIL_SN
+       )
+       VALUES (
+           #resveSn#,
+           #eqpmnDetailSn#
+       )
+	]]>
+	</insert>
+
+
+	<!-- 예약 신청장비 삭제 -->
+	<delete id="HkCultureResveDAO.deleteResveEqpmnByResveSn" parameterClass="zvl">
+	<![CDATA[
+		/* HkCultureResveDAO.deleteResveEqpmnByResveSn */
+		DELETE FROM TN_CULT_RESVE_EQPMN
+		WHERE RESVE_SN = #resveSn#
+	]]>
+	</delete>
+
+	<!-- 예약상태 수정 -->
+	<update id="HkCultureResveDAO.updateResveSttus" parameterClass="zvl">
+	<![CDATA[
+		/* HkCultureResveDAO.updateResveSttus */
+		UPDATE TN_CULT_FCLTY_RESVE SET
+           	RESVE_STTUS	= #resveSttus#,
+           	RESVE_STTUS_DT = SYSDATE,
+           	LAST_UPDT_PNTTM	= SYSDATE,
+           	LAST_UPDUSR_ID	= #lastUpdusrId#
+		WHERE RESVE_SN = #resveSn#
+	]]>
+	<isEqual prepend="AND" property="siteName" compareValue="ckl">
+			USER_SN = #userSn#
+		</isEqual>
+	</update>
+
+	<!--달련관련 예약 목록(예약상태 취소값만 제외하고 불러옴) -->
+	<select id="HkCultureResveDAO.listResveByCal" parameterClass="zvl" resultClass="zvl" >
+	<![CDATA[
+		/* HkCultureResveDAO.listResveByCal */
+		SELECT
+			A.FCLTY_SN,
+		    A.RESVE_SN,
+		    A.USER_SN,
+		   	A.RESVE_NM,
+		   	A.MBTLNUM,
+		   	A.EMAIL,
+		   	A.AGE_SE,
+		   	TO_CHAR(A.RESVE_DT, 'YYYY-MM-DD') AS RESVE_DT,
+		   	A.RESVE_STTUS,
+		   	FN_CMMNCODE_NM('COM071',A.RESVE_STTUS) AS RESVE_STTUS_NM,
+		   	A.USE_AT,
+		   	FN_CMMNCODE_NM('COM073',A.USE_AT) AS USE_AT_NM,
+		   	A.RESVE_NO,
+		   	A.RESVE_BEGIN_TIME,
+		   	A.RESVE_END_TIME,
+		   	TO_CHAR(A.FRST_REGIST_PNTTM, 'YYYY-MM-DD HH24:MI:SS') AS FRST_REGIST_PNTTM,
+	       	A.FRST_REGISTER_ID,
+	       	TO_CHAR(A.LAST_UPDT_PNTTM, 'YYYY-MM-DD HH24:MI:SS') AS LAST_UPDT_PNTTM,
+	       	A.LAST_UPDUSR_ID,
+		   	A.DELETE_AT
+		 FROM TN_CULT_FCLTY_RESVE A
+		 WHERE A.DELETE_AT = 'N'
+		 AND TRUNC(RESVE_DT) = TO_DATE(#resveDt#,'YYYYMMDD')
+		 AND A.FCLTY_SN = #fcltySn#
+		 AND A.RESVE_STTUS NOT IN ('04','05')
+  		ORDER BY A.RESVE_DT ASC
+
+
+	]]>
+	</select>
+
+
+
+	<!-- 시설예약 통계 조건 -->
+	<sql id="HkCultureResveDAO.listStats-where">
+		<isNotEmpty property="resveSdate">
+			<isNotEmpty prepend="AND" property="resveEdate">
+				<![CDATA[	TRUNC(A.RESVE_DT) BETWEEN TO_DATE(#resveSdate#,'YYYY-MM-DD') AND  TO_DATE(#resveEdate#,'YYYY-MM-DD')		]]>
+			</isNotEmpty>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="areaSe">
+			<![CDATA[	AREA_SE = #areaSe#		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="lcSe">
+			<![CDATA[	LC_SE = #lcSe#		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="fcltySe">
+			<![CDATA[	FCLTY_SE = #fcltySe#		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="spceNm">
+			<![CDATA[	SPCE_NM = #spceNm#		]]>
+		</isNotEmpty>
+
+		<isNotEmpty prepend="AND" property="ageSe">
+			<![CDATA[	AGE_SE = #ageSe#		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="jobSe">
+			<![CDATA[	JOB_SE = #jobSe#		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="resdncSe">
+			<![CDATA[	RESDNC_SE = #resdncSe#		]]>
+		</isNotEmpty>
+	</sql>
+
+
+	<!--시설예약(시설/공간) 통계 -->
+	<select id="HkCultureResveDAO.listStatsFclty" parameterClass="zvl" resultClass="zvl" >
+	<![CDATA[
+		/* HkCultureResveDAO.listStatsFclty */
+		SELECT
+		    NVL(FN_CMMNCODE_NM('COM172',B.AREA_SE),'총계') AS AREA_SE_NM,
+		    NVL(FN_CMMNCODE_NM('COM172',B.LC_SE),'총계') AS LC_SE_NM,
+		    NVL(FN_CMMNCODE_NM('COM172',B.FCLTY_SE),'총계') AS FCLTY_SE_NM,
+		    NVL(B.SPCE_NM,'총계') AS SPCE_NM,
+			SUM(DECODE(A.RESVE_STTUS,'01',1,0)) AS STTUS01,
+		    SUM(DECODE(A.RESVE_STTUS,'02',1,0)) AS STTUS02,
+		    SUM(DECODE(A.RESVE_STTUS,'04',1,0)) AS STTUS04,
+		    SUM(DECODE(A.RESVE_STTUS,'03',1,0)) AS STTUS03,
+		    SUM(DECODE(A.RESVE_STTUS,'05',1,0)) AS STTUS05,
+		    COUNT(*) AS STTUSALL,
+			SUM(DECODE(A.RESVE_STTUS,'01',DECODE(A.USE_AT,'Y',1,0),0)) AS USE_YES,
+		    SUM(DECODE(A.RESVE_STTUS,'01',CASE WHEN TRUNC(A.RESVE_DT)+ (1/24)*(A.RESVE_END_TIME+1) > SYSDATE AND A.USE_AT = 'W'   THEN 1 ELSE 0 END,0)) AS USE_WAIT,
+		    SUM(DECODE(A.RESVE_STTUS,'01',CASE WHEN TRUNC(A.RESVE_DT)+ (1/24)*(A.RESVE_END_TIME+1) <= SYSDATE AND A.USE_AT = 'W'   THEN 1 ELSE 0 END,0)) AS USE_NO,
+		    COUNT(*) AS STTUSALL2
+
+		 FROM TN_CULT_FCLTY_RESVE A, TN_CULT_FCLTY B
+		 WHERE A.DELETE_AT = 'N'
+		 AND A.FCLTY_SN = B.FCLTY_SN(+)
+		 AND A.DELETE_AT = 'N'
+	]]>
+		 <include refid="HkCultureResveDAO.listStats-where" />
+	<![CDATA[
+		 GROUP BY GROUPING SETS ((B.AREA_SE, B.LC_SE,B.FCLTY_SE, B.SPCE_NM),())
+		 ORDER BY B.AREA_SE, B.LC_SE,B.FCLTY_SE, B.SPCE_NM
+	]]>
+	</select>
+
+
+	<!--시설예약(장비) 통계 -->
+	<select id="HkCultureResveDAO.listStatsEqpmn" parameterClass="zvl" resultClass="zvl" >
+	<![CDATA[
+		/* HkCultureResveDAO.listStatsEqpmn */
+		SELECT
+		    NVL(B.EQPMN_NM,'총계') AS EQPMN_NM,
+			SUM(DECODE(A.RESVE_STTUS,'01',1,0)) AS STTUS01,
+		    SUM(DECODE(A.RESVE_STTUS,'02',1,0)) AS STTUS02,
+		    SUM(DECODE(A.RESVE_STTUS,'04',1,0)) AS STTUS04,
+		    SUM(DECODE(A.RESVE_STTUS,'03',1,0)) AS STTUS03,
+		    SUM(DECODE(A.RESVE_STTUS,'05',1,0)) AS STTUS05,
+		    COUNT(*) AS STTUSALL,
+			SUM(DECODE(A.RESVE_STTUS,'01',DECODE(A.USE_AT,'Y',1,0),0)) AS USE_YES,
+		    SUM(DECODE(A.RESVE_STTUS,'01',CASE WHEN TRUNC(A.RESVE_DT)+ (1/24)*(A.RESVE_END_TIME+1) > SYSDATE AND A.USE_AT = 'W'   THEN 1 ELSE 0 END,0)) AS USE_WAIT,
+		    SUM(DECODE(A.RESVE_STTUS,'01',CASE WHEN TRUNC(A.RESVE_DT)+ (1/24)*(A.RESVE_END_TIME+1) <= SYSDATE AND A.USE_AT = 'W'   THEN 1 ELSE 0 END,0)) AS USE_NO,
+			COUNT(*) AS STTUSALL2
+		 FROM TN_CULT_FCLTY_RESVE A, TN_CULT_EQPMN B, TN_CULT_EQPMN_DETAIL C, TN_CULT_RESVE_EQPMN D
+		 WHERE A.DELETE_AT = 'N'
+		 AND A.RESVE_SN = D.RESVE_SN(+)
+		 AND B.EQPMN_SN = C.EQPMN_SN
+		 AND C.EQPMN_DETAIL_SN = D.EQPMN_DETAIL_SN
+		 AND A.DELETE_AT = 'N'
+	]]>
+		 <include refid="HkCultureResveDAO.listStats-where" />
+	<![CDATA[
+		GROUP BY GROUPING SETS ((B.EQPMN_SN, B.EQPMN_NM),())
+ 		ORDER BY B.EQPMN_NM
+	]]>
+	</select>
+
+	<!--시설예약(사용목적) 통계 -->
+	<select id="HkCultureResveDAO.listStatsUsePurps" parameterClass="zvl" resultClass="zvl" >
+	<![CDATA[
+		/* HkCultureResveDAO.listStatsUsePurps */
+		SELECT
+		    NVL(FN_CMMNCODE_NM('COM172',B.AREA_SE),'총계') AS AREA_SE_NM,
+		    NVL(FN_CMMNCODE_NM('COM172',B.LC_SE),'총계') AS LC_SE_NM,
+		    NVL(FN_CMMNCODE_NM('COM172',B.FCLTY_SE),'총계') AS FCLTY_SE_NM,
+		    NVL(B.SPCE_NM,'총계') AS SPCE_NM,
+			NVL(SUM(DECODE(A.USE_PURPOSE_SE,'01',1,0)),0) AS PURPS01,
+		    NVL(SUM(DECODE(A.USE_PURPOSE_SE,'02',1,0)),0) AS PURPS02,
+		    NVL(SUM(DECODE(A.USE_PURPOSE_SE,'04',1,0)),0) AS PURPS04,
+		    NVL(SUM(DECODE(A.USE_PURPOSE_SE,'03',1,0)),0) AS PURPS03,
+		    NVL(SUM(DECODE(A.USE_PURPOSE_SE,'05',1,0)),0) AS PURPS05,
+		    NVL(SUM(DECODE(A.USE_PURPOSE_SE,NULL,0,1)),0) AS PURPSALL
+
+		 FROM TN_CULT_FCLTY_RESVE A, TN_CULT_FCLTY B
+		 WHERE A.DELETE_AT = 'N'
+		 AND A.FCLTY_SN = B.FCLTY_SN(+)
+		 AND A.DELETE_AT = 'N'
+	]]>
+		 <include refid="HkCultureResveDAO.listStats-where" />
+	<![CDATA[
+		 GROUP BY GROUPING SETS ((B.AREA_SE, B.LC_SE,B.FCLTY_SE, B.SPCE_NM),())
+		 ORDER BY B.AREA_SE, B.LC_SE,B.FCLTY_SE, B.SPCE_NM
+	]]>
+	</select>
+
+	<!--시설예약(열린공간 방문) 통계 -->
+	<select id="HkCultureResveDAO.listStatsVisit" parameterClass="zvl" resultClass="zvl" >
+	<![CDATA[
+		/* HkCultureResveDAO.listStatsVisit */
+		SELECT
+			NVL(A.VISIT_IP,'총계') AS VISIT_IP,
+			COUNT(A.VISIT_SN) AS VISIT_COUNT
+
+		FROM TN_CULT_FCLTY_HISTORY A
+		WHERE 1=1
+	]]>
+	<isNotEmpty property="resveSdate">
+		<isNotEmpty prepend="AND" property="resveEdate">
+			<![CDATA[	TRUNC(A.VISIT_DT) BETWEEN TO_DATE(#resveSdate#,'YYYY-MM-DD') AND  TO_DATE(#resveEdate#,'YYYY-MM-DD')		]]>
+		</isNotEmpty>
+	</isNotEmpty>
+	<![CDATA[
+		GROUP BY GROUPING SETS ((A.VISIT_IP),())
+	]]>
+	</select>
+
+
+	<!-- 시설예약 원시데이터 통계 엑셀다운로드 -->
+	<select id="HkCultureResveDAO.listStatsOriData" parameterClass="zvl" resultClass="zvl">
+	<![CDATA[
+		/* HkCultureResveDAO.listStatsOriData */
+
+		SELECT
+			RESVE_YYYYMM,
+			RESVE_MMDD,
+			FCLTY_SE_NM,
+			USE_PURPOSE_SE_NM,
+			SPCE_NM,
+			RESVE_NM,
+			USE_NMPR,
+			RESVE_TIME,
+			USE_PURPOSE_CN
+		FROM (
+			SELECT
+			    TO_CHAR(A.RESVE_DT, 'yy') || '년 ' || TO_CHAR(A.RESVE_DT, 'MM') || '월' AS RESVE_YYYYMM,
+			    TO_CHAR(A.RESVE_DT, 'MM/DD') || '(' || SUBSTR(TO_CHAR(A.RESVE_DT,'DAY'),1,1) || ')' AS RESVE_MMDD,
+			    FN_CMMNCODE_NM('COM172',B.FCLTY_SE) AS FCLTY_SE_NM,
+			    FN_CMMNCODE_NM('COM173',A.USE_PURPOSE_SE) AS USE_PURPOSE_SE_NM,
+			    FN_CMMNCODE_NM('COM172',B.AREA_SE) || '>' ||
+			        FN_CMMNCODE_NM('COM172',B.LC_SE) || '>' ||
+			        FN_CMMNCODE_NM('COM172',B.FCLTY_SE) || '>' || B.SPCE_NM
+			    AS SPCE_NM,
+			    A.RESVE_NM,
+			    A.USE_NMPR,
+			    LPAD(A.RESVE_BEGIN_TIME,2,'0') || ':00 ~' || LPAD(A.RESVE_END_TIME,2,'0') || ':59' AS RESVE_TIME,
+			    A.USE_PURPOSE_CN
+			 FROM TN_CULT_FCLTY_RESVE A, TN_CULT_FCLTY B
+			 WHERE A.DELETE_AT = 'N'
+			 AND A.FCLTY_SN = B.FCLTY_SN
+			AND A.RESVE_STTUS = '02'
+		]]>
+			<isNotEmpty property="resveSdate">
+				<isNotEmpty prepend="AND" property="resveEdate">
+					<![CDATA[	TO_CHAR(A.RESVE_DT,'YYYYMM') BETWEEN #resveSdate# AND  #resveEdate#	]]>
+				</isNotEmpty>
+			</isNotEmpty>
+
+
+		<![CDATA[
+			UNION ALL
+
+			SELECT
+				TO_CHAR(B.VISIT_DT, 'yy') || '년 ' || TO_CHAR(B.VISIT_DT, 'MM') || '월' AS RESVE_YYYYMM,
+			    TO_CHAR(B.VISIT_DT, 'MM/DD') || '(' || SUBSTR(TO_CHAR(B.VISIT_DT,'DAY'),1,1) || ')' AS RESVE_MMDD,
+			    '열린공간' AS FCLTY_SE_NM,
+			    '열린공간' AS USE_PURPOSE_SE_NM,
+			    '열린공간(' || B.VISIT_IP || ')' AS SPCE_NM,
+			    '열린공간' AS RESVE_NM,
+			    SUM(1) AS  USE_NMPR,
+			    '09:00 ~ 21:59' AS RESVE_TIME,
+			    '열린공간' AS USE_PURPOSE_CN
+			FROM TN_CULT_FCLTY_HISTORY B WHERE 1=1
+		]]>
+			<isNotEmpty property="resveSdate">
+				<isNotEmpty prepend="AND" property="resveEdate">
+					<![CDATA[	TO_CHAR(B.VISIT_DT,'YYYYMM') BETWEEN #resveSdate# AND  #resveEdate#	]]>
+				</isNotEmpty>
+			</isNotEmpty>
+		<![CDATA[
+			GROUP BY B.VISIT_DT, B.VISIT_IP
+		) TB
+		ORDER BY TB.RESVE_YYYYMM ASC, TB.RESVE_MMDD ASC, TB.SPCE_NM ASC
+		]]>
+
+	</select>
+
+
+	<!-- 시설이용목적별 현황 통계 엑셀다운로드 -->
+	<select id="HkCultureResveDAO.listStatsUsePurpsByMonth" parameterClass="zvl" resultClass="zvl">
+	<![CDATA[
+		/* HkCultureResveDAO.listStatsUsePurpsByMonth */
+		SELECT
+			TO_CHAR(RESVE_YYYYMM, 'yy') || '년 ' || TO_CHAR(RESVE_YYYYMM, 'MM') || '월' AS RESVE_YYYYMM,
+		    PURPS01,
+		    PURPS02,
+		    PURPS03,
+		    PURPS04,
+		    PURPS05,
+		    PURPSALL
+		FROM (
+			SELECT
+				TRUNC(A.RESVE_DT,'MM') AS RESVE_YYYYMM,
+		      	NVL(SUM(DECODE(A.USE_PURPOSE_SE,'01',A.USE_NMPR,0)),0) AS PURPS01,
+		      	NVL(SUM(DECODE(A.USE_PURPOSE_SE,'02',A.USE_NMPR,0)),0) AS PURPS02,
+		      	NVL(SUM(DECODE(A.USE_PURPOSE_SE,'04',A.USE_NMPR,0)),0) AS PURPS04,
+		      	NVL(SUM(DECODE(A.USE_PURPOSE_SE,'03',A.USE_NMPR,0)),0) AS PURPS03,
+		      	NVL(SUM(DECODE(A.USE_PURPOSE_SE,'05',A.USE_NMPR,0)),0) AS PURPS05,
+		      	NVL(SUM(A.USE_NMPR),0) AS PURPSALL
+
+		   	FROM TN_CULT_FCLTY_RESVE A
+		   	WHERE A.DELETE_AT = 'N'
+		   	AND A.RESVE_STTUS = '02'
+	]]>
+	<isNotEmpty property="resveSdate">
+		<isNotEmpty prepend="AND" property="resveEdate">
+			<![CDATA[	TO_CHAR(A.RESVE_DT,'YYYYMM') BETWEEN #resveSdate# AND  #resveEdate#	]]>
+		</isNotEmpty>
+	</isNotEmpty>
+	<![CDATA[
+		   	GROUP BY TRUNC(A.RESVE_DT,'MM')
+		   	ORDER BY RESVE_YYYYMM ASC
+		) TB
+	]]>
+	</select>
+
+
+
+	<!-- 시설별 이용현황 통계 타이틀 목록 -->
+	<select id="HkCultureResveDAO.listFcltyTitle" parameterClass="zvl" resultClass="zvl">
+	<![CDATA[
+	SELECT
+		NVL(A.LC_SE,'0000') AS LC_SE,
+		NVL(A.FCLTY_SN,0) AS FCLTY_SN,
+      	FN_CMMNCODE_NM('COM172',LC_SE) || DECODE(SPCE_NM,NULL,DECODE(LC_SE,NULL,'',' > '),' > ') || DECODE(FCLTY_SN,NULL,DECODE(LC_SE,NULL,'총합계','전체'),SPCE_NM) AS SPCE_NM
+  	FROM  TN_CULT_FCLTY A
+  	WHERE A.DELETE_AT = 'N'
+  	GROUP BY GROUPING SETS ((A.LC_SE, A.FCLTY_SN, A.SPCE_NM),(A.LC_SE),())
+	]]>
+	</select>
+
+	<!-- 시설별 이용현황 통계 엑셀다운로드 -->
+	<select id="HkCultureResveDAO.listStatsFcltyByMonth" parameterClass="zvl" resultClass="zvl">
+	<![CDATA[
+		/* HkCultureResveDAO.listStatsFcltyByMonth */
+		SELECT
+			DECODE(RESVE_YYYYMM,NULL,'총합계',TO_CHAR(RESVE_YYYYMM, 'yy') || '년 ' || TO_CHAR(RESVE_YYYYMM, 'MM') || '월') AS RESVE_YYYYMM,
+		    NVL(LC_SE,'0000') AS LC_SE,
+			NVL(FCLTY_SN,0) AS FCLTY_SN,
+		    FN_CMMNCODE_NM('COM172',LC_SE) || DECODE(SPCE_NM,NULL,DECODE(LC_SE,NULL,'',' > '),' > ') || DECODE(FCLTY_SN,NULL,DECODE(LC_SE,NULL,'총합계','전체'),SPCE_NM) AS SPCE_NM,
+		    USE_NMPR
+		FROM (
+		  SELECT
+		      B.FCLTY_SN,
+		      TRUNC(A.RESVE_DT,'MM') AS RESVE_YYYYMM,
+		      B.SPCE_NM,
+		      B.LC_SE,
+		      SUM(A.USE_NMPR) AS USE_NMPR
+		  FROM  TN_CULT_FCLTY_RESVE A, TN_CULT_FCLTY B
+		  WHERE A.DELETE_AT = 'N'
+		  AND A.RESVE_STTUS = '02'
+		  AND A.FCLTY_SN = B.FCLTY_SN
+		  AND B.DELETE_AT = 'N'
+	]]>
+	<isNotEmpty property="resveSdate">
+		<isNotEmpty prepend="AND" property="resveEdate">
+			<![CDATA[	TO_CHAR(A.RESVE_DT,'YYYYMM') BETWEEN #resveSdate# AND  #resveEdate#	]]>
+		</isNotEmpty>
+	</isNotEmpty>
+	<![CDATA[
+		  GROUP BY GROUPING SETS ((TRUNC(A.RESVE_DT,'MM'),B.LC_SE, B.FCLTY_SN, B.SPCE_NM),(TRUNC(A.RESVE_DT,'MM'),B.LC_SE),(TRUNC(A.RESVE_DT,'MM')),())
+		) TB
+	]]>
+	</select>
+
+
+	<!-- 일정관리 조건 -->
+	<sql id="HkCultureResveDAO.listSchdul-where">
+
+		<isNotEmpty prepend="AND" property="stDt">
+			<![CDATA[	EVENT_DT >= TO_DATE(#stDt#, 'YYYY-MM-DD')		]]>
+		</isNotEmpty>
+
+		<isNotEmpty prepend="AND" property="edDt">
+			<![CDATA[	EVENT_DT <= TO_DATE(#edDt#, 'YYYY-MM-DD')		]]>
+		</isNotEmpty>
+
+		<isNotEmpty prepend="AND" property="eventBeginTime">
+			<![CDATA[	EVENT_BEGIN_TIME >= TO_NUMBER(#eventBeginTime#)		]]>
+		</isNotEmpty>
+
+		<isNotEmpty prepend="AND" property="eventBeginTime">
+			<![CDATA[	EVENT_END_TIME <= TO_NUMBER(#eventBeginTime#)		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="eventNm">
+			<![CDATA[	EVENT_NM like '%' || #eventNm# || '%'	]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="place">
+			<![CDATA[	PLACE like '%' || #place# || '%'		]]>
+		</isNotEmpty>
+	</sql>
+
+	<!-- 일정관리 목록 -->
+	<select id="HkCultureResveDAO.listSchdul" parameterClass="zvl" resultClass="zvl" >
+	<![CDATA[
+		/* HkCultureResveDAO.listSchdul */
+
+		SELECT * FROM  (
+			SELECT ROWNUM RNUM, ALL_LIST.*  FROM (
+
+			SELECT
+				A.EVENT_SN,
+		       	TO_CHAR(A.EVENT_DT, 'YYYY-MM-DD') AS EVENT_DT,
+		       	A.EVENT_BEGIN_TIME,
+		       	A.EVENT_END_TIME,
+		       	A.EVENT_NM,
+		       	A.PLACE,
+		       	TO_CHAR(A.FRST_REGIST_PNTTM, 'YYYY-MM-DD HH24:MI:SS') AS FRST_REGIST_PNTTM,
+		       	A.FRST_REGISTER_ID,
+		       	TO_CHAR(A.LAST_UPDT_PNTTM, 'YYYY-MM-DD HH24:MI:SS') AS LAST_UPDT_PNTTM,
+		       	A.LAST_UPDUSR_ID,
+		       	A.DELETE_AT,
+		       	A.REF_RESVE_SN
+	  		FROM TN_EVENT_SCHDUL A
+	  		WHERE DELETE_AT = 'N'
+	]]>
+		<include refid="HkCultureResveDAO.listSchdul-where" />
+	<![CDATA[
+	  		ORDER BY A.FRST_REGIST_PNTTM DESC, EVENT_BEGIN_TIME ASC
+
+	  		) ALL_LIST
+	  	) WHERE  RNUM  > #firstIndex# AND  RNUM <= #firstIndex# + #recordCountPerPage#
+
+	]]>
+	</select>
+
+	<!-- 일정관리 목록카운트 -->
+	<select id="HkCultureResveDAO.listSchdulCnt" parameterClass="zvl" resultClass="java.lang.Integer" >
+	<![CDATA[
+		/* HkCultureResveDAO.listSchdulCnt */
+		SELECT COUNT(*) FROM TN_EVENT_SCHDUL A
+		WHERE DELETE_AT = 'N'
+	]]>
+		<include refid="HkCultureResveDAO.listSchdul-where" />
+	</select>
+
+
+	<!-- 일정관리 상세 -->
+	<select id="HkCultureResveDAO.viewSchdul" parameterClass="zvl" resultClass="zvl" >
+	<![CDATA[
+		/* HkCultureResveDAO.viewSchdul */
+		SELECT
+			A.EVENT_SN,
+	       	TO_CHAR(A.EVENT_DT, 'YYYY-MM-DD') AS EVENT_DT,
+	       	A.EVENT_BEGIN_TIME,
+	       	A.EVENT_END_TIME,
+	       	A.EVENT_NM,
+	       	A.PLACE,
+	       	TO_CHAR(A.FRST_REGIST_PNTTM, 'YYYY-MM-DD HH24:MI:SS') AS FRST_REGIST_PNTTM,
+	       	A.FRST_REGISTER_ID,
+	       	TO_CHAR(A.LAST_UPDT_PNTTM, 'YYYY-MM-DD HH24:MI:SS') AS LAST_UPDT_PNTTM,
+	       	A.LAST_UPDUSR_ID,
+	       	A.DELETE_AT,
+	       	A.REF_RESVE_SN
+  		FROM TN_EVENT_SCHDUL A
+  		WHERE DELETE_AT = 'N'
+  		AND EVENT_SN = #eventSn#
+	]]>
+	</select>
+
+
+	<!-- 일정관리 등록 -->
+	<insert id="HkCultureResveDAO.insertSchdul" parameterClass="zvl">
+		<selectKey resultClass="java.lang.Long" keyProperty="eventSn">
+			SELECT NVL(MAX(EVENT_SN),0) + 1 AS EVENT_SN FROM TN_EVENT_SCHDUL
+		</selectKey>
+	<![CDATA[
+		/* HkCultureResveDAO.insertSchdul */
+		INSERT INTO TN_EVENT_SCHDUL (
+			EVENT_SN,
+           	EVENT_DT,
+           	EVENT_BEGIN_TIME,
+           	EVENT_END_TIME,
+           	EVENT_NM,
+           	PLACE,
+           	FRST_REGIST_PNTTM,
+           	FRST_REGISTER_ID,
+           	LAST_UPDT_PNTTM,
+           	LAST_UPDUSR_ID,
+           	DELETE_AT,
+           	REF_RESVE_SN
+       )
+       VALUES (
+			#eventSn#,
+           	TO_DATE(#eventDt#,'YYYY-MM-DD'),
+           	#eventBeginTime#,
+           	#eventEndTime#,
+           	#eventNm#,
+           	#place#,
+           	SYSDATE,
+           	#frstRegisterId#,
+           	SYSDATE,
+           	#lastUpdusrId#,
+           	'N',
+           	#refResveSn#
+       )
+	]]>
+	</insert>
+
+
+	<!-- 일정관리  예약인련번호 중복체크 -->
+	<select id="HkCultureResveDAO.schdulChkCnt" parameterClass="zvl" resultClass="java.lang.Integer" >
+	<![CDATA[
+		/* HkCultureResveDAO.schdulChkCnt */
+		SELECT
+			COUNT(*) AS CNT
+  		FROM TN_EVENT_SCHDUL A
+  		WHERE DELETE_AT = 'N'
+  		AND REF_RESVE_SN = #refResveSn#
+	]]>
+	</select>
+
+
+	<!-- 일정관리 수정 -->
+	<update id="HkCultureResveDAO.updateSchdul" parameterClass="zvl">
+	<![CDATA[
+		/* HkCultureResveDAO.updateSchdul */
+		UPDATE TN_EVENT_SCHDUL SET
+           	EVENT_DT		= TO_DATE(#eventDt#,'YYYY-MM-DD'),
+           	EVENT_BEGIN_TIME		= #eventBeginTime#,
+           	EVENT_END_TIME	= #eventEndTime#,
+           	EVENT_NM		= #eventNm#,
+           	PLACE	= #place#,
+           	LAST_UPDT_PNTTM	= SYSDATE,
+           	LAST_UPDUSR_ID	= #lastUpdusrId#
+		WHERE EVENT_SN = #eventSn#
+	]]>
+	</update>
+
+	<!-- 일정관리 삭제 -->
+	<update id="HkCultureResveDAO.deleteSchdul" parameterClass="zvl">
+	<![CDATA[
+		/* HkCultureResveDAO.deleteSchdul */
+		UPDATE TN_EVENT_SCHDUL SET
+           	DELETE_AT = 'Y',
+           	LAST_UPDT_PNTTM	= SYSDATE,
+           	LAST_UPDUSR_ID	= #lastUpdusrId#
+		WHERE EVENT_SN = #eventSn#
+	]]>
+	</update>
+	
+	<!-- 일정관리 삭제 -->
+	<update id="HkCultureResveDAO.chgResveSn" parameterClass="zvl">
+	<![CDATA[
+		/* HkCultureResveDAO.chgResveSn */
+		UPDATE TN_CULT_FCLTY_RESVE SET
+           	USE_AT = #useAt#
+		WHERE RESVE_SN = #resveSn#
+	]]>
+	</update>
+</sqlMap>

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="progrmInstrctr">
+
+	<typeAlias  alias="zvl" type="kr.co.unp.util.ZValue"/>
+
+	<sql id="progrmInstrctrDAO.list-where">
+		<isNotEmpty prepend="AND" property="realm">
+			<![CDATA[	A.REALM = #realm# 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="tchNm">
+			<![CDATA[	A.TCH_NM LIKE '%' || #tchNm# || '%' 		]]>
+		</isNotEmpty>
+	</sql>
+
+	<select id="progrmInstrctrDAO.listCnt" parameterClass="zvl" resultClass="int" >
+		<![CDATA[
+			SELECT COUNT(*) FROM TN_TCH A
+			WHERE DELETE_AT = '0'
+		]]>
+		<include refid="progrmInstrctrDAO.list-where" />
+	</select>
+
+	<select id="progrmInstrctrDAO.list" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		SELECT * FROM
+		( SELECT a.*, rownum+rnum-1 as TOTAL_ROWS
+		   FROM ( SELECT a.*, rownum rnum
+				FROM (
+					SELECT
+					   A.TCH_SN,
+				       A.TCH_NM,
+				       A.PSITN,
+				       A.CAREER,
+				       A.TEL,
+				       A.RM,
+				       A.DELETE_AT,
+					   TO_CHAR(A.FRST_REGIST_PNTTM, 'YYYY-MM-DD') as REG_DATE,
+				       A.FRST_REGIST_PNTTM,
+				       A.FRST_REGISTER_ID,
+				       A.LAST_UPDT_PNTTM,
+				       A.LAST_UPDUSR_ID,
+				       A.REALM
+					FROM TN_TCH A
+					WHERE DELETE_AT = '0'
+		]]>
+		<include refid="progrmInstrctrDAO.list-where" />
+	    <![CDATA[
+	    		ORDER BY FRST_REGIST_PNTTM DESC
+		            ) a
+		          ORDER BY rnum DESC ) a
+		  ORDER BY rnum )
+		WHERE rnum BETWEEN #firstIndex# + 1 AND #lastIndex#
+		]]>
+	</select>
+
+	<select id="progrmInstrctrDAO.view" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+			SELECT
+			   A.TCH_SN,
+		       A.TCH_NM,
+		       A.PSITN,
+		       A.CAREER,
+		       A.TEL,
+		       A.RM,
+		       A.DELETE_AT,
+			   TO_CHAR(A.FRST_REGIST_PNTTM, 'YYYY-MM-DD') as REG_DATE,
+		       A.FRST_REGIST_PNTTM,
+		       A.FRST_REGISTER_ID,
+		       A.LAST_UPDT_PNTTM,
+		       A.LAST_UPDUSR_ID,
+		       A.REALM
+			FROM TN_TCH A
+			WHERE TCH_SN = #tchSn#
+		]]>
+	</select>
+
+	<insert id="progrmInstrctrDAO.insert" parameterClass="zvl" >
+		<selectKey resultClass="java.lang.Long" keyProperty="tchSn">
+			SELECT NVL(MAX(TCH_SN),0)+1 AS TCH_SN FROM TN_TCH
+		</selectKey>
+		<![CDATA[
+			INSERT INTO TN_TCH (
+				TCH_SN,TCH_NM,PSITN,CAREER,TEL,RM,DELETE_AT,FRST_REGIST_PNTTM,FRST_REGISTER_ID,LAST_UPDT_PNTTM,LAST_UPDUSR_ID,REALM
+			)
+			VALUES (
+				#tchSn#,#tchNm#,#psitn#,#career#,#tel#,#rm#,'0',sysdate,#userId#,sysdate,#userId#,#realm#
+			)
+		]]>
+	</insert>
+
+	<update id="progrmInstrctrDAO.update" parameterClass="zvl">
+		<![CDATA[
+			UPDATE TN_TCH
+			SET
+				TCH_NM = #tchNm#,
+				PSITN = #psitn#,
+				CAREER = #career#,
+				TEL = #tel#,
+				RM = #rm#,
+				LAST_UPDT_PNTTM = sysdate,
+				LAST_UPDUSR_ID = #userId#,
+				REALM = #realm#
+			WHERE TCH_SN = #tchSn#
+		]]>
+	</update>
+
+	<update id="progrmInstrctrDAO.delete" parameterClass="zvl">
+		<![CDATA[
+			UPDATE TN_TCH
+			SET
+				DELETE_AT = '1'
+			WHERE TCH_SN = #tchSn#
+		]]>
+	</update>
+	
+	<resultMap id="progrmInstrctrDAO.viewMap" class="zvl">
+	    <result property="menuNm" column="MENU_NM"/>
+	    <result property="prgSn" column="PRG_SN"/>
+	    <result property="prgCl" column="PRG_CL"/>
+	    <result property="title" column="TITLE"/>
+		<result property="content" column="CONTENT"  jdbcType="CLOB" javaType="java.lang.String"/>
+	    <result property="imgDesc" column="IMG_DESC" jdbcType="CLOB" javaType="java.lang.String"/>
+	    <result property="pathImg" column="PATH_IMG"/>
+	</resultMap>
+	<select id="progrmInstrctrDAO.selectRecommndView" parameterClass="zvl" resultClass="zvl" resultMap="progrmInstrctrDAO.viewMap">
+		<![CDATA[
+			SELECT
+				'progrm' AS MENU_NM
+				, A.PRG_SN
+				, A.PRG_CL
+				, A.PRG_NM TITLE
+				, A.PRG_CN CONTENT
+				, A.IMG_DESC_CN IMG_DESC
+  				, NVL2(filesq.ATCH_FILE_ID,'/cmm/fms/getImage.do?atchFileId='||filesq.ATCH_FILE_ID||'&fileSn='||filesq.FILE_SN,'default') AS PATH_IMG
+			FROM TN_PROGRAM A
+			LEFT JOIN TC_COMMNFILE_DETAIL filesq ON filesq.ATCH_FILE_ID LIKE A.ATCH_FILE_ID AND FILE_FIELD_NM LIKE 'mainImg'
+			WHERE DELETE_AT = '0'
+				AND USE_AT = 'Y'
+				AND A.PRG_SN = #seq#
+		]]>
+	</select>
+
+</sqlMap>

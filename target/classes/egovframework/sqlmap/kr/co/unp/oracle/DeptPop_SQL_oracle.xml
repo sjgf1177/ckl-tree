@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="MenuManage">
+
+	<typeAlias  alias="zvl" type="kr.co.unp.util.ZValue"/>
+	<typeAlias  alias="Integer" type="java.lang.Integer"/>
+
+	<select id="deptPopDAO.getDeptListTotCnt" parameterClass="zvl" resultClass="Integer">
+		<![CDATA[ 
+			SELECT COUNT(*) cnt 
+	         FROM DEPTINFO A  
+	        WHERE  1 = 1 
+			       ]]>
+		<isNotEmpty prepend="AND" property="searchStr">
+			<![CDATA[	DEPT_NAME LIKE '%' || #searchStr# || '%'	]]>
+		</isNotEmpty>
+	</select>
+
+	<select id="deptPopDAO.getDeptList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+			SELECT * FROM
+		( SELECT a.*, rownum+rnum-1 as TOTAL_ROWS
+		   FROM ( SELECT a.*, rownum rnum
+		            FROM (
+
+					SELECT A.DEPT_ID, 
+                            A.DEPT_NAME, 
+                            A.POSITION_ID, 
+                            A.UPPER_DEPT_ID, 
+                            A.DEPT_DEPTH, 
+                            A.REG_DATE, 
+                            A.DEPT_INFO, 
+                            A.USE_YN 
+                       FROM DEPTINFO A 
+                      WHERE A.use_yn = 'Y' 
+                            AND A.DEPT_DEPTH = 2 
+		]]> 
+		<isNotEmpty prepend="AND" property="searchTxt">	
+			<![CDATA[	A.DEPT_NAME LIKE '%' || #searchTxt# || '%' 		]]>
+		</isNotEmpty>
+		<![CDATA[
+                   ORDER BY A.POSITION_ID ASC 
+			
+		            ) a
+		          ORDER BY rnum DESC ) a
+		  ORDER BY rnum )
+		WHERE rnum BETWEEN #firstIndex# + 1 AND #lastIndex#
+		]]>
+				
+	</select>
+	
+</sqlMap>                            

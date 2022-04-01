@@ -1,0 +1,512 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="MenuManage">
+
+	<typeAlias  alias="zvl" type="kr.co.unp.util.ZValue"/>
+	<typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+    <typeAlias  alias="menuManageVO" type="kr.co.unp.mpm.vo.MenuManageVO"/>
+	<typeAlias  alias="comDefaultVO" type="egovframework.com.cmm.ComDefaultVO"/>
+
+	<resultMap id="menuListOnly" class="kr.co.unp.mpm.vo.MenuManageVO">
+		<result property="menuNo" column="MENU_NO"/>
+		<result property="menuOrdr" column="MENU_ORDR"/>
+		<result property="menuNm" column="MENU_NM"/>
+		<result property="upperMenuId" column="UPPER_MENU_NO"/>
+		<result property="menuDc" column="MENU_DC"/>
+		<result property="siteId" column="SITE_ID"/>
+		<result property="menuLink" column="MENU_LINK"/>
+		<result property="menuPopupYn" column="MENU_POPUP_YN"/>
+		<result property="useYn" column="USE_YN"/>
+		<result property="contentsPath" column="CONTENTS_PATH"/>
+		<result property="modifyDay" column="MODIFY_DAY"  jdbcType="DATE" javaType="java.util.Date" />
+	</resultMap>
+
+
+	<resultMap id="menuList" class="kr.co.unp.mpm.vo.MenuManageVO">
+		<result property="menuNo" column="MENU_NO"/>
+		<result property="menuOrdr" column="MENU_ORDR"/>
+		<result property="menuNm" column="MENU_NM"/>
+		<result property="upperMenuId" column="UPPER_MENU_NO"/>
+		<result property="menuDc" column="MENU_DC"/>
+		<result property="siteId" column="SITE_ID"/>
+		<result property="menuLink" column="MENU_LINK"/>
+		<result property="menuPopupYn" column="MENU_POPUP_YN"/>
+		<result property="deptId" column="DEPT_ID"/>
+		<result property="useYn" column="USE_YN"/>
+		<result property="contentsPath" column="CONTENTS_PATH"/>
+		<result property="modifyDay" column="MODIFY_DAY"  jdbcType="DATE" javaType="java.util.Date" />
+	</resultMap>
+
+	<resultMap id="menuContentsMap" class="zvl">
+		<result property="menuNo" column="MENU_NO"/>
+		<result property="cvNo" column="CV_NO"/>
+		<result property="cvCon" column="CV_CON" jdbcType="CLOB" javaType="java.lang.String" />
+	</resultMap>
+
+	<resultMap id="menuContentsInfoMap" class="zvl">
+		<result property="contentsPath" column="CONTENTS_PATH"/>
+		<result property="cvCon" column="CV_CON" jdbcType="CLOB" javaType="java.lang.String" />
+	</resultMap>
+
+
+
+	<select id="menuManageDAO.selectMenuManage_D" parameterClass="comDefaultVO" resultClass="menuManageVO">
+	/* menuManageDAO.selectMenuManage_D */
+		<![CDATA[
+			SELECT
+				  A.MENU_NO           AS "menuNo"
+				, A.MENU_ORDR         AS "menuOrdr"
+				, A.MENU_NM           AS "menuNm"
+				, A.UPPER_MENU_NO     AS "upperMenuId"
+				, A.MENU_DC           AS "menuDc"
+				, A.SITE_ID    		AS "siteId"
+				, A.MENU_LINK    		AS "menuLink"
+				, A.FULL_MENU_LINK    AS "fullMenuLink"
+				, A.POPUP_AT    	AS "menuPopupYn"
+				, A.DEPT_ID    		AS "deptId"
+				, A.RELATE_MENU_NM_LIST				AS "path"
+				, A.USE_AT            AS "useYn"
+				, A.CNTNTS_FILE_PATH            AS "contentsPath"
+				, SM.SITE_NM      AS "siteName"
+				, A.USER_ID           AS "userId"
+			FROM TC_MENUINFO A
+			INNER JOIN TC_SITEINFO SM ON SM.SITE_ID = A.SITE_ID
+			LEFT OUTER JOIN COMTNEMPLYRINFO B ON A.USER_ID = B.EMPLYR_ID
+			WHERE A.MENU_NO = #searchKeyword#
+		]]>
+	</select>
+
+	<select id="menuManageDAO.selectMaxMenuOrdr" parameterClass="menuManageVO" resultClass="int">
+	/* menuManageDAO.selectMaxMenuOrdr */
+		<![CDATA[
+			select NVL(MAX(MENU_ORDR),0)+1
+			from TC_MENUINFO
+			where SITE_ID=#siteId# and UPPER_MENU_NO=#upperMenuId#
+		]]>
+	</select>
+
+	<insert id="menuManageDAO.insertMenuManage_S" parameterClass="menuManageVO">
+		<selectKey resultClass="int" keyProperty="menuNo">
+			SELECT NVL(MAX(MENU_NO),#siteId#+'00000')+1 AS MENU_NO FROM TC_MENUINFO WHERE SITE_ID=#siteId#
+		</selectKey>
+		<![CDATA[
+	/* menuManageDAO.insertMenuManage_S */
+			INSERT INTO TC_MENUINFO
+			( MENU_NO
+            , MENU_ORDR
+            , MENU_NM
+            , UPPER_MENU_NO
+            , MENU_DC
+            , SITE_ID
+            , MENU_LINK
+            , POPUP_AT
+            , DEPT_ID
+            , RELATE_MENU_NM_LIST
+            , USE_AT
+            , CNTNTS_FILE_PATH
+			, LAST_UPDT_PNTTM
+			, USER_ID
+			, LAYOUT_SE
+          	)
+			VALUES (
+					#menuNo#
+                  , #menuOrdr#
+                  , #menuNm#
+                  , #upperMenuId#
+                  , #menuDc#
+                  , #siteId#
+                  , #menuLink#
+                  , #menuPopupYn#
+                  , #deptId#
+                  , #path#
+                  , #useYn#
+                  , #contentsPath#
+                  , SYSDATE
+				  , #userId#
+				  , NVL(#layoutSe#,0)
+           )
+		]]>
+	</insert>
+
+
+	<update id="menuManageDAO.updateMenuManage_S">
+	/* menuManageDAO.updateMenuManage_S */
+		<![CDATA[
+			UPDATE TC_MENUINFO
+			SET  MENU_ORDR         = #menuOrdr#
+            , MENU_NM           = #menuNm#
+            , MENU_DC           = #menuDc#
+			, MENU_LINK    		= #menuLink#
+			, POPUP_AT    	= #menuPopupYn#
+			, UPPER_MENU_NO    	= #upperMenuId#
+			, USE_AT            = #useYn#
+			, CNTNTS_FILE_PATH     = #contentsPath#
+			, LAST_UPDT_PNTTM	    = SYSDATE
+			, DEPT_ID           = #deptId#
+			, USER_ID           = #userId#
+			, BBS_ID            = #bbsId#
+			, LAYOUT_SE			= NVL(#layoutSe#,0)
+			WHERE MENU_NO=#cMenuNo#
+		]]>
+	</update>
+
+	<delete id="menuManageDAO.deleteMenuManage_S">
+	/* menuManageDAO.deleteMenuManage_S */
+		<![CDATA[
+			DELETE FROM TC_MENUINFO
+			WHERE MENU_NO=#cMenuNo#
+		]]>
+	</delete>
+
+	<!-- 메뉴번호 존재여부 조회 -->
+	<select id="menuManageDAO.selectMenuNoByPk" parameterClass="menuManageVO" resultClass="int">
+	/* menuManageDAO.selectMenuNoByPk */
+		<![CDATA[
+		SELECT COUNT(MENU_NO) AS "totcnt"
+		  FROM TC_MENUINFO
+		 WHERE MENU_NO = #cMenuNo#
+		]]>
+	</select>
+
+	<delete id="menuManageDAO.deleteAllMenuList" >
+	/* menuManageDAO.deleteAllMenuList */
+		<![CDATA[
+			DELETE FROM TC_MENUINFO
+		]]>
+	</delete>
+
+	<!-- 메뉴정보 총건수 조회 -->
+	<select id="menuManageDAO.selectMenuListTotCnt" parameterClass="menuManageVO" resultClass="int">
+	/* menuManageDAO.selectMenuListTotCnt */
+		<![CDATA[
+		SELECT COUNT(MENU_NO) AS totcnt
+		  FROM TC_MENUINFO
+		]]>
+			<isNotEmpty property="siteId">
+				WHERE SITE_ID = #siteId#
+			</isNotEmpty>
+	</select>
+
+	<select id="menuManageDAO.selectAllMenu" resultClass="menuManageVO">
+	/* menuManageDAO.selectAllMenu */
+		<![CDATA[
+			SELECT a.MENU_NO         AS menuNo,
+		       a.UPPER_MENU_NO       AS upperMenuId,
+		       a.UPPER_MENU_NO       AS upperMenuNo,
+		       a.SITE_ID             AS siteId,
+		       a.MENU_NM             AS menuNm,
+		       a.MENU_ORDR           AS menuOrdr,
+		       a.MENU_DC             AS menuDc,
+		       a.MENU_LINK           AS menuLink,
+		       a.POPUP_AT       	 AS menuPopupYn,
+		       a.FULL_MENU_LINK      AS fullMenuLink,
+		       a.DEPT_ID             AS deptId,
+		       a.CNTNTS_FILE_PATH       AS contentsPath,
+		       a.LAST_UPDT_PNTTM           AS modifyDay,
+		       a.POSITION            AS position,
+		       a.USE_AT              AS useYN,
+			   a.USER_ID             AS userId,
+			   sm.SITE_NM          AS siteName,
+			   a.BBS_ID              AS bbsId,
+			   a.LAYOUT_SE			AS layoutSe
+		  FROM TC_MENUINFO a
+		  INNER JOIN TC_SITEINFO sm ON sm.SITE_ID = a.SITE_ID
+		  WHERE a.USE_AT = 'Y'
+		  ORDER BY a.UPPER_MENU_NO, a.MENU_ORDR
+		]]>
+	</select>
+
+	<select id="menuManageDAO.selectAllMenuBySiteId" parameterClass="menuManageVO" resultClass="menuManageVO">
+	/* menuManageDAO.selectAllMenuBySiteId */
+		<![CDATA[
+			SELECT a.MENU_NO         AS menuNo,
+		       a.UPPER_MENU_NO       AS upperMenuId,
+		       a.UPPER_MENU_NO       AS upperMenuNo,
+		       a.SITE_ID             AS siteId,
+		       a.MENU_NM             AS menuNm,
+		       a.MENU_ORDR           AS menuOrdr,
+		       a.MENU_DC             AS menuDc,
+		       a.MENU_LINK           AS menuLink,
+		       a.POPUP_AT       	 AS menuPopupYn,
+		       a.FULL_MENU_LINK      AS fullMenuLink,
+		       a.DEPT_ID             AS deptId,
+		       a.CNTNTS_FILE_PATH    AS contentsPath,
+		       a.LAST_UPDT_PNTTM          AS modifyDay,
+		       a.POSITION            AS position,
+		       a.USE_AT              AS useYN,
+			   sm.SITE_NM          AS siteName,
+			   a.BBS_ID              AS bbsId,
+			   a.LAYOUT_SE			AS layoutSe
+		  FROM TC_MENUINFO a
+		  INNER JOIN TC_SITEINFO sm ON sm.SITE_ID = a.SITE_ID
+		  WHERE a.SITE_ID = #siteId# ]]>
+		  <isNotEqual prepend="AND" property="tempValue" compareValue="1"> a.USE_AT = 'Y'</isNotEqual>
+		  ORDER BY a.UPPER_MENU_NO, a.MENU_ORDR
+	</select>
+
+
+	<!-- 권한 담당자 어드민  메뉴정보-->
+	<select id="menuManageDAO.selectAuthoAdminDeptMenuListByUserId" parameterClass="string" resultClass="menuManageVO">
+	/* menuManageDAO.selectAuthoAdminDeptMenuListByUserId */
+		<![CDATA[
+		 SELECT
+				  A.MENU_NO           AS "menuNo"
+				, A.MENU_ORDR         AS "menuOrdr"
+				, A.MENU_NM           AS "menuNm"
+				, A.UPPER_MENU_NO     AS "upperMenuId"
+				, A.SITE_ID    		AS "siteId"
+				, A.MENU_LINK    		AS "menuLink"
+				, A.POPUP_AT    	AS "menuPopupYn"
+				, A.USE_AT            AS "useYn"
+				, A.LAYOUT_SE			AS "layoutSe"
+		 FROM TC_MENUINFO A, TC_AUTHOR_MENU B
+		 WHERE A.MENU_NO = B.MENU_NO
+		 AND NVL(A.USE_AT,'N') = 'Y'
+		 AND B.AUTHOR_CODE = #authorCode#
+		 ORDER BY A.UPPER_MENU_NO, A.MENU_ORDR
+		]]>
+	</select>
+
+	<!-- 권한 담당자 어드민  메뉴정보-->
+	<select id="menuManageDAO.selectAuthoMenuListByAuthorities" parameterClass="zvl" resultClass="menuManageVO">
+	/* menuManageDAO.selectAuthoMenuListByAuthorities */
+		<![CDATA[
+		 SELECT
+		 	DISTINCT
+				  A.MENU_NO           AS "menuNo"
+				, A.MENU_ORDR         AS "menuOrdr"
+				, A.MENU_NM           AS "menuNm"
+				, A.UPPER_MENU_NO     AS "upperMenuId"
+				, A.SITE_ID    		AS "siteId"
+				, A.MENU_LINK    		AS "menuLink"
+				, A.POPUP_AT    	AS "menuPopupYn"
+				, A.USE_AT            AS "useYn"
+				, A.LAYOUT_SE			AS "layoutSe"
+				, (SELECT count(B.MENU_NO)
+				         FROM TC_AUTHOR_MENU B
+				        WHERE B.MENU_NO  = A.MENU_NO
+				          AND B.AUTHOR_CODE = #authorCode#) AS "chkYeoBu"
+		 FROM TC_MENUINFO A, TC_AUTHOR_MENU B
+		 WHERE A.MENU_NO = B.MENU_NO
+		 AND NVL(A.USE_AT,'N') = 'Y'
+		 AND B.AUTHOR_CODE IN
+		]]>
+	<iterate conjunction="," open="(" close=")" property="authorities">
+			#authorities[]#
+	</iterate>
+		<![CDATA[
+		 ORDER BY A.UPPER_MENU_NO, A.MENU_ORDR
+		]]>
+	</select>
+
+	<!-- 권한별 관리자메뉴정보 조회 -->
+	<select id="menuManageDAO.selectAuthoMenuList" parameterClass="zvl" resultClass="menuManageVO">
+	/* menuManageDAO.selectAuthoMenuList */
+		<![CDATA[
+		SELECT
+			      MENU_NO           AS "menuNo"
+				, MENU_ORDR         AS "menuOrdr"
+				, MENU_NM           AS "menuNm"
+				, UPPER_MENU_NO     AS "upperMenuId"
+				, MENU_DC           AS "menuDc"
+				, SITE_ID    		AS "siteId"
+				, MENU_LINK    		AS "menuLink"
+				, POPUP_AT    	AS "menuPopupYn"
+				, DEPT_ID    		AS "deptId"
+				, RELATE_MENU_NM_LIST				AS "path"
+				, USE_AT            AS "useYn"
+				, LAYOUT_SE			AS "layoutSe"
+				, (SELECT count(B.MENU_NO)
+				         FROM TC_AUTHOR_MENU B
+				        WHERE B.MENU_NO  = A.MENU_NO
+				          AND B.AUTHOR_CODE = #authorCode#) AS "chkYeoBu"
+		FROM TC_MENUINFO A
+		WHERE SITE_ID = 1 AND NVL(USE_AT,'N') = 'Y'
+		ORDER BY UPPER_MENU_NO, MENU_ORDR
+		]]>
+	</select>
+
+	<!-- 컨텐츠 -->
+	<select id="menuManageDAO.selectPathByMenuNo" parameterClass="egovMap" resultClass="egovMap">
+	/* menuManageDAO.selectPathByMenuNo */
+		<![CDATA[
+		SELECT *
+		FROM TC_MENUINFO
+		WHERE MENU_NO = #menuNo#
+		]]>
+	</select>
+
+	<!-- 컨텐츠 -->
+	<select id="menuManageDAO.selectContentsPathByMenuNo" parameterClass="int" resultClass="string">
+	/* menuManageDAO.selectContentsPathByMenuNo */
+		<![CDATA[
+		SELECT CNTNTS_FILE_PATH CONTENTS_PATH
+		FROM TC_MENUINFO
+		WHERE MENU_NO = #menuNo#
+		]]>
+	</select>
+
+	<update id="menuManageDAO.rearrangeMenu" parameterClass="menuManageVO">
+	/* menuManageDAO.rearrangeMenu */
+		<![CDATA[
+			UPDATE TC_MENUINFO
+			SET
+				 FULL_MENU_LINK = #fullMenuLink#
+				, POSITION = #position#
+				, CNTNTS_FILE_PATH = #contentsPath#
+				, RELATE_MENU_NM_LIST = #path#
+				, RELATE_LINK_LIST = #fullPath#
+			WHERE MENU_NO = #menuNo#
+		]]>
+	</update>
+
+	<update id="menuManageDAO.rearrangeMenu2" parameterClass="menuManageVO">
+	/* menuManageDAO.rearrangeMenu2 */
+		<![CDATA[
+			UPDATE TC_MENUINFO
+			SET
+				 FULL_MENU_LINK = #fullMenuLink#
+				, POSITION = #position#
+				, RELATE_MENU_NM_LIST = #path#
+				, RELATE_LINK_LIST = #fullPath#
+				, LEAF_NODE_YN = #leafNodeYn#
+			WHERE MENU_NO = #menuNo#
+		]]>
+	</update>
+
+	<select id="menuManageDAO.menuLinkSearchC1Cnt" parameterClass="zvl" resultClass="java.lang.Integer">
+	/* menuManageDAO.menuLinkSearchC1Cnt */
+		<![CDATA[
+			SELECT
+	              COUNT(U_ID) as cnt
+	         FROM TBG_CONTENTS
+	        WHERE PCODE IN
+	              (SELECT PCODE
+	                FROM TBG_CONTENTS_INFO
+	               WHERE BOARD_TYPE='CONTP001'
+	              )
+	              AND lang_id='ko'
+	              AND USE_AT='Y'
+	              ]]>
+			<isNotEmpty prepend="AND" property="searchKeyword">
+				<![CDATA[	CON_NM LIKE '%' || #searchKeyword# || '%'	]]>
+			</isNotEmpty>
+	</select>
+
+	<select id="menuManageDAO.menuLinkSearchC1" parameterClass="zvl" resultClass="zvl">
+	/* menuManageDAO.menuLinkSearchC1 */
+		<![CDATA[
+			SELECT *
+			  FROM
+			       (SELECT
+			              /*+ INDEX_DESC(TBG_CONTENTS PK_TBG_CONTENTS) */
+			              ROWNUM RN,
+			              PCODE as PCODE,
+			              U_ID as U_ID,
+			              CON_NM  as SUBJECT
+			         FROM TBG_CONTENTS
+			        WHERE PCODE IN
+			              (SELECT PCODE
+			                FROM TBG_CONTENTS_INFO
+			               WHERE BOARD_TYPE='CONTP001'
+			              )
+			              AND lang_id='ko'
+			              AND USE_AT='Y'
+			              ]]>
+					<isNotEmpty prepend="AND" property="searchKeyword">
+						<![CDATA[	CON_NM LIKE '%' || #searchKeyword# || '%'	]]>
+					</isNotEmpty>
+			              <![CDATA[
+			              AND ROWNUM<=#enRn#
+			       )
+			 WHERE RN>=#stRn#
+		]]>
+	</select>
+
+	<select id="menuManageDAO.menuLinkSearchC2Cnt" parameterClass="zvl" resultClass="java.lang.Integer">
+	/* menuManageDAO.menuLinkSearchC2Cnt */
+		<![CDATA[
+			SELECT
+				COUNT(CODE_NM) as cnt
+	         FROM TC_CMMNCODE_DETAIL
+	        WHERE code IN
+	              (SELECT PCODE
+	                FROM TBG_CONTENTS_INFO
+	               WHERE BOARD_TYPE<>'CONTP001'
+	              )
+	              AND USE_AT='Y'
+	              ]]>
+			<isNotEmpty prepend="AND" property="searchKeyword">
+				<![CDATA[	CODE_NM LIKE '%' || #searchKeyword# || '%'	]]>
+			</isNotEmpty>
+	</select>
+
+	<select id="menuManageDAO.menuLinkSearchC2" parameterClass="zvl" resultClass="zvl">
+	/* menuManageDAO.menuLinkSearchC2 */
+		<![CDATA[
+			SELECT *
+			  FROM
+			       (SELECT ROWNUM RN,
+			              CODE as PCODE,
+			              CODE_NM as SUBJECT
+			         FROM TC_CMMNCODE_DETAIL
+			        WHERE code IN
+			              (SELECT PCODE
+			                FROM TBG_CONTENTS_INFO
+			               WHERE BOARD_TYPE<>'CONTP001'
+			              )
+			              AND USE_AT='Y'
+			              ]]>
+					<isNotEmpty prepend="AND" property="searchKeyword">
+						<![CDATA[	CODE_NM LIKE '%' || #searchKeyword# || '%'	]]>
+					</isNotEmpty>
+			              <![CDATA[
+			              AND ROWNUM<=#enRn#
+			       )
+			 WHERE RN>=#stRn#
+		]]>
+	</select>
+
+	<select id="menuManageDAO.selectMenuByContents" parameterClass="zvl" resultMap="menuContentsMap">
+	/* menuManageDAO.selectMenuByContents */
+		<![CDATA[
+			SELECT MENU_NO,
+		              CNTNTS_NO	AS	CV_NO,
+		              CNTNTS_CN	AS	CV_CON
+		         FROM TC_CONTENTS
+		        WHERE MENU_NO=#menuNo#  and USE_AT='Y'
+		]]>
+	</select>
+
+	<update id="menuManageDAO.releaseMenuContentsAuth">
+	/* menuManageDAO.releaseMenuContentsAuth */
+			UPDATE TC_MENUINFO
+			SET
+			  USER_ID           = null
+			, DEPT_ID           = null
+			WHERE MENU_NO IN
+		<iterate conjunction="," open="(" close=")" property="menuNoData">
+			#menuNoData[]#
+		</iterate>
+	</update>
+
+	<select id="menuManageDAO.selectMenuNoListByUserId" parameterClass="string" resultClass="string">
+	/* menuManageDAO.selectMenuNoListByUserId */
+		<![CDATA[
+		SELECT
+			      MENU_NO
+		FROM TC_MENUINFO A
+		WHERE USER_ID = #userId#
+		]]>
+	</select>
+
+	<update id="menuManageDAO.setModifyDayToToday" parameterClass="menuManageVO">
+	/* menuManageDAO.setModifyDayToToday */
+			UPDATE TC_MENUINFO
+			SET
+			  LAST_UPDT_PNTTM = SYSDATE
+			WHERE MENU_NO = #menuNo#
+	</update>
+
+</sqlMap>

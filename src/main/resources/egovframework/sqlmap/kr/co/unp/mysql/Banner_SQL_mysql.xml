@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Banner">
+
+	<typeAlias  alias="zvl" type="kr.co.unp.util.ZValue"/>
+
+	<sql id="BannerDAO.selectBannerList-where">
+		<isEqual prepend="AND" property="searchCnd" compareValue="1">
+			<![CDATA[	a.SITE_NM LIKE CONCAT('%',trim(#searchWrd#), '%')	]]>
+		</isEqual>
+		<isEqual prepend="AND" property="searchCnd" compareValue="2">
+			<![CDATA[	BANNER_NM LIKE CONCAT('%',trim(#searchWrd#), '%')	]]>
+		</isEqual>
+
+		<isNotEmpty prepend="AND" property="publish">
+			<isEqual property="publish" compareValue="Y">
+				<![CDATA[	USE_AT = 'Y' AND DATE_FORMAT(NOW(),'%Y-%m-%d') BETWEEN BGNDE AND ENDDE	]]>
+			</isEqual>
+			<isEqual property="publish" compareValue="N">
+				<![CDATA[	( USE_AT = 'N' OR DATE_FORMAT(NOW(),'%Y-%m-%d') < BGNDE OR DATE_FORMAT(NOW(),'%Y-%m-%d') > ENDDE  ) ]]>
+			</isEqual>
+		</isNotEmpty>
+	</sql>
+
+	<select id="BannerDAO.selectBannerListTotCnt" parameterClass="zvl" resultClass="int">
+		<![CDATA[
+			SELECT  COUNT(*) as totcnt
+			  FROM  TC_BANNER
+			 WHERE	DELETE_AT LIKE 'N'
+		]]>
+		<include refid="BannerDAO.selectBannerList-where" />
+	</select>
+
+	<select id="BannerDAO.selectBannerList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+			SELECT  *
+			  FROM  (
+			SELECT @RN:=@RN+1 AS RNUM, ALL_LIST.*
+			  FROM  (
+
+			SELECT	BANNER_NO
+				, a.BANNER_NM
+				, a.BANNER_URL
+				, a.DEPT_ID
+				, DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d')	AS	FRST_REGIST_PNTTM
+				, a.FRST_REGISTER_ID
+				, a.LAST_UPDT_PNTTM
+				, a.LAST_UPDUSR_ID
+				, a.DELETE_AT
+				, a.USE_AT
+				, a.DEPT_NM
+				, a.DONG
+				, a.BANNER_SE
+				, a.SITE_NM
+				, DATE_FORMAT(a.BGNDE, '%Y-%m-%d') as BGNDE
+				, CASE WHEN DATE_FORMAT(NOW(),'%Y-%m-%d') > ENDDE THEN '1'
+				       WHEN DATE_FORMAT(NOW(),'%Y-%m-%d') BETWEEN BGNDE AND ENDDE THEN '2'
+				       ELSE '3'
+				  END AS STATUS
+				, DATE_FORMAT(a.ENDDE, '%Y-%m-%d') as ENDDE
+				, a.SORT_ORDR
+				, a.ATCH_FILE_ID
+				, a.POPUP_AT
+				  FROM  TC_BANNER a
+ 			     WHERE	DELETE_AT = 'N'
+		]]>
+		<include refid="BannerDAO.selectBannerList-where" />
+		<![CDATA[
+			ORDER BY a.FRST_REGIST_PNTTM DESC
+			
+						) ALL_LIST
+			  	 ) ALL_LIST
+
+		   limit #firstIndex#, #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="BannerDAO.selectAllBannerList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+
+					SELECT	BANNER_NO
+					, a.BANNER_NM
+					, a.BANNER_URL
+					, a.DEPT_ID
+					, DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d')	AS	FRST_REGIST_PNTTM
+					, a.FRST_REGISTER_ID
+					, a.LAST_UPDT_PNTTM
+					, a.LAST_UPDUSR_ID
+					, a.DELETE_AT
+					, a.USE_AT
+					, a.DEPT_NM
+					, a.DONG
+					, a.BANNER_SE
+					, a.SITE_NM
+					, a.BGNDE
+					, a.ENDDE
+					, a.SORT_ORDR
+					, a.ATCH_FILE_ID
+					, a.POPUP_AT
+					  FROM  TC_BANNER a
+	 			     WHERE	DELETE_AT = 'N'
+		]]>
+		<isNotEmpty prepend="AND" property="siteNm">
+				SITE_NM = #siteNm#
+		</isNotEmpty>
+		<![CDATA[
+	 			     ORDER BY SORT_ORDR ASC, FRST_REGIST_PNTTM ASC
+		]]>
+	</select>
+
+	<select id="BannerDAO.selectPublishList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+				SELECT	BANNER_NO
+					, a.BANNER_NM
+					, a.BANNER_URL
+					, a.DEPT_ID
+					, DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d')	AS	FRST_REGIST_PNTTM
+					, a.FRST_REGISTER_ID
+					, DATE_FORMAT(a.LAST_UPDT_PNTTM, '%Y-%m-%d')	AS	LAST_UPDT_PNTTM
+					, a.LAST_UPDUSR_ID
+					, a.DELETE_AT
+					, a.USE_AT
+					, a.DEPT_NM
+					, a.DONG
+					, a.BANNER_SE
+					, a.SITE_NM
+					, BGNDE
+					, ENDDE
+					, a.SORT_ORDR
+					, a.ATCH_FILE_ID
+					, a.POPUP_AT
+					  FROM  TC_BANNER a
+	 			     WHERE	DELETE_AT = 'N'
+			     		AND USE_AT = 'Y'
+			     		AND (
+			     			DATE_FORMAT(NOW(), '%Y%m%d') >= REPLACE(BGNDE,'-','')
+		     		   		AND DATE_FORMAT(NOW(), '%Y%m%d') <= REPLACE(ENDDE,'-','')
+		     		   	)
+			ORDER BY	SORT_ORDR ASC, FRST_REGIST_PNTTM DESC
+		]]>
+	</select>
+
+	<select id="BannerDAO.selectBannerDetail" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+			SELECT	BANNER_NO
+					, a.BANNER_NM
+					, a.BANNER_URL
+					, a.DEPT_ID
+					, DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d')	AS	FRST_REGIST_PNTTM
+					, a.FRST_REGISTER_ID
+					, DATE_FORMAT(a.LAST_UPDT_PNTTM, '%Y-%m-%d')	AS	LAST_UPDT_PNTTM
+					, a.LAST_UPDUSR_ID
+					, a.DELETE_AT
+					, a.USE_AT
+					, a.DEPT_NM
+					, a.DONG
+					, a.BANNER_SE
+					, a.SITE_NM
+					, BGNDE
+					, ENDDE
+					, a.SORT_ORDR
+					, a.ATCH_FILE_ID
+					, a.POPUP_AT
+					, b.DEPT_NM_KOR
+					, b.DEPT_NM_ENG
+			  FROM  TC_BANNER a
+			  LEFT OUTER JOIN TM_USER c ON c.USER_ID = a.FRST_REGISTER_ID
+			  LEFT OUTER JOIN TM_ADMIN_DEPT b ON b.DEPT_ID = c.DEPT_ID
+			 WHERE	a.BANNER_NO = #bannerNo#
+		]]>
+	</select>
+
+
+
+	<update id="BannerDAO.updateBanner" parameterClass="zvl">
+		<![CDATA[
+            UPDATE  TC_BANNER
+               SET  BANNER_NM=#bannerNm#
+					, BANNER_URL=#bannerUrl#
+					, DEPT_ID=#deptId#
+					, LAST_UPDT_PNTTM=NOW()
+					, LAST_UPDUSR_ID=#lastUpdusrId#
+					, USE_AT=#useAt#
+					, DEPT_NM=#deptNm#
+					, DONG=#dong#
+					, BANNER_SE=#bannerSe#
+					, SITE_NM=#siteNm#
+					, BGNDE=#bgnde#
+					, ENDDE=#endde#
+					, SORT_ORDR=#sortOrdr#
+					, ATCH_FILE_ID=#atchFileId#
+					, POPUP_AT=#popupAt#
+             WHERE	BANNER_NO = #bannerNo#
+		]]>
+	</update>
+
+	<insert id="BannerDAO.insertBanner" parameterClass="zvl">
+		<selectKey resultClass="int" keyProperty="bannerNo">
+			SELECT IFNULL(MAX(BANNER_NO),0)+1 AS BANNER_NO  FROM TC_BANNER
+		</selectKey>
+		<![CDATA[
+		    INSERT
+		      INTO  TC_BANNER
+		        (
+					BANNER_NO
+					, BANNER_NM
+					, BANNER_URL
+					, DEPT_ID
+					, FRST_REGIST_PNTTM
+					, FRST_REGISTER_ID
+					, LAST_UPDT_PNTTM
+					, LAST_UPDUSR_ID
+					, DELETE_AT
+					, USE_AT
+					, DEPT_NM
+					, DONG
+					, BANNER_SE
+					, SITE_NM
+					, BGNDE
+					, ENDDE
+					, SORT_ORDR
+					, ATCH_FILE_ID
+					, POPUP_AT
+		        )
+		    VALUES
+		        (
+					#bannerNo#
+					, #bannerNm#
+					, #bannerUrl#
+					, #deptId#
+					, NOW()
+					, #frstRegistPnttm#
+					, NOW()
+					, #frstRegisterId#
+					, 'N'
+					, #useAt#
+					, #deptNm#
+					, #dong#
+					, #bannerSe#
+					, #siteNm#
+					, #bgnde#
+					, #endde#
+					, #sortOrdr#
+					, #atchFileId#
+					, #popupAt#
+		        )
+		]]>
+	</insert>
+
+
+	<delete id="BannerDAO.deleteBanner" parameterClass="zvl">
+		<![CDATA[
+		    DELETE FROM TC_BANNER WHERE BANNER_NO = #bannerNo#
+		]]>
+	</delete>
+
+
+</sqlMap>

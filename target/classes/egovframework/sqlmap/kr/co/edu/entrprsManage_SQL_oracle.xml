@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="entrprsManage">
+
+<typeAlias alias="zvl" type="kr.co.unp.util.ZValue" />
+
+
+	<sql id="entrprsManage.entrprsManageList-where">
+			<isNotEmpty  prepend="and" property="searchWrd">
+				<![CDATA[	( a.ENTRPRS_NM LIKE '%' || #searchWrd# || '%' )	]]>
+			</isNotEmpty>
+
+			<isNotEmpty  prepend="and" property="entrprsNm">
+				<![CDATA[	( a.ENTRPRS_NM LIKE '%' || #entrprsNm# || '%' )	]]>
+			</isNotEmpty>
+
+			<isNotEmpty  prepend="and" property="charger">
+				<![CDATA[	( a.CHARGER LIKE '%' || #charger# || '%' )	]]>
+			</isNotEmpty>
+	</sql>
+
+
+	<insert id="entrprsManage.insertEntrprsManage" parameterClass="zvl" >
+		<selectKey resultClass="java.lang.Long" keyProperty="entrprsSn">
+			<![CDATA[	SELECT NVL(MAX(ENTRPRS_SN),0)+1 AS entrprsSn  FROM TN_ENTRPRS_INFO ]]>
+		</selectKey>
+		<![CDATA[
+
+		/* entrprsManage.insertEntrprsManage */
+			INSERT INTO TN_ENTRPRS_INFO
+		       (
+		           ENTRPRS_SN,
+		           ENTRPRS_NM,
+		           LST_AT,
+		           RPRSNTV,
+		           EMPL_CO,
+		           FOND_YEAR,
+		           HMPG,
+		           CAPL,
+		           ENTRPRS_STLE,
+		           CHARGER,
+		           TELNO,
+		           EMAIL,
+		           USE_AT,
+		           FRST_REGIST_PNTTM,
+		           FRST_REGISTER_ID,
+		           LAST_UPDT_PNTTM,
+		           LAST_UPDUSR_ID,
+		           DELETE_AT,
+		           ATCH_FILE_ID
+		       )
+		       VALUES
+		       (
+				   #entrprsSn#, --기업 일련번호
+		           #entrprsNm#, --기업명
+		           NVL(#lstAt#, 'N'), --상장여부
+		           #rprsntv#, --대표자성명
+		           #emplCo#, --사원수
+		           #fondYear#, --설립연도
+		           #hmpg#, --홈페이지
+		           #capl#, --자본금
+		           #entrprsStle#, --기업분류
+		           #charger#, --담당자명
+		           #telno#, --전화번호
+		           #email#, --전자우편
+		           NVL(#useAt#, 'N'), --사용여부
+		           SYSDATE, --최초등록일
+		           #frstRegisterId#, --최초등록자 아이디
+		           SYSDATE, --최종수정일
+		           #lastUpdusrId#, --최종수정자 아이디
+		           NVL(#deleteAt#, '0'), --삭제여부
+		           #atchFileId#
+		       )
+		]]>
+	</insert>
+
+
+		<select id="entrprsManage.entrprsManageList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[ /* empmnPblanc.selectEmpmnPblancList */
+
+				SELECT *
+				  FROM
+				       (SELECT ROWNUM RNUM,
+				              ALL_LIST.*
+				         FROM
+				              (SELECT A.ENTRPRS_SN,
+				                     A.ENTRPRS_NM,
+				                     A.LST_AT,
+				                     A.RPRSNTV,
+				                     A.EMPL_CO,
+				                     A.FOND_YEAR,
+				                     A.CAPL,
+				                     A.ENTRPRS_STLE,
+				                     FN_CMMNCODE_NM('COM093', a.ENTRPRS_STLE) AS ENTRPRS_STLE_NM,
+				                     A.USE_AT,
+				                     a.FRST_REGIST_PNTTM
+				                FROM TN_ENTRPRS_INFO A
+				               WHERE 1=1
+				                     AND a.DELETE_AT = '0'
+				                     ]]>
+				             <include refid="entrprsManage.entrprsManageList-where" />
+				                     <![CDATA[
+				            ORDER BY a.FRST_REGIST_PNTTM DESC
+				              ) ALL_LIST
+				       )
+				 WHERE RNUM > #firstIndex#
+				       AND RNUM <= #firstIndex# + #recordCountPerPage#
+				       ]]>
+
+	</select>
+		<select id="entrprsManage.entrprsManagePopupList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[ /* entrprsManage.entrprsManagePopupList */
+
+				SELECT *
+				  FROM
+				       (SELECT ROWNUM RNUM,
+				              ALL_LIST.*
+				         FROM
+				              (SELECT A.ENTRPRS_SN,
+							       A.ENTRPRS_NM,
+							       a.CHARGER,
+							       A.TELNO,
+							       A.EMAIL,
+							       FN_CMMNCODE_NM('COM099', a.ENTRPRS_STLE) AS ENTRPRS_STLE_NM,
+							       A.USE_AT
+							  FROM TN_ENTRPRS_INFO A
+				               WHERE 1=1
+				                     AND a.DELETE_AT = '0'
+				                     ]]>
+				             <include refid="entrprsManage.entrprsManageList-where" />
+				                     <![CDATA[
+				            ORDER BY a.FRST_REGIST_PNTTM DESC
+				              ) ALL_LIST
+				       )
+				 WHERE RNUM > #firstIndex#
+				       AND RNUM <= #firstIndex# + #recordCountPerPage#
+				       ]]>
+
+	</select>
+
+	<select id="entrprsManage.entrprsManageListCnt" parameterClass="zvl" resultClass="int">
+	<![CDATA[
+	/* entrprsManage.entrprsManageListCnt */
+		SELECT COUNT(*)
+		  FROM TN_ENTRPRS_INFO A
+		 WHERE 1=1
+	 AND a.DELETE_AT = '0'
+		       ]]>
+	<include refid="entrprsManage.entrprsManageList-where" />
+	</select>
+
+	<update id="entrprsManage.updateEntrprsManage" parameterClass="zvl">
+		<![CDATA[
+		/* entrprsManage.updateEntrprsManage */
+			UPDATE TN_ENTRPRS_INFO a
+		       SET
+		       ENTRPRS_NM = #entrprsNm#,
+		       LST_AT = #lstAt#,
+		       RPRSNTV = #rprsntv#,
+		       EMPL_CO = #emplCo#,
+		       FOND_YEAR = #fondYear#,
+		       HMPG = #hmpg#,
+		       CAPL = #capl#,
+		       ENTRPRS_STLE = #entrprsStle#,
+		       CHARGER = #charger#,
+		       TELNO = #telno#,
+		       EMAIL = #email#,
+		       USE_AT = #useAt#,
+		       LAST_UPDT_PNTTM = SYSDATE,
+		       LAST_UPDUSR_ID = #lastUpdusrId#,
+		       ATCH_FILE_ID = #atchFileId#
+		 WHERE a.ENTRPRS_SN = #entrprsSn#
+		 ]]>
+	</update>
+
+	<select id="entrprsManage.selectEntrprsManage" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/* entrprsManage.selectEntrprsManage */
+			SELECT A.ENTRPRS_SN,
+		       A.ENTRPRS_NM,
+		       A.LST_AT,
+		       A.RPRSNTV,
+		       A.EMPL_CO,
+		       A.FOND_YEAR,
+		       A.HMPG,
+		       A.CAPL,
+		       A.ENTRPRS_STLE,
+		       A.CHARGER,
+		       A.TELNO,
+		       A.EMAIL,
+		       A.USE_AT,
+		       A.FRST_REGIST_PNTTM,
+		       A.FRST_REGISTER_ID,
+		       A.LAST_UPDT_PNTTM,
+		       A.LAST_UPDUSR_ID,
+		       A.LOGO_URL,
+		       A.DELETE_AT,
+		       A.ATCH_FILE_ID
+		  FROM TN_ENTRPRS_INFO A
+		  WHERE a.ENTRPRS_SN = #entrprsSn#
+		  ]]>
+	</select>
+
+	<update id="entrprsManage.deleteEntrprsManage" parameterClass="zvl">
+		<![CDATA[
+		/* entrprsManage.deleteEntrprsManage */
+		UPDATE TN_ENTRPRS_INFO a
+		       SET a.DELETE_AT = '1',
+		       a.LAST_UPDUSR_ID = #lastUpdusrId#,
+           a.LAST_UPDT_PNTTM = SYSDATE
+		 WHERE a.ENTRPRS_SN = #entrprsSn#
+		 ]]>
+	</update>
+
+</sqlMap>
+

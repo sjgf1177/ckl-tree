@@ -1,0 +1,1690 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="optionalBoard">
+
+	<typeAlias  alias="zvl" type="kr.co.unp.util.ZValue"/>
+
+	<insert id="optionalBoardDAO.insertBoardArticle" parameterClass="zvl" >
+		<selectKey resultClass="java.lang.Long" keyProperty="nttId">
+			SELECT IFNULL(MAX(NTT_ID),0)+1 AS NTT_ID  FROM $tableNm$
+		</selectKey>
+			INSERT INTO $tableNm$
+			(NTT_ID, BBS_ID, NTT_SJ, NTT_CN, SORT_ORDR,
+			 NTCR_ID, NTCR_NM, PASSWORD, INQIRE_CO,
+			 NTCE_BGNDE, NTCE_ENDDE, REPLY_AT,BBS_SE,
+			 PARNTS, NTCR_EMAIL, NTCR_TEL,NTCR_ADDR1, NTCR_ADDR2, NTCR_ZIPCODE,
+			 NTT_NO, REPLY_LC, ATCH_FILE_ID,
+			 FRST_REGISTER_ID, FRST_REGIST_PNTTM, LAST_UPDT_PNTTM, USE_AT,
+			 SECRET_AT, DELETE_CODE, NTT_TYPE, DEPT_ID,
+			 OPTION1, OPTION2, OPTION3,
+			 OPTION4, OPTION5, OPTION6, OPTION7, OPTION8,
+			 OPTION9, OPTION10, OPTION11, OPTION12, OPTION13,
+			 OPTION14, OPTION15, OPTION16, OPTION17, OPTION18,
+			 OPTION19, OPTION20, HTML_AT, NTCR_CI
+			 )
+			VALUES
+			( #nttId#, #bbsId#, #nttSj#, #nttCn:CLOB#, #sortOrdr#,
+			  #ntcrId#, #ntcrNm#, #password#, 0,
+			  #ntceBgnde#, #ntceEndde#, #replyAt#, #gubun#,
+			<isEqual property="parnts" compareValue="0">
+				#nttId#,
+			</isEqual>
+			<isNotEqual property="parnts" compareValue="0">
+				#parnts#,
+			</isNotEqual>
+			  #ntcrEmail#, #ntcrTel#,#ntcrAddr1#, #ntcrAddr2#, #ntcrZipcode#,
+			  #nttNo#, #replyLc#, #atchFileId#,
+			  #frstRegisterId#, NOW(), NOW(), 'Y',
+			  #secret#, IFNULL(#delcode#, '0'), #nttType#, #deptId#,
+			  #option1#, #option2#, #option3#,
+			  #option4#, #option5#, #option6#, #option7#, #option8#,
+			  #option9#, #option10#, #option11#, #option12#, #option13#,
+			  #option14#, #option15#, #option16#, #option17#, #option18#,
+			  #option19#, #option20#, IFNULL(#htmlYn#, 'N'), #ntcrCi#
+			 )
+	</insert>
+
+	<sql id="optionalBoardDAO.selectBoardArticleList-where">
+		<isNotEmpty prepend="AND" property="sdate">
+			<![CDATA[	DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y%m%d') >= REPLACE(#sdate#,'-','') 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="edate">
+			<![CDATA[	DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y%m%d') <= REPLACE(#edate#,'-','') 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchBgnDe">
+			<![CDATA[	REPLACE(a.NTCE_BGNDE,'-','') >= REPLACE(#searchBgnDe#,'-','') 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchEndDe">
+			<![CDATA[	REPLACE(a.NTCE_ENDDE,'-','') <= REPLACE(#searchEndDe#,'-','') 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="gubun">
+			<![CDATA[	a.BBS_SE = #gubun# 		]]>
+		</isNotEmpty>
+		<isNotEmpty property="status">
+			<isEqual prepend="AND" property="status" compareValue="4">
+				<![CDATA[	a.STATUS IN ('1','2') 		]]>
+			</isEqual>
+			<isNotEqual prepend="AND" property="status" compareValue="4">
+				<![CDATA[	a.STATUS = #status#	]]>
+			</isNotEqual>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="secret">
+			<![CDATA[	a.SECRET_AT = #secret# 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="useAt">
+			<![CDATA[	a.USE_AT = #useAt# 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="deptId">
+			<![CDATA[	a.DEPT_ID = #deptId# 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="delcode">
+			<![CDATA[	a.DELETE_CODE = #delcode# 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="option1">
+			<![CDATA[	a.OPTION1 LIKE CONCAT('%',trim(UPPER(replace(#option1#,'&gt;', '>'))), '%') 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="option2">
+			<![CDATA[	a.OPTION2 = #option2# 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="option3">
+			<![CDATA[	a.OPTION3 = #option3# 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="option4">
+			<![CDATA[	a.OPTION4 = #option4# 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="option5">
+			<![CDATA[	a.OPTION5 = #option5# 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="nttNo">
+			<![CDATA[	a.NTT_NO = #nttNo# 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="ntcrId">
+			<![CDATA[	a.NTCR_ID = #ntcrId# 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="ntcrCi">
+			<![CDATA[	a.NTCR_CI = #ntcrCi# 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchWrd">
+			<isEqual property="searchCnd" compareValue="1">
+				<![CDATA[	UPPER(a.NTT_SJ) LIKE CONCAT('%',trim(UPPER(#searchWrd#)), '%') 		]]>
+			</isEqual>
+			<isEqual property="searchCnd" compareValue="2">
+				<![CDATA[	UPPER(a.NTT_CN) LIKE CONCAT('%',trim(UPPER(#searchWrd#)), '%') 		]]>
+			</isEqual>
+			<isEqual property="searchCnd" compareValue="3">
+				<![CDATA[	b.DEPT_NM_KOR LIKE CONCAT('%',trim(UPPER(#searchWrd#)), '%')	]]>
+			</isEqual>
+			<isEqual property="searchCnd" compareValue="4">
+				<![CDATA[	UPPER(a.NTCR_NM) LIKE CONCAT('%',trim(UPPER(#searchWrd#)), '%') 		]]>
+			</isEqual>
+			<isEqual property="searchCnd" compareValue="5">
+				<![CDATA[	a.OPTION1 LIKE CONCAT('%',trim(#searchWrd#), '%') 		]]>
+			</isEqual>
+			<isEqual property="searchCnd" compareValue="6">
+				<![CDATA[	a.OPTION6 LIKE CONCAT('%',trim(#searchWrd#), '%') 		]]>
+			</isEqual>
+			<isEqual property="searchCnd" compareValue="7">
+				<![CDATA[	a.OPTION3 LIKE CONCAT('%',trim(#searchWrd#), '%') 		]]>
+			</isEqual>
+			<isEqual property="searchCnd" compareValue="8">
+				<![CDATA[	( UPPER(a.NTT_SJ) LIKE CONCAT('%',trim(UPPER(#searchWrd#)), '%') or UPPER(a.NTT_CN) LIKE CONCAT('%',trim(UPPER(#searchWrd#)), '%') or UPPER(a.NTCR_NM) LIKE CONCAT('%',trim(UPPER(#searchWrd#)), '%') )	]]>
+			</isEqual>
+			<isEqual property="searchCnd" compareValue="9">
+				<![CDATA[	a.OPTION2 LIKE CONCAT('%',trim(#searchWrd#), '%') 		]]>
+			</isEqual>
+		</isNotEmpty>
+	</sql>
+
+	<select id="optionalBoardDAO.selectBoardArticleListCnt" parameterClass="zvl" resultClass="int" >
+		<![CDATA[
+			SELECT
+				COUNT(a.NTT_ID)
+			FROM
+				$tableNm$ a
+			LEFT OUTER JOIN TM_ADMIN_DEPT b ON b.DEPT_ID = a.DEPT_ID
+			WHERE
+				a.BBS_ID = #bbsId#
+			AND a.DELETE_CODE = #delcode#
+
+		]]>
+		<include refid="optionalBoardDAO.selectBoardArticleList-where" />
+	</select>
+
+	<select id="optionalBoardDAO.selectBoardArticleFiles" parameterClass="zvl" resultClass="zvl" >
+		<![CDATA[
+			SELECT a.ATCH_FILE_ID,
+			       a.FILE_SN,
+			       a.FILE_STRE_COURS,
+			       a.STRE_FILE_NM,
+			       a.ORIGNL_FILE_NM,
+			       a.FILE_EXTSN,
+			       a.FILE_MG,
+			       a.FILE_CN,
+			       a.FILE_FIELD_NM	AS	FILE_FIELD_NAME,
+				   b.NTT_ID,
+				   b.BBS_ID
+			  FROM TC_COMMNFILE_DETAIL a
+			  INNER JOIN $tableNm$ b ON b.ATCH_FILE_ID = a.ATCH_FILE_ID
+			  WHERE 1=1
+		]]>
+		<isNotEmpty prepend="AND" property="atchFileIdData">
+					a.ATCH_FILE_ID IN
+			<iterate conjunction="," open="(" close=")" property="atchFileIdData">
+				#atchFileIdData[]#
+			</iterate>
+		</isNotEmpty>
+	 			order by a.FILE_SN desc
+	</select>
+
+	<select id="optionalBoardDAO.selectBoardArticleList" parameterClass="zvl" resultClass="zvl">
+		/* optionalBoardDAO.selectBoardArticleList */
+		<![CDATA[
+			SELECT  *
+			  FROM  (
+			SELECT @RN:=@RN+1 AS RNUM, ALL_LIST.*
+			  FROM  (
+			SELECT
+				a.NTT_ID
+				, a.NTT_SJ
+				, a.NTT_CN
+				, a.FRST_REGISTER_ID
+				, a.NTCR_ID
+				, a.NTCR_NM
+				, a.NTCR_CI
+				, a.NTT_NO
+				, a.INQIRE_CO
+				, a.PARNTS
+				, a.REPLY_AT
+				, a.REPLY_LC
+				, a.USE_AT
+				, a.ATCH_FILE_ID
+				, a.BBS_ID
+				, a.NTCE_BGNDE
+				, a.NTCE_ENDDE
+				, a.SECRET_AT AS SECRET
+				, a.NTT_TYPE2
+				, a.GUBUN
+				, a.NTT_TYPE
+				, DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d') as FRST_REGISTER_PNTTM
+				, DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d %H:%i:%s') as REG_DATE
+				, DATE_FORMAT(a.LAST_UPDT_PNTTM, '%Y-%m-%d') as LAST_UPDUSR_PNTTM
+				, DATE_FORMAT(a.LAST_UPDT_PNTTM, '%Y-%m-%d %H:%i:%s') as UPT_DATE
+				, a.DELETE_CODE AS DELCODE
+				, a.DEPT_ID
+				, b.DEPT_NM_KOR
+				, b.DEPT_NM_ENG
+				, OPTION1, OPTION2, OPTION3,OPTION4, OPTION5, OPTION6, OPTION7, OPTION8, OPTION9, OPTION10
+				, OPTION11, OPTION12, OPTION13, OPTION14, OPTION15, OPTION16, OPTION17, OPTION18, OPTION19, OPTION20
+				, a.NEW_YN
+			FROM (
+				SELECT
+					a.NTT_ID
+					, a.NTT_SJ
+					, a.NTT_CN
+					, a.FRST_REGISTER_ID
+					, a.NTCR_ID
+					, a.NTCR_NM
+					, a.NTCR_CI
+					, a.NTT_NO
+					, a.INQIRE_CO
+					, a.PARNTS
+					, a.REPLY_AT
+					, a.REPLY_LC
+					, a.USE_AT
+					, a.ATCH_FILE_ID
+					, a.BBS_ID
+					, a.NTCE_BGNDE
+					, a.NTCE_ENDDE
+					, a.SECRET_AT
+					, a.NTT_TYPE AS NTT_TYPE2
+					, a.BBS_SE AS GUBUN
+					, a.FRST_REGIST_PNTTM
+					, a.LAST_UPDT_PNTTM
+					, case
+						when NTT_TYPE = '1'
+						AND REPLACE(a.NTCE_BGNDE,'-','') <= DATE_FORMAT(NOW(), '%Y%m%d')
+						AND REPLACE(a.NTCE_ENDDE,'-','') >= DATE_FORMAT(NOW(), '%Y%m%d')
+						then '1'
+						else '2'
+						END AS ntt_type
+					, DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d') as FRST_REGISTER_PNTTM
+					, DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d %H:%i:%s') as REG_DATE
+					, DATE_FORMAT(a.LAST_UPDT_PNTTM, '%Y-%m-%d') as LAST_UPDUSR_PNTTM
+					, DATE_FORMAT(a.LAST_UPDT_PNTTM, '%Y-%m-%d %H:%i:%s') as UPT_DATE
+					, a.DELETE_CODE
+					, a.DEPT_ID
+					, OPTION1, OPTION2, OPTION3,OPTION4, OPTION5, OPTION6, OPTION7, OPTION8, OPTION9, OPTION10
+					, OPTION11, OPTION12, OPTION13, OPTION14, OPTION15, OPTION16, OPTION17, OPTION18, OPTION19, OPTION20
+					, case
+						WHEN a.FRST_REGIST_PNTTM >= date_add(now(), interval -7 day)   then 'Y'
+						ELSE 'N'
+					  END AS NEW_YN
+				FROM
+					$tableNm$ a
+			) a
+			LEFT OUTER JOIN TM_ADMIN_DEPT b ON b.DEPT_ID = a.DEPT_ID
+			WHERE  a.BBS_ID = #bbsId#
+		]]>
+		<include refid="optionalBoardDAO.selectBoardArticleList-where" />
+
+		<!-- 일반게시판 -->
+		<isEqual property="bbsTyCode" compareValue="BBST01">
+			<![CDATA[	ORDER BY a.REG_DATE DESC	]]>
+		</isEqual>
+		<!-- 계단형게시판 -->
+		<isEqual property="bbsTyCode" compareValue="BBST02">
+			<![CDATA[	ORDER BY a.PARNTS desc, a.REPLY_LC ASC	]]>
+		</isEqual>
+		<!-- 공지게시판 -->
+		<isEqual property="bbsTyCode" compareValue="BBST03">
+			<![CDATA[	ORDER BY a.NTT_TYPE ASC, a.REG_DATE DESC	]]>
+		</isEqual>
+		<![CDATA[
+				    ) ALL_LIST
+			    ) ALL_LIST
+			limit #firstIndex#, #recordCountPerPage#
+		]]>
+	</select>
+ 	<select id="optionalBoardDAO.selectBoardExcelList" parameterClass="zvl" resultClass="zvl" >
+ 		/* optionalBoardDAO.selectBoardExcelList */
+		<![CDATA[
+			SELECT
+				a.NTT_ID
+				, a.NTT_SJ
+				, a.NTT_CN
+				, a.FRST_REGISTER_ID
+				, a.NTCR_NM
+				, a.NTCR_CI
+				, a.NTT_NO
+				, a.INQIRE_CO
+				, a.PARNTS
+				, a.REPLY_AT
+				, a.REPLY_LC
+				, a.USE_AT
+				, a.ATCH_FILE_ID
+				, a.BBS_ID
+				, a.NTCE_BGNDE
+				, a.NTCE_ENDDE
+				, a.SECRET_AT SECRET
+				, a.NTT_TYPE AS NTT_TYPE2
+				, case
+					when NTT_TYPE = '1'
+					AND REPLACE(a.NTCE_BGNDE,'-','') <= DATE_FORMAT(NOW(), '%Y%m%d')
+					AND REPLACE(a.NTCE_ENDDE,'-','') >= DATE_FORMAT(NOW(), '%Y%m%d')
+					then '1'
+					else '2'
+					END AS NTT_TYPE
+				, DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d') as FRST_REGISTER_PNTTM
+				, a.FRST_REGIST_PNTTM as reg_date
+				, a.HTML_AT HTML_YN
+				, a.DELETE_CODE DELCODE
+				, a.DEPT_ID
+				, b.DEPT_NM_KOR as DEPT_NAME
+				, b.DEPT_NM_KOR
+				, b.DEPT_NM_ENG
+				, OPTION1, OPTION2, OPTION3,OPTION4, OPTION5, OPTION6, OPTION7, OPTION8, OPTION9, OPTION10
+				, OPTION11, OPTION12, OPTION13, OPTION14, OPTION15, OPTION16, OPTION17, OPTION18, OPTION19, OPTION20
+			FROM
+				$tableNm$ a
+			LEFT OUTER JOIN TM_ADMIN_DEPT b ON b.DEPT_ID = a.DEPT_ID
+			WHERE a.BBS_ID = #bbsId#
+		]]>
+		<include refid="optionalBoardDAO.selectBoardArticleList-where" />
+		ORDER BY a.FRST_REGIST_PNTTM DESC
+	</select>
+
+	<select id="optionalBoardDAO.selectCmmntBoardArticleList" parameterClass="zvl" resultClass="zvl">
+		/* optionalBoardDAO.selectCmmntBoardArticleList */
+		<![CDATA[
+			SELECT  *
+			  FROM  (
+			SELECT @RN:=@RN+1 AS RNUM, ALL_LIST.*
+			  FROM  (
+
+			SELECT
+				a.NTT_ID
+				, a.NTT_SJ
+				, a.NTT_CN
+				, a.FRST_REGISTER_ID
+				, a.NTCR_ID
+				, a.NTCR_NM
+				, a.NTCR_CI
+				, a.NTT_NO
+				, a.INQIRE_CO
+				, a.PARNTS
+				, a.REPLY_AT
+				, nvl(a.REPLY_LC,0) as REPLY_LC
+				, a.USE_AT
+				, a.ATCH_FILE_ID
+				, a.BBS_ID
+				, a.NTCE_BGNDE
+				, a.NTCE_ENDDE
+				, a.SECRET_AT as secret
+				, IFNULL(c.COMMENT_CNT,0) AS comment_cnt
+				, DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d') as FRST_REGISTER_PNTTM
+				, a.FRST_REGIST_PNTTM as reg_date
+				, a.SECTION
+				, a.HTML_AT HTML_YN
+				, a.DELETE_CODE DELCODE
+				, a.DEPT_ID
+			FROM
+				$tableNm$ a
+			LEFT OUTER JOIN (
+				SELECT BBS_ID, NTT_ID, COUNT(*) AS COMMENT_CNT
+				FROM TB_BBS_CMMNT
+				GROUP BY BBS_ID, NTT_ID
+			) c on a.BBS_ID = c.BBS_ID AND a.NTT_ID = c.NTT_ID
+			WHERE  a.BBS_ID = #bbsId#
+		]]>
+		<include refid="optionalBoardDAO.selectBoardArticleList-where" />
+		<![CDATA[
+			ORDER BY a.PARNTS desc, a.REPLY_LC ASC
+
+				    ) ALL_LIST
+			    ) ALL_LIST
+			 limit #firstIndex#, #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="optionalBoardDAO.selectBoardArticles" parameterClass="zvl" resultClass="zvl" >
+		<![CDATA[
+			SELECT
+				a.NTT_ID
+				, a.NTT_SJ
+				, a.NTT_CN
+				, a.FRST_REGISTER_ID
+				, a.NTCR_ID
+				, a.NTCR_NM
+				, a.NTCR_CI
+				, a.NTT_NO
+				, a.INQIRE_CO
+				, a.PARNTS
+				, a.REPLY_AT
+				, a.REPLY_LC
+				, a.USE_AT
+				, a.ATCH_FILE_ID
+				, a.BBS_ID
+				, a.NTCE_BGNDE
+				, a.NTCE_ENDDE
+				, a.SECRET_AT SECRET
+				, a.NTT_TYPE AS ntt_type2
+				, case
+					when NTT_TYPE = '1'
+					AND REPLACE(a.NTCE_BGNDE,'-','') <= DATE_FORMAT(NOW(), '%Y%m%d')
+					AND REPLACE(a.NTCE_ENDDE,'-','') >= DATE_FORMAT(NOW(), '%Y%m%d')
+					then '1'
+					else '2'
+					END AS ntt_type
+				,DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d') as FRST_REGISTER_PNTTM
+				, a.FRST_REGIST_PNTTM as reg_date
+				, a.GUBUN
+				, a.HTML_AT HTML_YN
+				, a.DELETE_CODE as del_code
+				, a.DEPT_ID
+				, b.DEPT_NM_KOR
+				, b.DEPT_NM_ENG
+			FROM
+				$tableNm$ a
+			LEFT OUTER JOIN TM_ADMIN_DEPT b ON b.DEPT_ID = a.DEPT_ID
+			WHERE a.BBS_ID = #bbsId#
+		]]>
+		<include refid="optionalBoardDAO.selectBoardArticleList-where" />
+			ORDER BY a.FRST_REGIST_PNTTM DESC
+	</select>
+
+	<select id="optionalBoardDAO.articeByAccess" parameterClass="zvl" resultClass="zvl" >
+		<![CDATA[
+			SELECT
+				NTT_ID, BBS_ID, DEPT_ID, NTCR_CI, NTCR_ID, SECRET_AT SECRET
+			FROM
+				$tableNm$ a
+			WHERE
+				a.BBS_ID = #bbsId# AND a.NTT_ID = #nttId#
+		]]>
+		<include refid="optionalBoardDAO.selectBoardArticleList-where" />
+	</select>
+
+	<select id="optionalBoardDAO.selectBoardArticle" parameterClass="zvl" resultClass="zvl" >
+		/* optionalBoardDAO.selectBoardArticle */
+		<![CDATA[
+			SELECT
+				a.NTT_SJ
+				, a.NTCR_ADDR1
+				, a.NTCR_ADDR2
+				, a.NTCR_ZIPCODE
+				, a.NTCR_ID
+				, a.NTCR_NM
+				, a.NTCR_CI
+				, a.NTCR_TEL
+				, a.NTCR_EMAIL
+				, a.NTT_CN
+				, a.PASSWORD
+				, a.FRST_REGISTER_ID
+				, a.NTCE_BGNDE
+				, a.NTCE_ENDDE
+				, a.INQIRE_CO
+				, a.USE_AT
+				, a.ATCH_FILE_ID
+				, a.BBS_ID
+				, a.NTT_ID
+				, a.PARNTS
+				, a.REPLY_AT
+				, a.REPLY_LC
+				, a.SECRET_AT SECRET
+				, a.NTT_TYPE
+				, a.DELETE_CODE DELCODE
+				, a.BBS_SE as GUBUN
+				, a.NTT_NO
+				, case
+					when a.FRST_REGIST_PNTTM >= date_add(now(), interval -7 day)   then 'Y'
+					else 'N'
+				  END AS new_yn
+				, DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d') as FRST_REGISTER_PNTTM
+				, DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d %H:%i:%s') as REG_DATE
+				, DATE_FORMAT(a.LAST_UPDT_PNTTM, '%Y-%m-%d') as LAST_UPDUSR_PNTTM
+				, DATE_FORMAT(a.LAST_UPDT_PNTTM, '%Y-%m-%d %H:%i:%s') as UPT_DATE
+				, a.DEPT_ID
+				, b.DEPT_NM_KOR
+				, b.DEPT_NM_ENG
+				, OPTION1, OPTION2, OPTION3,OPTION4, OPTION5, OPTION6, OPTION7, OPTION8, OPTION9, OPTION10
+				, OPTION11, OPTION12, OPTION13, OPTION14, OPTION15, OPTION16, OPTION17, OPTION18, OPTION19, OPTION20
+				, HTML_AT HTML_YN
+			FROM
+				$tableNm$ a
+			LEFT OUTER JOIN TM_ADMIN_DEPT b ON b.DEPT_ID = a.DEPT_ID
+			WHERE
+				a.BBS_ID = #bbsId#
+			AND
+				a.NTT_ID = #nttId#
+		]]>
+	</select>
+
+	<select id="optionalBoardDAO.selectBoardArticleByGubun" parameterClass="zvl" resultClass="zvl" >
+
+		/* optionalBoardDAO.selectBoardArticleByGubun */
+		<![CDATA[
+			SELECT
+				a.NTT_SJ
+				, a.NTCR_ID
+				, a.NTCR_NM
+				, a.NTCR_CI
+				, a.NTT_CN
+				, a.PASSWORD
+				, a.FRST_REGISTER_ID
+				, a.NTCE_BGNDE
+				, a.NTCE_ENDDE
+				, a.INQIRE_CO
+				, a.USE_AT
+				, a.ATCH_FILE_ID
+				, a.BBS_ID
+				, a.NTT_ID
+				, a.PARNTS
+				, a.REPLY_AT
+				, a.REPLY_LC
+				, a.SECRET_AT SECRET
+				, a.NTT_TYPE
+				, a.DELETE_CODE DELCODE
+				, case
+					when a.FRST_REGIST_PNTTM >= date_add(now(), interval -7 day)   then 'Y'
+					else 'N'
+				  END AS NEW_YN
+				, DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d') as FRST_REGISTER_PNTTM
+				, DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d %H:%i:%s') as REG_DATE
+				, DATE_FORMAT(a.LAST_UPDT_PNTTM, '%Y-%m-%d') as LAST_UPDUSR_PNTTM
+				, DATE_FORMAT(a.LAST_UPDT_PNTTM, '%Y-%m-%d %H:%i:%s') as UPT_DATE
+				, a.DEPT_ID
+				, b.DEPT_NM_KOR
+				, b.DEPT_NM_ENG
+				, OPTION1, OPTION2, OPTION3,OPTION4, OPTION5, OPTION6, OPTION7, OPTION8, OPTION9, OPTION10
+				, OPTION11, OPTION12, OPTION13, OPTION14, OPTION15, OPTION16, OPTION17, OPTION18, OPTION19, OPTION20
+				, HTML_AT HTML_YN
+				, GUBUN
+			FROM
+				$tableNm$ a
+			LEFT OUTER JOIN TM_ADMIN_DEPT b ON b.DEPT_ID = a.DEPT_ID
+			WHERE a.BBS_ID = #bbsId#
+		]]>
+		<isEmpty prepend="AND" property="delcode">
+			<![CDATA[	a.DELETE_CODE = '0'		]]>
+		</isEmpty>
+		<isNotEmpty prepend="AND" property="delcode">
+			<![CDATA[	a.DELETE_CODE = #delcode#		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="nttId">
+			<![CDATA[	a.NTT_ID = #nttId#	]]>
+		</isNotEmpty>
+		<isEmpty prepend="AND" property="nttId">
+			<![CDATA[	gubun = #gubun# AND ROWNUM = 1	]]>
+		</isEmpty>
+	</select>
+
+ 	<update id="optionalBoardDAO.updateBoardArticle" parameterClass="zvl">
+ 		<![CDATA[
+			UPDATE $tableNm$ SET
+				NTT_SJ = #nttSj#,
+				NTT_CN = #nttCn:CLOB#,
+				NTCR_NM = #ntcrNm#,
+				NTCR_TEL = #ntcrTel#,
+				NTCR_EMAIL = #ntcrEmail#,
+				PASSWORD = #password#,
+				NTCE_BGNDE = #ntceBgnde#,
+				NTCE_ENDDE = #ntceEndde#,
+				LAST_UPDUSR_ID = #lastUpdusrId#,
+				ATCH_FILE_ID = #atchFileId#,
+				SECRET_AT = #secret#,
+				LAST_UPDT_PNTTM = NOW(),
+				NTT_TYPE = #nttType#,
+				USE_AT = #useAt#,
+				BBS_SE = #gubun#,
+				OPTION1 = #option1#,
+				OPTION2 = #option2#,
+				OPTION3 = #option3#,
+				OPTION4 = #option4#,
+				OPTION5 = #option5#,
+				OPTION6 = #option6#,
+				OPTION7 = #option7#,
+				OPTION8 = #option8#,
+				OPTION9 = #option9#,
+				OPTION10 = #option10#,
+				OPTION11 = #option11#,
+				OPTION12 = #option12#,
+				OPTION13 = #option13#,
+				OPTION14 = #option14#,
+				OPTION15 = #option15#,
+				OPTION16 = #option16#,
+				OPTION17 = #option17#,
+				OPTION18 = #option18#,
+				OPTION19 = #option19#,
+				OPTION20 = #option20#,
+				HTML_AT = #htmlYn#,
+				NTT_NO = #nttNo#
+			WHERE BBS_ID = #bbsId#
+			AND NTT_ID = #nttId#
+ 		]]>
+ 	</update>
+
+ 	<update id="optionalBoardDAO.deleteBoardArticle" parameterClass="zvl">
+ 		<![CDATA[
+			UPDATE $tableNm$ SET
+				USE_AT = 'N',
+				LAST_UPDUSR_ID = #lastUpdusrId#,
+				LAST_UPDT_PNTTM = NOW(),
+				DELETE_CODE = #delcode#
+			WHERE BBS_ID = #bbsId#
+			AND NTT_ID = #nttId#
+ 		]]>
+ 	</update>
+
+ 	<update id="optionalBoardDAO.restoreBoardArticle" parameterClass="zvl">
+ 		<![CDATA[
+			UPDATE $tableNm$ SET
+				USE_AT = 'Y',
+				LAST_UPDUSR_ID = #lastUpdusrId#,
+				LAST_UPDT_PNTTM = NOW(),
+				DELETE_CODE = #delcode#
+			WHERE BBS_ID = #bbsId#
+			AND NTT_ID = #nttId#
+ 		]]>
+ 	</update>
+
+ 	<delete id="optionalBoardDAO.delPermanentlyBoardArticle" parameterClass="zvl">
+ 		<![CDATA[
+			DELETE $tableNm$
+			WHERE BBS_ID = #bbsId#
+			AND NTT_ID = #nttId#
+ 		]]>
+ 	</delete>
+
+ 	<delete id="optionalBoardDAO.delPermanentlyByBbsId" parameterClass="zvl">
+ 		<![CDATA[
+			DELETE $tableNm$
+			WHERE BBS_ID = #bbsId#
+ 		]]>
+ 	</delete>
+
+ 	<select id="optionalBoardDAO.selectMaxInqireCo" resultClass="java.lang.Integer" parameterClass="zvl">
+ 		<![CDATA[
+			SELECT IFNULL(MAX(INQIRE_CO),0)+1 AS INQIRE_CO FROM $tableNm$
+			WHERE BBS_ID = #bbsId#
+			AND NTT_ID = #nttId#
+ 		]]>
+ 	</select>
+
+ 	<update id="optionalBoardDAO.updateInqireCo" parameterClass="zvl">
+ 		<![CDATA[
+			UPDATE $tableNm$ SET
+				INQIRE_CO = INQIRE_CO+1,
+				LAST_UPDUSR_ID = #lastUpdusrId#,
+				LAST_UPDT_PNTTM = NOW()
+			WHERE BBS_ID = #bbsId#
+			AND NTT_ID = #nttId#
+ 		]]>
+ 	</update>
+
+	<select id="optionalBoardDAO.getParentNttNo" parameterClass="zvl" resultClass="java.lang.Long">
+		<![CDATA[
+			SELECT NTT_NO FROM $tableNm$
+			WHERE BBS_ID = #bbsId# AND NTT_ID = #parnts#
+		]]>
+	</select>
+
+	<select id="optionalBoardDAO.selectReplyBoardList" parameterClass="zvl" resultClass="zvl" >
+		<![CDATA[
+			SELECT  *
+			  FROM  (
+			SELECT @RN:=@RN+1 AS RNUM, ALL_LIST.*
+			  FROM  (
+
+			SELECT
+				a.NTT_ID
+				, a.NTT_SJ
+				, a.NTT_CN
+				, a.FRST_REGISTER_ID
+				, a.NTCR_NM
+				, a.NTT_NO
+				, a.INQIRE_CO
+				, a.PARNTS
+				, a.REPLY_AT
+				, a.REPLY_LC
+				, a.USE_AT
+				, a.ATCH_FILE_ID
+				, a.BBS_ID
+				, a.SECRET_AT SECRET
+				, a.FRST_REGIST_PNTTM as reg_date
+				, IFNULL(b.CNT,0) AS commentCnt
+				,DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d') as FRST_REGISTER_PNTTM
+				, a.DEPT_ID
+			FROM
+				$tableNm$ a
+			LEFT OUTER JOIN (
+				SELECT BBS_ID, NTT_ID, COUNT(*) AS CNT
+				FROM BBSCOMMENTS
+				GROUP BY BBS_ID, NTT_ID
+			) b ON b.BBS_ID = a.BBS_ID AND b.NTT_ID = a.NTT_ID
+			WHERE
+				a.BBS_ID = #bbsId#
+				AND a.DELETE_CODE = '0'
+				AND a.PARNTS = #nttId#
+			ORDER BY a.FRST_REGIST_PNTTM DESC
+
+				    ) ALL_LIST
+			    ) ALL_LIST
+			limit #firstIndex#, #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="optionalBoardDAO.selectReplyBoardListCnt" parameterClass="zvl" resultClass="int" >
+		<![CDATA[
+			SELECT COUNT(*)
+			FROM
+				$tableNm$ a
+			WHERE
+				a.BBS_ID = #bbsId#
+				AND a.DELETE_CODE = '0'
+				AND a.PARNTS = #nttId#
+		]]>
+	</select>
+
+	<select id="optionalBoardDAO.selectReplyArticles" parameterClass="zvl" resultClass="zvl" >
+		<![CDATA[
+			SELECT
+				a.NTT_ID
+				, a.NTT_SJ
+				, a.NTT_CN
+				, a.FRST_REGISTER_ID
+				, a.NTCR_NM
+				, a.NTT_NO
+				, a.INQIRE_CO
+				, a.PARNTS
+				, a.REPLY_AT
+				, a.REPLY_LC
+				, a.USE_AT
+				, a.ATCH_FILE_ID
+				, a.BBS_ID
+				, a.SECRET_AT SECRET
+				, a.FRST_REGIST_PNTTM as reg_date
+				, DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d') as FRST_REGISTER_PNTTM
+				, a.DEPT_ID
+			FROM
+				$tableNm$ a
+			WHERE
+				a.BBS_ID = #bbsId#
+				AND a.DELETE_CODE = '0'
+				AND a.PARNTS = #nttId#
+			ORDER BY a.FRST_REGIST_PNTTM DESC
+		]]>
+	</select>
+
+	<select id="optionalBoardDAO.selectPrevArticle" parameterClass="zvl" resultClass="zvl" >
+	/* optionalBoardDAO.selectPrevArticle */
+		<![CDATA[
+		select a.*
+		from (
+			select ntt_id, ntt_id as prev_ntt_id, bbs_id, ntt_sj,FRST_REGIST_PNTTM,DELETE_CODE,
+				case WHEN REPLACE(NTCE_BGNDE,'-','') > DATE_FORMAT(NOW(), '%Y%m%d') THEN '1'
+					   WHEN REPLACE(NTCE_BGNDE,'-','') <= DATE_FORMAT(NOW(), '%Y%m%d')
+					   AND REPLACE(NTCE_ENDDE,'-','') >= DATE_FORMAT(NOW(), '%Y%m%d') THEN '2'
+					ELSE '3'
+					END AS STATUS, ntt_cn, dept_id
+			from TB_BBS_ESTN
+			where DELETE_CODE = '0'
+		) a
+		LEFT OUTER JOIN TM_ADMIN_DEPT b ON b.DEPT_ID = a.DEPT_ID
+		where ntt_id > #nttId# and bbs_id = #bbsId#
+		]]>
+		<include refid="optionalBoardDAO.selectBoardArticleList-where" />
+		<![CDATA[
+		order by FRST_REGIST_PNTTM limit 0,1
+		]]>
+	</select>
+
+	<select id="optionalBoardDAO.selectNextArticle" parameterClass="zvl" resultClass="zvl" >
+	/* optionalBoardDAO.selectNextArticle */
+		<![CDATA[
+		select a.*
+		from (
+			select ntt_id, ntt_id as next_ntt_id, bbs_id, ntt_sj,FRST_REGIST_PNTTM,DELETE_CODE,
+				case WHEN REPLACE(NTCE_BGNDE,'-','') > DATE_FORMAT(NOW(), '%Y%m%d') THEN '1'
+					   WHEN REPLACE(NTCE_BGNDE,'-','') <= DATE_FORMAT(NOW(), '%Y%m%d')
+					   AND REPLACE(NTCE_ENDDE,'-','') >= DATE_FORMAT(NOW(), '%Y%m%d') THEN '2'
+					ELSE '3'
+					END AS STATUS, ntt_cn, dept_id
+			from TB_BBS_ESTN
+			where DELETE_CODE = '0'
+		) a
+		LEFT OUTER JOIN TM_ADMIN_DEPT b ON b.DEPT_ID = a.DEPT_ID
+		where ntt_id < #nttId# and bbs_id = #bbsId#
+		]]>
+		<include refid="optionalBoardDAO.selectBoardArticleList-where" />
+		<![CDATA[
+		order by FRST_REGIST_PNTTM desc limit 0,1
+		]]>
+	</select>
+
+	<select id="optionalBoardDAO.selectPrevNexArticle" parameterClass="zvl" resultClass="zvl" >
+	/* optionalBoardDAO.selectPrevNexArticle */
+		<![CDATA[
+		SELECT
+			ntt_id, nvl(prev_ntt_id, 0) as prev_ntt_id, nvl(next_ntt_id, 0) as next_ntt_id, prev_ntt_sj, next_ntt_sj
+		FROM (
+			SELECT
+      			NTT_ID
+			    , LEAD(ntt_id, 1, '') OVER (ORDER BY ntt_id DESC) AS prev_ntt_id
+			    , LAG(ntt_id, 1, '') OVER (ORDER BY ntt_id DESC ) AS next_ntt_id
+			    , LEAD(ntt_sj, 1, '') OVER (ORDER BY ntt_id DESC) AS prev_ntt_sj
+			    , LAG(ntt_sj, 1, '') OVER (ORDER BY ntt_id DESC ) AS next_ntt_sj
+			FROM
+				$tableNm$ a
+			WHERE BBS_ID = #bbsId# AND a.DELETE_CODE = '0'
+		]]>
+		<include refid="optionalBoardDAO.selectBoardArticleList-where" />
+		<![CDATA[
+		)
+		WHERE ntt_id = #nttId#
+		]]>
+	</select>
+
+	<select id="optionalBoardDAO.prevSelectPrevNexArticle" parameterClass="zvl" resultClass="zvl" >
+	/* optionalBoardDAO.prevSelectPrevNexArticle */
+		<![CDATA[
+		SELECT aa.NTT_TYPE, aa.NTT_ID, aa.NTT_SJ
+		FROM (
+			SELECT
+            	'NEXT' AS ntt_type
+				,a.NTT_ID
+				,a.NTT_SJ
+			FROM
+				$tableNm$ a
+			WHERE a.BBS_ID = #bbsId#
+				AND a.DELETE_CODE = '0'
+				AND a.NTT_ID IN (
+					SELECT MIN(NTT_ID)
+					FROM $tableNm$
+					WHERE BBS_ID = #bbsId# AND DELETE_CODE = '0' AND NTT_ID > #nttId#
+		]]>
+		<include refid="optionalBoardDAO.selectBoardArticleList-where" />
+		<![CDATA[
+				)
+
+			UNION ALL
+
+			SELECT
+            	'PREV' AS ntt_type
+				,a.NTT_ID
+				,a.NTT_SJ
+			FROM
+				$tableNm$ a
+			WHERE a.BBS_ID = #bbsId#
+				AND a.DELETE_CODE = '0'
+				AND a.NTT_ID IN (
+					SELECT MAX(NTT_ID)
+					FROM $tableNm$
+					WHERE BBS_ID = #bbsId# AND DELETE_CODE = '0' AND NTT_ID < #nttId#
+		]]>
+		<include refid="optionalBoardDAO.selectBoardArticleList-where" />
+		<![CDATA[
+				)
+		) aa
+		]]>
+	</select>
+
+	<select id="optionalBoardDAO.selectAllBoardArticles" parameterClass="zvl" resultClass="zvl" >
+		/* optionalBoardDAO.selectAllBoardArticles */
+		<![CDATA[
+			SELECT
+				a.NTT_SJ
+				, a.NTCR_ID
+				, a.NTCR_NM
+				, a.NTCR_CI
+				, a.PASSWORD
+				, a.FRST_REGISTER_ID
+				, a.NTCE_BGNDE
+				, a.NTCE_ENDDE
+				, a.INQIRE_CO
+				, a.USE_AT
+				, a.ATCH_FILE_ID
+				, a.BBS_ID
+				, a.NTT_ID
+				, a.PARNTS
+				, a.REPLY_AT
+				, a.REPLY_LC
+				, a.SECRET_AT SECRET
+				, a.NTT_TYPE
+				, a.DELETE_CODE DELCODE
+				, case
+					when a.FRST_REGIST_PNTTM >= date_add(now(), interval -7 day)   then 'Y'
+					else 'N'
+				  END AS new_yn
+				, DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d') as FRST_REGISTER_PNTTM
+				, DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d %H:%i:%s') as REG_DATE
+				, DATE_FORMAT(a.LAST_UPDT_PNTTM, '%Y-%m-%d') as LAST_UPDUSR_PNTTM
+				, DATE_FORMAT(a.LAST_UPDT_PNTTM, '%Y-%m-%d %H:%i:%s') as UPT_DATE
+				, a.DEPT_ID
+				, OPTION1, OPTION2, OPTION3,OPTION4, OPTION5, OPTION6, OPTION7, OPTION8, OPTION9, OPTION10
+				, OPTION11, OPTION12, OPTION13, OPTION14, OPTION15, OPTION16, OPTION17, OPTION18, OPTION19, OPTION20
+				, HTML_AT HTML_YN
+				, BBS_SE GUBUN
+			FROM TB_BBS_ESTN a
+			WHERE a.BBS_ID = #bbsId# AND a.DELETE_CODE = '0'
+		]]>
+	</select>
+	<select id="optionalBoardDAO.selectMainBoardArticleList" parameterClass="zvl" resultClass="zvl" >
+		<![CDATA[
+		/*optionalBoardDAO.selectMainBoardArticleList*/
+			SELECT  *
+			  FROM  (
+			SELECT
+				a.NTT_ID
+				, a.NTT_SJ
+				, a.NTT_CN
+				, a.BBS_ID
+				, a.FRST_REGIST_PNTTM as REG_DATE
+				, DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d') as FRST_REGISTER_PNTTM
+				, a.ATCH_FILE_ID
+				, b.DEPT_NM_KOR
+				, a.OPTION1
+				, c.CODE_NM as OPTION1_NM
+				, c.CODE_ID
+				, case
+					WHEN a.FRST_REGIST_PNTTM >= date_add(now(), interval -7 day)   then 'Y'
+					ELSE 'N'
+				  END AS NEW_YN
+			FROM
+				TB_BBS_ESTN a
+				 LEFT OUTER JOIN TM_ADMIN_DEPT b ON b.DEPT_ID = a.DEPT_ID
+				 LEFT OUTER JOIN TC_CMMNCODE_DETAIL c ON c.CODE = a.OPTION1
+			WHERE
+				a.DELETE_CODE = '0'
+			AND a.BBS_ID = #bbsId#
+			 AND c.CODE_ID = 'COM050'
+			ORDER BY REG_DATE DESC
+
+			    ) ALL_LIST
+			limit 0, #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="optionalBoardDAO.selectB0000045BoardArticleList" parameterClass="zvl" resultClass="zvl">
+		/* optionalBoardDAO.selectB0000045BoardArticleList */
+		<![CDATA[
+			SELECT  *
+			  FROM  (
+			SELECT @RN:=@RN+1 AS RNUM, ALL_LIST.*
+			  FROM  (
+			SELECT
+				a.NTT_ID
+				, a.NTT_SJ
+				, a.NTT_CN
+				, a.FRST_REGISTER_ID
+				, a.NTCR_NM
+				, a.NTCR_CI
+				, a.NTT_NO
+				, a.INQIRE_CO
+				, a.PARNTS
+				, a.REPLY_AT
+				, a.REPLY_LC
+				, a.USE_AT
+				, a.ATCH_FILE_ID
+				, a.BBS_ID
+				, a.NTCE_BGNDE
+				, a.NTCE_ENDDE
+				, a.SECRET_AT AS SECRET
+				, a.NTT_TYPE2
+				, a.GUBUN
+				, a.NTT_TYPE
+				, DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d') as FRST_REGISTER_PNTTM
+				, DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d %H:%i:%s') as REG_DATE
+				, DATE_FORMAT(a.LAST_UPDT_PNTTM, '%Y-%m-%d') as LAST_UPDUSR_PNTTM
+				, DATE_FORMAT(a.LAST_UPDT_PNTTM, '%Y-%m-%d %H:%i:%s') as UPT_DATE
+				, a.DELETE_CODE AS DELCODE
+				, a.DEPT_ID
+				, b.DEPT_NM_KOR
+				, b.DEPT_NM_ENG
+				, OPTION1, OPTION2, OPTION3,OPTION4, OPTION5, OPTION6, OPTION7, OPTION8, OPTION9, OPTION10
+				, OPTION11, OPTION12, OPTION13, OPTION14, OPTION15, OPTION16, OPTION17, OPTION18, OPTION19, OPTION20
+				, a.NEW_YN
+			FROM (
+				SELECT
+					a.NTT_ID
+					, a.NTT_SJ
+					, a.NTT_CN
+					, a.FRST_REGISTER_ID
+					, a.NTCR_NM
+					, a.NTCR_CI
+					, a.NTT_NO
+					, a.INQIRE_CO
+					, a.PARNTS
+					, a.REPLY_AT
+					, a.REPLY_LC
+					, a.USE_AT
+					, a.ATCH_FILE_ID
+					, a.BBS_ID
+					, a.NTCE_BGNDE
+					, a.NTCE_ENDDE
+					, a.SECRET_AT
+					, a.NTT_TYPE AS NTT_TYPE2
+					, a.BBS_SE AS GUBUN
+					, a.FRST_REGIST_PNTTM
+					, a.LAST_UPDT_PNTTM
+					, case
+						when NTT_TYPE = '1'
+						AND REPLACE(a.NTCE_BGNDE,'-','') <= DATE_FORMAT(NOW(), '%Y%m%d')
+						AND REPLACE(a.NTCE_ENDDE,'-','') >= DATE_FORMAT(NOW(), '%Y%m%d')
+						then '1'
+						else '2'
+						END AS ntt_type
+					, DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d') as FRST_REGISTER_PNTTM
+					, DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d %H:%i:%s') as REG_DATE
+					, DATE_FORMAT(a.LAST_UPDT_PNTTM, '%Y-%m-%d') as LAST_UPDUSR_PNTTM
+					, DATE_FORMAT(a.LAST_UPDT_PNTTM, '%Y-%m-%d %H:%i:%s') as UPT_DATE
+					, a.DELETE_CODE
+					, a.DEPT_ID
+					, OPTION1, OPTION2, OPTION3,OPTION4, OPTION5, OPTION6, OPTION7, OPTION8, OPTION9, OPTION10
+					, OPTION11, OPTION12, OPTION13, OPTION14, OPTION15, OPTION16, OPTION17, OPTION18, OPTION19, OPTION20
+					, case
+						WHEN a.FRST_REGIST_PNTTM >= date_add(now(), interval -7 day)   then 'Y'
+						ELSE 'N'
+					  END AS NEW_YN
+				FROM
+					$tableNm$ a
+			) a
+			LEFT OUTER JOIN TM_ADMIN_DEPT b ON b.DEPT_ID = a.DEPT_ID
+			WHERE  a.BBS_ID = #bbsId#
+			AND a.DELETE_CODE = #delcode#
+		]]>
+		<include refid="optionalBoardDAO.selectBoardArticleList-where" />
+
+		<![CDATA[
+		ORDER BY FRST_REGISTER_PNTTM DESC
+				    ) ALL_LIST
+			    ) ALL_LIST
+			limit #firstIndex#, #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="optionalBoardDAO.selectBoardB0000021ArticleList" parameterClass="zvl" resultClass="zvl">
+		/* optionalBoardDAO.selectBoardB0000021ArticleList */
+		<![CDATA[
+			SELECT  *
+			  FROM  (
+			SELECT @RN:=@RN+1 AS RNUM, ALL_LIST.*
+			  FROM  (
+			SELECT
+				a.NTT_ID
+				, a.NTT_SJ
+				, a.NTT_CN
+				, a.FRST_REGISTER_ID
+				, a.NTCR_NM
+				, a.NTCR_CI
+				, a.NTT_NO
+				, a.INQIRE_CO
+				, a.PARNTS
+				, a.REPLY_AT
+				, a.REPLY_LC
+				, a.USE_AT
+				, a.ATCH_FILE_ID
+				, a.BBS_ID
+				, a.NTCE_BGNDE
+				, a.NTCE_ENDDE
+				, a.SECRET_AT AS SECRET
+				, a.NTT_TYPE2
+				, a.GUBUN
+				, a.NTT_TYPE
+				, DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d') as FRST_REGISTER_PNTTM
+				, DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d %H:%i:%s') as REG_DATE
+				, DATE_FORMAT(a.LAST_UPDT_PNTTM, '%Y-%m-%d') as LAST_UPDUSR_PNTTM
+				, DATE_FORMAT(a.LAST_UPDT_PNTTM, '%Y-%m-%d %H:%i:%s') as UPT_DATE
+				, a.DELETE_CODE AS DELCODE
+				, a.DEPT_ID
+				, b.DEPT_NM_KOR
+				, b.DEPT_NM_ENG
+				, OPTION1, OPTION2, OPTION3,OPTION4, OPTION5, OPTION6, OPTION7, OPTION8, OPTION9, OPTION10
+				, OPTION11, OPTION12, OPTION13, OPTION14, OPTION15, OPTION16, OPTION17, OPTION18, OPTION19, OPTION20
+				, a.NEW_YN
+			FROM (
+				SELECT
+					a.NTT_ID
+					, a.NTT_SJ
+					, a.NTT_CN
+					, a.FRST_REGISTER_ID
+					, a.NTCR_NM
+					, a.NTCR_CI
+					, a.NTT_NO
+					, a.INQIRE_CO
+					, a.PARNTS
+					, a.REPLY_AT
+					, a.REPLY_LC
+					, a.USE_AT
+					, a.ATCH_FILE_ID
+					, a.BBS_ID
+					, a.NTCE_BGNDE
+					, a.NTCE_ENDDE
+					, a.SECRET_AT
+					, a.NTT_TYPE AS NTT_TYPE2
+					, a.BBS_SE AS GUBUN
+					, a.FRST_REGIST_PNTTM
+					, a.LAST_UPDT_PNTTM
+					, case
+						when NTT_TYPE = '1'
+						AND REPLACE(a.NTCE_BGNDE,'-','') <= DATE_FORMAT(NOW(), '%Y%m%d')
+						AND REPLACE(a.NTCE_ENDDE,'-','') >= DATE_FORMAT(NOW(), '%Y%m%d')
+						then '1'
+						else '2'
+						END AS ntt_type
+					, DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d') as FRST_REGISTER_PNTTM
+					, DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d %H:%i:%s') as REG_DATE
+					, DATE_FORMAT(a.LAST_UPDT_PNTTM, '%Y-%m-%d') as LAST_UPDUSR_PNTTM
+					, DATE_FORMAT(a.LAST_UPDT_PNTTM, '%Y-%m-%d %H:%i:%s') as UPT_DATE
+					, a.DELETE_CODE
+					, a.DEPT_ID
+					, OPTION1, OPTION2, OPTION3,OPTION4, OPTION5, OPTION6, OPTION7, OPTION8, OPTION9, OPTION10
+					, OPTION11, OPTION12, OPTION13, OPTION14, OPTION15, OPTION16, OPTION17, OPTION18, OPTION19, OPTION20
+					, case
+						WHEN a.FRST_REGIST_PNTTM >= date_add(now(), interval -7 day)   then 'Y'
+						ELSE 'N'
+					  END AS NEW_YN
+				FROM
+					$tableNm$ a
+			) a
+			LEFT OUTER JOIN TM_ADMIN_DEPT b ON b.DEPT_ID = a.DEPT_ID
+			WHERE  a.BBS_ID = #bbsId#
+			AND a.DELETE_CODE = #delcode#
+		]]>
+		<include refid="optionalBoardDAO.selectBoardArticleList-where" />
+		<![CDATA[
+		ORDER BY a.FRST_REGIST_PNTTM DESC
+				    ) ALL_LIST
+			    ) ALL_LIST
+			limit #firstIndex#, #recordCountPerPage#
+		]]>
+		</select>
+
+		<select id="optionalBoardDAO.selectBoardB0000021PortalList" parameterClass="zvl" resultClass="zvl">
+		/* optionalBoardDAO.selectBoardB0000021ArticleList */
+		<![CDATA[
+			SELECT
+				a.NTT_ID
+				, a.NTT_SJ
+				, a.NTT_CN
+				, a.FRST_REGISTER_ID
+				, a.NTCR_NM
+				, a.NTCR_CI
+				, a.NTT_NO
+				, a.INQIRE_CO
+				, a.PARNTS
+				, a.REPLY_AT
+				, a.REPLY_LC
+				, a.USE_AT
+				, a.ATCH_FILE_ID
+				, a.BBS_ID
+				, a.NTCE_BGNDE
+				, a.NTCE_ENDDE
+				, a.SECRET_AT AS SECRET
+				, a.NTT_TYPE2
+				, a.GUBUN
+				, a.NTT_TYPE
+				, DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d') as FRST_REGISTER_PNTTM
+				, DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d %H:%i:%s') as REG_DATE
+				, DATE_FORMAT(a.LAST_UPDT_PNTTM, '%Y-%m-%d') as LAST_UPDUSR_PNTTM
+				, DATE_FORMAT(a.LAST_UPDT_PNTTM, '%Y-%m-%d %H:%i:%s') as UPT_DATE
+				, a.DELETE_CODE AS DELCODE
+				, a.DEPT_ID
+				, b.DEPT_NM_KOR
+				, b.DEPT_NM_ENG
+				, OPTION1, OPTION2, OPTION3,OPTION4, OPTION5, OPTION6, OPTION7, OPTION8, OPTION9, OPTION10
+				, OPTION11, OPTION12, OPTION13, OPTION14, OPTION15, OPTION16, OPTION17, OPTION18, OPTION19, OPTION20
+				, a.NEW_YN
+			FROM (
+				SELECT
+					a.NTT_ID
+					, a.NTT_SJ
+					, a.NTT_CN
+					, a.FRST_REGISTER_ID
+					, a.NTCR_NM
+					, a.NTCR_CI
+					, a.NTT_NO
+					, a.INQIRE_CO
+					, a.PARNTS
+					, a.REPLY_AT
+					, a.REPLY_LC
+					, a.USE_AT
+					, a.ATCH_FILE_ID
+					, a.BBS_ID
+					, a.NTCE_BGNDE
+					, a.NTCE_ENDDE
+					, a.SECRET_AT
+					, a.NTT_TYPE AS NTT_TYPE2
+					, a.BBS_SE AS GUBUN
+					, a.FRST_REGIST_PNTTM
+					, a.LAST_UPDT_PNTTM
+					, case
+						when NTT_TYPE = '1'
+						AND REPLACE(a.NTCE_BGNDE,'-','') <= DATE_FORMAT(NOW(), '%Y%m%d')
+						AND REPLACE(a.NTCE_ENDDE,'-','') >= DATE_FORMAT(NOW(), '%Y%m%d')
+						then '1'
+						else '2'
+						END AS ntt_type
+					, DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d') as FRST_REGISTER_PNTTM
+					, DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d %H:%i:%s') as REG_DATE
+					, DATE_FORMAT(a.LAST_UPDT_PNTTM, '%Y-%m-%d') as LAST_UPDUSR_PNTTM
+					, DATE_FORMAT(a.LAST_UPDT_PNTTM, '%Y-%m-%d %H:%i:%s') as UPT_DATE
+					, a.DELETE_CODE
+					, a.DEPT_ID
+					, OPTION1, OPTION2, OPTION3,OPTION4, OPTION5, OPTION6, OPTION7, OPTION8, OPTION9, OPTION10
+					, OPTION11, OPTION12, OPTION13, OPTION14, OPTION15, OPTION16, OPTION17, OPTION18, OPTION19, OPTION20
+					, case
+						WHEN a.FRST_REGIST_PNTTM >= date_add(now(), interval -7 day)   then 'Y'
+						ELSE 'N'
+					  END AS NEW_YN
+				FROM
+					$tableNm$ a
+			) a
+			LEFT OUTER JOIN TM_ADMIN_DEPT b ON b.DEPT_ID = a.DEPT_ID
+			WHERE  a.BBS_ID = #bbsId#
+			AND a.DELETE_CODE = '0'
+		]]>
+		<include refid="optionalBoardDAO.selectBoardArticleList-where" />
+		<![CDATA[
+		ORDER BY a.FRST_REGIST_PNTTM DESC
+		]]>
+		</select>
+		<select id="optionalBoardDAO.selectMainBoardArticleList2" parameterClass="zvl" resultClass="zvl" >
+		<![CDATA[
+			SELECT  *
+			  FROM  (
+			SELECT
+				a.NTT_ID
+				, a.NTT_SJ
+				, a.NTT_CN
+				, a.BBS_ID
+				, a.FRST_REGIST_PNTTM as REG_DATE
+				, DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d') as FRST_REGISTER_PNTTM
+				, a.ATCH_FILE_ID
+				, case
+					WHEN a.FRST_REGIST_PNTTM >= date_add(now(), interval -7 day)   then 'Y'
+					ELSE 'N'
+				  END AS NEW_YN
+			FROM
+				TB_BBS_ESTN a
+			WHERE
+				a.DELETE_CODE = '0'
+			AND a.BBS_ID = #bbsId#
+			AND a.option2 = 'Y'
+			ORDER BY a.option3 ASC
+
+			    ) ALL_LIST
+			limit 0, #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="optionalBoardDAO.selectBoardB0000038ArticleList" parameterClass="zvl" resultClass="zvl">
+		/* optionalBoardDAO.selectBoardB0000038ArticleList */
+		<![CDATA[
+			SELECT  *
+			  FROM  (
+			SELECT @RN:=@RN+1 AS RNUM, ALL_LIST.*
+			  FROM  (
+			SELECT
+				a.NTT_ID
+				, a.NTT_SJ
+				, a.NTT_CN
+				, a.FRST_REGISTER_ID
+				, a.NTCR_NM
+				, a.NTCR_CI
+				, a.NTT_NO
+				, a.INQIRE_CO
+				, a.PARNTS
+				, a.REPLY_AT
+				, a.REPLY_LC
+				, a.USE_AT
+				, a.ATCH_FILE_ID
+				, a.BBS_ID
+				, a.NTCE_BGNDE
+				, a.NTCE_ENDDE
+				, a.SECRET_AT AS SECRET
+				, a.GUBUN
+				, case WHEN REPLACE(a.NTCE_BGNDE,'-','') > DATE_FORMAT(NOW(), '%Y%m%d') THEN '1'
+					   WHEN REPLACE(a.NTCE_BGNDE,'-','') <= DATE_FORMAT(NOW(), '%Y%m%d')
+					   AND REPLACE(a.NTCE_ENDDE,'-','') >= DATE_FORMAT(NOW(), '%Y%m%d') THEN '2'
+					ELSE '3'
+					END AS STATUS
+				, DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d') as FRST_REGISTER_PNTTM
+				, DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d %H:%i:%s') as REG_DATE
+				, DATE_FORMAT(a.LAST_UPDT_PNTTM, '%Y-%m-%d') as LAST_UPDUSR_PNTTM
+				, DATE_FORMAT(a.LAST_UPDT_PNTTM, '%Y-%m-%d %H:%i:%s') as UPT_DATE
+				, a.DELETE_CODE AS DELCODE
+				, a.DEPT_ID
+				, b.DEPT_NM_KOR
+				, b.DEPT_NM_ENG
+				, OPTION1, OPTION2, OPTION3,OPTION4, OPTION5, OPTION6, OPTION7, OPTION8, OPTION9, OPTION10
+				, OPTION11, OPTION12, OPTION13, OPTION14, OPTION15, OPTION16, OPTION17, OPTION18, OPTION19, OPTION20
+				, a.NEW_YN
+			FROM (
+				SELECT
+					a.NTT_ID
+					, a.NTT_SJ
+					, a.NTT_CN
+					, a.FRST_REGISTER_ID
+					, a.NTCR_NM
+					, a.NTCR_CI
+					, a.NTT_NO
+					, a.INQIRE_CO
+					, a.PARNTS
+					, a.REPLY_AT
+					, a.REPLY_LC
+					, a.USE_AT
+					, a.ATCH_FILE_ID
+					, a.BBS_ID
+					, a.NTCE_BGNDE
+					, a.NTCE_ENDDE
+					, a.SECRET_AT
+					, a.BBS_SE AS GUBUN
+					, a.FRST_REGIST_PNTTM
+					, a.LAST_UPDT_PNTTM
+					, DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d') as FRST_REGISTER_PNTTM
+					, DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d %H:%i:%s') as REG_DATE
+					, DATE_FORMAT(a.LAST_UPDT_PNTTM, '%Y-%m-%d') as LAST_UPDUSR_PNTTM
+					, DATE_FORMAT(a.LAST_UPDT_PNTTM, '%Y-%m-%d %H:%i:%s') as UPT_DATE
+					, a.DELETE_CODE
+					, a.DEPT_ID
+					, OPTION1, OPTION2, OPTION3,OPTION4, OPTION5, OPTION6, OPTION7, OPTION8, OPTION9, OPTION10
+					, OPTION11, OPTION12, OPTION13, OPTION14, OPTION15, OPTION16, OPTION17, OPTION18, OPTION19, OPTION20
+					, case
+						WHEN a.FRST_REGIST_PNTTM >= date_add(now(), interval -7 day)   then 'Y'
+						ELSE 'N'
+					  END AS NEW_YN
+				FROM
+					$tableNm$ a
+			) a
+			LEFT OUTER JOIN TM_ADMIN_DEPT b ON b.DEPT_ID = a.DEPT_ID
+			WHERE  a.BBS_ID = #bbsId#
+			AND a.DELETE_CODE = #delcode#
+		]]>
+		<include refid="optionalBoardDAO.selectBoardArticleList-where" />
+
+		<!-- 일반게시판 -->
+		<isEqual property="bbsTyCode" compareValue="BBST01">
+			<![CDATA[	ORDER BY a.REG_DATE DESC	]]>
+		</isEqual>
+		<!-- 계단형게시판 -->
+		<isEqual property="bbsTyCode" compareValue="BBST02">
+			<![CDATA[	ORDER BY a.PARNTS desc, a.REPLY_LC ASC	]]>
+		</isEqual>
+		<!-- 공지게시판 -->
+		<isEqual property="bbsTyCode" compareValue="BBST03">
+			<![CDATA[	ORDER BY a.NTT_TYPE ASC, a.REG_DATE DESC	]]>
+		</isEqual>
+		<![CDATA[
+				    ) ALL_LIST
+			    ) ALL_LIST
+			limit #firstIndex#, #recordCountPerPage#
+		]]>
+	</select>
+
+	<insert id="optionalBoardDAO.insertBoardB0000038Article" parameterClass="zvl" >
+		<selectKey resultClass="java.lang.Long" keyProperty="nttId">
+			SELECT IFNULL(MAX(NTT_ID),0)+1 AS NTT_ID  FROM $tableNm$
+		</selectKey>
+			INSERT INTO $tableNm$
+			(NTT_ID, BBS_ID, NTT_SJ, NTT_CN, SORT_ORDR,
+			 NTCR_ID, NTCR_NM, PASSWORD, INQIRE_CO,
+			 NTCE_BGNDE, NTCE_ENDDE, REPLY_AT,BBS_SE,
+			 PARNTS, NTCR_EMAIL, NTCR_TEL,NTCR_ADDR1, NTCR_ADDR2, NTCR_ZIPCODE,
+			 NTT_NO, REPLY_LC, ATCH_FILE_ID,
+			 FRST_REGISTER_ID, FRST_REGIST_PNTTM, LAST_UPDT_PNTTM, USE_AT,
+			 SECRET_AT, DELETE_CODE, NTT_TYPE, DEPT_ID,
+			 OPTION1, OPTION2, OPTION3,
+			 OPTION4, OPTION5, OPTION6, OPTION7, OPTION8,
+			 OPTION9, OPTION10, OPTION11, OPTION12, OPTION13,
+			 OPTION14, OPTION15, OPTION16, OPTION17, OPTION18,
+			 OPTION19, OPTION20, HTML_AT, NTCR_CI
+			 )
+			VALUES
+			( #nttId#, #bbsId#, #nttSj#, #nttCn:CLOB#, #sortOrdr#,
+			  #ntcrId#, #ntcrNm#, #password#, 0,
+			  #ntceBgnde#, #ntceEndde#, #replyAt#, #gubun#,
+			<isEqual property="parnts" compareValue="0">
+				#nttId#,
+			</isEqual>
+			<isNotEqual property="parnts" compareValue="0">
+				#parnts#,
+			</isNotEqual>
+			  #ntcrEmail#, #ntcrTel#,#ntcrAddr1#, #ntcrAddr2#, #ntcrZipcode#,
+			  #nttNo#, #replyLc#, #atchFileId#,
+			  #frstRegisterId#, NOW(), NOW(), #useAt#,
+			  #secret#, IFNULL(#delcode#, '0'), #nttType#, #deptId#,
+			  #option1#, #option2#, #option3#,
+			  #option4#, #option5#, #option6#, #option7#, #option8#,
+			  #option9#, #option10#, #option11#, #option12#, #option13#,
+			  #option14#, #option15#, #option16#, #option17#, #option18#,
+			  #option19#, #option20#, IFNULL(#htmlYn#, 'N'), #ntcrCi#
+			 )
+	</insert>
+
+	<select id="optionalBoardDAO.selectBoardB0000038Article" parameterClass="zvl" resultClass="zvl" >
+		/* optionalBoardDAO.selectBoardB0000038Article */
+		<![CDATA[
+			SELECT
+				a.NTT_SJ
+				, a.NTCR_ADDR1
+				, a.NTCR_ADDR2
+				, a.NTCR_ZIPCODE
+				, a.NTCR_ID
+				, a.NTCR_NM
+				, a.NTCR_CI
+				, a.NTCR_TEL
+				, a.NTCR_EMAIL
+				, a.NTT_CN
+				, a.PASSWORD
+				, a.FRST_REGISTER_ID
+				, a.NTCE_BGNDE
+				, a.NTCE_ENDDE
+				, case WHEN REPLACE(a.NTCE_BGNDE,'-','') > DATE_FORMAT(NOW(), '%Y%m%d') THEN '1'
+					   WHEN REPLACE(a.NTCE_BGNDE,'-','') <= DATE_FORMAT(NOW(), '%Y%m%d')
+					   AND REPLACE(a.NTCE_ENDDE,'-','') >= DATE_FORMAT(NOW(), '%Y%m%d') THEN '2'
+					ELSE '3'
+					END AS STATUS
+				, a.INQIRE_CO
+				, a.USE_AT
+				, a.ATCH_FILE_ID
+				, a.BBS_ID
+				, a.NTT_ID
+				, a.PARNTS
+				, a.REPLY_AT
+				, a.REPLY_LC
+				, a.SECRET_AT SECRET
+				, a.NTT_TYPE
+				, a.DELETE_CODE DELCODE
+				, a.BBS_SE as GUBUN
+				, a.NTT_NO
+				, case
+					when a.FRST_REGIST_PNTTM >= date_add(now(), interval -7 day)   then 'Y'
+					else 'N'
+				  END AS new_yn
+				, DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d') as FRST_REGISTER_PNTTM
+				, DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d %H:%i:%s') as REG_DATE
+				, DATE_FORMAT(a.LAST_UPDT_PNTTM, '%Y-%m-%d') as LAST_UPDUSR_PNTTM
+				, DATE_FORMAT(a.LAST_UPDT_PNTTM, '%Y-%m-%d %H:%i:%s') as UPT_DATE
+				, a.DEPT_ID
+				, b.DEPT_NM_KOR
+				, b.DEPT_NM_ENG
+				, OPTION1, OPTION2, OPTION3,OPTION4, OPTION5, OPTION6, OPTION7, OPTION8, OPTION9, OPTION10
+				, OPTION11, OPTION12, OPTION13, OPTION14, OPTION15, OPTION16, OPTION17, OPTION18, OPTION19, OPTION20
+				, HTML_AT HTML_YN
+			FROM
+				$tableNm$ a
+			LEFT OUTER JOIN TM_ADMIN_DEPT b ON b.DEPT_ID = a.DEPT_ID
+			WHERE
+				a.BBS_ID = #bbsId#
+			AND
+				a.NTT_ID = #nttId#
+		]]>
+	</select>
+
+	<select id="optionalBoardDAO.selectB0000048PortalPlanList" parameterClass="zvl" resultClass="zvl">
+		/* optionalBoardDAO.selectB0000048PortalPlanList */
+		<![CDATA[
+			SELECT *
+			FROM (
+			SELECT a.NTT_ID,a.NTT_SJ
+			,a.BBS_ID, a.DELETE_CODE
+			,a.FRST_REGIST_PNTTM
+			,a.USE_AT
+			, case WHEN REPLACE(a.NTCE_BGNDE,'-','') > DATE_FORMAT(NOW(), '%Y%m%d') THEN '1'
+			   WHEN REPLACE(a.NTCE_BGNDE,'-','') <= DATE_FORMAT(NOW(), '%Y%m%d')
+			   AND REPLACE(a.NTCE_ENDDE,'-','') >= DATE_FORMAT(NOW(), '%Y%m%d') THEN '2'
+			ELSE '3'
+			END AS STATUS
+			FROM TB_BBS_ESTN a
+			) a
+			WHERE  a.BBS_ID = 'B0000038'
+			AND a.DELETE_CODE = '0' AND a.STATUS IN ('2','3') AND a.USE_AT = 'Y'
+			ORDER BY a.FRST_REGIST_PNTTM DESC
+
+		]]>
+	</select>
+
+	<select id="optionalBoardDAO.selectB0000048AdminPlanList" parameterClass="zvl" resultClass="zvl">
+		/* optionalBoardDAO.selectB0000048AdminPlanList */
+		<![CDATA[
+			SELECT *
+			FROM (
+			SELECT a.NTT_ID,a.NTT_SJ
+			,a.BBS_ID, a.DELETE_CODE
+			,a.FRST_REGIST_PNTTM
+			,a.USE_AT
+			, case WHEN REPLACE(a.NTCE_BGNDE,'-','') > DATE_FORMAT(NOW(), '%Y%m%d') THEN '1'
+			   WHEN REPLACE(a.NTCE_BGNDE,'-','') <= DATE_FORMAT(NOW(), '%Y%m%d')
+			   AND REPLACE(a.NTCE_ENDDE,'-','') >= DATE_FORMAT(NOW(), '%Y%m%d') THEN '2'
+			ELSE '3'
+			END AS STATUS
+			FROM TB_BBS_ESTN a
+			) a
+			WHERE  a.BBS_ID = 'B0000038'
+			AND a.DELETE_CODE = '0' AND a.STATUS = '1' AND a.USE_AT = 'Y'
+			ORDER BY a.FRST_REGIST_PNTTM DESC
+
+		]]>
+	</select>
+
+	<select id="optionalBoardDAO.selectBoardB0000048ArticleListCnt" parameterClass="zvl" resultClass="int" >
+		<![CDATA[
+			SELECT
+				COUNT(a.NTT_ID)
+			FROM
+				$tableNm$ a
+			LEFT OUTER JOIN TM_ADMIN_DEPT b ON b.DEPT_ID = a.DEPT_ID
+			LEFT OUTER JOIN TB_BBS_ESTN c ON c.NTT_ID = a.NTT_NO
+			WHERE a.BBS_ID = #bbsId# and c.BBS_ID = 'B0000038' and c.DELETE_CODE = '0'
+
+		]]>
+		<include refid="optionalBoardDAO.selectBoardArticleList-where" />
+	</select>
+
+	<select id="optionalBoardDAO.selectBoardB0000048ArticleList" parameterClass="zvl" resultClass="zvl">
+		/* optionalBoardDAO.selectBoardB0000048ArticleList */
+		<![CDATA[
+			SELECT  *
+			  FROM  (
+			SELECT @RN:=@RN+1 AS RNUM, ALL_LIST.*
+			  FROM  (
+			SELECT
+				a.NTT_ID
+				, a.NTT_SJ
+				, a.NTT_CN
+				, a.FRST_REGISTER_ID
+				, a.NTCR_NM
+				, a.NTCR_CI
+				, a.NTT_NO
+				, a.INQIRE_CO
+				, a.PARNTS
+				, a.REPLY_AT
+				, a.REPLY_LC
+				, a.USE_AT
+				, a.ATCH_FILE_ID
+				, a.BBS_ID
+				, a.NTCE_BGNDE
+				, a.NTCE_ENDDE
+				, a.SECRET_AT SECRET
+				, a.BBS_SE AS GUBUN
+				, case WHEN REPLACE(a.NTCE_BGNDE,'-','') > DATE_FORMAT(NOW(), '%Y%m%d') THEN '1'
+				   WHEN REPLACE(a.NTCE_BGNDE,'-','') <= DATE_FORMAT(NOW(), '%Y%m%d')
+				   AND REPLACE(a.NTCE_ENDDE,'-','') >= DATE_FORMAT(NOW(), '%Y%m%d') THEN '2'
+				   ELSE '3'
+				   END AS STATUS
+				, DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d') as FRST_REGISTER_PNTTM
+				, DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d %H:%i:%s') as REG_DATE
+				, DATE_FORMAT(a.LAST_UPDT_PNTTM, '%Y-%m-%d') as LAST_UPDUSR_PNTTM
+				, DATE_FORMAT(a.LAST_UPDT_PNTTM, '%Y-%m-%d %H:%i:%s') as UPT_DATE
+				, a.DELETE_CODE DELCODE
+				, a.DEPT_ID
+				, b.DEPT_NM_KOR
+				, b.DEPT_NM_ENG
+				, a.OPTION1, a.OPTION2, a.OPTION3,a.OPTION4, a.OPTION5, a.OPTION6, a.OPTION7, a.OPTION8, a.OPTION9, a.OPTION10
+				, a.OPTION11, a.OPTION12, a.OPTION13, a.OPTION14, a.OPTION15, a.OPTION16, a.OPTION17, a.OPTION18, a.OPTION19, a.OPTION20
+				, c.NTT_SJ as CONF_NM
+				, case
+					WHEN a.FRST_REGIST_PNTTM >= date_add(now(), interval -7 day)   then 'Y'
+					ELSE 'N'
+				  END AS NEW_YN
+			FROM
+				TB_BBS_ESTN a
+			LEFT OUTER JOIN TM_ADMIN_DEPT b ON b.DEPT_ID = a.DEPT_ID
+			LEFT OUTER JOIN TB_BBS_ESTN c ON c.NTT_ID = a.NTT_NO
+			WHERE  a.BBS_ID = 'B0000048' and c.BBS_ID = 'B0000038'
+		]]>
+		<include refid="optionalBoardDAO.selectBoardArticleList-where" />
+
+		<![CDATA[
+			ORDER BY a.FRST_REGIST_PNTTM DESC
+				    ) ALL_LIST
+			    ) ALL_LIST
+			limit #firstIndex#, #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="optionalBoardDAO.selectBoardB0000048PortalArticleList" parameterClass="zvl" resultClass="zvl">
+		/* optionalBoardDAO.selectBoardB0000048PortalArticleList */
+		<![CDATA[
+			SELECT
+				a.NTT_ID
+				, a.NTT_NO
+				, a.NTT_SJ
+				, a.NTT_CN
+				, a.FRST_REGISTER_ID
+				, a.NTCR_NM
+				, a.NTCR_CI
+				, a.INQIRE_CO
+				, a.PARNTS
+				, a.REPLY_AT
+				, a.REPLY_LC
+				, a.USE_AT
+				, a.ATCH_FILE_ID
+				, a.BBS_ID
+				, a.NTCE_BGNDE
+				, a.NTCE_ENDDE
+				, a.SECRET_AT SECRET
+				, a.BBS_SE AS GUBUN
+				, case WHEN REPLACE(a.NTCE_BGNDE,'-','') > DATE_FORMAT(NOW(), '%Y%m%d') THEN '1'
+				   WHEN REPLACE(a.NTCE_BGNDE,'-','') <= DATE_FORMAT(NOW(), '%Y%m%d')
+				   AND REPLACE(a.NTCE_ENDDE,'-','') >= DATE_FORMAT(NOW(), '%Y%m%d') THEN '2'
+				   ELSE '3'
+				   END AS STATUS
+				, DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d') as FRST_REGISTER_PNTTM
+				, DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d %H:%i:%s') as REG_DATE
+				, DATE_FORMAT(a.LAST_UPDT_PNTTM, '%Y-%m-%d') as LAST_UPDUSR_PNTTM
+				, DATE_FORMAT(a.LAST_UPDT_PNTTM, '%Y-%m-%d %H:%i:%s') as UPT_DATE
+				, a.DELETE_CODE DELCODE
+				, a.DEPT_ID
+				, b.DEPT_NM_KOR
+				, b.DEPT_NM_ENG
+				, a.OPTION1, a.OPTION2, a.OPTION3,a.OPTION4, a.OPTION5, a.OPTION6, a.OPTION7, a.OPTION8, a.OPTION9, a.OPTION10
+				, a.OPTION11, a.OPTION12, a.OPTION13, a.OPTION14, a.OPTION15, a.OPTION16, a.OPTION17, a.OPTION18, a.OPTION19, a.OPTION20
+				, c.NTT_SJ as CONF_NM
+				, case
+					WHEN a.FRST_REGIST_PNTTM >= date_add(now(), interval -7 day)   then 'Y'
+					ELSE 'N'
+				  END AS NEW_YN
+			FROM
+				TB_BBS_ESTN a
+			LEFT OUTER JOIN TM_ADMIN_DEPT b ON b.DEPT_ID = a.DEPT_ID
+			LEFT OUTER JOIN TB_BBS_ESTN c ON c.NTT_ID = a.NTT_NO
+			WHERE  a.BBS_ID = 'B0000048' and c.BBS_ID = 'B0000038'
+			AND a.DELETE_CODE = '0'
+		]]>
+		<include refid="optionalBoardDAO.selectBoardArticleList-where" />
+	</select>
+
+	<select id="optionalBoardDAO.selectB0000004BoardArticleList" parameterClass="zvl" resultClass="zvl">
+		/* optionalBoardDAO.selectB0000004BoardArticleList */
+		<![CDATA[
+			SELECT
+					  NTT_ID
+					, NTT_NO
+					, NTCR_EMAIL
+					, USE_AT
+					, BBS_ID
+					, SECRET_AT
+					, FRST_REGIST_PNTTM
+					, LAST_UPDT_PNTTM
+					, DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d') as FRST_REGISTER_PNTTM
+					, DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d %H:%i:%s') as REG_DATE
+					, DATE_FORMAT(a.LAST_UPDT_PNTTM, '%Y-%m-%d') as LAST_UPDUSR_PNTTM
+					, DATE_FORMAT(a.LAST_UPDT_PNTTM, '%Y-%m-%d %H:%i:%s') as UPT_DATE
+					, DELETE_CODE AS DELCODE
+					, case
+						WHEN a.FRST_REGIST_PNTTM >= date_add(now(), interval -7 day)   then 'Y'
+						ELSE 'N'
+					  END AS NEW_YN
+				FROM
+					$tableNm$ a
+			WHERE  a.BBS_ID = #bbsId#
+		]]>
+		<include refid="optionalBoardDAO.selectBoardArticleList-where" />
+
+		<!-- 일반게시판 -->
+		<isEqual property="bbsTyCode" compareValue="BBST01">
+			<![CDATA[	ORDER BY REG_DATE DESC	]]>
+		</isEqual>
+		<![CDATA[
+			limit #firstIndex#, #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="optionalBoardDAO.selectB0000004BoardArticleListCnt" parameterClass="zvl" resultClass="int" >
+		<![CDATA[
+			SELECT
+				COUNT(a.NTT_ID)
+			FROM
+				$tableNm$ a
+			LEFT OUTER JOIN TM_ADMIN_DEPT b ON b.DEPT_ID = a.DEPT_ID
+			WHERE
+				a.BBS_ID = #bbsId#
+			AND a.DELETE_CODE = '0'
+			AND  (NTCR_EMAIL = #ntcrEmail# )
+
+		]]>
+		<include refid="optionalBoardDAO.selectBoardArticleList-where" />
+	</select>
+</sqlMap>

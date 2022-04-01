@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="siteMng">
+
+	<typeAlias  alias="zvl" type="kr.co.unp.util.ZValue"/>
+    			
+	<select id="siteMngDAO.selectSiteList" resultClass="zvl">
+		SELECT SITE_ID, SITE_NM AS SITE_NAME , SITE_DC AS SITE_DESC, SITE_URL, DATE_FORMAT(FRST_REGIST_PNTTM,'%Y-%m-%d') AS CREAT_DT,
+			SITE_IP
+		FROM TC_SITEINFO
+		ORDER BY SITE_ID ASC
+	</select>	
+		
+	<insert id="siteMngDAO.addSite" parameterClass="zvl">
+		<selectKey resultClass="int" keyProperty="siteId">
+			SELECT To_Number('0' || Max(SITE_ID))+1 FROM TC_SITEINFO
+		</selectKey>
+		<![CDATA[ 			
+		     INSERT INTO TC_SITEINFO (
+		     	SITE_ID, SITE_NM, SITE_DC, SITE_URL, SITE_IP
+		     )
+			VALUES (#siteId#, #siteName#, #siteDesc#, #siteUrl#, #siteIp#)
+		]]> 
+	</insert>
+		
+	<update id="siteMngDAO.updateSite" parameterClass="zvl">
+		<![CDATA[ 			
+		     UPDATE TC_SITEINFO 
+			 SET SITE_NM = #siteName#,
+			 	 SITE_DC = #siteDesc#,
+				 SITE_URL = #siteUrl#,
+				 SITE_IP = #siteIp#
+			 WHERE SITE_ID = #siteId#
+		]]> 
+	</update>
+		
+	<delete id="siteMngDAO.delSite" parameterClass="zvl">
+		<![CDATA[ 			
+		     DELETE TC_SITEINFO 
+			 WHERE SITE_ID = #siteId#
+		]]> 
+	</delete>
+		
+	<select id="siteMngDAO.selectSite" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[ 
+			SELECT SITE_ID, SITE_NM AS SITE_NAME, SITE_DC AS SITE_DESC, SITE_URL, DATE_FORMAT(FRST_REGIST_PNTTM,'%Y-%m-%d') AS CREAT_DT,
+				SITE_IP
+			FROM TC_SITEINFO
+			WHERE SITE_ID = #siteId#
+		 ]]>
+	</select>
+</sqlMap>                            

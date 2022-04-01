@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<bean name="CmmnCodeIdGnrStrategy"
+		class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+		<property name="prefix" value="COM" />
+		<property name="cipers" value="3" />
+		<property name="fillChar" value="0" />
+	</bean>		
+		
+	<bean name="CmmnCodeIdGnrService"
+		class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="egov.dataSource" />
+		<property name="strategy" ref="CmmnCodeIdGnrStrategy" />
+		<property name="blockSize" 	value="1"/>
+		<property name="table"	   	value="TC_CMMNSN"/>
+		<property name="tableName"	value="TC_CMMNCODE_CTGRY"/>
+	</bean>
+	
+	<bean name="pageCodeGnrStrategy"
+		class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+		<property name="prefix" value="PG" />
+		<property name="cipers" value="4" />
+		<property name="fillChar" value="0" />
+	</bean>		
+		
+	<bean name="pageCodeGnrService"
+		class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="egov.dataSource" />
+		<property name="strategy" ref="pageCodeGnrStrategy" />
+		<property name="blockSize" 	value="1"/>
+		<property name="table"	   	value="TC_CMMNSN"/>
+		<property name="tableName"	value="TB_ATTRBINFO"/>
+	</bean>
+	
+	<bean name="egovPollUserCdGnrService"
+		class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="egov.dataSource" />
+		<property name="blockSize" 	value="1"/>
+		<property name="table"	   	value="TC_CMMNSN"/>
+		<property name="tableName"	value="POLL_USER_CD"/>
+	</bean>
+	
+	<bean name="egovBBSMstrNewIdGnrService"
+		class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="egov.dataSource" />
+		<property name="strategy" ref="bbsMstrNewStrategy" />
+		<property name="blockSize" 	value="1"/>
+		<property name="table"	   	value="TC_CMMNSN"/>
+		<property name="tableName"	value="TB_BBS_MASTR"/>
+	</bean>
+	
+	<bean name="bbsMstrNewStrategy"
+		class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+		<property name="prefix" value="B" />
+		<property name="cipers" value="7" />
+		<property name="fillChar" value="0" />
+	</bean>		
+	
+	<bean name="egovFileIdGnrService"
+		class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="egov.dataSource" />
+		<property name="strategy" ref="fileStrategy" />
+		<property name="blockSize" 	value="10"/>
+		<property name="table"	   	value="TC_CMMNSN"/>
+		<property name="tableName"	value="TC_COMMNFILE"/>
+	</bean>
+	<bean name="fileStrategy"
+		class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+		<property name="prefix" value="FILE_" />
+		<property name="cipers" value="15" />
+		<property name="fillChar" value="0" />
+	</bean>
+	
+	<!-- 이벤트 평가자 ID 생성 -->
+	<bean name="evlIdGnrStrategy"
+		class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+		<property name="prefix" value="ftic" />
+		<property name="cipers" value="4" />
+		<property name="fillChar" value="0" />
+	</bean>		
+		
+	<bean name="evlIdGnrService"
+		class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="egov.dataSource" />
+		<property name="strategy" ref="evlIdGnrStrategy" />
+		<property name="blockSize" 	value="1"/>
+		<property name="table"	   	value="TC_CMMNSN"/>
+		<property name="tableName"	value="TC_EVENT"/>
+	</bean>
+	
+	<!-- 게시판용 NTT_ID 생성 -->
+	<bean name="egovNttIdGnrService"
+		class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="egov.dataSource" />
+		<property name="strategy" ref="nttIdStrategy" />
+		<property name="blockSize" 	value="1"/>
+		<property name="table"	   	value="TC_CMMNSN"/>
+		<property name="tableName"	value="NTT_ID"/>
+	</bean>
+	<bean name="nttIdStrategy"
+		class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+		<property name="cipers" value="20" />
+	</bean>	
+		
+	<bean name="egovBBSMstrIdGnrService"
+		class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="egov.dataSource" />
+		<property name="strategy" ref="bbsMstrStrategy" />
+		<property name="blockSize" 	value="10"/>
+		<property name="table"	   	value="TC_CMMNSN"/>
+		<property name="tableName"	value="BBS_ID"/>
+	</bean>
+	<bean name="bbsMstrStrategy"
+		class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+		<property name="prefix" value="BBSMSTR_" />
+		<property name="cipers" value="12" />
+		<property name="fillChar" value="0" />
+	</bean>		
+	
+    <!--  그룹 -->
+    <bean name="egovGroupIdGnrService"
+        class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+        destroy-method="destroy">
+        <property name="dataSource" ref="egov.dataSource" />
+        <property name="strategy"   ref="groupIdStrategy" />
+        <property name="blockSize"  value="1"/>
+        <property name="table"      value="TC_CMMNSN"/>
+        <property name="tableName"  value="GROUP_ID"/>
+    </bean>
+
+    <bean name="groupIdStrategy"
+        class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+        <property name="prefix" value="GROUP_" />
+        <property name="cipers" value="14" />
+        <property name="fillChar" value="0" />
+    </bean> 
+    <!-- 그룹 -->	
+
+    <!--  롤 ID -->
+    <bean name="egovRoleIdGnrService"
+        class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+        destroy-method="destroy">
+        <property name="dataSource" ref="egov.dataSource" />
+        <property name="strategy"   ref="roleIdStrategy" />
+        <property name="blockSize"  value="1"/>
+        <property name="table"      value="TC_CMMNSN"/>
+        <property name="tableName"  value="ROLE_ID"/>
+    </bean>
+
+    <bean name="roleIdStrategy"
+        class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+        <property name="prefix" value="" />
+        <property name="cipers" value="6" />
+        <property name="fillChar" value="0" />
+    </bean> 
+    <!-- 롤 ID -->
+</beans>

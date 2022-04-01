@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Banner">
+
+
+	<typeAlias  alias="Banner" 	type="kr.co.unp.banner.vo.Banner"/>
+	<typeAlias  alias="zvl" type="kr.co.unp.util.ZValue"/>
+
+
+
+
+	<resultMap id="BannerDAO.selectBannerListMap" class="zvl">
+		<result property="bnrCd" column="BNR_CD"/>
+		<result property="bnrNm" column="BNR_NM" jdbcType="CLOB" javaType="java.lang.String"/>
+		<result property="bnrUrl" column="BNR_URL"/>
+		<result property="deptId" column="DEPT_ID"/>
+		<result property="regDt" column="REG_DT"/>
+		<result property="regUserId" column="REG_USER_ID"/>
+		<result property="lastModDt" column="LAST_MOD_DT"/>
+		<result property="lastModUserId" column="LAST_MOD_USER_ID"/>
+		<result property="isDel" column="IS_DEL"/>
+		<result property="publish" column="PUBLISH"/>
+		<result property="dept" column="DEPT"/>
+		<result property="dong" column="DONG"/>
+		<result property="gubun" column="GUBUN"/>
+		<result property="useBanner" column="USE_BANNER"/>
+		<result property="startDt" column="START_DT"/>
+		<result property="endDt" column="END_DT"/>
+		<result property="orderly" column="ORDERLY"/>
+		<result property="atchFileId" column="ATCH_FILE_ID"/>
+		<result property="popup" column="POPUP"/>
+	</resultMap>
+
+
+
+
+
+
+	<select id="BannerDAO.selectBannerListTotCnt" parameterClass="zvl" resultClass="int">
+		<![CDATA[
+		/*  BannerDAO.selectBannerListTotCnt */
+			SELECT  COUNT(*) as totcnt
+			  FROM  TC_BANNER
+			 WHERE	DELETE_AT LIKE 'N'
+		]]>
+
+		<isNotEmpty prepend="AND" property="searchWrd">
+				<![CDATA[	BANNER_NM LIKE '%'|| #searchWrd# || '%' ]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="use_banner">
+				<![CDATA[	SITE_NM = #use_banner# ]]>
+		</isNotEmpty>
+	</select>
+
+
+	<select id="BannerDAO.selectAllBannerList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+
+					SELECT	BANNER_NO	AS	BNR_CD
+					, a.BANNER_NM	AS	BNR_NM
+					, a.BANNER_URL	AS	BNR_URL
+					, a.DEPT_ID
+					, a.FRST_REGIST_PNTTM	AS	REG_DT
+					, a.FRST_REGISTER_ID	AS	REG_USER_ID
+					, a.LAST_UPDT_PNTTM		AS	LAST_MOD_DT
+					, a.LAST_UPDUSR_ID		AS	LAST_MOD_USER_ID
+					, a.DELETE_AT	AS	IS_DEL
+					, a.USE_AT		AS	PUBLISH
+					, a.DEPT_NM		AS	DEPT
+					, a.DONG
+					, a.BANNER_SE	AS	GUBUN
+					, a.SITE_NM	AS	USE_BANNER
+					, a.BGNDE	AS	START_DT
+					, a.ENDDE	AS	END_DT
+					, a.SORT_ORDR	AS	ORDERLY
+					, a.ATCH_FILE_ID
+					, a.POPUP_AT	AS	POPUP
+					  FROM  TC_BANNER a
+	 			     WHERE	DELETE_AT = 'N'
+		]]>
+		<isNotEmpty prepend="AND" property="use_banner">
+				SITE_NM = #use_banner#
+		</isNotEmpty>
+		<![CDATA[
+	 			     ORDER BY SORT_ORDR ASC, FRST_REGIST_PNTTM ASC
+		]]>
+	</select>
+
+
+	<select id="BannerDAO.selectBannerList" parameterClass="zvl" resultMap="BannerDAO.selectBannerListMap">
+		<![CDATA[
+			SELECT  *
+			  FROM  (
+			SELECT ROWNUM RNUM, ALL_LIST.*
+			  FROM  (
+
+					SELECT	BANNER_NO	AS	BNR_CD
+					, a.BANNER_NM	AS	BNR_NM
+					, a.BANNER_URL	AS	BNR_URL
+					, a.DEPT_ID
+					, a.FRST_REGIST_PNTTM	AS	REG_DT
+					, a.FRST_REGISTER_ID	AS	REG_USER_ID
+					, a.LAST_UPDT_PNTTM		AS	LAST_MOD_DT
+					, a.LAST_UPDUSR_ID		AS	LAST_MOD_USER_ID
+					, a.DELETE_AT	AS	IS_DEL
+					, a.USE_AT		AS	PUBLISH
+					, a.DEPT_NM		AS	DEPT
+					, a.DONG
+					, a.BANNER_SE	AS	GUBUN
+					, a.SITE_NM	AS	USE_BANNER
+					, a.BGNDE	AS	START_DT
+					, a.ENDDE	AS	END_DT
+					, a.SORT_ORDR	AS	ORDERLY
+					, a.ATCH_FILE_ID
+					, a.POPUP_AT	AS	POPUP
+					  FROM  TC_BANNER a
+	 			     WHERE	DELETE_AT = 'N'
+		]]>
+		<isNotEmpty prepend="AND" property="searchWrd">
+			<![CDATA[	a.BANNER_NM LIKE '%'|| #searchWrd# || '%' ]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="use_banner">
+			<![CDATA[	SITE_NM = #use_banner# ]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="useAt">
+			<![CDATA[	a.USE_AT = #useAt# ]]>
+		</isNotEmpty>
+		<![CDATA[
+					ORDER BY BANNER_NO DESC
+
+				    ) ALL_LIST
+				    )
+			 WHERE  RNUM  > #firstIndex#
+			   AND  RNUM <= #firstIndex# + #recordCountPerPage#
+		]]>
+	</select>
+
+
+	<resultMap id="BannerDAO.selectPublishListMap" class="zvl">
+		<result property="bnrCd" column="BNR_CD"/>
+		<result property="bnrNm" column="BNR_NM" jdbcType="CLOB" javaType="java.lang.String"/>
+		<result property="bnrUrl" column="BNR_URL"/>
+		<result property="deptId" column="DEPT_ID"/>
+		<result property="regDt" column="REG_DT"/>
+		<result property="regUserId" column="REG_USER_ID"/>
+		<result property="lastModDt" column="LAST_MOD_DT"/>
+		<result property="lastModUserId" column="LAST_MOD_USER_ID"/>
+		<result property="isDel" column="IS_DEL"/>
+		<result property="publish" column="PUBLISH"/>
+		<result property="dept" column="DEPT"/>
+		<result property="dong" column="DONG"/>
+		<result property="gubun" column="GUBUN"/>
+		<result property="useBanner" column="USE_BANNER"/>
+		<result property="startDt" column="START_DT"/>
+		<result property="endDt" column="END_DT"/>
+		<result property="orderly" column="ORDERLY"/>
+		<result property="atchFileId" column="ATCH_FILE_ID"/>
+		<result property="popup" column="POPUP"/>
+	</resultMap>
+
+	<select id="BannerDAO.selectPublishList" parameterClass="zvl" resultMap="BannerDAO.selectPublishListMap">
+		<![CDATA[
+				SELECT	BANNER_NO	AS	BNR_CD
+					, a.BANNER_NM	AS	BNR_NM
+					, a.BANNER_URL	AS	BNR_URL
+					, a.DEPT_ID
+					, a.FRST_REGIST_PNTTM	AS	REG_DT
+					, a.FRST_REGISTER_ID	AS	REG_USER_ID
+					, a.LAST_UPDT_PNTTM		AS	LAST_MOD_DT
+					, a.LAST_UPDUSR_ID		AS	LAST_MOD_USER_ID
+					, a.DELETE_AT	AS	IS_DEL
+					, a.USE_AT		AS	PUBLISH
+					, a.DEPT_NM		AS	DEPT
+					, a.DONG
+					, a.BANNER_SE	AS	GUBUN
+					, a.SITE_NM	AS	USE_BANNER
+					, a.BGNDE	AS	START_DT
+					, a.ENDDE	AS	END_DT
+					, a.SORT_ORDR	AS	ORDERLY
+					, a.ATCH_FILE_ID
+					, a.POPUP_AT	AS	POPUP
+					  FROM  TC_BANNER a
+	 			     WHERE	DELETE_AT = 'N'
+			     		AND USE_AT = 'Y'
+			     		AND a.BANNER_SE = #gubun#
+			     		AND (
+			     			TO_CHAR(SYSDATE, 'YYYYMMDD') >= REPLACE(BGNDE,'-','')
+		     		   		AND TO_CHAR(SYSDATE, 'YYYYMMDD') <= REPLACE(ENDDE,'-','')
+		     		   	)
+			ORDER BY	SORT_ORDR ASC, FRST_REGIST_PNTTM DESC
+		]]>
+	</select>
+
+
+
+
+	<resultMap id="BannerDAO.selectBannerDetailMap" class="zvl">
+		<result property="bnrCd" column="BNR_CD"/>
+		<result property="bnrNm" column="BNR_NM" jdbcType="CLOB" javaType="java.lang.String"/>
+		<result property="bnrUrl" column="BNR_URL"/>
+		<result property="deptId" column="DEPT_ID"/>
+		<result property="regDt" column="REG_DT"/>
+		<result property="regUserId" column="REG_USER_ID"/>
+		<result property="lastModDt" column="LAST_MOD_DT"/>
+		<result property="lastModUserId" column="LAST_MOD_USER_ID"/>
+		<result property="isDel" column="IS_DEL"/>
+		<result property="publish" column="PUBLISH"/>
+		<result property="dept" column="DEPT"/>
+		<result property="dong" column="DONG"/>
+		<result property="gubun" column="GUBUN"/>
+		<result property="useBanner" column="USE_BANNER"/>
+		<result property="startDt" column="START_DT"/>
+		<result property="endDt" column="END_DT"/>
+		<result property="orderly" column="ORDERLY"/>
+		<result property="atchFileId" column="ATCH_FILE_ID"/>
+		<result property="popup" column="POPUP"/>
+	</resultMap>
+
+
+
+
+	<select id="BannerDAO.selectBannerDetail" parameterClass="zvl" resultMap="BannerDAO.selectBannerDetailMap">
+		<![CDATA[
+		/* BannerDAO.selectBannerDetail */
+
+			SELECT	BANNER_NO	AS	BNR_CD
+					, a.BANNER_NM	AS	BNR_NM
+					, a.BANNER_URL	AS	BNR_URL
+					, a.DEPT_ID
+					, a.FRST_REGIST_PNTTM	AS	REG_DT
+					, a.FRST_REGISTER_ID	AS	REG_USER_ID
+					, a.LAST_UPDT_PNTTM		AS	LAST_MOD_DT
+					, a.LAST_UPDUSR_ID		AS	LAST_MOD_USER_ID
+					, a.DELETE_AT	AS	IS_DEL
+					, a.USE_AT		AS	PUBLISH
+					, a.DEPT_NM		AS	DEPT
+					, a.DONG
+					, a.BANNER_SE	AS	GUBUN
+					, a.SITE_NM	AS	USE_BANNER
+					, a.BGNDE	AS	START_DT
+					, a.ENDDE	AS	END_DT
+					, a.SORT_ORDR	AS	ORDERLY
+					, b.CODE_NM AS USE_BANNER_NM
+					, a.ATCH_FILE_ID
+					, a.POPUP_AT	AS	POPUP
+			  FROM  TC_BANNER a
+			  LEFT OUTER JOIN TC_CMMNCODE_DETAIL b
+			  ON b.CODE_ID = 'COM092' AND b.USE_AT='Y' AND b.CODE = a.SITE_NM
+			 WHERE	a.BANNER_NO = #bnrCd#
+		]]>
+	</select>
+
+
+
+	<update id="BannerDAO.updateBanner" parameterClass="zvl">
+		<![CDATA[
+
+		/* BannerDAO.updateBanner */
+
+            UPDATE  TC_BANNER
+               SET  BANNER_NM				= #bannerNm#
+					, BANNER_URL			= #bannerUrl#
+					, DEPT_ID			= #deptId#
+					, LAST_UPDT_PNTTM		= SYSDATE
+					, LAST_UPDUSR_ID	= #lastUpdusrId#
+					, USE_AT			= #useAt#
+					, DEPT_NM				= #dept#
+					, DONG				= #dong#
+					, BANNER_SE             = #gubun#
+					, SITE_NM        	= #useBanner#
+					, BGNDE          = #bgnde#
+					, ENDDE            = #endde#
+					, SORT_ORDR           = #sortOrdr#
+					, ATCH_FILE_ID      = #atchFileId#
+					, POPUP_AT				= #popupAt#
+             WHERE	BANNER_NO = #bnrCd#
+		]]>
+	</update>
+
+	<insert id="BannerDAO.insertBanner" parameterClass="zvl">
+		<selectKey resultClass="int" keyProperty="bnrCd">
+			SELECT NVL(MAX(BANNER_NO),0)+1 AS BNR_CD  FROM TC_BANNER
+		</selectKey>
+		<![CDATA[
+		    INSERT
+		      INTO  TC_BANNER
+		        (
+					BANNER_NO
+					, BANNER_NM
+					, BANNER_URL
+					, DEPT_ID
+					, FRST_REGIST_PNTTM
+					, FRST_REGISTER_ID
+					, LAST_UPDT_PNTTM
+					, LAST_UPDUSR_ID
+					, DELETE_AT
+					, USE_AT
+					, DEPT_NM
+					, DONG
+					, BANNER_SE
+					, SITE_NM
+					, BGNDE
+					, ENDDE
+					, SORT_ORDR
+					, ATCH_FILE_ID
+					, POPUP_AT
+		        )
+		    VALUES
+		        (
+					#bnrCd#
+					, #bannerNm#
+					, #bannerUrl#
+					, #deptId#
+					, SYSDATE
+					, #frstRegisterId#
+					, SYSDATE
+					, #lastUpdusrId#
+					, 'N'
+					, #useAt#
+					, #dept#
+					, #dong#
+					, #gubun#
+					, #useBanner#
+					, #bgnde#
+					, #endde#
+					, #sortOrdr#
+					, #atchFileId#
+					, #popupAt#
+		        )
+		]]>
+	</insert>
+
+
+	<delete id="BannerDAO.deleteBanner" parameterClass="zvl">
+		<![CDATA[
+		    DELETE FROM TC_BANNER WHERE BANNER_NO = #bnr_cd#
+		]]>
+	</delete>
+
+
+</sqlMap>

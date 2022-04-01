@@ -1,0 +1,993 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<title>성과아카이브 HTML Publishing List</title>
+<style type="text/css">
+@charset "utf-8";
+* {margin:0;padding:0;}
+body {font-size:.75em;width:1200px;margin: 0 auto;}
+hr {border:0;border-bottom:solid 1px #ddd !important;}
+.skip {position:absolute;left:0;top:0;display:block;height:1px;width:1px;margin:0 -1px -1px 0;padding:0;overflow:hidden;font-size:0;line-height:0;text-align:center;}
+.skip:hover,
+.skip:active,
+.skip:focus {position:static;width:100%;height:auto;margin:0;padding:5px 0;text-indent:10px;font-weight:bold;font-size:12px;color:#333;font-family:Tahoma,Sans-serif;line-height:1;text-decoration:none !important;}
+#header {overflow:hidden;height:100px;background-color:#000;}
+#header h1 {float:left;padding:37px 20px;font:bold 15pt/100% Arial,Sans-serif;color:#fff;}
+#header h2 {float:right;padding:33px 10px 0 0;font:60pt/100% Arial,Sans-serif;color:#fff;}
+#wrap {padding:0 20px;}
+#wrap h3 {padding:20px 0;font:bold 16pt/130% "나눔고딕",NanumGothic,"맑은 고딕","Malgun gothic","Segoe UI",AppleGothic,Arial,Sans-serif;color:#333;}
+#wrap h4 {margin:0 0 5px 0;font:bold 11pt/130% "나눔고딕",NanumGothic,"맑은 고딕","Malgun gothic","Segoe UI",AppleGothic,Arial,Sans-serif;color:#333;}
+#wrap h4.h4_first {margin:20px 0 -15px 0;}
+table {width:100%;margin:0 0 20px 0;border-spacing:0;border-collapse:collapse;border:1px solid #ddd;font-family:"돋움",Dotum,Arial,Sans-serif;font-size:.95em;color:#555;}
+caption {padding:0 0 5px 0;font-family:"돋움",Dotum,"굴림",Gulim,Sans-serif;text-align:right;}
+.col1 {width:12%;}
+.col2 {width:20%;}
+.col3 {width:20%;}
+.col4 {width:10%;}
+.col5 {}
+.col6 {width:100px;}
+.col7 {width:100px;}
+thead {background-color:#f9f9f9;}
+th, td {padding:6px 10px;border-top:1px solid #ddd;border-right:1px solid #ddd}
+td a {color:#125fae;text-decoration:none;}
+td a:hover {color:#444;text-decoration:underline;}
+.align-center {text-align:center;}
+.state {font-size:.95em;color:#fff;}
+.state span {padding:3px;}
+.state .undecided {border-radius:30px;background-color:#9b9a4b;}
+.state .complete {border-radius:30px;background-color:#1f4d87;}
+.state .inProgress {border-radius:30px;background-color:#82cf54;}
+.state .edit {border-radius:30px;background-color:#c3122f;}
+footer {zoom:1;}
+footer:after {display:block;content:"";clear:both;}
+footer h3 {float:left;}
+footer dl {float:left;margin:27px 0 0 50px;}
+dl {overflow:auto;font-family:"나눔고딕",NanumGothic,"맑은 고딕","Malgun gothic","Segoe UI",AppleGothic,Arial,Sans-serif;}
+dt {float:left;font-weight:bold;color:#444;}
+dd {float:left;padding:0 30px 0 20px;color:#888;}
+/* 임시구분 */
+td {display:none;}
+.dowork td {display:table-cell;border-bottom:1px solid #ddd;}
+</style>
+</head>
+<body>
+<a href="#wrap" class="skip">≫ &nbsp; 메뉴 건너 뛰기</a>
+<header>
+	<div id="header">
+		<hgroup>
+			<h1>성과아카이브 HTML Publishing List</h1>
+			<h2>Publishing</h2>
+		</hgroup>
+	</div>
+</header>
+<hr style="display:none;" />
+<div id="wrap">
+	<section>
+		<h3>진행사항</h3>
+	</section>
+	<hr />
+<section>
+	
+	<article style="padding-top: 30px">
+		<h4 class="h4_first">실감 콘텐츠 창작자 양성</h4>
+		<table border="0" class="dowork">
+			<caption>
+				진행상태 &nbsp;
+				<span class="state"><span class="undecided">미</span></span> 미정,
+				<span class="state"><span class="inProgress">중</span></span> 진행중,
+				<span class="state"><span class="complete">완</span></span> 완료,
+				<span class="state"><span class="edit">수</span></span> 수정
+			</caption>
+			<colgroup>
+				<col class="col1" />
+				<col class="col2" />
+				<col class="col5" />
+				<col class="col3" />
+				<col class="col6" />
+				<col class="col7" />
+			</colgroup>
+			<thead>
+				<tr>
+					<th>2depth</th>
+					<th>3depth</th>
+					<th>화면</th>
+					<th>URL</th>
+					<th>완료일</th>
+					<th>상태</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="align-center">목록</td>
+					<td></td>
+					<td></td>
+					<td><a href="./05_silgam/silgam_list_01.html" target="_blank">silgam_list_01.html</a></td>
+					<td class="align-center">2020.12.14</td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center">상세</td>
+					<td>비비트리(주)</td>
+					<td></td>
+					<td><a href="./05_silgam/silgam_01.html" target="_blank">silgam_01.html</a></td>
+					<td class="align-center">2020.12.14</td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center">팝업</td>
+					<td></td>
+					<td>파노라마 VR투어 콘텐츠 제작 (오설록)</td>
+					<td><a href="./05_silgam/silgam_pop_01_1.html" target="_blank">silgam_pop_01_1.html</a></td>
+					<td class="align-center">2020.12.15</td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>파노라마 VR투어 콘텐츠 제작(제주항공우주박물관)</td>
+					<td><a href="./05_silgam/silgam_pop_01_2.html" target="_blank">silgam_pop_01_2.html</a></td>
+					<td class="align-center">2020.12.15</td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>파노라마 VR투어 콘텐츠 제작 (브릭캠퍼스)</td>
+					<td><a href="./05_silgam/silgam_pop_01_3.html" target="_blank">silgam_pop_01_3.html</a></td>
+					<td class="align-center">2020.12.15</td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center">상세</td>
+					<td>메디치이앤에스(주)</td>
+					<td></td>
+					<td><a href="./05_silgam/silgam_02.html" target="_blank">silgam_02.html</a></td>
+					<td class="align-center">2020.12.15</td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center">팝업</td>
+					<td></td>
+					<td>VR 음악여행</td>
+					<td><a href="./05_silgam/silgam_pop_02_1.html" target="_blank">silgam_pop_02_1.html</a></td>
+					<td class="align-center">2020.12.15</td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>FLY AWAY</td>
+					<td><a href="./05_silgam/silgam_pop_02_2.html" target="_blank">silgam_pop_02_2.html</a></td>
+					<td class="align-center">2020.12.15</td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>POLARIS</td>
+					<td><a href="./05_silgam/silgam_pop_02_3.html" target="_blank">silgam_pop_02_3.html</a></td>
+					<td class="align-center">2020.12.15</td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>To The Moon</td>
+					<td><a href="./05_silgam/silgam_pop_02_4.html" target="_blank">silgam_pop_02_4.html</a></td>
+					<td class="align-center">2020.12.15</td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>Animal Surgery Simulation</td>
+					<td><a href="./05_silgam/silgam_pop_02_5.html" target="_blank">silgam_pop_02_5.html</a></td>
+					<td class="align-center">2020.12.15</td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center">상세</td>
+					<td>(주)라이크코퍼레이션</td>
+					<td></td>
+					<td><a href="./05_silgam/silgam_03.html" target="_blank">silgam_03.html</a></td>
+					<td class="align-center">2020.12.15</td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center">팝업</td>
+					<td></td>
+					<td>VR기반의 항공기 착륙 및 격납고 입고점검 콘텐츠</td>
+					<td><a href="./05_silgam/silgam_pop_03_1.html" target="_blank">silgam_pop_03_1.html</a></td>
+					<td class="align-center">2020.12.15</td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center">상세</td>
+					<td>(주)디지포레</td>
+					<td></td>
+					<td><a href="./05_silgam/silgam_04.html" target="_blank">silgam_04.html</a></td>
+					<td class="align-center">2020.12.15</td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center">팝업</td>
+					<td></td>
+					<td>ISS National Lab VR</td>
+					<td><a href="./05_silgam/silgam_pop_04_1.html" target="_blank">silgam_pop_04_1.html</a></td>
+					<td class="align-center">2020.12.15</td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>ISS National Lab AR</td>
+					<td><a href="./05_silgam/silgam_pop_04_2.html" target="_blank">silgam_pop_04_2.html</a></td>
+					<td class="align-center">2020.12.15</td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>FCEV Smart FactoryR</td>
+					<td><a href="./05_silgam/silgam_pop_04_3.html" target="_blank">silgam_pop_04_3.html</a></td>
+					<td class="align-center">2020.12.15</td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center">상세</td>
+					<td>일레븐에이엠</td>
+					<td></td>
+					<td><a href="./05_silgam/silgam_05.html" target="_blank">silgam_05.html</a></td>
+					<td class="align-center">2020.12.15</td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center">팝업</td>
+					<td></td>
+					<td>MIX MATCH LOOK</td>
+					<td><a href="./05_silgam/silgam_pop_05_1.html" target="_blank">silgam_pop_05_1.html</a></td>
+					<td class="align-center">2020.12.15</td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>I AM (I ALWAYS MEETING)</td>
+					<td><a href="./05_silgam/silgam_pop_05_2.html" target="_blank">silgam_pop_05_2.html</a></td>
+					<td class="align-center">2020.12.15</td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+			</tbody>
+		</table>
+	</article>
+
+	<article style="padding-top: 30px">
+		<h4 class="h4_first">콘텐츠 원캠퍼스</h4>
+		<table border="0" class="dowork">
+			<caption>
+				진행상태 &nbsp;
+				<span class="state"><span class="undecided">미</span></span> 미정,
+				<span class="state"><span class="inProgress">중</span></span> 진행중,
+				<span class="state"><span class="complete">완</span></span> 완료,
+				<span class="state"><span class="edit">수</span></span> 수정
+			</caption>
+			<colgroup>
+				<col class="col1" />
+				<col class="col2" />
+				<col class="col5" />
+				<col class="col3" />
+				<col class="col6" />
+				<col class="col7" />
+			</colgroup>
+			<thead>
+				<tr>
+					<th>2depth</th>
+					<th>3depth</th>
+					<th>화면</th>
+					<th>URL</th>
+					<th>완료일</th>
+					<th>상태</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="align-center">목록</td>
+					<td>1페이지</td>
+					<td></td>
+					<td><a href="./03_onecam/onecam_list1.html" target="_blank">onecam_list1.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td>2페이지</td>
+					<td></td>
+					<td><a href="./03_onecam/onecam_list2.html" target="_blank">onecam_list2.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center">상세</td>
+					<td>경희대학교 X (주)알마로꼬</td>
+					<td></td>
+					<td><a href="./03_onecam/onecam_01.html" target="_blank">onecam_01.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center">팝업</td>
+					<td></td>
+					<td>고지도 속 상상동물</td>
+					<td><a href="./03_onecam/onecam_pop_01_1.html" target="_blank">onecam_pop_01_1.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>고지도 속 상상동물</td>
+					<td><a href="./03_onecam/onecam_pop_01_2.html" target="_blank">onecam_pop_01_2.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>고지도 속 상상동물</td>
+					<td><a href="./03_onecam/onecam_pop_01_3.html" target="_blank">onecam_pop_01_3.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center">상세</td>
+					<td>계원예술대학교 X (주)샌드박스네트워크</td>
+					<td></td>
+					<td><a href="./03_onecam/onecam_02.html" target="_blank">onecam_02.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center">팝업</td>
+					<td></td>
+					<td>캐릭터 메이킹 초기 과정</td>
+					<td><a href="./03_onecam/onecam_pop_02_1.html" target="_blank">onecam_pop_02_1.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>버추얼 캐릭터 개발 과정</td>
+					<td><a href="./03_onecam/onecam_pop_02_2.html" target="_blank">onecam_pop_02_2.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>버추얼 캐릭터</td>
+					<td><a href="./03_onecam/onecam_pop_02_3.html" target="_blank">onecam_pop_02_3.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center">상세</td>
+					<td>광주대학교 X 아시아문화원</td>
+					<td></td>
+					<td><a href="./03_onecam/onecam_03.html" target="_blank">onecam_03.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center">팝업</td>
+					<td></td>
+					<td>VR 실감콘텐츠 아시아의 부엌과 음식문화 프로젝트 교육영상</td>
+					<td><a href="./03_onecam/onecam_pop_03_1.html" target="_blank">onecam_pop_03_1.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>고려인의 부엌</td>
+					<td><a href="./03_onecam/onecam_pop_03_2.html" target="_blank">onecam_pop_03_2.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>VR 실감 콘텐츠</td>
+					<td><a href="./03_onecam/onecam_pop_03_3.html" target="_blank">onecam_pop_03_3.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center">상세</td>
+					<td>국민대학교 X (주)메인콘텐츠</td>
+					<td></td>
+					<td><a href="./03_onecam/onecam_04.html" target="_blank">onecam_04.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center">팝업</td>
+					<td></td>
+					<td>미래 여행자의 미래 유망 직업 게임</td>
+					<td><a href="./03_onecam/onecam_pop_04_1.html" target="_blank">onecam_pop_04_1.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>진로 초이스 게임</td>
+					<td><a href="./03_onecam/onecam_pop_04_2.html" target="_blank">onecam_pop_04_2.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center">상세</td>
+					<td>단국대학교 X 에스기획</td>
+					<td></td>
+					<td><a href="./03_onecam/onecam_05.html" target="_blank">onecam_05.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center">팝업</td>
+					<td></td>
+					<td>국가무형문화제 제 2호 양주별산대 놀이의 AR 기반 실감 콘텐츠 어플리케이션</td>
+					<td><a href="./03_onecam/onecam_pop_05_1.html" target="_blank">onecam_pop_05_1.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center">상세</td>
+					<td>목원대학교 X (주)원탑스튜디오</td>
+					<td></td>
+					<td><a href="./03_onecam/onecam_06.html" target="_blank">onecam_06.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center">팝업</td>
+					<td></td>
+					<td>강치를 찍다</td>
+					<td><a href="./03_onecam/onecam_pop_06_1.html" target="_blank">onecam_pop_06_1.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>삽살 경비단과 알아보는 독도의 역사</td>
+					<td><a href="./03_onecam/onecam_pop_06_2.html" target="_blank">onecam_pop_06_2.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>동쪽의 요정</td>
+					<td><a href="./03_onecam/onecam_pop_06_3.html" target="_blank">onecam_pop_06_3.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center">상세</td>
+					<td>세종대학교 X 코믹스브이</td>
+					<td></td>
+					<td><a href="./03_onecam/onecam_07.html" target="_blank">onecam_07.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center">팝업</td>
+					<td></td>
+					<td>독신각신</td>
+					<td><a href="./03_onecam/onecam_pop_07_1.html" target="_blank">onecam_pop_07_1.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>우리집 도깨비님</td>
+					<td><a href="./03_onecam/onecam_pop_07_2.html" target="_blank">onecam_pop_07_2.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>도깨비의 숲</td>
+					<td><a href="./03_onecam/onecam_pop_07_3.html" target="_blank">onecam_pop_07_3.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center">상세</td>
+					<td>차의과학대학교 X 경기콘텐츠진흥원 X (주)알쥐비메이커스 X (주)이모꼭 차심리상담센터</td>
+					<td></td>
+					<td><a href="./03_onecam/onecam_08.html" target="_blank">onecam_08.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center">팝업</td>
+					<td></td>
+					<td>힐링 플래닛</td>
+					<td><a href="./03_onecam/onecam_pop_08_1.html" target="_blank">onecam_pop_08_1.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center">상세</td>
+					<td>한국예술종합학교 X 유니티코리아</td>
+					<td></td>
+					<td><a href="./03_onecam/onecam_09.html" target="_blank">onecam_09.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"><span class="complete">완</span></span></td>
+				</tr>
+				<tr>
+					<td class="align-center">팝업</td>
+					<td></td>
+					<td>Life is hard, enjoy your soft</td>
+					<td><a href="./03_onecam/onecam_pop_09_1.html" target="_blank">onecam_pop_09_1.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>펜팔키친</td>
+					<td><a href="./03_onecam/onecam_pop_09_2.html" target="_blank">onecam_pop_09_2.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>Life on an iland</td>
+					<td><a href="./03_onecam/onecam_pop_09_3.html" target="_blank">onecam_pop_09_3.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+			</tbody>
+		</table>
+	</article>
+
+	<article style="padding-top: 30px">
+		<h4 class="h4_first">콘텐츠 임팩트</h4>
+		<table border="0" class="dowork">
+			<caption>
+				진행상태 &nbsp;
+				<span class="state"><span class="undecided">미</span></span> 미정,
+				<span class="state"><span class="inProgress">중</span></span> 진행중,
+				<span class="state"><span class="complete">완</span></span> 완료,
+				<span class="state"><span class="edit">수</span></span> 수정
+			</caption>
+			<colgroup>
+				<col class="col1" />
+				<col class="col2" />
+				<col class="col5" />
+				<col class="col3" />
+				<col class="col6" />
+				<col class="col7" />
+			</colgroup>
+			<thead>
+				<tr>
+					<th>2depth</th>
+					<th>3depth</th>
+					<th>화면</th>
+					<th>URL</th>
+					<th>완료일</th>
+					<th>상태</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="align-center">목록</td>
+					<td>1페이지</td>
+					<td></td>
+					<td><a href="./04_impact/impact_list1.html" target="_blank">impact_list1.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td>2페이지</td>
+					<td></td>
+					<td><a href="./04_impact/impact_list2.html" target="_blank">impact_list2.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center">상세</td>
+					<td>AI: Storyteller</td>
+					<td></td>
+					<td><a href="./04_impact/impact_01.html" target="_blank">impact_01.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center">팝업</td>
+					<td></td>
+					<td>세이브더AI캣</td>
+					<td><a href="./04_impact/impact_pop_01_1.html" target="_blank">impact_pop_01_1.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>셈셈이와 시 쓰기</td>
+					<td><a href="./04_impact/impact_pop_01_2.html" target="_blank">impact_pop_01_2.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>시놉큐레이터</td>
+					<td><a href="./04_impact/impact_pop_01_3.html" target="_blank">impact_pop_01_3.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>AI 희곡 문장 생성기</td>
+					<td><a href="./04_impact/impact_pop_01_4.html" target="_blank">impact_pop_01_4.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>웹툰 자동번역</td>
+					<td><a href="./04_impact/impact_pop_01_5.html" target="_blank">impact_pop_01_5.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>씨네디터</td>
+					<td><a href="./04_impact/impact_pop_01_6.html" target="_blank">impact_pop_01_6.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center">상세</td>
+					<td>다빈치 프로젝트</td>
+					<td></td>
+					<td><a href="./04_impact/impact_02.html" target="_blank">impact_02.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center">팝업</td>
+					<td></td>
+					<td>더 커다란 폭력 (Bigger violence)</td>
+					<td><a href="./04_impact/impact_pop_02_1.html" target="_blank">impact_pop_02_1.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>퍼포먼스 괴</td>
+					<td><a href="./04_impact/impact_pop_02_2.html" target="_blank">impact_pop_02_2.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>생태계로서의 유토피아: 선호하는 미래</td>
+					<td><a href="./04_impact/impact_pop_02_3.html" target="_blank">impact_pop_02_3.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>E-Motion</td>
+					<td><a href="./04_impact/impact_pop_02_4.html" target="_blank">impact_pop_02_4.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>K on travel</td>
+					<td><a href="./04_impact/impact_pop_02_5.html" target="_blank">impact_pop_02_5.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>Fn(M)</td>
+					<td><a href="./04_impact/impact_pop_02_6.html" target="_blank">impact_pop_02_6.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>oraculum</td>
+					<td><a href="./04_impact/impact_pop_02_7.html" target="_blank">impact_pop_02_7.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center">상세</td>
+					<td>콘텐츠, 공감하다</td>
+					<td></td>
+					<td><a href="./04_impact/impact_03.html" target="_blank">impact_03.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center">팝업</td>
+					<td></td>
+					<td>핑핑아, 놀자!</td>
+					<td><a href="./04_impact/impact_pop_03_1.html" target="_blank">impact_pop_03_1.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>무비 인 케이스</td>
+					<td><a href="./04_impact/impact_pop_03_2.html" target="_blank">impact_pop_03_2.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>아무도 모른다</td>
+					<td><a href="./04_impact/impact_pop_03_3.html" target="_blank">impact_pop_03_3.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>2050에서 보내온 메시지</td>
+					<td><a href="./04_impact/impact_pop_03_4.html" target="_blank">impact_pop_03_4.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>The Extended Phenotype</td>
+					<td><a href="./04_impact/impact_pop_03_5.html" target="_blank">impact_pop_03_5.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>디지털 휴먼 튜터</td>
+					<td><a href="./04_impact/impact_pop_03_6.html" target="_blank">impact_pop_03_6.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>Liquidis</td>
+					<td><a href="./04_impact/impact_pop_03_7.html" target="_blank">impact_pop_03_7.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center">상세</td>
+					<td>Music Meets AI</td>
+					<td></td>
+					<td><a href="./04_impact/impact_04.html" target="_blank">impact_04.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center">팝업</td>
+					<td></td>
+					<td>구해줘 홈트</td>
+					<td><a href="./04_impact/impact_pop_04_1.html" target="_blank">impact_pop_04_1.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>작곡왕 김지능</td>
+					<td><a href="./04_impact/impact_pop_04_2.html" target="_blank">impact_pop_04_2.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>SoriGori</td>
+					<td><a href="./04_impact/impact_pop_04_3.html" target="_blank">impact_pop_04_3.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>국악의 미래</td>
+					<td><a href="./04_impact/impact_pop_04_4.html" target="_blank">impact_pop_04_4.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>그 여자 작사 그 남자 작곡</td>
+					<td><a href="./04_impact/impact_pop_04_5.html" target="_blank">impact_pop_04_5.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>Wheel of Four Tune</td>
+					<td><a href="./04_impact/impact_pop_04_6.html" target="_blank">impact_pop_04_6.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center">상세</td>
+					<td>5G 실감형 콘텐츠랩</td>
+					<td></td>
+					<td><a href="./04_impact/impact_05.html" target="_blank">impact_05.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center">팝업</td>
+					<td></td>
+					<td>나비방</td>
+					<td><a href="./04_impact/impact_pop_05_1.html" target="_blank">impact_pop_05_1.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>온앤오프(ONF) - 스쿰빗스</td>
+					<td><a href="./04_impact/impact_pop_05_2.html" target="_blank">impact_pop_05_2.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>무이-가을하늘(창작곡), 서른즈음에, when i dream</td>
+					<td><a href="./04_impact/impact_pop_05_3.html" target="_blank">impact_pop_05_3.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>THE RULER / BACK &amp; FORTH</td>
+					<td><a href="./04_impact/impact_pop_05_4.html" target="_blank">impact_pop_05_4.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>BLUE</td>
+					<td><a href="./04_impact/impact_pop_05_5.html" target="_blank">impact_pop_05_5.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>The Bus</td>
+					<td><a href="./04_impact/impact_pop_05_6.html" target="_blank">impact_pop_05_6.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>Project_X</td>
+					<td><a href="./04_impact/impact_pop_05_7.html" target="_blank">impact_pop_05_7.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center">상세</td>
+					<td>Future on the Stage</td>
+					<td></td>
+					<td><a href="./04_impact/impact_06.html" target="_blank">impact_06.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center">팝업</td>
+					<td></td>
+					<td>Time Flow</td>
+					<td><a href="./04_impact/impact_pop_06_1.html" target="_blank">impact_pop_06_1.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>Jungle Riot in Neo-Space</td>
+					<td><a href="./04_impact/impact_pop_06_2.html" target="_blank">impact_pop_06_2.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>.마고</td>
+					<td><a href="./04_impact/impact_pop_06_3.html" target="_blank">impact_pop_06_3.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>Fine</td>
+					<td><a href="./04_impact/impact_pop_06_4.html" target="_blank">impact_pop_06_4.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>키가 다른 기념비 XR</td>
+					<td><a href="./04_impact/impact_pop_06_5.html" target="_blank">impact_pop_06_5.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>Digi-tact</td>
+					<td><a href="./04_impact/impact_pop_06_6.html" target="_blank">impact_pop_06_6.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+				<tr>
+					<td class="align-center"></td>
+					<td></td>
+					<td>STEREOTYPE</td>
+					<td><a href="./04_impact/impact_pop_06_7.html" target="_blank">impact_pop_06_7.html</a></td>
+					<td class="align-center"></td>
+					<td class="align-center"><span class="state"></span></td>
+				</tr>
+			</tbody>
+		</table>
+	</article>
+
+</section>
+<hr />
+<footer>
+	<h3>진행 퍼블리셔</h3>
+	<dl>
+		<dt>이름</dt>
+		<dd>김미연</dd>
+	</dl>
+</footer>
+</div>
+</body>
+
+</html>

@@ -1,0 +1,517 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="asisMysql">
+
+	<typeAlias alias="zvl" type="kr.co.unp.util.ZValue" />
+	<typeAlias alias="MigrationVO" type="kr.co.unp.migration.vo.MigrationVO" />
+	<typeAlias alias="BoardVO" type="kr.co.unp.bbs.vo.BoardVO" />
+
+	<sql id="asisMysqlDAO.selectProgramAppList-where">
+
+		<isNotEmpty prepend="AND" property="dong">
+			<![CDATA[	a.dong = #dong# 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="gubun">
+			<![CDATA[	a.part = #gubun# 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchWrd">
+			<isEqual property="searchCnd" compareValue="1">
+				<![CDATA[	a.title LIKE CONCAT('%',trim(#searchWrd#), '%')  ]]>
+			</isEqual>
+		</isNotEmpty>
+	</sql>
+
+	<select id="asisMysqlDAO.selectProgramAppList" parameterClass="BoardVO"	resultClass="BoardVO">
+		<![CDATA[
+			select a.idx as nttId,
+			       a.writer as ntcrNm,
+			       b.dong,
+			       c.part_name as gubun,
+			       a.title as nttSj,
+			       a.target as option1,
+			       a.location as option2,
+			       a.period_start as option3,
+			       a.period_end as potion4,
+			       a.accept_start as option5,
+			       a.accept_end as option6,
+			       a.status as option7,
+			       a.edu_cost as option8,
+			       a.regdate as regDate,
+			       ifnull(a.recruit_num,0) + ifnull(a.recruit_num2,0) + ifnull(a.recruit_num3,0) + ifnull(a.recruit_num4,0) as  option9,
+			       ifnull(a.accept_num,0) + ifnull(a.accept_num2,0) + ifnull(a.accept_num3,0) + ifnull(a.accept_num4,0) as  option10,
+				   CASE WHEN DATE_FORMAT(now(), '%Y-%m-%d') >= a.accept_start
+		     		    AND DATE_FORMAT(now(), '%Y-%m-%d') <= accept_end THEN '2'
+		     	        WHEN DATE_FORMAT(now(), '%Y-%m-%d') > accept_end THEN '3'
+		     	        WHEN DATE_FORMAT(now(), '%Y-%m-%d') < a.accept_start THEN '1'
+		     	   end as replyAt
+			  from commnew.program_app a
+			 left outer join commnew.dong b on b.idx = a.dong
+			 left outer join commnew.program_part c on c.idx = a.part
+			  where 1=1
+		]]>
+		<include refid="asisMysqlDAO.selectProgramAppList-where" />
+		<![CDATA[
+			  order by a.idx desc
+			  limit #firstIndex#, #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisMysqlDAO.selectProgramAppListCnt" parameterClass="BoardVO" resultClass="int">
+		<![CDATA[
+			select count(*)
+			  from commnew.program_app a
+			  where 1=1
+		]]>
+		<include refid="asisMysqlDAO.selectProgramAppList-where" />
+	</select>
+
+	<select id="asisMysqlDAO.selectDongList" resultClass="BoardVO">
+		<![CDATA[
+			select a.idx as nttId,
+			       a.dong as dong
+			  from commnew.dong a
+			  order by a.idx asc
+		]]>
+	</select>
+
+	<select id="asisMysqlDAO.selectPartList" resultClass="BoardVO">
+		<![CDATA[
+			select a.idx as nttId,
+			       a.part_name as gubun
+			  from commnew.program_part a
+			  order by a.idx asc
+		]]>
+	</select>
+
+	<select id="asisMysqlDAO.selectAsIsBbsArticles" parameterClass="MigrationVO"	resultClass="MigrationVO">
+		<![CDATA[
+			select a.num as nttNo,
+			       a.id as ntcrId,
+			       a.writer as ntcrNm,
+			       a.passwd,
+			       a.email as ntcrEmail,
+			       a.title as nttSj,
+			       a.content as nttCn,
+			       --a.re_group,
+			       --a.re_order,
+			       --a.re_level,
+			       a.ip_addr as ntcrIp,
+			       case when a.html_use = 'T' then 'N'
+			            else 'Y'
+			       end as htmlYn,
+			       case when a.notice_use = 'N' then '2'
+			            else '1'
+			       end as nttType,
+			       a.view_cnt as inqireCo,
+			       --a.recommend,
+			       case when a.show_flag = 'Y' then '0'
+			            else '1'
+			       end as delcode,
+			       a.write_date as regDate,
+			       a.modify_date as lastUpdDate
+			  from $orgTableNm$ a
+			  where a.num > #currentSize#
+			  order by a.num asc
+			  limit #firstIndex#, #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisMysqlDAO.selectAsIsArticlesCnt" parameterClass="MigrationVO" resultClass="int">
+		<![CDATA[
+			select count(*)
+			 From $orgTableNm$ a
+			where a.num > #currentSize#
+		]]>
+	</select>
+
+	<select id="asisMysqlDAO.selectB0000190AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO">
+		<![CDATA[
+			SELECT
+					a.wr_id as nttNo,
+					a.wr_subject as nttSj,
+					a.wr_content as nttCn,
+			        a.wr_link1 as option1,
+			        a.wr_hit as inqireCo,
+			        a.mb_id as ntcrId,
+			        a.wr_name as deptName,
+			        a.wr_email as ntcrEmail,
+			        a.wr_datetime as regDate,
+			        b.bf_source as realFileName,
+			        b.bf_file as fileNm
+					  from $orgTableNm$ a
+		              LEFT JOIN safe.g4_board_file b on a.wr_id = b.wr_id
+		        WHERE a.wr_id > #currentSize#
+		        ORDER BY a.wr_id asc
+			  LIMIT #firstIndex#, #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisMysqlDAO.selectB0000190AsIsBbsArticlesCnt" parameterClass="MigrationVO"	resultClass="int">
+		<![CDATA[
+			select count(*)
+			 From $orgTableNm$ a
+			where a.WR_ID > #currentSize#
+		]]>
+	</select>
+
+	<select id="asisMysqlDAO.selectB0000123AsIsBbsArticlesCnt" parameterClass="MigrationVO"	resultClass="int">
+		<![CDATA[
+			select count(*)
+			 From $orgTableNm$ a
+		]]>
+	</select>
+
+	<select id="asisMysqlDAO.selectB0000123AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO">
+		<![CDATA[
+			SELECT
+					name as nttSj,
+			        date as regDate,
+			        case when siteClass = '1114' then '1112'
+			            else siteClass
+                    end as gubun,
+			        initpage as option4,
+			        concat('http://ecatalog.jungnang.seoul.kr/src/viewer/main.php?host=main&amp;site=',site) as option1,
+			        concat('http://ecatalog.jungnang.seoul.kr/src/viewer/download.php?host=main&amp;site=',site,'&amp;no=1') as option2,
+			        nowpage as option3,
+			        visit as inqireCo
+					  from $orgTableNm$ a
+		        ORDER BY site asc
+			  LIMIT #firstIndex#, #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisMysqlDAO.mainSelectProgramAppList" parameterClass="BoardVO"	resultClass="BoardVO">
+		<![CDATA[
+			select a.idx as nttId,
+			       a.writer as ntcrNm,
+			       b.dong,
+			       c.part_name as gubun,
+			       a.title as nttSj,
+			       a.target as option1,
+			       a.location as option2,
+			       a.period_start as option3,
+			       a.period_end as potion4,
+			       a.accept_start as option5,
+			       a.accept_end as option6,
+			       a.status as option7,
+			       a.edu_cost as option8,
+			       a.regdate as regDate,
+			       ifnull(a.recruit_num,0) + ifnull(a.recruit_num2,0) + ifnull(a.recruit_num3,0) + ifnull(a.recruit_num4,0) as  option9,
+			       ifnull(a.accept_num,0) + ifnull(a.accept_num2,0) + ifnull(a.accept_num3,0) + ifnull(a.accept_num4,0) as  option10,
+				   CASE WHEN DATE_FORMAT(now(), '%Y-%m-%d') >= a.accept_start
+		     		    AND DATE_FORMAT(now(), '%Y-%m-%d') <= accept_end THEN '2'
+		     	        WHEN DATE_FORMAT(now(), '%Y-%m-%d') > accept_end THEN '3'
+		     	        WHEN DATE_FORMAT(now(), '%Y-%m-%d') < a.accept_start THEN '1'
+		     	   end as replyAt
+			  from commnew.program_app a
+			 left outer join commnew.dong b on b.idx = a.dong
+			 left outer join commnew.program_part c on c.idx = a.part
+
+			  order by a.idx desc
+			  limit #firstIndex#, #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisMysqlDAO.selectCommnewArticlesCnt" parameterClass="MigrationVO" resultClass="int" >
+		<![CDATA[
+			SELECT count(*)
+			FROM commnew.$orgTableNm$ a
+			WHERE
+			a.wr_id > #currentSize#
+		]]>
+	</select>
+
+	<select id="asisMysqlDAO.selectB0000296AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO">
+		<![CDATA[
+			SELECT
+					a.wr_id as nttNo,
+					a.wr_subject as nttSj,
+					a.wr_content as nttCn,
+			        a.wr_hit as inqireCo,
+			        a.mb_id as ntcrId,
+		]]>
+	<isEqual property="bbsId" compareValue="B0000263">
+		<![CDATA[
+			        a.wr_name as deptName,
+			        'Y' as gubun,
+		]]>
+	</isEqual>
+	<isEqual property="bbsId" compareValue="B0000302">
+		<![CDATA[
+			        a.wr_name as ntcrNm,
+		]]>
+	</isEqual>
+	<isEqual property="bbsId" compareValue="B0000305">
+		<![CDATA[
+			        a.wr_name as deptName,
+			        CASE WHEN a.wr_name = '면목본동' then '01'
+			        	 WHEN a.wr_name = '면목2동' then '02'
+			        	 WHEN a.wr_name = '면목3,8동' then '03'
+			        	 WHEN a.wr_name = '면목4동' then '04'
+			        	 WHEN a.wr_name = '면목5동' then '05'
+			        	 WHEN a.wr_name = '면목7동' then '06'
+			        	 WHEN a.wr_name = '상봉1동' then '07'
+			        	 WHEN a.wr_name = '상봉2동' then '08'
+			        	 WHEN a.wr_name = '중화1동' then '09'
+			        	 WHEN a.wr_name = '중화2동' then '10'
+			        	 WHEN a.wr_name = '묵1동' then '11'
+			        	 WHEN a.wr_name = '묵2동' then '12'
+			        	 WHEN a.wr_name = '망우본동' then '13'
+			        	 WHEN a.wr_name = '망우3동' then '14'
+			        	 WHEN a.wr_name = '신내1동' then '15'
+			        	 WHEN a.wr_name = '신내2동' then '16'
+			        	 WHEN a.wr_name = '괸리자' then ''
+                    END as gubun,
+		]]>
+	</isEqual>
+		<![CDATA[
+			        a.wr_email as ntcrEmail,
+			        a.wr_datetime as regDate,
+			        a.wr_ip as ntcrIp
+			FROM commnew.$orgTableNm$ a
+		    WHERE a.wr_id > 0
+		        ORDER BY a.wr_id asc
+			  LIMIT #firstIndex#, #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisMysqlDAO.selectB0000301AsIsBbsFiles" parameterClass="MigrationVO" resultClass="MigrationVO">
+		<![CDATA[
+			 SELECT
+               	    b.wr_id,
+                    a.bo_table,
+                    a.wr_id,
+                    a.bf_no,
+                    a.bf_source as realFileName,
+                    a.bf_file as fileNm
+             FROM commnew.g4_board_file a, commnew.$orgTableNm$ b
+             WHERE a.bo_table = #gubun# and a.wr_id = #nttNo# and b.wr_id = #nttNo#
+		]]>
+	</select>
+
+	<select id="asisMysqlDAO.selectB0000297ArticlesCnt" parameterClass="MigrationVO" resultClass="int" >
+		<![CDATA[
+			SELECT count(*)
+			FROM commnew.$orgTableNm$ a
+			WHERE
+			a.idx > #currentSize#
+		]]>
+	</select>
+
+	<select id="asisMysqlDAO.selectB0000297AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO">
+		<![CDATA[
+			SELECT
+					a.idx as nttNo,
+			        a.name as ntcrNm,
+			        a.mobile as ntcrMobile,
+			        CASE WHEN a.mobile_use = '0' then 'N'
+			        ELSE 'Y'
+                    END as option1,
+			        a.email as ntcrEmail,
+			        CASE WHEN a.email_use = '0' then 'N'
+			        ELSE 'Y'
+                    END as option2,
+					a.part as option3,
+					a.major as nttSj,
+			        a.dong as option4,
+			        a.photo as fileNm,
+			        CASE WHEN a.isuse = '0' then 'N'
+			        ELSE 'Y'
+                    END as gubun,
+			        a.regdate as regDate,
+			        a.ip as ntcrIp
+			FROM commnew.$orgTableNm$ a
+		    WHERE a.idx > 0
+		        ORDER BY a.idx asc
+			  LIMIT #firstIndex#, #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisMysqlDAO.selectB0000298AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO">
+		<![CDATA[
+			SELECT
+				   a.idx as nttNo,
+			       a.userID as ntcrId,
+			       a.userName as ntcrNm,
+			       a.tel as ntcrTel,
+			       a.mobile as ntcrMobile,
+			       CASE WHEN a.mobile_agree = '0' then 'N'
+			       ELSE 'Y'
+			       END as option1,
+			       a.email as ntcrEmail,
+			       CASE WHEN a.email_agree = '0' then 'N'
+			       ELSE 'Y'
+			       END as option2,
+				   CASE WHEN a.answer not like '%%' then '1'
+				   ELSE '5'
+				   END as replyAt,
+			       a.zipcode as ntcrZipcode,
+			       a.address1 as ntcrAddr1,
+			       a.address2 as ntcrAddr2,
+			       a.photo as option15,
+			       a.lecturer_title as nttSj,
+			       'Y' as secret,
+			       a.lecturer_part as option3,
+			       a.lecturer_academic as option4,
+			       a.lecturer_major as option5,
+			       a.lecturer_career as option6,
+			       a.lecturer_now as option7,
+			       a.lecturer_intro as nttCn,
+			       a.lecturer_license as option8,
+				   CONCAT(a.photo,'/',a.lecturer_file1,'/', a.lecturer_file2,'/', a.lecturer_file3,'/', a.lecturer_file4,'/', a.lecturer_file5)as fileNm,
+			       a.regdate as regDate,
+			       a.ip as ntcrIp
+			FROM commnew.$orgTableNm$ a
+		    WHERE a.idx > 0
+		        ORDER BY a.idx asc
+			  LIMIT #firstIndex#, #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisMysqlDAO.selectB0000298ReAsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO">
+		<![CDATA[
+			SELECT
+			       a.answer as nttCn,
+			       a.regdate as answerDate
+			FROM commnew.$orgTableNm$ a
+		    WHERE a.idx = #nttNo#
+		        ORDER BY a.idx asc
+		]]>
+	</select>
+
+	<select id="asisMysqlDAO.selectEduArticlesCnt" parameterClass="MigrationVO" resultClass="int" >
+		<![CDATA[
+			SELECT count(*)
+			FROM jumpjungnangseou.$orgTableNm$ a
+			WHERE
+			a.num > #currentSize#
+		]]>
+	</select>
+
+	<select id="asisMysqlDAO.selectEduAsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO">
+		<![CDATA[
+			SELECT
+					a.num as nttNo,
+			        a.name as ntcrNm,
+			        a.email as ntcrEmail,
+					a.title as nttSj,
+					a.content as nttCn,
+			        a.readcnt as inqireCo,
+			        a.userip as ntcrIp,
+			       CASE WHEN a.isvalid = 'Y' then '0'
+			       ELSE '1'
+			       END as delcode,
+			       CASE WHEN a.category = '7' then '유치원'
+			       		WHEN a.category = '8' then '초등학교'
+			       		WHEN a.category = '9' then '중학교'
+			       		WHEN a.category = '10' then '고등학교'
+			       		WHEN a.category = '11' then '초등학교'
+			       		WHEN a.category = '12' then '중학교'
+			       		WHEN a.category = '13' then '고등학교'
+			       		WHEN a.category = '14' then '학부모'
+			       		WHEN a.category = '15' then '평생교육'
+			       ELSE ''
+			       END as gubun,
+                   b.filename as fileNm
+			FROM jumpjungnangseou.$orgTableNm$ a
+            left join jumpjungnangseou.board_file b on a.num = b.boardnum
+		    WHERE a.num > 0
+		]]>
+	<isEqual property="bbsId" compareValue="B0000285">
+		<![CDATA[
+		      AND a.boardid = 'yukjum'
+		]]>
+	</isEqual>
+	<isEqual property="bbsId" compareValue="B0000286">
+		<![CDATA[
+		      AND a.boardid = 'edu_support'
+		]]>
+	</isEqual>
+	<isEqual property="bbsId" compareValue="B0000287">
+		<![CDATA[
+		      AND a.boardid = 'jung_news'
+		]]>
+	</isEqual>
+	<isEqual property="bbsId" compareValue="B0000288">
+		<![CDATA[
+		      AND a.boardid = 'univer_info'
+		]]>
+	</isEqual>
+	<isEqual property="bbsId" compareValue="B0000290">
+		<![CDATA[
+		      AND a.boardid = 'woohak'
+		]]>
+	</isEqual>
+	<isEqual property="bbsId" compareValue="B0000291">
+		<![CDATA[
+		      AND a.boardid = 'loveroom'
+		]]>
+	</isEqual>
+	<isEqual property="bbsId" compareValue="B0000292">
+		<![CDATA[
+		      AND a.boardid = 'story'
+		]]>
+	</isEqual>
+		<![CDATA[
+		        ORDER BY a.num asc
+			  LIMIT #firstIndex#, #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisMysqlDAO.selectB0000289AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO">
+		<![CDATA[
+			SELECT
+					a.num as nttNo,
+			        a.name as ntcrNm,
+			        a.email as ntcrEmail,
+					a.title as nttSj,
+					a.content as nttCn,
+			        a.readcnt as inqireCo,
+			        a.userip as ntcrIp,
+			        a.imgfile as fileNm,
+			       CASE WHEN a.isvalid = 'Y' then '0'
+			       ELSE '1'
+			       END as delcode
+			FROM jumpjungnangseou.$orgTableNm$ a
+		    WHERE a.num > 0 AND a.boardid = 'photogallery'
+		        ORDER BY a.num asc
+			  LIMIT #firstIndex#, #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisMysqlDAO.selectB0000294AsIsBbsArticles" parameterClass="MigrationVO" resultClass="MigrationVO">
+		<![CDATA[
+			SELECT
+				  a.idx as nttNo,
+		          CASE WHEN a.cate = '10' then '01'
+		       		   WHEN a.cate = '20' then '02'
+		       		   WHEN a.cate = '30' then '03'
+		       		   WHEN a.cate = '40' then '04'
+		       	       WHEN a.cate = '50' then '05'
+		       		   WHEN a.cate = '60' then '06'
+		          ELSE ''
+		          END as gubun,
+		          'N' as option3,
+		          a.sort as option10,
+		          a.name as nttSj,
+		          a.ip as ntcrIp,
+		          a.img as fileNm,
+		          a.regdate as regDate
+			FROM jumpjungnangseou.$orgTableNm$ a
+		    WHERE a.idx > 0
+		        ORDER BY a.idx asc
+			  LIMIT #firstIndex#, #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="asisMysqlDAO.selectB0000294ArticlesCnt" parameterClass="MigrationVO" resultClass="int" >
+		<![CDATA[
+			SELECT count(*)
+			FROM jumpjungnangseou.$orgTableNm$ a
+			WHERE
+			a.idx > #currentSize#
+		]]>
+	</select>
+
+</sqlMap>

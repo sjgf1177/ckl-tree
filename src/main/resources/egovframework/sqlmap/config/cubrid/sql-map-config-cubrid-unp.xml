@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN"
+    "http://www.ibatis.com/dtd/sql-map-config-2.dtd">
+
+<sqlMapConfig>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/AuthorManage_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/Banner_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/Board_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/BasicBoard_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/BBSMaster_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/CmmnClCodeManage_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/CmmnCodeManage_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/CmmnDetailCodeManage_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/Comment_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/CommonContentsManage_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/DeptAuthor_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/DeptPop_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/File_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/Member_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/MenuManage_SQL_cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/migration_SQL_cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/pageGenerator_SQL_cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/poll_SQL_cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/popupMng_SQL_cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/PortalAlert_SQL_cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/post_SQL_cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/satisfaction_SQL_cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/siteMng_SQL_cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/MenuCreat_SQL_cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/CtsDownloadBoard_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/teamMng_SQL_Cubrid.xml"/>
+	<sqlMap resource="egovframework/sqlmap/kr/co/unp/authoDeptMenu_SQL_cubrid.xml"/>
+</sqlMapConfig>

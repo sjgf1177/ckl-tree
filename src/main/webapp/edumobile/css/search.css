@@ -1,0 +1,77 @@
+#container{position: relative;}
+
+#tsh-set{width: 770px;}
+.tsh_top{}
+
+.tsh-tit{font-size: 24px;margin: 0 0 10px;color: #494949;line-height: 1;}
+.sh_default{background-color: #f6f6f6;border: 1px solid #e3e3e3;padding: 14px 39px;height: 100px;width: 690px;}
+.sh_default .resh{color: #f4844e;padding: 10px 0;}
+.sh_default .input_text_sh{width: 488px;padding: 0 15px;border: 1px solid #d2d2d2;font-size: 14px;background-color: #fff;height: 34px;line-height: 34px;border-radius: 0;margin-right: 4px;}
+.sh_default input[type="submit"]{background-color: #666666;border: 1px solid #555555;height: 34px;width: 78px;font-weight: bold;color: #fff;}
+.sh_default .sh_detail{border: 1px solid #f4844e;background-color: #f4844e;height: 34px;width: 78px;font-weight: bold;color: #fff;}
+
+.hotkeyword{border: 1px solid #e3e3e3;height: 128px;position: absolute;right: 0;top: 34px;width: 188px;overflow: hidden;background-color: #fff;}
+.hotkeyword:hover,
+.hotkeyword.on{height: auto;}
+.hotkeyword h2{font-size: 15px;font-weight: bold;color: #494949;padding: 9px 0 8px 20px;background-color: #e6e6e6;}
+.hotkeyword ol{padding: 11px 0 0 20px;}
+.hotkeyword ol li{margin-bottom: 7px;}
+.hotkeyword ol li a{display: block;overflow: hidden;}
+.hotkeyword ol li a span{float: left;}
+.hotkeyword ol li a span.num{text-decoration: underline;width: 26px;color: #494949;}
+.hotkeyword ol li a span.txt{width: 98px;color: #666;}
+.hotkeyword ol li a span.ico{padding-left: 15px;background:  url(/portal/images/tsh/ico_hotkeyword.gif) 0 6px no-repeat;color: #ed6d1f;}
+.hotkeyword ol li a span.ico.ico_up{}
+.hotkeyword ol li a span.ico.ico_down{background-position: 0 -20px;}
+.hotkeyword ol li a span.ico.ico_dfault{background-position: 0 -46px;}
+
+.tsh-tab{margin-bottom: 40px;margin-top: 20px;}
+.tsh-tab ul{overflow: hidden;border-bottom: 1px solid #e3e3e3;}
+.tsh-tab ul li{float: left;width: 171px;margin-left: -1px;}
+.tsh-tab ul li:first-child{margin: 0;}
+.tsh-tab ul li.on{position: relative;z-index: 100;}
+.tsh-tab ul li.on a{text-align: center;background-color: #9a9996;color: #fff;font-weight: bold;}
+.tsh-tab ul li.on a span{}
+.tsh-tab ul li a{display: block;height: 43px;line-height:43px;color: #888888;border: 1px solid #e3e3e3;border-bottom:none 0;text-align: center;}
+.tsh-tab ul li a span{}
+
+.con_sh_more{background-color: #f6f6f6;border: 1px solid #e3e3e3;width: 978px;margin: 20px 0 0;display: none;}
+.con_sh_more .set{padding: 14px 39px;}
+.con_sh_more .set dl{font-size: 13px;border-bottom: 1px solid #fbfbfb;overflow: hidden;}
+.con_sh_more .set dl>*{padding: 6px 0;border-bottom: 1px solid #e7e7e7;height: 30px;line-height:30px}
+.con_sh_more .set dl dt{float: left;width: 71px;font-weight: bold;color: #666;}
+.con_sh_more .set dl dd{float: left;width: 829px;color: #888888;}
+.con_sh_more .set dl dt.l{}
+.con_sh_more .set dl dd.l{width: 469px;}
+.con_sh_more .set dl dt.r{width: 90px;}
+.con_sh_more .set dl dd.r{width: 270px;}
+.con_sh_more .set dl dd.r .i{border: 1px solid #e6e6e6;background-color: #fff;padding: 3px;display: inline-block;line-height:20px;height: 20px;}
+.con_sh_more .set dl dd.r .input_txt{width: 78px;height: 20px;line-height: 20px;border: none;background-color: #fff;}
+.con_sh_more .set dl dd input{}
+.con_sh_more .set dl dd label{padding-right: 6px;}
+.con_sh_more .set .btn_set{text-align: center;}
+.con_sh_more .set .btn_set > *{height: 34px;width: 78px;font-weight: bold;color: #fff;}
+.con_sh_more .set .btn_set input[type=submit]{background-color: #666666;border: 1px solid #555555;}
+.con_sh_more .set .btn_set button[type=reset]{background-color: #f4844e;border: 1px solid #f4844e;	}
+.con_sh_more .set .btn_set .sh_cancel{float: right;background-color: #888784;border: 1px solid #a7a7a5;	}
+
+.con_sh_list a em,
+.con_sh_list em{color: #ed6d1f;}
+.sh_result{font-weight: bold;font-size: 16px;border-bottom: 1px solid #494949;padding: 0 0 10px;margin: 0 0 40px;}
+
+.hgroup h2{font-size: 16px;color: #494949;font-weight: bold;margin: 0 0 25px;}
+.sh_menu_list{}
+.sh_menu_list li{margin-bottom: 15px;}
+.sh_menu_list li a{}
+
+.list_more_view{text-align: right;border-bottom: 1px solid #dddddd;padding-bottom: 40px;margin-bottom: 40px;}
+.list_more_view a{background-color: #888784;color: #fff;padding: 8px 15px;}
+
+.sh_list{}
+.sh_list li{margin-bottom: 25px;}
+.sh_list li a{}
+.sh_list li a span{display: block;}
+.sh_list li a span.tit{font-weight: bold;color: #666666;font-size: 14px;}
+.sh_list li a span.txt{font-size: 13px;color: #888888;}
+.sh_list li a span.pageurl{color: #666;}
+.sh_list li span{color: #999;}

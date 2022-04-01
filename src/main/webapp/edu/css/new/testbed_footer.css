@@ -1,0 +1,96 @@
+/* COMMON */
+*{list-style:none; text-decoration:none; box-sizing: border-box;}
+.container{width:calc(100% - 30px);}
+.container.testbedmain{min-width: 100%; margin-top: 50px; padding: 0 30px;}
+.container.testbedsub{max-width: 1200px;}
+@media (min-width: 576px){
+	.container{max-width:540px;}
+}
+@media (min-width: 768px){
+	.container{max-width:720px;}
+}
+@media (min-width: 992px){
+	.container{max-width: 980px;}
+}
+@media (min-width: 1300px){
+	.container{max-width: 1300px;}
+}
+
+
+
+    /* span */
+span{display:inline-block;}
+    /* a */
+#footer a{cursor:pointer; color:#666; display:inline-block;}
+#footer a:hover{color:#666;}
+#footer a.white:hover{color:white !important;}
+    /* font */
+#footer .white{color:white !important;}
+#footer .black{color:black;}
+#footer .main_blue{color:#1f6db5;}
+#footer .point_blue{color:#2d9dcb;}
+#footer .point_orange{color:#dd7b09;}
+    /*background*/
+.bg_main_blue{background:#1f6db5;}
+    /* seperate line */
+.seperate_line{border:none; border-right:1px solid white; opacity:0.5; display:inline-block; vertical-align:middle;}
+    /* scroll */
+.scroll-none{-ms-overflow-style: none;}
+.scroll-none::-webkit-scrollbar{display:none;}
+    /* select */
+#footer select{background-image: url('/edu/new_image/relation_site_arrow.png'); background-repeat: no-repeat; -webkit-appearance: none; appearance: none;}
+
+
+
+
+/* FOOTER */
+#footer {max-width: 100% !important; padding:0 !important;}
+#footer .container{border-top:solid 1px #666; padding-top:10px;}
+#footer .row > div{padding:0}
+#footer *{color:#666;}
+#footer .row > div:first-child ul{padding:0;}
+#footer .row > div:first-child ul:first-child{margin-top:0;}
+#footer .row > div:first-child ul:first-child:after{content:''; display:block; clear:both;}
+#footer .row > div:first-child ul:first-child li{float:left; padding:0 15px; border-right:solid 1px #6b6b6b; margin:10px 0; font-size:11px;}
+#footer .row > div:first-child ul:first-child li:first-child{padding-left:0;}
+#footer .row > div:first-child ul:first-child li:first-child a{font-weight:900; color:black; font-size:15px; margin-top:-4px;}
+#footer .row > div:first-child ul:first-child li:last-child{border:none;}
+#footer .row > div:first-child ul:nth-child(3){margin:0}
+#footer .row > div:first-child ul:nth-child(3) li{line-height:20px; font-size:12px;}
+#footer .row > div:first-child span:nth-child(2){padding-bottom:10px; font-size:12px;}
+#footer .row > div:first-child span:last-child{margin-bottom:20px;}
+    /* app_download */
+.app_download{display:block; width:100%; text-align:right; height:36px; margin-top:5px;}
+.app_download img{height:100%;}
+
+.app_download + div{text-align: right; margin-top:60px;}
+    /* relation_site */
+.relation_site{ background-position:right 7px; background-size:8px; font-size:1.2rem; line-height: 2.0rem; border:none; border-bottom:2px solid white; padding-bottom:8px; outline: none;  padding-right:20px; display:inline-block; margin-top:13px; margin-right:30px;}
+    /* footer_util_link */
+.footer_util_link{display:inline-block; float:right; margin-top:6px;}
+.footer_util_link:after{content:''; display:block; clear:both;}
+.footer_util_link li{float:left; width:40px; margin-left:5px; height:40px; position: relative;}
+.footer_util_link li a{width:100%; height:100%;}
+.footer_util_link li a img{max-width:100%; position: absolute; top:50%; left:50%; transform: translate(-50%, -50%); max-height:40px;}
+    /* media footer */
+@media (min-width:1200px) and (max-width: 1299px){
+    .app_download + div{margin-top:45px;}
+    .relation_site{display:block; float:none; margin-left:auto}
+    .footer_util_link{display:block; float:right; margin:0; padding:0; margin-left:auto;}
+    .footer_util_link:after{display:block; content:''; clear: both;}
+}
+@media (min-width:992px) and (max-width: 1199px){
+    .app_download + div{margin-top:0px;}
+    .app_download{display:inline-block; width:auto; text-align:left; margin-top:0px;}
+    .app_download + div{text-align:left; margin-top:0px;}
+}
+@media (max-width: 991px){
+    #footer .row > div:first-child span:last-child{margin-bottom:10px;}
+    .relation_site{margin-top:8px;}
+    .app_download{display:inline-block; width:auto; text-align:left; margin-top:0px;}
+    .app_download + div{text-align:left; margin-top:0px; width:100%;}
+    #footer .row > div:last-child{width:100%;}
+}
+@media (max-width: 427px){
+    .footer_util_link{display:block; float:none; padding-left:0;}
+}

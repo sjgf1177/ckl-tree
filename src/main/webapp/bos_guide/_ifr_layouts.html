@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=Edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<meta name="robots" content="all" />
+<link rel="stylesheet" type="text/css" href="/fonts/css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css" href="/js/bootstrap/css/bootstrap.css" />
+<link rel="stylesheet" type="text/css" href="/bos/css/reset.css" />
+<!-- <link Rel="stylesheet" Type="text/css" Href="/cross/css/editor.css" /> -->
+<link rel="stylesheet" type="text/css" href="/bos/css/sub.css" />
+<link rel="stylesheet" type="text/css" href="/bos/css/common.css" />
+<link rel="stylesheet" type="text/css" href="/bos/css/ui-lightness/jquery-ui-1.9.1.custom.min.css">
+<script type="text/javascript" src="/js/bootstrap/bootstrap.min.js"></script>
+<script type="text/javascript" src="/js/jquery.js"></script>
+<script type="text/javascript" src="/bos/js/jquery-ui-1.9.1.custom.min.js"></script>
+<script type="text/javascript" src="/bos/js/jquery.ui.core.js"></script>
+<script type="text/javascript" src="/bos/js/jquery.ui.datepicker.js"></script>
+<script type="text/javascript" src="/bos/js/jquery.highlight-4.js"></script>
+<script type="text/javascript">
+
+function del(){
+	var act = "/bos/bbs/B0000074/delete.json";
+	if( "0" == "1" ){
+		act = "/bos/bbs/B0000074/delPermanently.json";
+	}
+	if($(":checkbox:checked").length == 0)
+	{
+		alert("삭제할 게시물을 선택하세요.");
+		return;
+	}
+	if( !confirm("정말로 삭제하시겠습니까?") ){
+		return;
+	}
+	var inData = $("#frm").serialize();
+	$.post(
+		act,
+		inData,
+		function(data){
+			var resultCode = data.resultCode;
+			var resultMsg = data.msg;
+			alert(resultMsg);
+			if(resultCode == "success") location.reload();
+		}
+	);
+}
+
+	$(function() {
+		$.datepicker.setDefaults($.datepicker.regional['ko']);
+		$("#sdate").datepicker({showOn: 'button', buttonImage: '/bos/images/calendar.gif', buttonImageOnly: true, changeMonth: true, changeYear: true, showMonthAfterYear:false});
+		$("#edate").datepicker({showOn: 'button', buttonImage: '/bos/images/calendar.gif', buttonImageOnly: true, changeMonth: true, changeYear: true, showMonthAfterYear:false});
+	});
+
+	$(document).ready(function(){
+
+		var strKey = ''; // 하이라이트를 적용할 스트링
+
+		 if(strKey != ''){
+
+			$('.tit').highlight(strKey); //line class에 해당하는 요소들에서 strKey 값들을 하이라이트 처리
+
+		 }
+
+	});
+
+	$( document ).ready( function() {
+		  $( '.check-all' ).click( function() {
+	          $( '.input_check' ).prop( 'checked', this.checked );
+	        } );
+		 } );
+
+	function goSearch(frm){
+
+		if(frm.sdate.value > frm.edate.value){
+
+			alert("기간을 올바르게 선택해주세요.");
+			frm.sdate.value = "";
+			frm.edate.value = "";
+			return false;
+		}
+	}
+</script>
+<title>비디오(유투브)</title>
+</head>
+<body>
+<form id="frm" name="frm" action ="/bos/bbs/B0000074/list.do" method="post" onsubmit="return goSearch(this);">
+	<input type="hidden" name="searchCnd" value="1">
+	<div id="content">
+		<div class="hgroup">
+			<h3>비디오(유투브)</h3>
+			<a class="btn btn-success" href="/bos/forprint.jsp" id="print" title="새창" onclick="window.open(this.href, 'printPage', 'width=800,height=550,scrollbars,toolbar,status');return false;" alt="인쇄하기 (자바스크립트 미지원시 브라우저은 인쇄기능을 이용하세요)"><i class="fa fa-hover fa-print"></i><span >인쇄하기</span></a> </div>
+		
+		<!-- 게시판 게시물검색 start -->
+		<div class="sh">
+			<fieldset>
+				<legend>게시판 게시물검색</legend>
+				<input type="text" id="sdate" name="sdate" value="" size="10" />
+				~
+				<input type="text" id="edate" name="edate" value="" size="10" />
+				</select>
+				<label for="stributary" class="blind"></label>
+				<select id="stributary" name="searchCnd" title="검색조건">
+					<option value="1"  >제목</option>
+					<option value="2"  >내용</option>
+				</select>
+				<label for="input1">
+					<input id="input1" type="text"  title="검색어입력" style="width:130px" name="searchWrd" value="" />
+				</label>
+				<label for="input2">
+					<input type="submit" id="input2" name="input2" value="검색" class="btn" />
+				</label>
+			</fieldset>
+		</div>
+		<!-- 게시판 게시물검색 end --> 
+		
+		<!-- board list start -->
+		<div>
+			<table class="table table-bordered table-hover table-striped" cellpadding="0" cellspacing="0" summary="번호,제목,등록일,조회수 포함">
+				<caption>
+				비디오(유투브) 목록
+				</caption>
+				<colgroup>
+				<col width="5%" />
+				<!-- 삭제 체크 박스 -->
+				<col width="8%" />
+				<!-- 번호 -->
+				<col width="*" />
+				<!-- 제목 -->
+				<col width="13%" />
+				<!-- 태그 -->
+				<col width="15%" />
+				<!-- 등록일-->
+				<col width="15%" />
+				<!-- 섬네일 간격 -->
+				</colgroup>
+				<thead>
+					<tr>
+						<th scope="col"><input type="checkbox" name="check-all" id="tschLfrcOrgplceCode" value="all" class="check-all"  /></th>
+						<th scope="col">번호</th>
+						<th scope="col">제목</th>
+						<th scope="col">태그</th>
+						<th scope="col">등록일</th>
+						<th scope="col">섬네일</th>
+						<!-- <th scope="col">조회</th> --> 
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td><input type="checkbox" name="nttIdData" id="nttIdData_9830" class="input_check" value="9830" /></td>
+						<td>11</td>
+						<td class="tit"><a href="/bos/bbs/B0000074/view.do?nttId=9830&searchCnd=&amp;searchWrd=&amp;gubun=&amp;delcode=0&amp;useAt=&amp;replyAt=&amp;menuNo=100186&amp;sdate=&amp;edate=&amp;deptId=&amp;isk=&amp;ise=&amp;viewType=&amp;type=&amp;pageIndex=1"> sss </a></td>
+						<td></td>
+						<td>2015-08-10</td>
+						<td><img src='//img.youtube.com/vi/maSoUetHock/mqdefault.jpg'  width="160" height="120" alt="유투브영상"/></td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" name="nttIdData" id="nttIdData_9550" class="input_check" value="9550" /></td>
+						<td>10</td>
+						<td class="tit"><a href="/bos/bbs/B0000074/view.do?nttId=9550&searchCnd=&amp;searchWrd=&amp;gubun=&amp;delcode=0&amp;useAt=&amp;replyAt=&amp;menuNo=100186&amp;sdate=&amp;edate=&amp;deptId=&amp;isk=&amp;ise=&amp;viewType=&amp;type=&amp;pageIndex=1"> 티아라 </a></td>
+						<td> 케냐 </td>
+						<td>2015-08-04</td>
+						<td><img src='//img.youtube.com/vi/maSoUetHock/mqdefault.jpg'  width="160" height="120" alt="유투브영상"/></td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" name="nttIdData" id="nttIdData_9535" class="input_check" value="9535" /></td>
+						<td>9</td>
+						<td class="tit"><a href="/bos/bbs/B0000074/view.do?nttId=9535&searchCnd=&amp;searchWrd=&amp;gubun=&amp;delcode=0&amp;useAt=&amp;replyAt=&amp;menuNo=100186&amp;sdate=&amp;edate=&amp;deptId=&amp;isk=&amp;ise=&amp;viewType=&amp;type=&amp;pageIndex=1"> 1박2일 . </a></td>
+						<td> 국제선거참관 </td>
+						<td>2015-08-03</td>
+						<td><img src='//img.youtube.com/vi/KrczMZQnxro/mqdefault.jpg'  width="160" height="120" alt="유투브영상"/></td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" name="nttIdData" id="nttIdData_9496" class="input_check" value="9496" /></td>
+						<td>8</td>
+						<td class="tit"><a href="/bos/bbs/B0000074/view.do?nttId=9496&searchCnd=&amp;searchWrd=&amp;gubun=&amp;delcode=0&amp;useAt=&amp;replyAt=&amp;menuNo=100186&amp;sdate=&amp;edate=&amp;deptId=&amp;isk=&amp;ise=&amp;viewType=&amp;type=&amp;pageIndex=1"> 유투브 영상입니다. </a></td>
+						<td> 키르기즈스탄공화국 </td>
+						<td>2015-07-29</td>
+						<td><img src='//img.youtube.com/vi/G9zL-A78oRg/mqdefault.jpg'  width="160" height="120" alt="유투브영상"/></td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" name="nttIdData" id="nttIdData_9411" class="input_check" value="9411" /></td>
+						<td>7</td>
+						<td class="tit"><a href="/bos/bbs/B0000074/view.do?nttId=9411&searchCnd=&amp;searchWrd=&amp;gubun=&amp;delcode=0&amp;useAt=&amp;replyAt=&amp;menuNo=100186&amp;sdate=&amp;edate=&amp;deptId=&amp;isk=&amp;ise=&amp;viewType=&amp;type=&amp;pageIndex=1"> 케냐 </a></td>
+						<td> 케냐 </td>
+						<td>2015-07-27</td>
+						<td><img src='//img.youtube.com/vi/IoVCNqWpn-0/mqdefault.jpg'  width="160" height="120" alt="유투브영상"/></td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" name="nttIdData" id="nttIdData_9410" class="input_check" value="9410" /></td>
+						<td>6</td>
+						<td class="tit"><a href="/bos/bbs/B0000074/view.do?nttId=9410&searchCnd=&amp;searchWrd=&amp;gubun=&amp;delcode=0&amp;useAt=&amp;replyAt=&amp;menuNo=100186&amp;sdate=&amp;edate=&amp;deptId=&amp;isk=&amp;ise=&amp;viewType=&amp;type=&amp;pageIndex=1"> 키르기즈스탄공화국 </a></td>
+						<td> 키르기즈스탄공화국 </td>
+						<td>2015-07-27</td>
+						<td><img src='//img.youtube.com/vi/L7V04MLTX-g/mqdefault.jpg'  width="160" height="120" alt="유투브영상"/></td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" name="nttIdData" id="nttIdData_9357" class="input_check" value="9357" /></td>
+						<td>5</td>
+						<td class="tit"><a href="/bos/bbs/B0000074/view.do?nttId=9357&searchCnd=&amp;searchWrd=&amp;gubun=&amp;delcode=0&amp;useAt=&amp;replyAt=&amp;menuNo=100186&amp;sdate=&amp;edate=&amp;deptId=&amp;isk=&amp;ise=&amp;viewType=&amp;type=&amp;pageIndex=1"> 강원도 횡성군의 저수지에서 발견된 </a></td>
+						<td> 국제선거참관 </td>
+						<td>2015-07-14</td>
+						<td><img src='//img.youtube.com/vi/oFmfi1vM7co/mqdefault.jpg'  width="160" height="120" alt="유투브영상"/></td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" name="nttIdData" id="nttIdData_9318" class="input_check" value="9318" /></td>
+						<td>4</td>
+						<td class="tit"><a href="/bos/bbs/B0000074/view.do?nttId=9318&searchCnd=&amp;searchWrd=&amp;gubun=&amp;delcode=0&amp;useAt=&amp;replyAt=&amp;menuNo=100186&amp;sdate=&amp;edate=&amp;deptId=&amp;isk=&amp;ise=&amp;viewType=&amp;type=&amp;pageIndex=1"> 노동개혁 나선 與, '좌클릭'으로 '부담' 최소화? </a></td>
+						<td> 국제협력 </td>
+						<td>2015-07-13</td>
+						<td><img src='//img.youtube.com/vi/RgdCBerDhlE/mqdefault.jpg'  width="160" height="120" alt="유투브영상"/></td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" name="nttIdData" id="nttIdData_9313" class="input_check" value="9313" /></td>
+						<td>3</td>
+						<td class="tit"><a href="/bos/bbs/B0000074/view.do?nttId=9313&searchCnd=&amp;searchWrd=&amp;gubun=&amp;delcode=0&amp;useAt=&amp;replyAt=&amp;menuNo=100186&amp;sdate=&amp;edate=&amp;deptId=&amp;isk=&amp;ise=&amp;viewType=&amp;type=&amp;pageIndex=1"> 수정 테스트 </a></td>
+						<td> 국가사업 </td>
+						<td>2015-07-13</td>
+						<td><img src='//img.youtube.com/vi/YUMFYvZ_i1k/mqdefault.jpg'  width="160" height="120" alt="유투브영상"/></td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" name="nttIdData" id="nttIdData_9311" class="input_check" value="9311" /></td>
+						<td>2</td>
+						<td class="tit"><a href="/bos/bbs/B0000074/view.do?nttId=9311&searchCnd=&amp;searchWrd=&amp;gubun=&amp;delcode=0&amp;useAt=&amp;replyAt=&amp;menuNo=100186&amp;sdate=&amp;edate=&amp;deptId=&amp;isk=&amp;ise=&amp;viewType=&amp;type=&amp;pageIndex=1"> test제목 </a></td>
+						<td> 총회 </td>
+						<td>2015-07-13</td>
+						<td><img src='//img.youtube.com/vi/74RzHIpZuDY/mqdefault.jpg'  width="160" height="120" alt="유투브영상"/></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="fl"><a class="btn btn-primary" href="javascript:del();"><span>삭제</span></a></div>
+		<div class="btn_set"> <a class="btn btn-primary" href="/bos/bbs/B0000074/list.do?delcode=1"><span>삭제글보기</span></a> <a class="btn btn-primary" href="/bos/bbs/B0000074/forInsert.do?searchCnd=&amp;searchWrd=&amp;gubun=&amp;delcode=0&amp;useAt=&amp;replyAt=&amp;menuNo=100186&amp;sdate=&amp;edate=&amp;deptId=&amp;isk=&amp;ise=&amp;viewType=&amp;type=&amp;pageIndex=1"><span>글쓰기</span></a> </div>
+		<!-- board list end //-->
+		
+		<div class="paging">
+			<div class="paging">
+				<ol>
+					<li class="img"><span class="pagell"><span>맨 처음 목록으로 이동</span></span></li>
+					<li class="img"><span class="pagel"><span>10페이지 이전 목록으로 이동</span></span></li>
+					<li><em title="현재페이지">1</em></li>
+					<li><a href='/bos/bbs/B0000074/list.do?searchCnd=&amp;searchWrd=&amp;gubun=&amp;delcode=0&amp;useAt=&amp;replyAt=&amp;menuNo=100186&amp;sdate=&amp;edate=&amp;deptId=&amp;isk=&amp;ise=&amp;viewType=&amp;type=&amp;pageIndex=2'>2</a></li>
+					<li class="img"><span class="pager"><span>10페이지 다음 목록으로 이동</span></span></li>
+					<li class="img"><span class="pagerr"><span>맨 마지막 목록으로 이동</span></span></li>
+				</ol>
+			</div>
+		</div>
+		<!-- paging end //--> 
+		
+	</div>
+</form>
+</body>
+</html>
+<br/>
+<font color="red">*/WEB-INF/jsp/bos/bbs/PG0043/List.jsp</font>

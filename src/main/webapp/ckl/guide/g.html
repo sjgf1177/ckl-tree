@@ -1,0 +1,796 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ko" lang="ko">
+<head>
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="../css/base.css" type="text/css" />
+<link rel="stylesheet" href="../css/common.css" type="text/css" />
+<link rel="stylesheet" href="../css/contents.css" type="text/css" />
+<link rel="stylesheet" href="../css/contents_kth.css" type="text/css" />
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.9.0.js"></script>
+<script type="text/javascript" src="../js/jquery-1.8.3.js"></script>
+<script type="text/javascript" src="../js/jquery.carouFredSel-6.2.1-packed.js"></script>
+<script type="text/javascript" src="../js/main.js"></script>
+
+<style>
+h1{font-size: 20px;color: #000;margin: 10px 0 5px 0;border-bottom: 2px solid #eee;}
+h1:before{content: 'type : ';display: inline;}
+body{width: 770px;margin: 0 auto;}
+textarea{width: 99%;height: 50px;}
+input{width: 97%;}
+</style>
+
+</head>
+<body>
+<h1>페이지 내 컨텐츠 타이틀</h1>
+<h2 class="tit1">h2.tit1</h2>
+
+<h1>불릿</h1>
+<p class="bu1">텍스트 bu1 한국증권전산(주) 창립</p>
+<p class="bu_warn">bu_warn 텍스트 한국증권전산(주) 창립</p>
+
+<h1>타이틀</h1>
+<div class="tit1">한국증권전산(주) 창립 tit1 </div>
+<div class="tit2">한국증권전산(주) 창립 tit2 </div>
+<div class="tit1_1">한국증권전산(주) 창립 tit1_1 </div>
+
+<h1>list_text</h1>
+<ol class="list_text">
+  <li>'77. 9 : 한국증권전산(주) 창립</li>
+  <li>'13. 7 : 코넥스(KONEX) 시장 시스템 가동</li>
+  <li>'14. 3 : EXTURE+ 가동</li>
+  <li>'14. 3 : 금현물 시스템 가동</li>
+</ol>
+
+
+
+<h1>list_type</h1>
+<div class="default_view1">
+<table>
+	<tr>
+		<td>
+<ol class="list_type">
+  <li>'77. 9 : 한국증권전산(주) 창립</li>
+  <li>'13. 7 : 코넥스(KONEX) 시장 시스템 가동</li>
+  <li>'14. 3 : EXTURE+ 가동</li>
+  <li>'14. 3 : 금현물 시스템 가동</li>
+</ol>
+		</td>
+	</tr>
+	<tr>
+		<td>
+
+<ul class="list_type1">
+  <li>'77. 9 : 한국증권전산(주) 창립
+  	<ul>
+	  <li>'77. 9 : 한국증권전산(주) 창립
+	  	<ul>
+		  <li>'77. 9 : 한국증권전산(주) 창립</li>
+		  <li>'13. 7 : 코넥스(KONEX) 시장 시스템 가동</li>
+		</ul>
+	  </li>
+	  <li>'13. 7 : 코넥스(KONEX) 시장 시스템 가동</li>
+	</ul>
+  </li>
+  <li>'13. 7 : 코넥스(KONEX) 시장 시스템 가동</li>
+  <li>'14. 3 : EXTURE+ 가동</li>
+  <li>'14. 3 : 금현물 시스템 가동</li>
+</ul>
+		</td>
+	</tr>
+	<tr>
+		<td>
+
+<ul class="list_type2">
+  <li>'77. 9 : 한국증권전산(주) 창립
+  	<ul>
+	  <li>'77. 9 : 한국증권전산(주) 창립
+	  	<ul>
+		  <li>'77. 9 : 한국증권전산(주) 창립</li>
+		  <li>'13. 7 : 코넥스(KONEX) 시장 시스템 가동</li>
+		</ul>
+	  </li>
+	  <li>'13. 7 : 코넥스(KONEX) 시장 시스템 가동</li>
+	</ul>
+  </li>
+  <li>'13. 7 : 코넥스(KONEX) 시장 시스템 가동</li>
+  <li>'14. 3 : EXTURE+ 가동</li>
+  <li>'14. 3 : 금현물 시스템 가동</li>
+</ul>
+	</td>
+	</tr>
+</table>
+
+	<h1>btn</h1>
+	<div class="default_view1">
+		<table>
+			<tr>
+				<td>a.btn</td>
+				<td><input type="text" value='<a href="" class="btn"><span>버튼</span></a>' /></td>
+				<td>
+					<a href="" class="btn"><span>버튼</span></a>
+				</td>
+			</tr>
+			<tr>
+				<td>a.btn.btn-primary</td>
+				<td><input type="text" value='<a href="" class="btn btn-primary"><span></span></a>' /></td>
+				<td>
+					<a href="" class="btn btn-primary"><span>button</span></a>
+				</td>
+			</tr>
+			<tr>
+				<td>a.btn.btn-primary.gray</td>
+				<td></td>
+				<td>
+					<a href="" class="btn btn-primary gray"><span>gray</span></a>
+				</td>
+			</tr>
+			<tr>
+				<td>a.btn.btn-primary.orange</td>
+				<td></td>
+				<td>
+					<a href="" class="btn btn-primary orange"><span>orange</span></a>
+				</td>
+			</tr>
+			<tr>
+				<td>a.btn.small</td>
+				<td></td>
+				<td>
+					<a href="" class="btn small"><span>small</span></a> <br />
+					<a href="#self" class="button small"><span>등록</span></a>
+				</td>
+			</tr>
+			<tr>
+				<td>a.btn.small2</td>
+				<td></td>
+				<td>
+					<a href="" class="btn small2"><span>small2</span></a> <br />
+					<input type="submit" id="input2" name="input2" value="검색" class="btn small2" />
+
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>
+					<a href="" class="btn "><span class="arr_up">arr_up</span></a>
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>
+					<a href="" class="btn "><span class="arr_up on">arr_up on</span></a>
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>
+					<a href="" class="btn "><span class="arr_down">arr_down</span></a>
+				</td>
+			</tr>
+		</table>
+	</div>
+
+<h1>box</h1>
+<h2 class="tit1">box- 이미지 있는 경우</h2>
+<div class="box bg1">
+	box
+</div>
+<h2 class="tit1">box- 이미지 없는 경우</h2>
+<div class="box1">
+	box
+</div>
+<div class="box2">
+	box
+</div>
+<h1>제목 + 테이블설명(.tbrInfor) + 테이블</h1>
+<h2 class="tit1">제목 h2.tit1</h2>
+<div class="tbrInfor"> 테이블 설명 .tbrInfor</div>
+<div class="default_view1 fixed">
+<table cellspacing="0" cellpadding="0">
+	<tr>
+		<td>테이블</td>
+	</tr>
+</table>
+</div>
+<textarea name="" id="" cols="30" rows="10">h2.tit1+.tbrInfor+.default_view1>table>caption+(tr+)</textarea>
+
+<h1>테이블설명(.tar) + 테이블</h1>
+<div class="tar">오른쪽정렬</div>
+<div class="default_view1 fixed">
+<table cellspacing="0" cellpadding="0">
+	<tr>
+		<td>테이블</td>
+	</tr>
+</table>
+</div>
+<textarea name="" id="" cols="30" rows="10">h2.tit1+.tar+.default_view1>table>caption+(tr+)</textarea>
+
+	<h1>bbs_sch</h1>
+			<fieldset class="bbs_sch">
+		    	<legend>검색</legend>
+		    	<span class="bbs_sch_type">
+		    		<a href=""><img src="../images/common/btn_listicon1_off.gif" alt="내용형 정렬" /></a>
+	    			<a href=""><img src="../images/common/btn_listicon2_off.gif" alt="포토형 정렬" /></a>
+	    		</span>
+	    		<div class="bbs_sch_area1">
+			    	<select class="inp_sel" title="검색조건 ">
+			    		<option>제목</option>
+			    		<option>내용</option>
+			    	</select>
+			    	<input type="text" title="검색어 입력" name="" class="inp_text1" />
+			    	<input type="submit" value="검색" class="btn small2" />
+		    	</div>
+		    </fieldset>
+<textarea name="" id="" cols="30" rows="10">
+			<fieldset class="bbs_sch">
+		    	<legend>검색</legend>
+		    	<span class="bbs_sch_type">
+		    		<a href=""><img src="../images/common/btn_listicon1_off.gif" alt="내용형 정렬" /></a>
+	    			<a href=""><img src="../images/common/btn_listicon2_off.gif" alt="포토형 정렬" /></a>
+	    		</span>
+	    		<div class="bbs_sch_area1">
+			    	<select class="inp_sel" title="검색조건 ">
+			    		<option>제목</option>
+			    		<option>내용</option>
+			    	</select>
+			    	<input type="text" title="검색어 입력" name="" class="inp_text1" />
+			    	<input type="submit" value="검색" class="btn small2" />
+		    	</div>
+		    </fieldset></textarea>
+
+		    <fieldset class="bbs_sch ">
+		    	<legend>검색</legend>
+		    	<div class="bbs_sch_area">
+		    	<select class="inp_sel" title="검색조건 ">
+		    		<option>제목</option>
+
+		    		<option>내용</option>
+		    	</select>
+		    	<input type="text" title="검색어 입력" name="" class="inp_text" />
+		    	<input type="submit" value="검색" class="btn small2" />
+		    	</div>
+		    </fieldset>
+<textarea name="" id="" cols="30" rows="10">
+			<fieldset class="bbs_sch ">
+		    	<legend>검색</legend>
+		    	<div class="bbs_sch_area">
+		    	<select class="inp_sel" title="검색조건 ">
+		    		<option>제목</option>
+		    		<option>내용</option>
+		    	</select>
+		    	<input type="text" title="검색어 입력" name="" class="inp_text" />
+		    	<input type="submit" value="검색" class="btn small2" />
+		    	</div>
+		    </fieldset></textarea>
+
+<h1>bbs_photo(포토형)</h1>
+		    <div class="bbs_photo">
+		    	<ul>
+		    		<li>
+		    			<a href=""><img src="../images/common/photo.gif" alt="" /></a>
+		    			<p>방만경영 정상화 계획 이행을 위한 직책자 워크숍</p>
+		    			<span>기간 : 2015-02-05 ~2015-02-05</span>
+		    		</li>
+		    		<li>
+		    			<a href=""><img src="../images/common/photo.gif" alt="" /></a>
+		    			<p>방만경영 정상화 계획 이행을 위한 직책자 워크숍</p>
+		    			<span>2015-03-21</span>
+		    		</li>
+		    		<li>
+		    			<a href=""><img src="../images/common/photo.gif" alt="" /></a>
+		    			<p>방만경영 정상화 계획 이행을 위한 직책자 워크숍</p>
+		    			<span>기간 : 2015-02-05 ~2015-02-05</span>
+		    		</li>
+		    		<li>
+		    			<a href=""><img src="../images/common/photo.gif" alt="" /></a>
+		    			<p>방만경영 정상화 계획 이행을 위한 직책자 워크숍</p>
+		    			<span>기간 : 2015-02-05 ~2015-02-05</span>
+		    		</li>
+		    		<li>
+		    			<a href=""><img src="../images/common/photo.gif" alt="" /></a>
+		    			<p>방만경영 정상화 계획 이행을 위한 직책자 워크숍</p>
+		    			<span>기간 : 2015-02-05 ~2015-02-05</span>
+		    		</li>
+		    		<li>
+		    			<a href=""><img src="../images/common/photo.gif" alt="" /></a>
+		    			<p>방만경영 정상화 계획 이행을 위한 직책자 워크숍</p>
+		    			<span>기간 : 2015-02-05 ~2015-02-05</span>
+		    		</li>
+		    	</ul>
+		    </div>
+<textarea name="" id="" cols="30" rows="10"><div class="bbs_photo">
+		    	<ul>
+		    		<li>
+		    			<a href=""><img src="../images/common/photo.gif" alt="" /></a>
+		    			<p>방만경영 정상화 계획 이행을 위한 직책자 워크숍</p>
+		    			<span>기간 : 2015-02-05 ~2015-02-05</span>
+		    		</li>
+		    		<li>
+		    			<a href=""><img src="../images/common/photo.gif" alt="" /></a>
+		    			<p>방만경영 정상화 계획 이행을 위한 직책자 워크숍</p>
+		    			<span>2015-03-21</span>
+		    		</li>
+		    		<li>
+		    			<a href=""><img src="../images/common/photo.gif" alt="" /></a>
+		    			<p>방만경영 정상화 계획 이행을 위한 직책자 워크숍</p>
+		    			<span>기간 : 2015-02-05 ~2015-02-05</span>
+		    		</li>
+		    		<li>
+		    			<a href=""><img src="../images/common/photo.gif" alt="" /></a>
+		    			<p>방만경영 정상화 계획 이행을 위한 직책자 워크숍</p>
+		    			<span>기간 : 2015-02-05 ~2015-02-05</span>
+		    		</li>
+		    		<li>
+		    			<a href=""><img src="../images/common/photo.gif" alt="" /></a>
+		    			<p>방만경영 정상화 계획 이행을 위한 직책자 워크숍</p>
+		    			<span>기간 : 2015-02-05 ~2015-02-05</span>
+		    		</li>
+		    		<li>
+		    			<a href=""><img src="../images/common/photo.gif" alt="" /></a>
+		    			<p>방만경영 정상화 계획 이행을 위한 직책자 워크숍</p>
+		    			<span>기간 : 2015-02-05 ~2015-02-05</span>
+		    		</li>
+		    	</ul>
+		    </div></textarea>
+<h1>bbs_photo(내용형)</h1>
+<div class="bbs_photo1">
+		    	<ul>
+		    		<li>
+		    			<a class="img" href=""><img width="140" height="170" alt="" src="../images/common/photo.gif"></a>
+		    			<dl class="type1">
+		    				<dt><span class="em">[세계경제의 심장편]</span>세계경제의 심장으로! 코스콤이 뜁니다</dt>
+		    				<dd>
+		    				대한민국 경제를 뛰게 하는 힘, 코스콤!<br>
+							이제 금융IT의 글로벌 리더로 도약합니다.<br>
+							말레이시아, 베트남, 라오스 등에 경제심장을 제공한 노하우와 기술력을 바탕으로 세계 경제의 심장을 뛰게 합니다.
+		    				</dd>
+		    			</dl>
+		    		</li>
+		    		<li>
+		    			<a class="img" href=""><img width="140" height="170" alt="" src="../images/common/photo.gif"></a>
+		    			<dl class="type1">
+		    				<dt><span class="em">[세계경제의 심장편]</span>세계경제의 심장으로! 코스콤이 뜁니다</dt>
+		    				<dd>
+		    				대한민국 경제를 뛰게 하는 힘, 코스콤!<br>
+							이제 금융IT의 글로벌 리더로 도약합니다.<br>
+							말레이시아, 베트남, 라오스 등에 경제심장을 제공한 노하우와 기술력을 바탕으로 세계 경제의 심장을 뛰게 합니다.
+		    				</dd>
+		    			</dl>
+		    		</li>
+		    	</ul>
+		    </div>
+		    <textarea name="" id="" cols="30" rows="10">
+		    	<div class="bbs_photo1">
+		    	<ul>
+		    		<li>
+		    			<a class="img" href=""><img width="140" height="170" alt="" src="../images/common/photo.gif"></a>
+		    			<dl class="type1">
+		    				<dt><span class="em">[세계경제의 심장편]</span>세계경제의 심장으로! 코스콤이 뜁니다</dt>
+		    				<dd>
+		    				대한민국 경제를 뛰게 하는 힘, 코스콤!<br>
+							이제 금융IT의 글로벌 리더로 도약합니다.<br>
+							말레이시아, 베트남, 라오스 등에 경제심장을 제공한 노하우와 기술력을 바탕으로 세계 경제의 심장을 뛰게 합니다.
+		    				</dd>
+		    			</dl>
+		    		</li>
+		    		<li>
+		    			<a class="img" href=""><img width="140" height="170" alt="" src="../images/common/photo.gif"></a>
+		    			<dl class="type1">
+		    				<dt><span class="em">[세계경제의 심장편]</span>세계경제의 심장으로! 코스콤이 뜁니다</dt>
+		    				<dd>
+		    				대한민국 경제를 뛰게 하는 힘, 코스콤!<br>
+							이제 금융IT의 글로벌 리더로 도약합니다.<br>
+							말레이시아, 베트남, 라오스 등에 경제심장을 제공한 노하우와 기술력을 바탕으로 세계 경제의 심장을 뛰게 합니다.
+		    				</dd>
+		    			</dl>
+		    		</li>
+		    	</ul>
+		    </div>
+		    </textarea>
+<div class="bbs_photo2">
+		    	<ul>
+		    		<li>
+		    			<a class="img" href=""><img width="70" height="70" alt="" src="../images/common/photo.gif"></a>
+		    			<dl>
+		    				<dt>경영효율화와 정보보호 거버넌스 </dt>
+		    				<dd>(정보보호센터부 이주호 차장, 2-767-7312) <br>전자신문, 2013년 12월 18일(수) 20면 경제과학</dd>
+		    				<dd class="button"><a class="btn btn-primary red" href=""><span>PDF 보기</span></a></dd>
+		    			</dl>
+		    		</li>
+		    		<li>
+		    			<a class="img" href=""><img width="70" height="70" alt="" src="../images/common/photo.gif"></a>
+		    			<dl>
+		    				<dt>경영효율화와 정보보호 거버넌스 </dt>
+		    				<dd>(정보보호센터부 이주호 차장, 2-767-7312) <br>전자신문, 2013년 12월 18일(수) 20면 경제과학</dd>
+		    				<dd class="button"><a class="btn btn-primary red" href=""><span>PDF 보기</span></a></dd>
+		    			</dl>
+		    		</li>
+		    	</ul>
+		    </div>
+		    <textarea name="" id="" cols="30" rows="10">
+		    	<div class="bbs_photo2">
+		    	<ul>
+		    		<li>
+		    			<a class="img" href=""><img width="70" height="70" alt="" src="../images/common/photo.gif"></a>
+		    			<dl>
+		    				<dt>경영효율화와 정보보호 거버넌스 </dt>
+		    				<dd>(정보보호센터부 이주호 차장, 2-767-7312) <br>전자신문, 2013년 12월 18일(수) 20면 경제과학</dd>
+		    				<dd class="button"><a class="btn btn-primary red" href=""><span>PDF 보기</span></a></dd>
+		    			</dl>
+		    		</li>
+		    		<li>
+		    			<a class="img" href=""><img width="70" height="70" alt="" src="../images/common/photo.gif"></a>
+		    			<dl>
+		    				<dt>경영효율화와 정보보호 거버넌스 </dt>
+		    				<dd>(정보보호센터부 이주호 차장, 2-767-7312) <br>전자신문, 2013년 12월 18일(수) 20면 경제과학</dd>
+		    				<dd class="button"><a class="btn btn-primary red" href=""><span>PDF 보기</span></a></dd>
+		    			</dl>
+		    		</li>
+		    	</ul>
+		    </div>
+		    </textarea>
+<h1>default_view1</h1>
+<div class="default_view1">
+	<table>
+		<tr>
+			<th>제목제목제목제목제목제목제목제목제목제목제목제목</th>
+			<td>내용</td>
+			<td>내용내용내용</td>
+			<td>내용내용</td>
+		</tr>
+		<tr>
+			<th>제목</th>
+			<td>내용</td>
+			<td>내용</td>
+			<td>내용</td>
+		</tr>
+	</table>
+</div>
+<br />
+<br />
+<div class="default_view1">
+	<table>
+		<tr>
+			<th>제목</th>
+			<th>제목</th>
+			<th>제목</th>
+			<th>제목</th>
+		</tr>
+		<tr>
+			<td>data</td>
+			<td>data</td>
+			<td>data</td>
+			<td>data</td>
+		</tr>
+	</table>
+</div>
+
+<h1>테이블 균등 분할 fixed</h1>
+	<div class="default_view1 fixed">
+		<table>
+			<tr>
+				<th>제목제목제목제목제목제목제목제목제목제목제목제목</th>
+				<td>내용</td>
+				<td>내용내용내용</td>
+				<td>내용내용</td>
+			</tr>
+			<tr>
+				<th>제목</th>
+				<td>내용</td>
+				<td>내용</td>
+				<td>내용</td>
+			</tr>
+		</table>
+	</div>
+<!--
+	<h1>table</h1>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>th</th>
+				<th>th</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<th>th</th>
+				<td>td</td>
+			</tr>
+		</tbody>
+	</table>
+	<br /> <br />
+	<table class="table">
+		<thead>
+			<tr>
+				<th>th</th>
+				<th>th</th>
+				<th>th</th>
+				<th>th</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>td</td>
+				<td>td</td>
+				<td>td</td>
+				<td>td</td>
+			</tr>
+		</tbody>
+	</table>
+-->
+<h1>셀이 내용 정렬 td_tar,td_tal</h1>
+
+<input type="text" value="default_view1.td_tar" />
+<div class="default_view1 td_tar">
+<table class="">
+		<thead>
+			<tr>
+				<th>th</th>
+				<th>th</th>
+				<th>th</th>
+				<th>th</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>td</td>
+				<td>td</td>
+				<td>td</td>
+				<td>td</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+	<br /> <br />
+<input type="text" value="default_view1.td_tac" />
+<div class="default_view1 td_tac">
+<table >
+		<thead>
+			<tr>
+				<th>th</th>
+				<th>th</th>
+				<th>th</th>
+				<th>th</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>td</td>
+				<td>td</td>
+				<td>td</td>
+				<td>td</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+	<br />
+<input type="text" value=".default_view1.fixed.td_tar>table" />
+<div class="default_view1 fixed td_tar">
+	<table>
+		<tr>
+			<th>제목제목제목제목제목제목제목제목제목제목제목제목</th>
+			<td>내용</td>
+			<td>내용내용내용</td>
+			<td>내용내용</td>
+		</tr>
+		<tr>
+			<th>제목</th>
+			<td>내용</td>
+			<td>내용</td>
+			<td>내용</td>
+		</tr>
+	</table>
+</div>
+<h1>내용이 많은 테이블 div.default_view1.fixed.small>table</h1>
+<p>타이틀은 센터정렬, <br />숫자는 오른쪽 정렬</p>
+<div class="default_view1 td_tar fixed small">
+	<table>
+	  <caption>
+	  사내근로복지기금 조성현황
+	  </caption>
+	  <tr>
+	    <th rowspan="2" scope="col">년도</th>
+	    <th rowspan="2" scope="col">전연도말기금잔액</th>
+	    <th rowspan="2" scope="col">전연도세전순이익<br />(A)</th>
+	    <th rowspan="2" scope="col">촐연액<br />(B)</th>
+	    <th rowspan="2" scope="col">수익금</th>
+	    <th rowspan="2" scope="col">수혜자수<br />(C)</th>
+	    <th colspan="3" scope="col">사용액</th>
+	    <th rowspan="2" scope="col">당해연도말기금잔액<br />(D)</th>
+	    <th rowspan="2" scope="col">출연<br />비율<br />(B/A)</th>
+	    <th rowspan="2" scope="col">1인당<br />출연<br />(B/C)</th>
+	    <th rowspan="2" scope="col">1인당<br />누적<br />(D/C)</th>
+	  </tr>
+	  <tr>
+	    <th scope="col">용도<br />사업<br />(무상)</th>
+	    <th scope="col">대부<br />사업<br />(융자)</th>
+	    <th scope="col">기타<br />(기금<br />운용)</th>
+	  </tr>
+	  <tr>
+	    <td class="tac">2013년</td>
+	    <td>14,817,728</td>
+	    <td>38,019,885</td>
+	    <td>760,000</td>
+	    <td>464,166</td>
+	    <td>787</td>
+	    <td>1,828,204</td>
+	    <td>526,800</td>
+	    <td>1,003</td>
+	    <td>14,212,687</td>
+	    <td>2%</td>
+	    <td>966</td>
+	    <td>18,059</td>
+	  </tr>
+	  <tr>
+	    <td class="tac">2012년</td>
+	    <td>14,928,637</td>
+	    <td>57,505,033</td>
+	    <td>1,150,000</td>
+	    <td>530,040</td>
+	    <td>772</td>
+	    <td>1,789,948</td>
+	    <td>1,181,500</td>
+	    <td>1,001</td>
+	    <td>14,817,728</td>
+	    <td>2%</td>
+	    <td>1,490</td>
+	    <td>19,194</td>
+	  </tr>
+	</table>
+
+</div>
+	<h1>bbs_list</h1>
+<table summary="번호,제목,사업부,첨부,등록일,조회" class="table">
+			<caption>공지사항 목록</caption>
+			<colgroup>
+				<col width="7%">
+				<col width="*">
+				<col width="14%">
+				<col width="8%">
+				<col width="12%">
+				<col width="7%">
+			</colgroup>
+				<thead>
+				<tr>
+					<th scope="col">번호</th>
+					<th scope="col">제목</th>
+					<th scope="col">사업부</th>
+					<th scope="col">첨부</th>
+					<th scope="col">등록일</th>
+					<th scope="col">조회</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr>
+					<td>010</td>
+					<td class="tal"><a href="">2015 FINTECH KOREA Challenge 공고문 <img alt="새글" src="../images/common/new.gif"></a></td>
+					<td>대외협력부</td>
+					<td><img alt="첨부파일 있음" src="../images/common/ico_file.gif"></td>
+					<td>2015-03-20</td>
+					<td>1332</td>
+				</tr>
+				<tr>
+					<td>010</td>
+					<td class="tal"><a href="">2015 FINTECH KOREA Challenge 공고문 <img alt="새글" src="../images/common/new.gif"></a></td>
+					<td>대외협력부</td>
+					<td><img alt="첨부파일 있음" src="../images/common/ico_file.gif"></td>
+					<td>2015-03-20</td>
+					<td>1332</td>
+				</tr>
+				<tr>
+					<td>010</td>
+					<td class="tal"><a href="">2015 FINTECH KOREA Challenge 공고문 <img alt="새글" src="../images/common/new.gif"></a></td>
+					<td>대외협력부</td>
+					<td><img alt="첨부파일 있음" src="../images/common/ico_file.gif"></td>
+					<td>2015-03-20</td>
+					<td>1332</td>
+				</tr>
+				</tbody>
+			</table>
+	<h1>bbs_write</h1>
+	<div class="default_view">
+		    <table summary="구분,이름,회사명,부서명,이메일,우편번호, 주소, 상세주소, 내용을 나타낸 표">
+				<caption>사보구독신청</caption>
+				<colgroup>
+					<col width="20%">
+					<col width="80%">
+				</colgroup>
+					<tbody>
+						<tr>
+							<th scope="row">구분</th>
+							<td>
+								<select class="inp" title="사보구독신청 구분">
+									<option value="">구독신청</option>
+									<option value="">정보변경</option>
+									<option value="">구독해지</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">이름</th>
+							<td>홍길동</td>
+						</tr>
+						<tr>
+							<th scope="row">회사명</th>
+							<td><input type="text" name="" class="inp w_n1" title="회사명"></td>
+						</tr>
+						<tr>
+							<th scope="row">부서명</th>
+							<td><input type="text" name="" class="inp w_n1" title="회사명"></td>
+						</tr>
+						<tr>
+							<th scope="row">이메일</th>
+							<td>
+								<input type="text" name="" title="사용자 아이디" class="inp w_s2">
+								@ <input type="text" name="" title="도메인 이름 " class="inp w_s2">
+								<select class="inp w_s2" title="직접입력">
+									<option value="">네이버</option>
+									<option value=""></option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">우편번호</th>
+							<td>
+								<input type="text" name="" title="우편번호 앞자리" class="inp w_s1"> -
+								<input type="text" name="" title="우편번호 뒷자리" class="inp w_s1">
+								<a class="btn small" href="#"><span>우편번호</span></a>
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">주소</th>
+							<td><input type="text" name="" title="주소" class="inp w_big"></td>
+						</tr>
+						<tr>
+							<th scope="row">상세주소</th>
+							<td><input type="text" name="" title="상세주소" class="inp w_big"></td>
+						</tr>
+						<tr>
+							<th scope="row">내용</th>
+							<td><textarea title="내용" rows="10" cols="20" class="inp w_textarea"></textarea></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+	<h1>bbs_view</h1>
+	 <div class="bbs_view">
+		<h2>공공기관 고객만족도조사 관련 개인정보 제3자 제공사항 알림</h2>
+		<div>
+			<dl>
+				<dt>사업부 : </dt>
+				<dd class="wid">경영지원부</dd>
+				<dt>작성일 : </dt>
+				<dd>2015-03-20</dd>
+			</dl>
+		</div>
+		<div>
+			<dl>
+				<dt>첨부파일 : </dt>
+				<dd class="point">
+					공지사항 관련 홈페이지 안내.hwp<br />
+					공지사항 관련 홈페이지 안내.hwp<br />
+					공지사항 관련 홈페이지 안내.hwp	<br />
+				</dd>
+			</dl>
+		</div>
+		<div class="cont">
+			(주)코스콤은 다음과 같이 개인정보를 제3자에게 제공하고 있습니다.<br />
+			      - 제공 일자 : 2014. 8. 25<br />
+			     - 제공받는자 : 고객만족도 조사 사업자 [(주)리서치앤리서치]<br />
+			     - 제공의 법적 근거 : 「개인정보보호법」제18조 제2항 제2호, 「공공기관 운영에 관한 법률」 제13조 제2항, <br />
+			       동법시행령 제17조 제3항<br />
+			     - 제공받는 자의 개인정보 이용 목적 : 공공기관의 고객만족도 조사를 위한 코스콤의 상품/서비스 이용고객에 대한 설문<br />
+			       조사 실시<br />
+			     - 제공하는 개인정보 항목 : 상품/서비스명, 성명, 직위, 고객사명, 부서명, 직위, 전화번호, E-mail<br />
+			     - 제공받는 자의 보유기간 : 2014년 고객만족도 조사 완료시까지 (2014.10.31)<br />
+		</div>
+	</div>
+	<h1>bbs_simple</h1>
+	<dl class="bbs_simple">
+		<dt>윗글</dt>
+		<dd><a href="">코스콤 창립</a> <span>2015-03-12</span></dd>
+		<dt class="end">아랫글</dt>
+		<dd class="end"><a href="">코스콤 창립</a> <span>2015-03-12</span></dd>
+	</dl>
+</body>
+</html>

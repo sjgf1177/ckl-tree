@@ -1,0 +1,18 @@
+@CHARSET "UTF-8";
+
+
+/* reserve_print_contents */
+.reserve_print_contents{border:2px solid #e6e6e6; padding-left:30px; padding-right:30px; padding-bottom:64px;}
+.reserve_print_contents .reserve_print_logo{padding-top:68px; padding-bottom:66px; text-align:center;}
+.reserve_print_contents .reserve_printing_time{font-size:14.5px; line-height:20.5px; color:#313131; font-weight:400; margin-bottom:15px;}
+.reserve_print_contents .reserve_printing_article{box-sizing:border-box; border-bottom:1px solid #e6e6e6; padding-top:32px; padding-bottom:30px;}
+.reserve_print_contents .reserve_printing_article.first{border-top:1px solid #e6e6e6;}
+.reserve_print_contents .reserve_printing_article.last{margin-bottom:74px; border-bottom:2px solid #e6e6e6;}
+.reserve_print_contents .reserve_printing_name{font-size:16px; line-height:22px; color:#313131; font-weight:400; margin-bottom:22px;}
+.reserve_print_contents .reserve_printing_title{font-size:30px; line-height:36px; color:#313131; font-weight:400; margin-bottom:22px;}
+.reserve_print_contents .reserve_printing_date{font-size:16px; line-height:22px; color:#313131; font-weight:400; margin-bottom:2px;}
+.reserve_print_contents .reserve_printing_seat{font-size:16px; line-height:22px; color:#313131; font-weight:400;}
+.reserve_print_contents .reserve_printing_rule{font-size:20px; line-height:26px; letter-spacing: -0.025em; color:#299bdc; margin-bottom:17px; font-weight:400;}
+.reserve_printing_desc{font-size:14.5px; line-height:20.5px; color:#999999; margin-bottom:14px;}
+.reserve_printing_desc.last{margin-bottom:0;}
+.reserve_printing_desc .reserve_printing_desc_title{color:#313131; font-weight:400; margin-bottom:2px;}

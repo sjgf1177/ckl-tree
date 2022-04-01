@@ -1,0 +1,104 @@
+/ * 공지사항 조회쿼리 */
+SELECT
+      a.NTT_ID --게시물ID
+    , a.BBS_ID --게시판ID
+    , a.NTT_SJ  --제목
+    , a.NTT_CN  --내용
+    , TO_CHAR(a.FRST_REGIST_PNTTM, 'YYYY-MM-DD') as FRST_REGISTER_PNTTM  --등록일
+    , CASE
+        when a.NTT_TYPE = '1'
+        AND REPLACE(a.NTCE_BGNDE,'-','') <= TO_CHAR(SYSDATE, 'YYYYMMDD')
+        AND REPLACE(a.NTCE_ENDDE,'-','') >= TO_CHAR(SYSDATE, 'YYYYMMDD')
+        THEN '1'
+        ELSE '2'
+      END AS ntt_type --공지여부 (1:공지글 , 2: 일반)
+FROM
+    TB_BBS_ESTN a
+WHERE  a.BBS_ID = 'B0000011' AND a.PARNTS = 0
+AND a.DELETE_CODE = '0' 		
+ORDER BY a.NTT_TYPE ASC, a.FRST_REGIST_PNTTM DESC
+
+
+/ * 보도자료 조회쿼리 */
+SELECT
+      a.NTT_ID --게시물ID
+    , a.BBS_ID --게시판ID
+    , a.NTT_SJ  --제목
+    , a.NTT_CN  --내용
+    , TO_CHAR(a.FRST_REGIST_PNTTM, 'YYYY-MM-DD') as FRST_REGISTER_PNTTM  --등록일
+    , CASE
+        when a.NTT_TYPE = '1'
+        AND REPLACE(a.NTCE_BGNDE,'-','') <= TO_CHAR(SYSDATE, 'YYYYMMDD')
+        AND REPLACE(a.NTCE_ENDDE,'-','') >= TO_CHAR(SYSDATE, 'YYYYMMDD')
+        THEN '1'
+        ELSE '2'
+      END AS ntt_type --공지여부 (1:공지글 , 2: 일반)
+FROM
+    TB_BBS_ESTN a
+WHERE  a.BBS_ID = 'B0000010' AND a.PARNTS = 0
+AND a.DELETE_CODE = '0' 		
+ORDER BY a.NTT_TYPE ASC, a.FRST_REGIST_PNTTM DESC
+
+/ * FAQ 조회쿼리 */
+SELECT
+      a.NTT_ID --게시물ID
+    , a.BBS_ID --게시판ID
+    , a.NTT_SJ  --제목
+    , a.NTT_CN  --내용
+    , TO_CHAR(a.FRST_REGIST_PNTTM, 'YYYY-MM-DD') as FRST_REGISTER_PNTTM  --등록일
+FROM
+    TB_BBS_ESTN a
+WHERE  a.BBS_ID = 'B0000034' AND a.PARNTS = 0
+AND a.DELETE_CODE = '0' 		
+ORDER BY a.FRST_REGIST_PNTTM DESC
+
+
+/* 1:1문의하기 조회쿼리 */
+
+--NTT_ID 자동증가
+SELECT NVL(MAX(NTT_ID),0)+1 AS NTT_ID  FROM TB_BBS_ESTN;
+
+INSERT INTO TB_BBS_ESTN (
+     NTT_ID, -- 게시글ID 
+     BBS_ID, -- 게시판ID (B0000038 문의하기)
+     NTT_SJ, -- 제목
+     NTT_CN, -- 내용 (CLOB)
+     NTCR_ID, -- 회원일련번호
+     NTCR_NM,  -- 회원명
+     INQIRE_CO, 
+     REPLY_AT, 
+     PARNTS, 
+     REPLY_LC, 
+     NTCR_EMAIL, -- 이메일 
+     NTCR_TEL,   -- 전화번호(핸드폰)
+     FRST_REGISTER_ID,  -- 회원일련번호(등록자 USER_SN 값)
+     FRST_REGIST_PNTTM,  -- 등록일자
+     LAST_UPDT_PNTTM,    -- 수정일자
+     USE_AT, 
+     SECRET_AT, -- 비공개여부 (Y,N)
+     DELETE_CODE,  -- 삭제코드 (1 : 삭제 0 : 유지)
+     NTT_TYPE, 
+     HTML_AT
+) 
+VALUES ( 
+   '124', 
+   'B0000038', 
+   '테스트입니다.', 
+   '테스트 입니다 내용', 
+   '2', 
+   '홍길동', 
+   0, 		-- default
+   'N', 	-- default
+   '0', 	-- default
+   '0',		-- default
+   'vacco@naver.com', 
+   '010-1111-2222', 
+   '2', 
+   SYSDATE, -- default
+   SYSDATE, -- default
+   'Y', 	-- default
+   'Y',		-- default
+   '0', 	-- default
+   '2',  	-- default
+   'N'   	-- default
+);

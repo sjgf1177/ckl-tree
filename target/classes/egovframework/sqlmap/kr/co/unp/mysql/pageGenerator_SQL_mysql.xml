@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="pageGenerator">
+
+	<typeAlias  alias="fieldAttributeVO" type="kr.co.unp.pg.vo.FieldAttributeVO"/>
+	<typeAlias  alias="pageVO" type="kr.co.unp.pg.vo.PageVO"/>
+
+	<select id="pageGeneratorDAO.selectAllFieldList" parameterClass="pageVO" resultClass="fieldAttributeVO">
+		/* pageGeneratorDAO.selectAllFieldList */
+
+		SELECT
+				 IFNULL(b.FIELD_ID , 0 ) as fieldId,
+		         a.fieldName AS fieldName,
+		         IFNULL(b.FIELD_DC,a.fieldText) AS fieldText,
+		         b.FIELD_TYPE as fieldType,
+		         b.LIST_USE_AT as fieldList
+		  FROM
+		       (SELECT   distinct
+			       cc.COLUMN_NAME      AS fieldName,
+			       cc.column_comment    AS fieldText
+				FROM information_schema.columns cc
+				WHERE LOWER(cc.TABLE_NAME) = LOWER(#tableName#) AND cc.column_comment IS NOT null
+		       ) a
+		   LEFT OUTER JOIN
+		       (SELECT *
+		           FROM TB_FIELDINFO
+		          WHERE ATTRB_CODE=#pageCode#
+		         ) b
+		       ON LOWER(REPLACE(a.fieldName,'_','')) = LOWER(b.FIELD_IEM)
+		ORDER BY  fieldName ASC
+	</select>
+
+	<select id="pageGeneratorDAO.selectPageAttributeList" resultClass="pageVO">
+		SELECT
+		       a.ATTRB_CODE as pageCode,
+		       a.ATTRB_NM as pageName,
+			   a.ATTRB_DC as pageDesc,
+		       a.FRST_REGIST_PNTTM as creatDt
+		  FROM TB_ATTRBINFO a
+		  ORDER BY a.FRST_REGIST_PNTTM DESC
+	</select>
+
+	<select id="pageGeneratorDAO.selectPageAttribute" parameterClass="pageVO" resultClass="pageVO">
+		SELECT
+		       a.ATTRB_CODE as pageCode,
+		       a.ATTRB_NM as pageName,
+			   a.ATTRB_DC as pageDesc,
+		       a.FRST_REGIST_PNTTM as creatDt
+		  FROM TB_ATTRBINFO a
+		  WHERE a.ATTRB_CODE = #pageCode#
+	</select>
+
+	<select id="pageGeneratorDAO.selectFieldAttributeList" parameterClass="pageVO" resultClass="fieldAttributeVO">
+		SELECT a.FIELD_ID as fieldId,
+		       a.ATTRB_CODE as pageCode,
+		       a.ATTRB_TYPE as pageType,
+		       a.FIELD_IEM as fieldName,
+		       a.FIELD_TYPE as fieldType,
+		       a.FIELD_DC as fieldText,
+		       a.LIST_USE_AT as fieldList
+		  FROM TB_FIELDINFO a
+		  WHERE a.ATTRB_CODE = #pageCode#
+		<isNotEmpty prepend="AND" property="pageType">
+			<![CDATA[	ATTRB_TYPE = #pageType# 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="fieldList">
+			<![CDATA[	LIST_USE_AT = #fieldList# 		]]>
+		</isNotEmpty>
+		  ORDER BY a.FIELD_ORDR ASC
+	</select>
+
+	<insert id="pageGeneratorDAO.addPageAttribute" parameterClass="pageVO" >
+		<![CDATA[
+			INSERT INTO TB_ATTRBINFO ( ATTRB_CODE,ATTRB_NM,ATTRB_DC,FRST_REGIST_PNTTM )
+			VALUES ( #pageCode#,#pageName#,#pageDesc#,NOW()  )
+		]]>
+	</insert>
+
+	<update id="pageGeneratorDAO.updatePageAttribute" parameterClass="pageVO" >
+		<![CDATA[
+			UPDATE TB_ATTRBINFO
+			SET ATTRB_NM = #pageName#,
+			    ATTRB_DC = #pageDesc#
+			WHERE ATTRB_CODE = #pageCode#
+		]]>
+	</update>
+
+	<delete id="pageGeneratorDAO.deletePageAttribute" parameterClass="pageVO" >
+		<![CDATA[
+			DELETE FROM TB_ATTRBINFO
+			WHERE ATTRB_CODE = #pageCode#
+		]]>
+	</delete>
+
+	<insert id="pageGeneratorDAO.addFieldAttribute" parameterClass="fieldAttributeVO" >
+		<![CDATA[
+			INSERT INTO TB_FIELDINFO ( ATTRB_CODE,ATTRB_TYPE,FIELD_IEM,FIELD_TYPE,FIELD_DC,FIELD_ORDR,LIST_USE_AT )
+			VALUES ( #pageCode#,#pageType#,#fieldName#,#fieldType#,#fieldText#,#fieldOrdr#,IFNULL(#fieldList#,'N')  )
+		]]>
+	</insert>
+
+	<delete id="pageGeneratorDAO.deleteFieldAttribute" parameterClass="fieldAttributeVO" >
+		<![CDATA[
+			DELETE FROM TB_FIELDINFO
+			WHERE ATTRB_CODE = #pageCode#
+			AND ATTRB_TYPE = #pageType#
+		]]>
+	</delete>
+
+	<delete id="pageGeneratorDAO.deleteFieldAttributeCode" parameterClass="fieldAttributeVO" >
+		<![CDATA[
+			DELETE FROM TB_FIELDINFO
+			WHERE ATTRB_CODE = #pageCode#
+		]]>
+	</delete>
+
+</sqlMap>

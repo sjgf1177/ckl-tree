@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="DeptAuthor">
+
+    <typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+    <typeAlias  alias="DeptAuthorVO" type="kr.co.unp.cmm.sec.ram.service.DeptAuthorVO"/>
+    <typeAlias  alias="DeptAuthor" type="kr.co.unp.cmm.sec.ram.service.DeptAuthor"/>
+
+    <resultMap id="deptAuthor" class="kr.co.unp.cmm.sec.ram.service.DeptAuthorVO">
+        <result property="deptCode" column="DEPT_CODE" columnIndex="1"/>
+        <result property="deptNm" column="DEPT_NM" columnIndex="2"/>
+        <result property="userId" column="USER_ID" columnIndex="3"/>
+        <result property="userNm" column="USER_NM" columnIndex="4"/>
+        <result property="authorCode" column="AUTHOR_CODE" columnIndex="5"/>
+        <result property="uniqId" column="UNIQ_ID" columnIndex="6"/>
+        <result property="regYn" column="REG_YN" columnIndex="7"/>
+    </resultMap>
+
+    <resultMap id="dept" class="kr.co.unp.cmm.sec.ram.service.DeptAuthorVO">
+        <result property="deptCode" column="DEPT_CODE" columnIndex="1"/>
+        <result property="deptNm" column="DEPT_NM" columnIndex="2"/>
+    </resultMap>
+
+	<sql id="deptAuthorDAO.selectDeptAuthorList-where">
+		<isNotEmpty prepend="AND" property="larCd">
+			<![CDATA[	LAR_CD = #larCd# 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="midCd">
+			<![CDATA[	MID_CD = #midCd# 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="smCd">
+			<![CDATA[	SM_CD = #smCd# 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchWrd">
+			<isEqual property="searchCnd" compareValue="1">
+				<![CDATA[	A.AID LIKE CONCAT('%',trim(#searchWrd#), '%') 		]]>
+			</isEqual>
+			<isEqual property="searchCnd" compareValue="4">
+				<![CDATA[	A.ADNM LIKE CONCAT('%',trim(#searchWrd#), '%') 		]]>
+			</isEqual>
+		</isNotEmpty>
+	</sql>
+
+    <select id="deptAuthorDAO.selectDeptAuthorList" parameterClass="DeptAuthorVO" resultClass="DeptAuthorVO">
+    <![CDATA[
+		SELECT * FROM
+		( SELECT a.*, rownum+rnum-1 as totalRows
+		   FROM ( SELECT a.*, rownum rnum
+		            FROM (
+
+            SELECT
+				A.LAR_CD as larCd
+				,A.MID_CD as midCd
+				,A.SM_CD as smCd
+				,A.LAR_NM as larNm
+				,A.MID_NM as midNm
+				,A.SM_NM as smNm
+				,A.AID AS userId
+				,A.AID AS uniqId
+				,A.ADNM AS userNm
+				,C.AUTHOR_CODE as authorCode
+				,(CASE WHEN C.USER_ID IS NULL THEN 'N'
+                       ELSE 'Y'
+                  END) AS regYn
+			FROM TB_POLICEADMIN A
+			LEFT OUTER JOIN TC_USER_AUTHOR C ON A.AID = C.USER_ID
+			WHERE 1=1
+	]]>
+	<include refid="deptAuthorDAO.selectDeptAuthorList-where" />
+    <![CDATA[
+
+		            ) a
+		          ORDER BY rnum DESC ) a
+		  ORDER BY rnum )
+		WHERE rnum BETWEEN #firstIndex# + 1 AND #lastIndex#
+        ]]>
+    </select>
+
+    <insert id="deptAuthorDAO.insertDeptAuthor" parameterClass="DeptAuthor">
+        <![CDATA[
+            INSERT INTO TC_USER_AUTHOR
+                  ( USER_ID
+                  , AUTHOR_CODE)
+           VALUES ( #uniqId#
+                  , #authorCode#)
+        ]]>
+    </insert>
+
+    <update id="deptAuthorDAO.updateDeptAuthor" parameterClass="DeptAuthor">
+        <![CDATA[
+            UPDATE TC_USER_AUTHOR
+               SET AUTHOR_CODE=#authorCode#
+             WHERE USER_ID=#uniqId#
+        ]]>
+    </update>
+
+    <delete id="deptAuthorDAO.deleteDeptAuthor">
+        <![CDATA[
+            DELETE FROM TC_USER_AUTHOR
+             WHERE USER_ID=#uniqId#
+        ]]>
+    </delete>
+
+    <select id="deptAuthorDAO.selectDeptAuthorListTotCnt" parameterClass="DeptAuthorVO" resultClass="int">
+            SELECT
+				count(*)
+			FROM TB_POLICEADMIN A
+			INNER JOIN ORG_DATA B ON B.LAR_CD = A.LAR_CD AND B.MID_CD = A.MID_CD AND B.SM_CD = A.SM_CD
+			LEFT OUTER JOIN TC_USER_AUTHOR C ON A.AID = C.USER_ID
+			WHERE 1=1
+		<include refid="deptAuthorDAO.selectDeptAuthorList-where" />
+    </select>
+
+    <select id="deptAuthorDAO.selectDeptList" parameterClass="DeptAuthorVO" resultMap="dept">
+       <![CDATA[
+
+            SELECT
+				A.LAR_CD || A.MID_CD || A.SM_CD AS DEPT_CODE
+				,A.LAR_NM || '/' || A.MID_NM || '/' || A.SM_NM AS DEPT_NM
+			FROM ORG_DATA A
+			WHERE 1=1
+        ]]>
+            <isNotEmpty prepend="AND" property="searchKeyword">
+                	A.LAR_NM || '/' || A.MID_NM || '/' || A.SM_NM LIKE CONCAT('%',trim(#searchKeyword#), '%')
+            </isNotEmpty>
+        <![CDATA[
+			ORDER BY A.LAR_CD ASC, A.MID_CD ASC, A.SM_CD ASC
+        ]]>
+    </select>
+
+    <select id="deptAuthorDAO.selectDeptListTotCnt" parameterClass="DeptAuthorVO" resultClass="int">
+            SELECT COUNT(*) AS totcnt
+            FROM ORG_DATA A
+            WHERE 1=1
+            <isNotEmpty prepend="AND" property="searchKeyword">
+                	A.LAR_NM || '/' || A.MID_NM || '/' || A.SM_NM LIKE CONCAT('%',trim(#searchKeyword#), '%')
+            </isNotEmpty>
+    </select>
+
+</sqlMap>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="accessHistory">
+
+	<typeAlias  alias="zvl" type="kr.co.unp.util.ZValue"/>
+
+	<insert id="AccessHistoryDAO.insert" parameterClass="zvl" >
+		<selectKey resultClass="java.lang.Long" keyProperty="histSn">
+			SELECT NVL(MAX(HIST_SN),0)+1 AS NTT_ID  FROM TC_ACCESS_HISTORY
+		</selectKey>
+		<![CDATA[
+			INSERT INTO TC_ACCESS_HISTORY (
+			     HIST_SN,
+			     CATE_TP,
+			     NTT_SN,
+			     TARGET_USER_SN,
+			     ETC_INFO,
+			     ACCESS_DT,
+			     ACCESS_IP,
+			     ACCESS_CRUD,
+			     ACCESS_ADMIN_ID
+			 )
+			 VALUES
+			 (
+			     #histSn#,
+			     #cateTp#,
+			     #nttSn#,
+			     #targetUserSn#,
+			     #etcInfo#,
+			     SYSDATE,
+			     #accessIp#,
+			     #accessCrud#,
+			     #accessAdminId#
+			 )
+		]]>
+	</insert>
+
+</sqlMap>

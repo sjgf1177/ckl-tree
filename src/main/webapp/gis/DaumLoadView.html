@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Daum Load View</title>
+	
+	<style type="text/css">
+		html, 
+		body {
+			height: 100%;
+			margin: 0;
+			padding: 0;
+		}
+		#DIV_ROADVIEW {
+			min-height: 100%;
+		}
+		* html #body {
+			height: 100%;
+		}
+
+</style>
+
+	<script type="text/javascript" src="http://apis.daum.net/maps/maps3.js?apikey=acb372e70c661bd6b9763541243726d01f5bf3d8" charset="utf-8"></script>
+	<script type="text/javascript" src="./script/md5.js"></script>
+	<script type="text/javascript">
+
+	function getQuerystring(key, default_)
+	{
+		if (default_==null) default_=""; 
+		key = key.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+		var regex = new RegExp("[\\?&]"+key+"=([^&#]*)");
+		var qs = regex.exec(window.location.href);
+		if(qs == null)
+		   return default_;
+		else
+		   return qs[1];
+	}
+	function init() 
+	{
+	  var company = getQuerystring("Company");
+    if(hex_md5(company) != "27bf04637aece773c6b9ee11645c8152") return;
+		var m_sLat = getQuerystring("sLat");
+		var m_sLng = getQuerystring("sLng");
+		var p = new daum.maps.LatLng(m_sLat, m_sLng);
+		var rc = new daum.maps.RoadviewClient();
+		var rv = new daum.maps.Roadview(document.getElementById("DIV_ROADVIEW"));
+		rc.getNearestPanoId(p, 50, function(panoid) 
+			{
+				rv.setPanoId(panoid, p);
+			});
+	}
+</script>
+
+</head>
+
+<body onload="init()" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" >
+	<div id="DIV_ROADVIEW"></div> 
+</body>
+</html>

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Comment">
+
+	<typeAlias  alias="zvl" type="kr.co.unp.util.ZValue"/>
+
+
+	<select id="CommentDAO.selectComment" parameterClass="zvl" resultClass="zvl" >
+		<![CDATA[
+		/*CommentDAO.selectComment*/
+			SELECT A.CMMNT_ID as cmmntId,
+			       A.BBS_ID as bbsId,
+			       A.NTT_ID as nttId,
+			       A.NTCR_ID as ntcrId,
+			       A.PASSWORD as password,
+			       A.NTT_CN as nttCn,
+			       A.FRST_REGIST_PNTTM as regDate,
+			       A.NTCR_NM as ntcrNm,
+			       A.NTT_SJ as nttSj,
+			       A.NTCR_EMAIL as ntcrEmail
+			  FROM TB_BBS_CMMNT A
+			WHERE
+				A.CMMNT_ID = #cmmntId#
+		]]>
+	</select>
+
+	<select id="CommentDAO.selectCommentListCnt" parameterClass="zvl" resultClass="int" >
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM
+				BBSCOMMENTS
+			WHERE
+				BBS_ID = #bbsId#
+			AND NTT_ID = #nttId#
+		]]>
+	</select>
+
+	<sql id="CommentDAO.selectCommentList-where">
+
+		<isNotEmpty prepend="AND" property="sdate">
+			<![CDATA[	TO_CHAR(A.FRST_REGIST_PNTTM, 'YYYYMMDD') >= REPLACE(#sdate#,'-','') 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="edate">
+			<![CDATA[	TO_CHAR(A.FRST_REGIST_PNTTM, 'YYYYMMDD') <= REPLACE(#edate#,'-','') 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchWrd">
+			<isEqual property="searchCnd" compareValue="2">
+				<![CDATA[	A.NTT_CN LIKE '%' || #searchWrd# || '%' 		]]>
+			</isEqual>
+			<isEqual property="searchCnd" compareValue="4">
+				<![CDATA[	A.NTCR_NM LIKE '%' || #searchWrd# || '%' 		]]>
+			</isEqual>
+		</isNotEmpty>
+	</sql>
+
+	<resultMap id="commentListMap" class="zvl">
+		<result property="cmmntId" column="CMMNT_ID"/>
+		<result property="bbsId" column="BBS_ID"/>
+		<result property="nttId" column="NTT_ID"/>
+		<result property="password" column="PASSWORD"/>
+		<result property="nttCn" column="NTT_CN" jdbcType="CLOB" javaType="java.lang.String" />
+		<result property="regDate" column="FRST_REGIST_PNTTM"/>
+		<result property="ntcrNm" column="NTCR_NM"/>
+		<result property="nttSj" column="NTT_SJ"/>
+		<result property="ntcrEmail" column="NTCR_EMAIL"/>
+		<result property="cmmntSe" column="CMMNT_SE"/>
+		<result property="ntcrCi" column="NTCR_CI"/>
+		<result property="atchFileId" column="ATCH_FILE_ID"/>
+	</resultMap>
+
+	<select id="CommentDAO.selectCommentList" parameterClass="zvl" resultMap="commentListMap" >
+
+		<![CDATA[
+		/*CommentDAO.selectCommentList*/
+			SELECT A.CMMNT_ID,
+			       A.BBS_ID,
+			       A.NTT_ID,
+			       A.NTCR_ID,
+			       A.PASSWORD,
+			       A.NTT_CN,
+				   A.FRST_REGIST_PNTTM,
+			       A.NTCR_NM,
+			       A.NTT_SJ,
+			       A.NTCR_EMAIL,
+			       A.CMMNT_SE,
+			       A.NTCR_CI,
+             	   B.ATCH_FILE_ID
+			  FROM TB_BBS_CMMNT A
+		      LEFT OUTER JOIN (
+		        SELECT b.AUTH_KEY, a.ATCH_FILE_ID
+		        FROM TM_USER a
+		        LEFT OUTER JOIN TM_CRTFC b ON b.USER_IDX = a.USER_IDX
+		      ) B ON A.NTCR_CI = B.AUTH_KEY
+			WHERE BBS_ID = #bbsId# AND NTT_ID = #nttId# AND DELCODE = 0
+		]]>
+		<include refid="CommentDAO.selectCommentList-where" />
+			ORDER BY FRST_REGIST_PNTTM
+
+	</select>
+
+	<select id="CommentDAO.selectComments" parameterClass="zvl" resultClass="zvl" >
+		<![CDATA[
+
+			SELECT A.CMMNT_ID as cmmntId,
+			       A.BBS_ID as bbsId,
+			       A.NTT_ID as nttId,
+			       A.NTCR_ID as ntcrId,
+			       A.PASSWORD as password,
+			       A.NTT_CN as nttCn,
+			       A.FRST_REGIST_PNTTM as regDate,
+			       A.NTCR_NM as ntcrNm,
+			       A.NTT_SJ as nttSj,
+			       A.NTCR_EMAIL as ntcrEmail
+			  FROM TB_BBS_CMMNT A
+			WHERE BBS_ID = #bbsId# AND NTT_ID = #nttId#
+		]]>
+		<include refid="CommentDAO.selectCommentList-where" />
+			ORDER BY A.REG_DATE DESC
+	</select>
+
+	<insert id="CommentDAO.insertCommentArticle" parameterClass="zvl" >
+		<selectKey resultClass="java.lang.Long" keyProperty="cmmntId">
+			SELECT NVL(MAX(CMMNT_ID),0)+1 AS CMMNT_ID  FROM TB_BBS_CMMNT
+		</selectKey>
+		<![CDATA[
+			INSERT INTO TB_BBS_CMMNT ( CMMNT_ID,BBS_ID,NTT_ID,NTCR_ID,PASSWORD,NTT_CN,FRST_REGIST_PNTTM,NTCR_NM,NTCR_CI,NTT_SJ,NTCR_EMAIL,DELCODE,CMMNT_SE,OPTION1 )
+			VALUES ( #cmmntId#,#bbsId#,#nttId#,#ntcrId#,#password#,#nttCn#,SYSDATE,#ntcrNm#,#ntcrCi#,#nttSj#,#ntcrEmail#,0,#cmmntSe#,#option1#  )
+
+		]]>
+	</insert>
+
+	<update id="CommentDAO.updateCommentState" parameterClass="zvl">
+ 		<![CDATA[
+			UPDATE TB_BBS_CMMNT
+			SET
+				PASSWORD = #password#,
+				NTT_SJ = #nttSj#,
+				NTT_CN = #nttCn#,
+				LAST_UPDT_PNTTM = SYSDATE
+			WHERE
+				CMMNT_ID = #cmmntId#
+ 		]]>
+ 	</update>
+
+	<delete id="CommentDAO.deleteCommentArticle" parameterClass="zvl">
+	<![CDATA[
+			/*CommentDAO.deleteCommentArticle*/
+			UPDATE TB_BBS_CMMNT
+			SET
+				DELCODE = 1,
+				LAST_UPDT_PNTTM = SYSDATE
+			WHERE CMMNT_ID = #cmmntId#
+	 		]]>
+	</delete>
+
+</sqlMap>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=Edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<meta name="robots" content="all" />
+<link rel="stylesheet" type="text/css" href="/js/bootstrap/css/bootstrap.css" />
+<link rel="stylesheet" type="text/css" href="/js/bootstrap/css/bootstrap-theme.css" />
+<link rel="stylesheet" type="text/css" href="/js/jquery-ui/jquery-ui.css">
+<link rel="stylesheet" type="text/css" href="/portal/css/common.css" />
+<link rel="stylesheet" type="text/css" href="/bos/css/common.css" />
+<link rel="stylesheet" type="text/css" href="/bos/css/bosLayout.css" />
+
+<script type="text/javascript" src="/js/jquery.js"></script>
+<script type="text/javascript" src="/js/bootstrap/bootstrap.js"></script>
+<script type="text/javascript" src="/js/bootstrap/respond.min.js"></script>
+<script type="text/javascript" src="/js/jquery-ui/jquery-ui.js"></script>
+<script type="text/javascript" src="/js/jquery.highlight-4.js"></script>
+<script type="text/javascript" src="/js/miya_validator.js"></script>
+<script type="text/javascript" src="/bos/js/common.js"></script>
+
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+<script type="text/javascript" src="/js/html5shiv.js"></script><script type="text/javascript" src="js/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+<div id="wrap">
+	<div id="header_wrap">
+		<div class="header">
+			<h1><a href="/bos/main/main.do"><img src="/bos/images/common/logo.gif" alt="콘텐츠코리아랩" /></a></h1>
+			<p class="user bold"><span class="color1">[]CKL관리자(ckladmin)</span>님 로그인 접속IP:0:0:0:0:0:0:0:1</p>
+			<div class="util btn-group"> <a href="javascript:openPopup();"class="btn btn-success"><i class="fa fa-power-off"></i>내정보수정</a> <a href="/bos/member/logout.do" class="btn btn-info"><i class="fa fa-power-off"></i> 로그아웃</a> </div>
+		</div>
+		<div id="gnb">
+			<ul class="gnb_width">
+				<li class='on'> <a href="/bos/member/list.do?menuNo=100001" >관리자관리</a> </li>
+				<li > <a href="/bos/bbs/B0000002/list.do?menuNo=100009" >게시물관리</a> </li>
+				<li > <a href="/bos/mpm/commonContents/list.do?siteId=2&amp;menuNo=100020" >콘텐츠관리</a> </li>
+				<li class='pr0'> <a href="/bos/cmmncode/CmmnCodeClList.do?menuNo=100021" >사이트관리</a> </li>
+			</ul>
+		</div>
+	</div>
+	<div id="container" class="clearfix" >
+		<div id="lnb">
+			<h2>관리자관리</h2>
+			<!-- <p><input type="text" name="searchTxt" id="searchTxt" value="" /> <label for="search"><a id="search" href="#search">조회</a></label></p> -->
+			
+			<ul>
+				<li> <a href="/bos/member/list.do?menuNo=100002" title="/bos/member/list.do" >관리자정보</a> </li>
+				<li> <a href="/bos/mpm/MenuCreatManageSelect.do?menuNo=100003" title="/bos/mpm/MenuCreatManageSelect.do" >권한관리</a>
+					<ol>
+						<li> <a href="/bos/cmm/sec/ram/AuthorList.do?menuNo=100004" title="/bos/cmm/sec/ram/AuthorList.do" >권한관리</a> </li>
+						<li> <a href="/bos/mpm/MenuCreatManageSelect.do?menuNo=100005" title="/bos/mpm/MenuCreatManageSelect.do" >권한별 메뉴관리</a> </li>
+					</ol>
+				</li>
+			</ul>
+		</div>
+		<div id="content">
+
+			<div class="hgroup clearfix">
+				<h3 class="fl">프로그램 관리</h3>
+				<div class="fr"> <a class="btn btn-sm btn-success" href="/bos/forprint.jsp" id="print" title="새창" onclick="window.open(this.href, 'printPage', 'width=800,height=550,scrollbars,toolbar,status');return false;" alt="인쇄하기 (자바스크립트 미지원시 브라우저은 인쇄기능을 이용하세요)"><i class="fa fa-hover fa-print"></i><span >인쇄하기</span></a> </div>
+			</div>
+			
+			
+
+
+
+
+
+			<h4>프로그램 정보</h4>
+			<div class="bdView">
+				<table cellspacing="0" cellpadding="0" class="table table-bordered" summary=" ">
+					<caption>프로그램 정보</caption>
+					<colgroup>
+					<col style="width:15%" />
+					<col style="width:35%" />
+					<col style="width:15%" />
+					<col  />
+					</colgroup>
+					<tbody>
+						<tr>
+							<th>대표이미지</th>
+							<td colspan="3" ><img src="/portal/images/tmp/prog.jpg" width="147" height="85"  alt=""/></td>
+						</tr>
+						<tr>
+							<th>구분</th>
+							<td>교육</td>
+							<th>교육분류</th>
+							<td>창업마스터즈</td>
+						</tr>
+						<tr>
+							<th>프로그램명</th>
+							<td colspan="3">CKL 창업마스터즈 1기</td>
+						</tr>
+						<tr>
+							<th>담당부서</th>
+							<td>창의인재양성팀</td>
+							<th>사용여부</th>
+							<td>사용</td>
+						</tr>
+						<tr>
+							<th>교육기간</th>
+							<td>2015.11.01 ~ 2015.11.02</td>
+							<th>강사</th>
+							<td>홍길동, 김철수</td>
+						</tr>
+						<tr>
+							<th>내용</th>
+							<td colspan="3">콘텐츠산업 분야 예비창업자와 초기창업자들을    대상으로 한 이번 교육은 내달 2일부터 12월12일까지 총 11주에 걸쳐 서울 종로구 콘텐츠코리아랩 제1센터 10층 콘퍼런스룸에서 진행된다.<br>
+							<br>
+							수업과 멘토링, 팀별    프로젝트로 구성된 이번 프로그램은 창업 초기에 꼭 알아야 할 비즈니스모델 수립과 특허, 법률, 마케팅, 투자유치와 관련된 교육 내용 등으로 구성됐다.<br>
+							<br>
+							'2014 CKL 창업 마스터즈'는    콘텐츠 산업 현장에서 활발히 활동하고 있는 전문가들로부터 생생한 현장 창업 노하우를 전수    받을 수 있는 점이 타 교육과정과 차별화된 특징으로 꼽히고 있다<br></td>
+						</tr>
+						<tr>
+							<th>만족도점수</th>
+							<td colspan="3">89</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+
+			<h4>신청정보</h4>
+			<div class="bdView">
+				<table cellspacing="0" cellpadding="0" class="table table-bordered" summary=" ">
+					<caption>신청정보</caption>
+					<colgroup>
+					<col style="width:15%" />
+					<col style="width:35%" />
+					<col style="width:15%" />
+					<col  />
+					</colgroup>
+					<tbody>
+						<tr>
+							<th>신청기간</th>
+							<td>2015.10.15    09:00 ~ 2015.10.31 18:00</td>
+							<th>진행상태</th>
+							<td>진행중</td>
+						</tr>
+						<tr>
+							<th>신청방식</th>
+							<td>선착순</td>
+							<th>정원</th>
+							<td>100 명</td>
+						</tr>
+						<tr>
+							<th>대기신청여부</th>
+							<td colspan="3">대기신청 가능 ( 30명 )</td>
+						</tr>
+						<tr>
+							<th>접수번호표시</th>
+							<td>표시</td>
+							<th>승인단계사용</th>
+							<td>사용</td>
+						</tr>
+						<tr>
+							<th>수료증발급</th>
+							<td>사용</td>
+							<th>위탁제공사용</th>
+							<td>사용</td>
+						</tr>
+						<tr>
+							<th>개인정보 제3자    위탁 제공</th>
+							<td colspan="3">제3자 위탁제공    내용 전문 표시</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+
+
+			<div class="row clear mt20">
+				<div class="col-md-11 tac"><a href="#self" class="btn btn-primary">수정</a> 
+					<a href="#self" class="btn btn-danger">삭제</a>
+				</div>
+				<div class="col-md-1"><a href="#self" class="btn btn-primary">목록</a></div>
+			</div>
+	
+
+
+
+
+
+
+
+
+
+
+
+			
+		</div>
+	</div>
+</div>
+<div id="footer">
+	<p><span class="bold">콘텐츠코리아랩</span>&nbsp;&nbsp;&nbsp;
+		서울시 영등포구 여의나루로 76(150-010),
+		&nbsp;&nbsp;&nbsp; <span class="bold">전화번호</span>: 02)767-7114 </p>
+	<em>Copyright ⓒ 2012 CKL Corp. All Rights reserved.</em> </div>
+
+<!--[if lte IE 7]>
+<script type="text/javascript">
+//<![CDATA[
+	$('*').each(function(index) {
+		if ($(this).css("overflow")=="hidden"){ $(this).css("zoom",1)}
+		if ($(this).css("display")=="inline-block"){ $(this).css("display",'inline'); $(this).css("zoom",1)}
+	});
+//]]>
+</script>
+<![endif]-->
+
+<div class="posr">
+	<div class="souceUrl" style="color:#f00">*/WEB-INF/jsp/bos/member/list.jsp</div>
+	<div class="check" style="display: none">복사완료</div>
+	<div class="souceUrl" style="color:#f00">WEB-INF/jsp/bos/member/list.jsp</div>
+	<div class="check" style="display: none">복사완료</div>
+</div>
+</body>
+</html>

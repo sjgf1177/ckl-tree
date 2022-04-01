@@ -1,0 +1,1066 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="penLecture">
+
+
+	<typeAlias alias="zvl" type="kr.co.unp.util.ZValue" />
+
+
+	<resultMap id="viewGoldClassMap" class="zvl">
+		<result property="seq" column="SEQ"/>
+		<result property="lecnm" column="LECNM"/>
+		<result property="bannerimg" column="BANNERIMG"/>
+		<result property="tutornm" column="TUTORNM"/>
+		<result property="tutorcareer" column="TUTORCAREER"/>
+		<result property="lectime" column="LECTIME"/>
+		<result property="genre" column="GENRE"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="intro" column="INTRO"/>
+		<result property="contents" column="CONTENTS"/>
+		<result property="tutorauthor" column="TUTORAUTHOR"/>
+		<result property="heightS" column="HEIGHT_S"/>
+		<result property="widthS" column="WIDTH_S"/>
+		<result property="openyn" column="OPENYN"/>
+		<result property="vodurl" column="VODURL"/>
+		<result property="vodimg" column="VODIMG"/>
+		<result property="vodPath" column="VOD_PATH"/>
+		<result property="lectureType" column="LECTURE_TYPE"/>
+		<result property="tutorimg" column="TUTORIMG"/>
+		<result property="creatyear" column="CREATYEAR"/>
+		<result property="hitYn" column="HIT_YN"/>
+		<result property="recomYn" column="RECOM_YN"/>
+		<result property="newYn" column="NEW_YN"/>
+		<result property="favorYn" column="FAVOR_YN"/>
+		<result property="subtitle" column="SUBTITLE" jdbcType="CLOB" javaType="java.lang.String"/> <!-- CLOB -->
+		<result property="g1cd" column="GUBUN_1"/> 
+		<result property="g2cd" column="GUBUN_2"/> 
+		<result property="g3cd" column="GUBUN_3"/> 
+		<result property="g1nm" column="G1NM"/> 
+		<result property="g2nm" column="G2NM"/> 
+		<result property="g3nm" column="G3NM"/> 
+		<result property="lvcd" column="LVCODE"/> 
+		<result property="lvnm" column="LVNM"/> 
+	</resultMap>
+
+	<sql id="openLecture.selectMainGoldClassList-where">
+		<isNotEmpty prepend="AND" property="pGenre">
+					<![CDATA[
+					A.GENRE = #pGenre#
+					]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchWrd">
+			<isEqual property="searchCnd" compareValue="1">
+				<![CDATA[
+				LOWER(A.LECNM) LIKE '%'|| LOWER(#searchWrd#) || '%' --강좌명 제목
+ 				]]>
+			</isEqual>
+			<isEqual property="searchCnd" compareValue="2">
+				<![CDATA[
+				LOWER(A.INTRO) LIKE  '%'|| LOWER(#searchWrd#) ||'%' --강좌 상세
+				]]>
+			</isEqual>
+			<isEqual property="searchCnd" compareValue="3">
+				<![CDATA[
+				LOWER(A.TUTORNM) LIKE  '%'|| LOWER(#searchWrd#) ||'%' --강사명
+				]]>
+			</isEqual>
+		</isNotEmpty>
+	</sql>
+
+	<sql id="openLecture.sortOrdr-where">
+		<isEqual property="sortOrder" compareValue="newOrdr">
+					<![CDATA[	   DECODE(NEWYN, 'Y', 1, 2) ASC, A.SEQ DESC, A.LDATE DESC,		]]><!-- V.RNK, -->
+		</isEqual>
+		<isEqual property="sortOrder" compareValue="recomendOrdr">
+					<![CDATA[	A.RECOM_YN DESC,		]]>
+		</isEqual>
+		<isEqual property="sortOrder" compareValue="hangulOrdr">
+					<![CDATA[
+					convert (A.LECNM,'ISO2022-KR') ASC,		]]>
+		</isEqual>
+	</sql>
+
+	<!-- 이달의 골드 클래스 리스트 -->
+	<select id="openLecture.selectMainGoldClassList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/* openLecture.selectMainGoldClassList (열린강좌 목록 구하기) */
+		SELECT *
+	  	  FROM (SELECT ROWNUM RNUM
+ 			  		 , ALL_LIST.*
+         		  FROM (SELECT A.SEQ
+         			  		 , A.LECNM 
+                     		 , REPLACE(A.VODIMG,'\','/') AS VODIMG
+							 , A.TUTORNM 
+                   			 , A.TUTORCAREER 
+                   			 , A.TUTORAUTHOR 
+                   			 , A.LECTIME 
+                   			 , A.CREATOR 
+                   			 , A.INTRO 
+                   			 , A.BANNERIMG 
+                   			 , A.CONTENTS 
+                   			 , A.WIDTH_S 
+                   			 , A.HEIGHT_S 
+                   			 , A.VIEWCNT 
+                   			 , A.VODURL 
+                   			 , A.GENRE 
+                   			 , A.TUTORIMG 
+                   			 , A.LECTURE_TYPE 
+                   			 , A.LECTURE_CLS 
+                   			 , A.VOD_PATH 
+                   			 , NVL(A.NEW_YN, 'N') AS NEWYN
+                   			 , NVL(A.HIT_YN, 'N') AS HIT_YN 
+                   			 , NVL(A.RECOM_YN, 'N') AS RECOM_YN 
+                   			 , COUNT(A.SEQ) OVER( PARTITION BY B.GRCODE ) AS TOT_CNT
+                   			 , C.GUBUN_1 G1CD
+                   			 , C.GUBUN_2 G2CD
+                   			 , (SELECT Z.CODENM 
+					         	  FROM TZ_CODE Z 
+					         	 WHERE Z.GUBUN  = '0110' 
+					         	   AND Z.LEVELS = 2 
+					         	   AND Z.CODE   = C.GUBUN_2) AS G2NM
+							 , C.GUBUN_3 G3CD
+                   			 , (SELECT Z.CODENM 
+					         	  FROM TZ_CODE Z 
+					         	 WHERE Z.GUBUN  = '0110' 
+					         	   AND Z.LEVELS = 3 
+					         	   AND Z.CODE   = C.GUBUN_3) AS G3NM		
+							 , (SELECT X.LVCODE 
+							 	  FROM TZ_GOLDHOMEGUBUN_LEVEL X 
+							 	 WHERE X.SEQ = A.SEQ) AS LVCD
+							 , (SELECT Z.CODENM 
+							      FROM TZ_CODE Z 
+							     WHERE Z.GUBUN  = '0121' 
+							       AND Z.LEVELS = 2 
+							       AND Z.CODE   = (SELECT X.LVCODE 
+							       				     FROM TZ_GOLDHOMEGUBUN_LEVEL X 
+							       				    WHERE X.SEQ = A.SEQ)) AS LVNM	                   			 
+                		  FROM TZ_GOLDCLASS A 
+                		     , TZ_GOLDCLASS_GRMNG B 
+                		     , TZ_GOLDHOMEGUBUN C
+               			 WHERE A.USEYN    = 'Y'
+                     	   AND B.GRCODE   = #temGrcode# /* getSession = tem_grcode */
+                     	   AND A.SEQ 	  = B.SEQ(+)
+						   AND A.SEQ 	  = C.SEQ(+)
+                     	   AND C.GUBUN(+) = 'GC'
+			]]>
+
+						<isNotEmpty prepend="AND" property="pLectureCls">
+							   C.GUBUN_1 = #pLectureCls#
+						</isNotEmpty>
+						
+						<isEmpty prepend="AND" property="pLectureCls">
+							   A.LECTURE_CLS != 'GC99'
+						</isEmpty>
+						
+						<isNotEmpty prepend="AND" property="p_type">
+							   C.GUBUN_1 = #p_type#
+						</isNotEmpty>
+			
+						<isNotEmpty prepend="AND" property="p_gcd1">
+							   C.GUBUN_2 = #p_gcd1#
+						</isNotEmpty>
+						
+						<isNotEmpty prepend="AND" property="p_gcd2">
+							   C.GUBUN_3 = #p_gcd2#
+						</isNotEmpty>
+						
+						<isNotEmpty prepend="AND" property="p_level">
+							   A.SEQ IN (SELECT DISTINCT SEQ FROM TZ_GOLDHOMEGUBUN_LEVEL WHERE LVCODE = #p_level#)
+		        		</isNotEmpty>						
+		
+						<include refid="openLecture.selectMainGoldClassList-where" />
+			
+						<isEmpty property="p_sort">
+							   ORDER BY	DECODE(NEWYN, 'Y', 1, 2) ASC, A.SEQ DESC, A.LDATE DESC, A.LECNM) ALL_LIST
+						</isEmpty>
+						
+						<isNotEmpty property="p_sort">
+							<isEqual property="p_sort" compareValue="N">
+							   ORDER BY	DECODE(NEWYN, 'Y', 1, 2) ASC, A.SEQ DESC, A.LDATE DESC, A.LECNM) ALL_LIST
+							</isEqual>
+							
+							<isEqual property="p_sort" compareValue="O">
+							   ORDER BY	A.SEQ, DECODE(NEWYN, 'Y', 1, 2) ASC, A.LDATE DESC, A.LECNM) ALL_LIST
+							</isEqual>		
+							
+							<isEqual property="p_sort" compareValue="V">
+							   ORDER BY	A.VIEWCNT DESC, DECODE(NEWYN, 'Y', 1, 2) ASC, A.SEQ DESC, A.LDATE DESC, A.LECNM) ALL_LIST
+							</isEqual>												
+						</isNotEmpty>						
+		   	<![CDATA[
+			       	   )
+		 	 	 WHERE RNUM > #firstIndex#
+		       	   AND RNUM <= #firstIndex# + #recordCountPerPage#
+			]]>
+	</select>
+
+	<select id="openLecture.selectMainGoldClassListCnt" parameterClass="zvl" resultClass="int">
+		<![CDATA[
+		SELECT COUNT(*)
+		  FROM TZ_GOLDCLASS A
+		  JOIN TZ_GOLDCLASS_GRMNG B ON (A.SEQ = B.SEQ)
+		  LEFT JOIN TZ_GOLDHOMEGUBUN C ON A.SEQ = C.SEQ AND C.GUBUN = 'GC'
+		 WHERE A.USEYN  = 'Y'
+		   AND B.GRCODE = #temGrcode#
+		]]>
+		
+		<isNotEmpty prepend="AND" property="pLectureCls">
+			   C.GUBUN_1 = #pLectureCls#
+		</isNotEmpty>
+		
+		<isEmpty prepend="AND" property="pLectureCls">
+			   A.LECTURE_CLS != 'GC99'
+		</isEmpty>
+		
+		<isNotEmpty prepend="AND" property="p_type">
+			   C.GUBUN_1 = #p_type#
+		</isNotEmpty>
+
+		<isNotEmpty prepend="AND" property="p_gcd1">
+			   C.GUBUN_2 = #p_gcd1#
+		</isNotEmpty>
+		
+		<isNotEmpty prepend="AND" property="p_gcd2">
+			   C.GUBUN_3 = #p_gcd2#
+		</isNotEmpty>
+		
+		<isNotEmpty prepend="AND" property="p_level">
+			   A.SEQ IN (SELECT DISTINCT SEQ FROM TZ_GOLDHOMEGUBUN_LEVEL WHERE LVCODE = #p_level#)
+   		</isNotEmpty>		
+		
+		<include refid="openLecture.selectMainGoldClassList-where" />
+	</select>
+
+	<!-- 열린강좌 누적 조회수를 갱신한다. TZ_GOLDCLASS 테이블에 트리거가 생성되어 있어, 해당 테이블의 누적 조회 자료를 갱신하면 TZ_VIEWCOUNT 테이블 자료도 같이 갱신된다. -->
+	<update id="openLecture.updateOpenClassViewCount" parameterClass="zvl">
+			<![CDATA[
+			/* openLecture.updateOpenClassViewCount  */
+				UPDATE  TZ_GOLDCLASS
+				SET  VIEWCNT = VIEWCNT + 1
+				WHERE  SEQ = #seq#
+			]]>
+
+	</update>
+
+	<!-- 지난 골드클래스 리스트 전문가 관리 리스트 -->
+	<!-- if (v_process.equals("mainPage")) { // 골드클래스 메인 페이지에서는 지난강좌 3개만 출력 v_pagesize = 3; } else if (v_process.equals("INFORMATION")) { // 정보광장 메인페이지 지난강좌 5개 출력 v_pagesize = 5; } -->
+
+	<select id="openLecture.selectPreGoldClassList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/* openLecture.selectPreGoldClassList */
+		SELECT A.SEQ,
+		       A.VODIMG,
+		       A.LECNM,
+		       A.TUTORNM,
+		       A.LECTIME,
+		       A.CREATOR,
+		       A.INTRO,
+		       A.VODURL,
+		       A.WIDTH_S,
+		       A.HEIGHT_S,
+		       A.VIEWCNT ,
+		       ROUND(B.CHECKPOIN, 1) CHECKPOIN
+		 FROM TZ_GOLDCLASS A ,
+		       (SELECT SEQ,
+		              AVG(CHECKPOIN) CHECKPOIN
+		         FROM TZ_GOLDCLASSREPL
+		        GROUP BY SEQ
+		       ) B
+		WHERE A.SEQ = B.SEQ(+)
+		       AND A.OPENYN = 'N'
+		       AND A.USEYN = 'Y'
+		       ]]>
+		<isNotEmpty prepend="AND" property="p_searchtext">
+			<isEqual prepend="AND" property="p_search" compareValue="lecnm">
+				<![CDATA[
+				AND A.GENRE = '%'|| #p_searchtext# || '%'
+ 				]]>
+			</isEqual>
+			<isEqual prepend="AND" property="p_search" compareValue="tutornm">
+				<![CDATA[
+				AND A.GENRE =  '%'|| #p_searchtext# ||'%'
+				]]>
+			</isEqual>
+		</isNotEmpty>
+		<![CDATA[
+		ORDER BY INDATE DESC
+		]]>
+	</select>
+
+
+	<!-- 지난 골드클래스 게시물 갯수 전문가 관리 게시물 갯수 -->
+	<select id="openLecture.selectPreGoldClassListCnt" parameterClass="zvl" resultClass="zvl">
+	<![CDATA[
+	/* openLecture.selectPreGoldClassListCnt */
+		SELECT COUNT(*)
+		FROM TZ_GOLDCLASS A ,
+		(SELECT SEQ,
+		AVG(CHECKPOIN) CHECKPOIN
+		FROM TZ_GOLDCLASSREPL
+		GROUP BY SEQ
+		) B
+		WHERE A.SEQ = B.SEQ(+)
+		AND A.OPENYN = 'N'
+		AND A.USEYN = 'Y'
+	]]>
+		<isNotEmpty prepend="AND" property="p_searchtext">
+			<isEqual prepend="AND" property="p_search" compareValue="lecnm">
+				<![CDATA[
+				AND A.GENRE = '%'|| #p_searchtext# || '%'
+ 				]]>
+			</isEqual>
+			<isEqual prepend="AND" property="p_search" compareValue="tutornm">
+				<![CDATA[
+				AND A.GENRE =  '%'|| #p_searchtext# ||'%'
+				]]>
+			</isEqual>
+		</isNotEmpty>
+	</select>
+
+	<!-- 강좌 의견 등록 ########################################################################## -->
+	<insert id="openLecture.insertReply" parameterClass="zvl">
+		<selectKey resultClass="java.lang.Long" keyProperty="cnt">
+			select count(*) cnt from TZ_GOLDCLASSREPL where seq = #pSeq#
+		</selectKey>
+		<selectKey resultClass="java.lang.Long" keyProperty="num">
+			SELECT NVL(MAX(CNSL_SN),0)+1 AS CNSL_SN FROM TN_EMPYMN_CNSL
+		</selectKey>
+
+		/* openLecture.insertReply */
+
+		INSERT INTO TZ_GOLDCLASSREPL
+		(
+			SEQ,
+			NUM,
+			CONT,
+			CHECKPOIN,
+			REGID,
+			REGDT
+		)
+		VALUES
+		(
+			#pSeq#,
+			#num#,
+			#p_comment#,
+			#p_point#,
+			#userid#, /* getSession = userid */
+			TO_CHAR (SYSDATE, 'YYYYMMDDHH24MISS')
+		)
+	</insert>
+
+	<!-- 강좌 상세보기 SELECT 1 구분 -->
+	<select id="openLecture.selectViewGoldClass" parameterClass="zvl" resultMap="viewGoldClassMap">
+		/* openLecture.selectViewGoldClass(강좌 상세보기) */
+		<![CDATA[
+		SELECT A.SEQ
+		 	 , SUBTITLE
+		 	 , LECNM
+			 , BANNERIMG
+			 , TUTORNM
+			 , TUTORCAREER
+			 , LECTIME
+			 , GENRE
+			 , CREATOR
+			 , INTRO
+			 , CONTENTS
+			 , TUTORAUTHOR
+			 , HEIGHT_S
+			 , WIDTH_S
+			 , OPENYN
+			 , VODURL
+			 , REPLACE(A.VODIMG,'\','/') AS VODIMG 
+			 , VOD_PATH
+			 , LECTURE_TYPE
+			 , TUTORIMG
+			 , CREATYEAR
+			 , NVL(HIT_YN,   'N') AS HIT_YN
+			 , NVL(RECOM_YN, 'N') AS RECOM_YN
+			 , NVL(NEW_YN,   'N') AS NEW_YN
+			 , DECODE(NVL(B.SUBJ, ''), '', 'N', 'Y') AS FAVOR_YN
+			 , C.GUBUN_1
+			 , (SELECT X.CODENM 
+			      FROM TZ_CODE X 
+			     WHERE X.GUBUN  = '0110' 
+			       AND X.LEVELS = 1 
+			       AND X.CODE = C.GUBUN_1) AS G1NM
+			 , C.GUBUN_2
+			 , (SELECT X.CODENM 
+			 	  FROM TZ_CODE X 
+			 	 WHERE X.GUBUN  = '0110' 
+			 	   AND X.LEVELS = 2 
+			 	   AND X.CODE   = C.GUBUN_2) AS G2NM
+			 , C.GUBUN_3
+			 , (SELECT X.CODENM 
+			 	  FROM TZ_CODE X 
+			 	 WHERE X.GUBUN  = '0110' 
+			 	   AND X.LEVELS = 3 
+			 	   AND X.CODE   = C.GUBUN_3) AS G3NM
+			 , D.LVCODE 
+			 , (SELECT X.CODENM 
+			 	  FROM TZ_CODE X 
+			 	 WHERE X.GUBUN  = '0121' 
+			 	   AND X.LEVELS = 2 
+			 	   AND X.CODE   = D.LVCODE) AS LVNM		 
+		  FROM TZ_GOLDCLASS A
+		     , (SELECT SUBJ
+		          FROM TZ_SUBJ_FAVOR B
+		         WHERE CLASS_TYPE = '02'
+		           AND USERID     = #userid#  /* getSession = userid */)B
+		     , TZ_GOLDHOMEGUBUN C
+		     , TZ_GOLDHOMEGUBUN_LEVEL D		       
+		 WHERE A.SEQ 		  = #pSeq#
+		   AND TO_CHAR(A.SEQ) = B.SUBJ(+)
+		   AND A.SEQ 		  = C.SEQ(+)
+		   AND C.GUBUN(+) 	  = 'GC'
+		   AND A.SEQ 		  = D.SEQ(+)		   
+		]]>
+	</select>
+
+	<!-- 강좌 강좌 상세 보기 SELECT 2 RanDom구분 -->
+	<select id="openLecture.selectViewGoldClassRandom" parameterClass="zvl" resultClass="zvl">
+	<![CDATA[
+	/* openLecture.selectViewGoldClassRandom */
+
+			 SELECT *
+			  FROM
+			       (SELECT SEQ ,
+			              BANNERIMG ,
+			              LECNM ,
+			              TUTORNM ,
+			              TUTORCAREER ,
+			              LECTIME ,
+			              GENRE ,
+			              CREATOR ,
+			              INTRO ,
+			              CONTENTS ,
+			              TUTORAUTHOR ,
+			              HEIGHT_S ,
+			              WIDTH_S ,
+			              OPENYN ,
+			              VODURL ,
+			              VODIMG ,
+			              VOD_PATH ,
+			              LECTURE_TYPE ,
+			              TUTORIMG ,
+			              CREATYEAR ,
+			              NVL(HIT_YN, 'N') AS HIT_YN ,
+			              NVL(RECOM_YN, 'N') AS RECOM_YN ,
+			              NVL(NEW_YN, 'N') AS NEW_YN
+			         FROM TZ_GOLDCLASS
+			     ORDER BY DBMS_RANDOM.VALUE
+			       )
+			 WHERE ROWNUM < 2
+			    ]]>
+	</select>
+	<!-- ##################S#########T##########A#######R##################T##########################################애매함 -->
+	<!-- 열린강좌 상세 화면에서 연관강좌 목록을 조회한다. 연관강좌란 연관된 강좌로 tags 항목에 등록된 내용을 기반으로 조회한다 tags 가져오는 파일 -->
+	<select id="openLecture.selectRelatedLecutreListTag" parameterClass="zvl" resultClass="zvl">
+			<![CDATA[
+			/* openLecture.selectRelatedLecutreListTag */
+			SELECT a.seq,  a.TAGS
+			  FROM   TZ_GOLDCLASS a
+			 WHERE a.SEQ = #pSeq#
+			]]>
+	</select>
+
+	<!-- 열린강좌 상세 화면에서 연관강좌 목록을 조회한다. 연관강좌란 연관된 강좌로 tags 항목에 등록된 내용을 기반으로 조회한다 tags로 리스트 가져오는파일 -->
+	<select id="openLecture.selectRelatedLecutreTagList_back" parameterClass="zvl" resultClass="zvl" remapResults="true" >
+	<![CDATA[
+		/* openLecture.selectRelatedLecutreTagList (열린강좌 연관 강좌 웹목록 조회) */
+SELECT  *
+  FROM  (
+        SELECT  A.SEQ
+            ,   A.LECNM
+            ,   REPLACE(A.VODIMG,'\','/') AS VODIMG
+            ,   A.TAGS
+            ,   A.TUTORNM
+            ,   A.INTRO
+            ,   A.CONTENTS
+            ,   A.HIT_YN
+            ,   A.NEW_YN
+            ,   A.RECOM_YN
+            ]]>
+		<iterate property="arrList">
+     	<![CDATA[
+             , CASE WHEN INSTR (A.TAGS, #arrList[].arrStr# ) > 0 THEN 1 ELSE 0 END AS RNK$arrList[].num$
+             ]]>
+		</iterate>
+	<![CDATA[
+          FROM  TZ_GOLDCLASS A
+            ,   TZ_GOLDCLASS_GRMNG B
+         WHERE  A.SEQ <> #pSeq#
+           AND  B.GRCODE = #temGrcode#  /* getSession = grcode */
+           AND  A.USEYN = 'Y'
+           AND  A.SEQ = B.SEQ
+           AND  (
+           ]]>
+		<iterate property="arrList">
+			<isEqual property="arrList[].num" compareValue="0">
+         	<![CDATA[ A.TAGS LIKE '%' || #arrList[].arrStr# || '%' ]]>
+			</isEqual>
+			<isGreaterThan property="arrList[].num" compareValue="0">
+			<![CDATA[ OR A.TAGS LIKE '%' ||#arrList[].arrStr# || '%' ]]>
+			</isGreaterThan>
+		</iterate>
+    	<![CDATA[
+        ))
+ 		WHERE ( ]]>
+		<iterate property="arrList"  conjunction="+">
+         	<![CDATA[ RNK$arrList[].num$]]>
+		</iterate>
+			<![CDATA[
+			) > #rnkLimit#
+			ORDER  BY
+			]]>
+		<iterate property="arrList" >
+			<isEqual property="arrList[].num" compareValue="0">
+		  	<![CDATA[  RNK$arrList[].num$ ]]>
+			</isEqual>
+			<isNotEqual property="arrList[].num" compareValue="0">
+		  	<![CDATA[ ||  RNK$arrList[].num$  ]]>
+			</isNotEqual>
+		</iterate>
+ 	<![CDATA[  DESC ]]>
+	</select>
+	
+	<select id="openLecture.selectRelatedLecutreTagList" parameterClass="zvl" resultClass="zvl" remapResults="true" >
+		<![CDATA[
+		/* openLecture.selectRelatedLecutreTagList (열린강좌 연관 강좌 웹목록 조회) */
+		SELECT *
+		  FROM (SELECT TYPE
+		   			 , COURSE_ID
+		   			 , YEAR
+		   			 , SUBJSEQ
+		   			 , COURSE_NAME
+		   			 , IMGFILE
+		   			 , MOBILE_USE_YN
+		   			 , INTRO
+		   			 , EXPLAIN
+		   			 , PROPSTART
+		   			 , PROPEND
+		   			 , EDUSTART
+		   			 , EDUEND
+		   			 , B.GUBUN_1 AS G1CD 
+		   			 , B.GUBUN_2 AS G2CD
+		   			 , B.GUBUN_3 AS G3CD
+					 , (SELECT X.CODENM 
+					      FROM TZ_CODE X 
+					     WHERE X.GUBUN  = '0110' 
+					       AND X.LEVELS = 1 
+					       AND X.CODE = B.GUBUN_1) AS G1NM
+		   			 , (SELECT X.CODENM 
+					      FROM TZ_CODE X 
+					     WHERE X.GUBUN  = '0110' 
+					       AND X.LEVELS = 2 
+					       AND X.CODE = B.GUBUN_2) AS G2NM
+		   			 , (SELECT X.CODENM 
+					      FROM TZ_CODE X 
+					     WHERE X.GUBUN  = '0110' 
+					       AND X.LEVELS = 3 
+					       AND X.CODE = B.GUBUN_3) AS G3NM
+					 , C.LVCODE AS LVCD
+					 , (SELECT X.CODENM 
+					 	  FROM TZ_CODE X 
+					 	 WHERE X.GUBUN  = '0121' 
+					 	   AND X.LEVELS = 2 
+					 	   AND X.CODE   = C.LVCODE) AS LVNM			   			 
+		]]>
+				<iterate property="arrList">
+	     			<![CDATA[
+	             	 , CASE WHEN INSTR (LINK_TEXT, #arrList[].arrStr# ) > 0 THEN 1 ELSE 0 END AS RNK$arrList[].num$
+		            ]]>
+				</iterate>
+				<![CDATA[
+		          FROM VZ_LINK_COURSE A
+		          LEFT JOIN TZ_GOLDHOMEGUBUN B ON A.COURSE_ID = TO_CHAR(B.SEQ) AND B.GUBUN = 'GC' 
+		          LEFT JOIN TZ_GOLDHOMEGUBUN_LEVEL C ON A.COURSE_ID = TO_CHAR(C.SEQ) 		          
+		         WHERE COURSE_ID <> #pSeq#
+		           AND COURSE_ID NOT IN (SELECT DISTINCT SUBJ 
+		           						   FROM TZ_SUBJHOMEGUBUN 
+		           						  WHERE GUBUN    = 'GS' 
+		           						    AND GUBUN_1 IN 'T0')
+		           AND (
+	           	]]>
+				<iterate property="arrList">
+					<isEqual property="arrList[].num" compareValue="0">
+		         		<![CDATA[ LINK_TEXT LIKE '%' || #arrList[].arrStr# || '%' ]]>
+					</isEqual>
+					
+					<isGreaterThan property="arrList[].num" compareValue="0">
+						<![CDATA[ OR LINK_TEXT LIKE '%' ||#arrList[].arrStr# || '%' ]]>
+					</isGreaterThan>
+				</iterate>
+		    	<![CDATA[
+		        ))
+		 		WHERE ( ]]>
+				<iterate property="arrList"  conjunction="+">
+		         	<![CDATA[ RNK$arrList[].num$]]>
+				</iterate>
+					<![CDATA[
+					) > #rnkLimit#
+					ORDER  BY
+					]]>
+				<iterate property="arrList" >
+					<isEqual property="arrList[].num" compareValue="0">
+				  	<![CDATA[  RNK$arrList[].num$ ]]>
+					</isEqual>
+					<isNotEqual property="arrList[].num" compareValue="0">
+				  	<![CDATA[ ||  RNK$arrList[].num$  ]]>
+					</isNotEqual>
+				</iterate>
+		 	<![CDATA[  DESC ]]>
+		</select>
+	<!-- ################################E###############N##################D########################################### -->
+
+
+	<!-- 강좌 의견 리스트 전문가 관리 리스트 -->
+	<select id="openLecture.selectGoldClassReplyList" parameterClass="zvl" resultClass="zvl">
+	<![CDATA[
+			/* openLecture.selectGoldClassReplyList */
+
+		SELECT A.SEQ,
+		       A.NUM,
+		       A.REGID,
+		       A.CONT ,
+		       A.CHECKPOIN,
+		       A.REGDT,
+		       B.NAME
+		  FROM TZ_GOLDCLASSREPL A ,
+		       TZ_MEMBER B
+		 WHERE A.REGID = B.USERID(+)
+		       AND A.SEQ = #pSeq#
+		       AND B.GRCODE = #tem_grcode# /* getSession = tem_grcode */
+		       ORDER BY REGDT DESC
+	]]>
+	</select>
+	<!-- 강좌 의견 갯수 전문가 관리 갯수 -->
+
+	<select id="openLecture.selectGoldClassReplyListCnt" parameterClass="zvl" resultClass="zvl">
+	<![CDATA[
+	/* openLecture.selectGoldClassReplyListCnt */
+
+		SELECT COUNT(*)
+		  FROM TZ_GOLDCLASSREPL A ,
+		       TZ_MEMBER B
+		 WHERE A.REGID = B.USERID(+)
+		       AND A.SEQ = #pSeq#
+		       AND B.GRCODE = #tem_grcode#  /* getSession = tem_grcode */
+		       ORDER BY REGDT DESC
+	]]>
+	</select>
+
+	<!-- 강좌 의견 삭제 -->
+	<delete id="openLecture.deleteReply">
+        <![CDATA[
+        /* openLecture.deleteReply */
+            delete from TZ_GOLDCLASSREPL
+ 			  where  num = #p_num#
+        ]]>
+	</delete>
+	
+	<!-- 외부 링크를 타고 열린 강좌를 보려 할 경우에 필요한 기본 정보를 조회한다. -->
+	<select id="openLecture.selecOpenClassCntInfo" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/* openLecture.selecOpenClassCntInfo (열린강좌 분류별 카운트) */
+		SELECT MAX(DECODE( NVL(LECTURE_CLS, 'ALL'), 'ALL', CLS_CNT) ) 
+		       - NVL(MAX(DECODE( NVL(LECTURE_CLS, 'ALL'), 'GC99', CLS_CNT)), 0) AS ALL_CNT
+		     , MAX(DECODE( NVL(LECTURE_CLS, 'ALL'), 'GC01', CLS_CNT) ) AS GC01_CNT
+		     , MAX(DECODE( NVL(LECTURE_CLS, 'ALL'), 'GC02', CLS_CNT) ) AS GC02_CNT
+		     , MAX(DECODE( NVL(LECTURE_CLS, 'ALL'), 'GC03', CLS_CNT) ) AS GC03_CNT
+		     , MAX(DECODE( NVL(LECTURE_CLS, 'ALL'), 'GC04', CLS_CNT) ) AS GC04_CNT
+		     , MAX(DECODE( NVL(LECTURE_CLS, 'ALL'), 'GC05', CLS_CNT) ) AS GC05_CNT
+		     , MAX(DECODE( NVL(LECTURE_CLS, 'ALL'), 'GC06', CLS_CNT) ) AS GC06_CNT
+		     , MAX(DECODE( NVL(LECTURE_CLS, 'ALL'), 'GC07', CLS_CNT) ) AS GC07_CNT
+		     , MAX(DECODE( NVL(LECTURE_CLS, 'ALL'), 'GC08', CLS_CNT) ) AS GC08_CNT
+		     , MAX(DECODE( NVL(LECTURE_CLS, 'ALL'), 'GC11', CLS_CNT) ) AS GC11_CNT
+		     , MAX(DECODE( NVL(LECTURE_CLS, 'ALL'), 'GC99', CLS_CNT) ) AS GC99_CNT
+		     , MAX(DECODE( NVL(LECTURE_CLS, 'ALL'), 'B0',   CLS_CNT) ) AS B0_CNT
+		     , MAX(DECODE( NVL(LECTURE_CLS, 'ALL'), 'G0',   CLS_CNT) ) AS G0_CNT
+		     , MAX(DECODE( NVL(LECTURE_CLS, 'ALL'), 'K0',   CLS_CNT) ) AS K0_CNT
+		     , MAX(DECODE( NVL(LECTURE_CLS, 'ALL'), 'M0',   CLS_CNT) ) AS M0_CNT
+		     , MAX(DECODE( NVL(LECTURE_CLS, 'ALL'), 'S0',   CLS_CNT) ) AS S0_CNT
+		  FROM (SELECT LECTURE_CLS
+		             , COUNT( SEQ ) AS CLS_CNT
+		          FROM (SELECT NVL(C.GUBUN_1, A.LECTURE_CLS) LECTURE_CLS
+		                 	 , A.SEQ 
+		         		  FROM TZ_GOLDCLASS A 
+		         		  	 , TZ_GOLDCLASS_GRMNG B
+		         		  	 , TZ_GOLDHOMEGUBUN C
+		        		 WHERE A.USEYN    = 'Y'
+		              	   AND B.GRCODE   = #temGrcode#  /* getSession = tem_grcode */
+		              	   AND A.SEQ      = B.SEQ
+		              	   AND A.SEQ 	  = C.SEQ(+)
+		              	   AND C.GUBUN(+) = 'GC'
+		              ]]>
+		              
+						<isNotEmpty prepend="AND" property="pLectureCls">
+							   C.GUBUN_1 = #pLectureCls#
+						</isNotEmpty>
+						
+						<isEmpty prepend="AND" property="pLectureCls">
+							   A.LECTURE_CLS != 'GC99'
+						</isEmpty>
+						
+						<isNotEmpty prepend="AND" property="p_type">
+							   C.GUBUN_1 = #p_type#
+						</isNotEmpty>						
+			
+						<isNotEmpty prepend="AND" property="p_gcd1">
+							   C.GUBUN_2 = #p_gcd1#
+						</isNotEmpty>
+						
+						<isNotEmpty prepend="AND" property="p_gcd2">
+							   C.GUBUN_3 = #p_gcd2#
+						</isNotEmpty>
+						
+						<isNotEmpty prepend="AND" property="p_level">
+							   A.SEQ IN (SELECT DISTINCT SEQ FROM TZ_GOLDHOMEGUBUN_LEVEL WHERE LVCODE = #p_level#)
+		        		</isNotEmpty>
+			              
+             <include refid="openLecture.selectMainGoldClassList-where" />
+		              <![CDATA[
+		        ) GROUP BY ROLLUP(LECTURE_CLS))
+	]]>
+	</select>
+
+ 	<!-- 열린강좌 후기 목록을 조회한다. -->
+	<select id="openLecture.selectReviewListCnt"  parameterClass="zvl" resultClass="int" >
+	 <![CDATA[
+		/* openLecture.selectReviewListCnt (열린강좌후기 목록 갯수) */
+			SELECT count(*)
+			  FROM TZ_GOLDCLASSREPL A ,
+			       TZ_MEMBER B
+			 WHERE A.SEQ = 177
+			       AND A.REGID = B.USERID
+
+ 	]]>
+	</select>
+
+
+
+	 <!-- 열린강좌 후기 목록을 조회한다. -->
+	<select id="openLecture.selectReviewList"  parameterClass="zvl" resultClass="zvl" >
+	 <![CDATA[
+		/* openLecture.selectReviewList (열린강좌후기 목록 조회) */
+		SELECT *
+		 		FROM
+		       (SELECT ROWNUM RNUM,
+		              ALL_LIST.*
+		         FROM
+		              (
+				        SELECT  A.SEQ
+				            ,   A.NUM
+				            ,   A.CONT
+				            ,   A.CHECKPOIN
+				            ,   A.REGID
+				            ,   B.NAME
+				            ,   TO_CHAR( TO_DATE(A.REGDT, 'YYYYMMDDHH24MISS'), 'YYYY/MM/DD') AS REGDT
+				            ,   RANK() OVER(ORDER BY DECODE(A.REGID, #userid#, 1, 0) DESC, NUM DESC) AS RNK   /* getSession = userid */
+				            ,   COUNT(NUM) OVER() AS TOT_CNT
+				          FROM  TZ_GOLDCLASSREPL A
+				            ,   TZ_MEMBER B
+				         WHERE  A.SEQ = #pSeq#
+				           AND  A.REGID = B.USERID
+			       		) ALL_LIST
+				    )
+			 WHERE  RNUM  > #firstIndex#
+			   AND  RNUM <= #firstIndex# + #recordCountPerPage#
+			   ORDER  BY RNK, NUM DESC
+
+ 	]]>
+	</select>
+	<select id="openLecture.selectMainGoldClassThemeList" parameterClass="zvl" resultClass="zvl" >
+	 <![CDATA[
+	 /* openLecture.selectMainGoldClassThemeList */
+		SELECT A.SEQ ,
+		       A.LECNM ,
+		       NVL(V.MONTHLY_CNT, 0) AS MONTHLY_CNT ,
+		       REPLACE(A.VODIMG,'\','/') AS VODIMG ,
+		       A.TUTORNM ,
+		       A.TUTORCAREER ,
+		       A.TUTORAUTHOR ,
+		       A.LECTIME ,
+		       A.CREATOR ,
+		       A.INTRO ,
+		       A.BANNERIMG ,
+		       A.CONTENTS ,
+		       A.WIDTH_S ,
+		       A.HEIGHT_S ,
+		       A.VIEWCNT ,
+		       A.VODURL ,
+		       A.GENRE ,
+		       A.TUTORIMG ,
+		       A.LECTURE_TYPE ,
+		       A.LECTURE_CLS ,
+		       A.VOD_PATH ,
+		       NVL(A.NEW_YN, 'N') AS NEW_YN ,
+		       NVL(A.HIT_YN, 'N') AS HIT_YN ,
+		       NVL(A.RECOM_YN, 'N') AS RECOM_YN ,
+		       COUNT(A.SEQ) OVER( PARTITION BY B.GRCODE ) AS TOT_CNT
+		  FROM TZ_GOLDCLASS A ,
+		       TZ_GOLDCLASS_GRMNG B ,
+		       (SELECT SEQ ,
+		              SUM(CNT) AS MONTHLY_CNT ,
+		              RANK() OVER( ORDER BY SUM(CNT) DESC, COUNT(SEQ) DESC, SEQ DESC) AS RNK
+		         FROM TZ_VIEWCOUNT
+		        WHERE VIEWDATE BETWEEN TO_CHAR(SYSDATE - 7, 'YYYYMMDD') AND TO_CHAR(SYSDATE, 'YYYYMMDD')
+		        /*WHERE  VIEWDATE BETWEEN ADD_MONTHS(SYSDATE, -1) AND TO_CHAR(SYSDATE, 'YYYYMMDD')   */
+		        GROUP BY SEQ
+		       ) V
+		 WHERE A.USEYN = 'Y'
+		       AND B.GRCODE = #grCode#
+		       AND A.SEQ = B.SEQ(+)
+		       AND A.SEQ = V.SEQ(+) ]]>
+		        <isNotNull prepend="AND" property="p_genre">
+		       <![CDATA[  AND A.GENRE = #p_genre# ]]>
+		        </isNotNull>
+		       <isNotNull  property="p_lecture_cls">
+				    <isNotEqual prepend="AND" property="p_lecture_cls" compareValue="ALL">
+				        AND LECTURE_THEME =#p_lecture_cls#
+				    </isNotEqual>
+				</isNotNull>
+		        <![CDATA[
+				ORDER BY
+		       A.LDATE DESC,
+		       A.SEQ DESC
+		       ]]>
+	</select>
+		<!-- (열린강좌 분류별 카운트) -->
+	<select id="openLecture.selecOpenClassThemeCntInfo" parameterClass="zvl" resultClass="zvl" >
+	 <![CDATA[
+			SELECT
+		       MAX(DECODE( NVL(LECTURE_THEME, 'ALL'), 'ALL', CLS_CNT) ) AS ALL_CNT  ,
+		       MAX(DECODE( NVL(LECTURE_THEME, 'ALL'), 'OT01', CLS_CNT) ) AS OT01_CNT  ,
+		       MAX(DECODE( NVL(LECTURE_THEME, 'ALL'), 'OT02', CLS_CNT) ) AS OT02_CNT  ,
+		       MAX(DECODE( NVL(LECTURE_THEME, 'ALL'), 'OT03', CLS_CNT) ) AS OT03_CNT  ,
+		       MAX(DECODE( NVL(LECTURE_THEME, 'ALL'), 'OT04', CLS_CNT) ) AS OT04_CNT  ,
+		       MAX(DECODE( NVL(LECTURE_THEME, 'ALL'), 'OT05', CLS_CNT) ) AS OT05_CNT  ,
+		       MAX(DECODE( NVL(LECTURE_THEME, 'ALL'), 'OT06', CLS_CNT) ) AS OT06_CNT  ,
+		       MAX(DECODE( NVL(LECTURE_THEME, 'ALL'), 'OT07', CLS_CNT) ) AS OT07_CNT  ,
+		       MAX(DECODE( NVL(LECTURE_THEME, 'ALL'), 'OT08', CLS_CNT) ) AS OT08_CNT  ,
+		       MAX(DECODE( NVL(LECTURE_THEME, 'ALL'), 'OT09', CLS_CNT) ) AS OT09_CNT  ,
+		       MAX(DECODE( NVL(LECTURE_THEME, 'ALL'), 'OT10', CLS_CNT) ) AS OT10_CNT
+		  FROM (
+		SELECT A.LECTURE_THEME  ,
+		       COUNT( A.SEQ ) AS CLS_CNT
+		  FROM TZ_GOLDCLASS A  ,
+		       TZ_GOLDCLASS_GRMNG B
+		 WHERE A.USEYN = 'Y'
+		       AND B.GRCODE = #temGrcode#
+		       AND A.SEQ = B.SEQ
+		 GROUP BY ROLLUP(LECTURE_THEME)  )
+		 ]]>
+	</select>
+
+	<!-- 콘텐츠아카데미 메인 리스트 -->
+	<select id="openLecture.selectMainList" parameterClass="zvl" resultClass="zvl">
+	<![CDATA[
+		SELECT  *
+		  FROM  (
+			SELECT ROW_NUMBER() OVER(ORDER BY ROUND(DBMS_RANDOM.VALUE(1, 100),0)) AS RNUM,
+			       ALL_LIST.*
+			  FROM  (
+					SELECT
+						   A.SEQ ,   --번호
+					   	   A.LECNM , --제목
+					   	   A.INTRO ,
+					       REPLACE(A.VODIMG,'\','/') AS VODIMG,   -- 이미지경로
+					   	   A.LECTURE_CLS,  -- 분류코드
+					   	   A.NEW_YN AS NEWYN,
+						   DECODE(A.LECTURE_CLS,
+					    	'GC01','방송영상','GC02','게임','GC03','만화애니캐릭터','GC04','음악공연','GC05','기타',
+					        'GC06','콘텐츠 인사이트','GC07','마스터 클래스','GC11','제휴과정'
+					       ) AS LECTURE_CLS_NM,  -- 분류명
+					       TO_DATE(A.LDATE,'YYYYMMDDHH24MISS') AS LDATE   -- 등록일
+					 FROM TZ_GOLDCLASS A 
+					 LEFT OUTER JOIN TZ_GOLDCLASS_GRMNG B
+					   ON A.SEQ = B.SEQ
+					INNER JOIN TZ_SUBJECT_RANDOM C
+					   ON A.SEQ = TO_NUMBER(C.COURSE)
+					  AND C.GUBUN = 'O'
+				    WHERE A.USEYN = 'Y'
+					  AND B.GRCODE = 'N000001' 
+			    ) ALL_LIST
+			)
+		WHERE  RNUM  > '0'
+		   AND  RNUM <= '0' + #recordCountPerPage#
+	]]>
+	</select>
+	
+	<!-- 열린강좌 목록 최신조회 (메인-추천프로그램) -->
+	<select id="openLecture.selectRecommndView" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		SELECT 
+		  'open' AS MENU_NM
+		  , A.SEQ    --번호
+		  , A.LECNM TITLE
+		  , A.INTRO CONTENT
+		  , '(열린강좌)'||A.LECNM||' - '||A.INTRO IMG_DESC
+		  , REPLACE(A.VODIMG,'\','/') AS PATH_IMG
+		  FROM TZ_GOLDCLASS A ,
+		  TZ_GOLDCLASS_GRMNG B ,
+		  (SELECT SEQ,
+		  SUM(CNT) AS MONTHLY_CNT,
+		  RANK() OVER( ORDER BY SUM(CNT) DESC, COUNT(SEQ) DESC, SEQ DESC) AS RNK
+		  FROM TZ_VIEWCOUNT
+		  WHERE VIEWDATE BETWEEN TO_CHAR(SYSDATE - 7, 'YYYYMMDD') AND TO_CHAR(SYSDATE, 'YYYYMMDD') /*WHERE VIEWDATE BETWEEN ADD_MONTHS(SYSDATE, -1) AND TO_CHAR(SYSDATE, 'YYYYMMDD') */
+		  GROUP BY SEQ
+		  ) V
+		WHERE A.USEYN = 'Y'
+		  AND B.GRCODE = 'N000001' /* getSession = tem_grcode */
+		  AND A.SEQ = B.SEQ(+)
+		  AND A.SEQ = V.SEQ(+)
+		  AND A.SEQ = #seq#
+		ORDER BY A.LDATE DESC
+		]]>
+	</select>
+
+	<!-- 열린강좌 찜목록 리스트 -->
+	<select id="openLecture.selectMyOpenLectureList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+				SELECT *
+		  FROM
+		       (SELECT B.SEQ ,
+		       		  REPLACE(B.VODIMG,'\','/') AS VODIMG ,
+		              B.LECNM ,
+		              b.INTRO,
+		              B.LECTURE_CLS ,
+		              GET_CODENM('0101', B.AREA) AS AREA_NM ,
+		              GET_CODENM('0118', B.LECTURE_CLS) AS LECTURE_CLS_NM ,
+		              RANK() OVER( ORDER BY A.REG_DT DESC, B.SEQ DESC) AS RNK ,
+		              COUNT(A.SUBJ) OVER() AS TOT_CNT
+		         FROM TZ_SUBJ_FAVOR A ,
+		              TZ_GOLDCLASS B
+		        WHERE A.CLASS_TYPE = '02'
+		              AND A.GRCODE = #grcode# --로그인 사용자 교육그룹코드가 들어갑니다. 포털에서는 'N000001' 입니다.
+		              AND A.USERID = #userId# --로그인 사용자 아이디가 들어갑니다.
+		              AND A.SUBJ = B.SEQ
+		       )
+		 WHERE RNK < 31
+		ORDER BY RNK
+		]]>
+	</select>
+	
+	<select id="openLecture.selectOpenclassEventSeq" parameterClass="zvl" resultClass="String">
+		SELECT SEQ
+		  FROM (
+					SELECT B.SEQ, ROW_NUMBER() OVER(ORDER BY ROUND(DBMS_RANDOM.VALUE(1, 100),0)) AS RAN
+					  FROM TZ_OPENCLASS_EVENT A
+					 INNER JOIN TZ_OPENCLASS_SEQ B
+					    ON A.EVENT_SEQ = B.EVENT_SEQ
+					 WHERE TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN A.START_DATE AND A.END_DATE
+					   AND A.USE_YN = 'Y'
+					   AND NOT EXISTS (
+					                       SELECT 1
+					                         FROM TZ_OPENCLASS_TARGET C
+					                        WHERE B.SEQ = C.SEQ
+					                          AND C.USERID = #userid#
+					                   )
+		       ) T
+		 WHERE RAN = 1
+	</select>
+	
+	<!-- 열린강좌 진행중인 이벤트여부 체크  -->
+	<select id="openLecture.selectOpenclassEventCount" parameterClass="zvl" resultClass="int">
+		SELECT COUNT(0) AS CNT
+		  FROM TZ_OPENCLASS_EVENT A
+		 INNER JOIN TZ_OPENCLASS_SEQ B
+		    ON A.EVENT_SEQ = B.EVENT_SEQ
+		 WHERE TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN START_DATE AND END_DATE
+		   AND A.USE_YN = 'Y'
+		   AND B.SEQ = #seq#
+	</select>
+	
+	<!-- 열린강좌 이벤트 등록 -->
+	<update id="openLecture.updateOpenClassEvent" parameterClass="zvl">
+		MERGE INTO TZ_OPENCLASS_TARGET A
+		     USING (
+		     	SELECT event.EVENT_SEQ FROM TZ_OPENCLASS_EVENT event LEFT JOIN TZ_OPENCLASS_SEQ sbj ON sbj.EVENT_SEQ = event.EVENT_SEQ WHERE TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN event.START_DATE AND event.END_DATE AND sbj.SEQ = #seq#
+		     	) B
+		        ON (A.EVENT_SEQ = B.EVENT_SEQ
+		       AND A.SEQ = #seq#
+		       AND A.USERID = #userid#)
+		 WHEN MATCHED THEN
+		     UPDATE SET STUDY_COUNT = STUDY_COUNT + 1,
+		                  LDATE = SYSDATE
+		 WHEN NOT MATCHED THEN
+		     INSERT (
+		                EVENT_SEQ,
+		                USERID,
+		                SEQ,
+		                STUDY_DATE,
+		                STUDY_COUNT,
+		                INDATE,
+		                LDATE
+		             )
+		      VALUES (
+		                B.EVENT_SEQ,
+		                #userid#,
+		                #seq#,
+		                TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS'),
+		                1,
+		                SYSDATE,
+		                SYSDATE
+		              )
+	</update>
+	
+	<!-- 분류별 탭 1depth 목록 -->
+	<select id="openLecture.realmTabList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/* openLecture.realmTabList */
+		SELECT T1.CODE
+			 , T1.CODENM
+			 , (SELECT ISNULL(COUNT(DISTINCT A.SEQ), 0)
+		  		  FROM (SELECT X.SEQ
+		  		  		     , Y.GRCODE 
+		  		  		  FROM TZ_GOLDCLASS X
+		  		  		     , TZ_GOLDCLASS_GRMNG Y 
+		  		  		 WHERE X.USEYN  = 'Y' 
+		  		  		   AND Y.GRCODE = #temGrcode# 
+		  		  		   AND X.SEQ = Y.SEQ) A
+		    			INNER JOIN TZ_GOLDHOMEGUBUN B ON A.SEQ = B.SEQ
+		 		 WHERE A.GRCODE  = #temGrcode#
+		 		   AND B.GUBUN   = 'GC'
+		    	   AND B.GUBUN_1 = T1.CODE
+			   ) AS CNT
+		  FROM TZ_CODE T1
+		 WHERE T1.GUBUN = '0110'
+		 ORDER BY T1.CODE ASC
+		]]>
+	</select>	
+	
+	<!-- 분류 목록 -->
+	<select id="openLecture.gubunList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/* openLecture.gubunList */
+		SELECT A.CODE
+			 , A.CODENM
+		  FROM TZ_CODE A
+		 WHERE A.GUBUN IN ('0110')
+		   AND A.UPPER  = #p_code#
+		   AND A.LEVELS = #p_ordr#
+		 ORDER BY A.CODE ASC
+		]]>
+	</select>	
+	
+	<!-- 난이도 목록 -->
+	<select id="openLecture.levelList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/* openLecture.levelList */
+		SELECT A.CODE
+			 , A.CODENM
+		  FROM TZ_CODE A
+		 WHERE A.GUBUN IN ('0121')
+		   AND A.LEVELS = '2'
+		   AND A.UPPER  = (SELECT B.LEVEL_CODE 
+		  				     FROM TZ_CODE B
+		 				    WHERE B.GUBUN IN ('0110')
+		   				      AND B.CODE   = #p_code#
+		   				      AND B.LEVELS = '1')
+		 ORDER BY A.CODE ASC
+		]]>
+	</select>	
+
+</sqlMap>
+

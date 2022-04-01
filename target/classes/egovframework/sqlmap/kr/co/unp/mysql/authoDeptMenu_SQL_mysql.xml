@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="satisfaction">
+
+	<typeAlias  alias="zvl" type="kr.co.unp.util.ZValue"/>
+    <typeAlias  alias="menuManageVO" type="kr.co.unp.mpm.vo.MenuManageVO"/>
+
+	<insert id="authoDeptMenuDAO.insertDeptMenuCreat_S" parameterClass="zvl">
+		<selectKey resultClass="java.lang.Long" keyProperty="deptMenuId">
+			SELECT SEQ_COMTNDEPTMENUCREATDTLS.NEXTVAL FROM DUAL
+		</selectKey>
+		<![CDATA[
+			INSERT INTO COMTNDEPTMENUCREATDTLS ( DEPT_MENU_ID, MENU_NO, MAPCREAT_ID )
+			VALUES (  #deptMenuId#, #menuNo#, #mapcreatId# )
+		]]>
+	</insert>
+
+	<delete id="authoDeptMenuDAO.deleteDeptMenuCreat_S" parameterClass="string">
+		<![CDATA[
+			DELETE FROM COMTNDEPTMENUCREATDTLS
+			 WHERE MAPCREAT_ID=#mapcreatId#
+		]]>
+	</delete>
+
+	<select id="authoDeptMenuDAO.selectDeptMenuCreatCnt_S" parameterClass="string" resultClass="int">
+		<![CDATA[
+			SELECT COUNT(MAPCREAT_ID) AS "totcnt"
+			  FROM COMTNDEPTMENUCREATDTLS
+			 WHERE MAPCREAT_ID = #mapcreatId#
+		]]>
+	</select>
+
+	<select id="authoDeptMenuDAO.selectDeptMenuCreat_S" parameterClass="zvl" resultClass="menuManageVO">
+		<![CDATA[
+			SELECT
+				  A.MENU_NO AS "menuNo"
+				, A.MENU_ORDR AS "menuOrdr"
+				, A.MENU_NM AS "menuNm"
+				, A.UPPER_MENU_NO AS "upperMenuId"
+			    , (SELECT count(C.MENU_NO)
+			         FROM COMTNDEPTMENUCREATDTLS C
+			        WHERE C.MENU_NO  = A.MENU_NO
+			          AND C.MAPCREAT_ID = #mapcreatId#
+			       ) AS "chkYeoBu"
+			FROM TC_MENUINFO A, TC_AUTHOR_MENU B
+			WHERE A.MENU_NO = B.MENU_NO
+			AND AUTHOR_CODE = #authorCode#
+			ORDER BY A.MENU_ORDR
+		]]>
+	</select>
+
+
+    <insert id="authoDeptMenuDAO.insertNewEmployeeAuthor">
+        <![CDATA[
+            INSERT INTO TC_AUTHORINFO
+                  ( AUTHOR_CODE
+                  , AUTHOR_NM
+                  , AUTHOR_DC
+                  , FRST_REGIST_PNTTM )
+           SELECT 'ROLE_' || user_id, user_id || '_' || user_name, user_id || '_' || user_name, SYSTIMESTAMP
+            FROM admin_member
+            WHERE user_id NOT IN (
+				SELECT replace(AUTHOR_CODE,'ROLE_','')
+				FROM TC_AUTHORINFO
+			)
+        ]]>
+    </insert>
+
+    <select id="authoDeptMenuDAO.selectChangeInPersonnelList" parameterClass="zvl" resultClass="zvl">
+        <![CDATA[
+            SELECT
+            	a.USER_ID
+            	, a.USER_NAME
+            	, b.AUTHOR_CODE
+            	, a.staff_place AS dept_id
+            	, b.AUTHOR_DEPT_ID as PREV_DEPT_CODE
+            FROM ADMIN_MEMBER a
+            inner JOIN (
+            	SELECT replace(AUTHOR_CODE,'ROLE_','') AS user_id,
+                	AUTHOR_DEPT_ID,
+                    AUTHOR_CODE
+                FROM TC_AUTHORINFO
+            ) b ON b.user_id = a.user_id
+            WHERE b.AUTHOR_DEPT_ID <> a.staff_place
+        ]]>
+    </select>
+
+    <update id="authoDeptMenuDAO.updateAuthorDeptId" parameterClass="zvl">
+            UPDATE TC_AUTHORINFO
+            	SET AUTHOR_DEPT_ID = #authorDeptId#
+            WHERE AUTHOR_CODE = #authorCode#
+    </update>
+
+    <delete id="authoDeptMenuDAO.releaseChangeInPersonnel" parameterClass="zvl">
+            DELETE TC_AUTHOR_MENU
+            WHERE AUTHOR_CODE IN
+		<iterate conjunction="," open="(" close=")" property="authorCodeData">
+			#authorCodeData[]#
+		</iterate>
+    </delete>
+
+</sqlMap>

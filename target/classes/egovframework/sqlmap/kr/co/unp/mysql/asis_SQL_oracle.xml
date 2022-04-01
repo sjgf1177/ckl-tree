@@ -1,0 +1,1493 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="asis">   
+
+	<typeAlias  alias="zvl" type="kr.co.unp.util.ZValue"/>
+	<typeAlias  alias="fnwBoardVO" type="kr.co.unp.bbs.vo.BoardVO"/>
+	
+	<select id="asisDAO.selectAsIsBbsArticles" parameterClass="fnwBoardVO" resultClass="fnwBoardVO" >
+		<![CDATA[
+		SELECT * FROM
+		( SELECT a.*, rownum+rnum-1 as totalRows
+		   FROM ( SELECT a.*, rownum rnum
+		            FROM (
+
+			Select 	
+				id 	AS ntcrId,	-- 게시자 ID
+				passwd as password,
+				0		AS sortOrdr,	-- 정열
+				name		AS ntcrNm,	-- 게시자명
+				title 	AS nttSj,	-- 게시물제목
+				content 	AS nttCn,	-- 게시물내용
+				reads 	AS inqireCo, 	-- 조회횟수
+				0	AS parnts,	-- 상위
+				wdate		AS regDate, 	--등록일
+				idx as nttNo,
+				image as fileNm
+			 From $orgTableNm$  a 
+			where 1=1 and idx > #currentSize#
+			order by wdate asc
+			
+		            ) a
+		          ORDER BY rnum DESC ) a
+		  ORDER BY rnum )
+		WHERE rnum BETWEEN #firstIndex# + 1 AND #lastIndex#
+		]]>
+	</select>
+			
+	<select id="asisDAO.selectAsIsArticlesCnt" parameterClass="fnwBoardVO" resultClass="int" >
+		<![CDATA[
+			select count(*)
+			 From $orgTableNm$  a
+			where 1=1 and seq > #currentSize# and seq <= 43932
+		]]>
+	</select>
+	
+	<!--
+	사이버경찰청 > 소통공감 > 명예의전당 > 명예의전당
+	-->
+	<select id="asisDAO.selectB0000008AsIsBbsArticles" parameterClass="fnwBoardVO" resultClass="fnwBoardVO" >
+		<![CDATA[
+		SELECT * FROM
+		( SELECT a.*, rownum+rnum-1 as totalRows
+		   FROM ( SELECT a.*, rownum rnum
+		            FROM (
+
+			Select 	
+				aid 	AS ntcrId,	-- 게시자 ID
+				0		AS sortOrdr,	-- 정열
+				anm		AS ntcrNm,	-- 게시자명
+				writer 	AS nttSj,	-- 명예의전당자
+				contents 	AS nttCn,	-- 게시물내용
+				hits  AS inqireCo, 	-- 조회횟수
+				writer  AS section,  -- 계급
+				title  AS option1,  -- 소속
+				CASE WHEN STATE = 'Y' THEN '0' ELSE '1' 
+        		END AS delcode,  
+				0	AS parnts,	-- 상위
+				up_date		AS regDate, 	--등록일
+				seq AS nttNo,
+				imgname AS fileNm
+			 From $orgTableNm$  a 
+			where 1=1 seq idx > #currentSize#
+			order by up_date asc
+			
+		            ) a
+		          ORDER BY rnum DESC ) a
+		  ORDER BY rnum )
+		WHERE rnum BETWEEN #firstIndex# + 1 AND #lastIndex#
+		]]>
+	</select>
+	
+	<!--
+	사이버경찰청 > 소통공감 > 규제개혁 > 추진과제
+	-->
+	<select id="asisDAO.selectB0000010AsIsBbsArticles" parameterClass="fnwBoardVO" resultClass="fnwBoardVO" >
+		<![CDATA[
+		SELECT * FROM
+		( SELECT a.*, rownum+rnum-1 as totalRows
+		   FROM ( SELECT a.*, rownum rnum
+		            FROM (
+
+			Select 	
+				id 	AS ntcrId,	-- 게시자 ID
+				0		AS sortOrdr,	-- 정열
+				kornm		AS ntcrNm,	-- 게시자명
+				title 	AS nttSj,	-- 게시물제목
+				contents 	AS nttCn,	-- 게시물내용
+				hits  AS inqireCo, 	-- 조회횟수
+				CASE WHEN STATE = 'Y' THEN '0' ELSE '1' 
+        		END AS delcode,  -- 삭제여부
+				0	AS parnts,	-- 상위
+				reg_date	AS regDate, 	--등록일
+				seq AS nttNo
+			 From $orgTableNm$  a 
+			where 1=1 and seq > #currentSize#
+			order by reg_date asc
+			
+		            ) a
+		          ORDER BY rnum DESC ) a
+		  ORDER BY rnum )
+		WHERE rnum BETWEEN #firstIndex# + 1 AND #lastIndex#
+		]]>
+	</select>
+	
+	<!--
+	사이버경찰청 > 홍보마당 > 정책홍보실 > 이렇게일하겠습니다
+	-->
+	<select id="asisDAO.selectB0000015AsIsBbsArticles" parameterClass="fnwBoardVO" resultClass="fnwBoardVO" >
+		<![CDATA[
+		SELECT * FROM
+		( SELECT a.*, rownum+rnum-1 as totalRows
+		   FROM ( SELECT a.*, rownum rnum
+		            FROM (
+
+			Select 	
+				mbid 	AS ntcrId,	-- 게시자 ID
+				0		AS sortOrdr,	-- 정열
+				writer		AS ntcrNm,	-- 게시자명
+				subject 	AS nttSj,	-- 게시물제목
+				content 	AS nttCn,	-- 게시물내용
+				visit  AS inqireCo, 	-- 조회횟수
+				CASE WHEN del_yn = 'N' THEN '0' ELSE '1' 
+        		END AS delcode,  -- 삭제여부
+				CASE WHEN SUBSTR (part, 0, 6) = '002001' THEN '01'
+		          	 WHEN SUBSTR (part, 0, 6) = '002002' THEN '02' 
+		         	 WHEN SUBSTR (part, 0, 6) = '002003' THEN '03'
+		             WHEN SUBSTR (part, 0, 6) = '002004' THEN '04'
+		             WHEN SUBSTR (part, 0, 6) = '002005' THEN '05'
+		             WHEN SUBSTR (part, 0, 6) = '002006' THEN '06'
+		             WHEN SUBSTR (part, 0, 6) = '002007' THEN '07'
+		             WHEN SUBSTR (part, 0, 6) = '002008' THEN '08'
+		             WHEN SUBSTR (part, 0, 6) = '002009' THEN '09'
+		             WHEN SUBSTR (part, 0, 6) = '002010' THEN '10'
+		             WHEN SUBSTR (part, 0, 6) = '002011' THEN '11'
+		             WHEN SUBSTR (part, 0, 6) = '002012' THEN '12'
+        		END AS section, 
+				summary  AS option2,  --  주요내용
+				0	AS parnts,	-- 상위
+				regdate		AS regDate, 	--등록일
+				id AS nttNo,
+				biid AS option1
+			 From $orgTableNm$  a 
+			where biid=#option1# and id > #currentSize#
+			order by regdate asc
+			
+		            ) a
+		          ORDER BY rnum DESC ) a
+		  ORDER BY rnum )
+		WHERE rnum BETWEEN #firstIndex# + 1 AND #lastIndex#
+		]]>
+	</select>
+	
+	<!--
+	사이버경찰청 > 홍보마당 > 지방청NOW
+	-->
+	<select id="asisDAO.selectB0000019AsIsBbsArticles" parameterClass="fnwBoardVO" resultClass="fnwBoardVO" >
+		<![CDATA[
+		SELECT * FROM
+		( SELECT a.*, rownum+rnum-1 as totalRows
+		   FROM ( SELECT a.*, rownum rnum
+		            FROM (
+
+			Select 	
+				mbid 	AS ntcrId,	-- 게시자 ID
+				0		AS sortOrdr,	-- 정열
+				writer		AS ntcrNm,	-- 게시자명
+				subject 	AS nttSj,	-- 게시물제목
+				content 	AS nttCn,	-- 게시물내용
+				visit  AS inqireCo, 	-- 조회횟수
+				CASE WHEN del_yn = 'N' THEN '0' ELSE '1' 
+        		END AS delcode,  -- 삭제여부
+				0	AS parnts,	-- 상위
+				regdate		AS regDate, 	--등록일
+				id AS nttNo,
+				biid AS option1
+			 From $orgTableNm$  a 
+			where biid=#option1# and id > #currentSize#
+			order by regdate asc
+			
+		            ) a
+		          ORDER BY rnum DESC ) a
+		  ORDER BY rnum )
+		WHERE rnum BETWEEN #firstIndex# + 1 AND #lastIndex#
+		]]>
+	</select>
+	
+	<!--
+	사이버경찰청 > 홍보마당 > 정책홍보실 > 이렇게일하겠습니다
+	사이버경찰청 > 홍보마당 > 지방청NOW
+	사이버경찰청 > 이용안내 > 개인정보침해신고
+	-->
+	<select id="asisDAO.selectB0000015AsIsBbsArticlesCnt" parameterClass="fnwBoardVO" resultClass="int" >
+		<![CDATA[
+			Select 	
+				count(*) as cnt
+			 From $orgTableNm$  a
+			where biid=#option1# and id > #currentSize#
+		]]>
+	</select>
+			
+	<!--
+	사이버경찰청 > 홍보마당 > 정책홍보실 > 이렇게일하겠습니다
+	-->		
+	<select id="asisDAO.selectB0000015BoardFiles" parameterClass="zvl" resultClass="zvl" >
+		<![CDATA[
+			 SELECT a.id, b.bid, b.FILESYSNAME FROM PS_BOARD a, PS_BOARD_FILES b 
+			 WHERE b.bid=#bid# AND a.biid=#biid# AND b.bid=a.id
+		]]>
+	</select>
+			
+	<!--
+	사이버경찰청 > 홍보마당 > 정책홍보실 > 이렇게일하겠습니다(코멘트)
+	-->
+	<select id="asisDAO.selectB0000015AsIsCmmntBbsArticles" parameterClass="fnwBoardVO" resultClass="fnwBoardVO" >
+		<![CDATA[
+			Select 	
+				pw  AS  password,
+				writer		AS ntcrNm,	-- 게시자명
+				cmnt 	AS nttCn,	-- 게시물내용
+				regdate	  AS regDate, 	--등록일
+				idx AS nttId,
+				biid AS option1
+			 From PS_BOARD_CMNT  a
+			where biid=#option1# AND del_yn='N' AND bid=#nttNo#
+			order by regdate asc			
+		]]>
+	</select>
+	
+	<!--
+	사이버경찰청 > 홍보마당 > PBN뉴스(홍보영상)
+	-->
+	<select id="asisDAO.selectB0000021AsIsBbsArticles" parameterClass="fnwBoardVO" resultClass="fnwBoardVO" >
+		<![CDATA[
+		SELECT * FROM
+		( SELECT a.*, rownum+rnum-1 as totalRows
+		   FROM ( SELECT a.*, rownum rnum
+		            FROM (
+
+			Select 	
+				0		AS sortOrdr,	-- 정열
+				title 	AS nttSj,	-- 게시물제목
+		        cont  AS option1, -- 내용
+		        vod56 AS option2, -- 영상링크
+		        vod300 AS option3, -- 영상링크
+				caption 	AS nttCn,	-- 자막
+				0	AS parnts,	-- 상위
+				to_date(indate||'000000','yyyymmddhh24miss')  AS  regDate,  -- 등록일
+				CASE WHEN code1 = 2 THEN 'M01' 
+			            WHEN code1 = 3 THEN 'M02' 
+			            WHEN code1 = 7 THEN 'M03' 
+        		END AS section,  
+		        CASE WHEN viewyn = 'Y' THEN '0' 
+		             	WHEN viewyn = 'N' THEN '1' 
+		       	END AS delcode,      
+				seq as nttNo,
+				img as fileNm
+			 From $orgTableNm$  a 
+			where 1=1 and seq > #currentSize#
+			order by indate asc
+			
+		            ) a
+		          ORDER BY rnum DESC ) a
+		  ORDER BY rnum )
+		WHERE rnum BETWEEN #firstIndex# + 1 AND #lastIndex#
+		]]>
+	</select>
+			
+	<!--
+	사이버경찰청 > 정보마당 > 정보공개제도안내 > 정보공개관련법령, 정보공개서식안내
+	사이버경찰청 > 정보마당 > 정보목록 > 기록물건정보목록
+	-->
+	<select id="asisDAO.selectB0000023AsIsBbsArticles" parameterClass="fnwBoardVO" resultClass="fnwBoardVO" >
+		<![CDATA[
+		SELECT * FROM
+		( SELECT a.*, rownum+rnum-1 as totalRows
+		   FROM ( SELECT a.*, rownum rnum
+		            FROM (
+
+			Select 	
+				reg_aid 	AS ntcrId,	-- 게시자 ID
+				0		AS sortOrdr,	-- 정열
+				title 	AS nttSj,	-- 게시물제목
+				CASE WHEN STATE = 'Y' THEN '0' ELSE '1' 
+        		END AS delcode,  -- 삭제여부
+				0	AS parnts,	-- 상위
+				reg_date		AS regDate, 	--등록일
+				seq AS nttNo,
+				bseq AS option1
+			 From $orgTableNm$  a 
+			where bseq=#option1# and seq > #currentSize#
+			order by reg_date asc
+			
+		            ) a
+		          ORDER BY rnum DESC ) a
+		  ORDER BY rnum )
+		WHERE rnum BETWEEN #firstIndex# + 1 AND #lastIndex#
+		]]>
+	</select>
+	<!--
+	사이버경찰청 > 정보마당 > 정보공개제도안내 > 정보공개관련법령, 정보공개서식안내
+	사이버경찰청 > 정보마당 > 정보목록 > 기록물건정보목록
+	-->		
+	<select id="asisDAO.selectB0000023BoardFiles" parameterClass="zvl" resultClass="zvl" >
+		<![CDATA[
+			 SELECT a.seq, a.bseq, b.seq, b.FILESYSNAME FROM INFODATA_BOARD a, INFODATA_BOARD_FILES b 
+			 WHERE b.seq=#seq# AND a.seq=#seq# AND a.bseq=#bseq# AND b.seq=a.seq
+		]]>
+	</select>
+	<!--
+	사이버경찰청 > 정보마당 > 정보공개제도안내 > 정보공개관련법령, 정보공개서식안내
+	사이버경찰청 > 정보마당 > 정보목록 > 기록물건정보목록
+	-->
+	<select id="asisDAO.selectB0000023AsIsBbsArticlesCnt" parameterClass="fnwBoardVO" resultClass="int" >
+		<![CDATA[
+			Select 	
+				count(*) as cnt
+			 From $orgTableNm$  a 
+			where seq=#option1# and seq > #currentSize#
+		]]>
+	</select>
+	
+		
+	<!--
+	사이버경찰청 > 정보마당 > 사전공표정보 > 정보공개자료실
+	-->
+	<select id="asisDAO.selectB0000025AsIsBbsArticles" parameterClass="fnwBoardVO" resultClass="fnwBoardVO" >
+		<![CDATA[
+		SELECT * FROM
+		( SELECT a.*, rownum+rnum-1 as totalRows
+		   FROM ( SELECT a.*, rownum rnum
+		            FROM (
+
+			Select 	
+				id 	AS ntcrId,	-- 게시자 ID
+				0		AS sortOrdr,	-- 정열
+				name		AS ntcrNm,	-- 게시자명
+				title 	AS nttSj,	-- 게시물제목
+				content 	AS nttCn,	-- 게시물내용
+				reads  AS inqireCo, 	-- 조회횟수
+				dept  AS section,   -- 국관
+				dept_sub AS option1, -- 목록
+				0	AS parnts,	-- 상위
+				wdate		AS regDate, 	--등록일
+				idx AS nttNo,
+				image AS fileNm
+			 From $orgTableNm$  a 
+			where 1=1 and idx > #currentSize#
+			order by wdate asc
+			
+		            ) a
+		          ORDER BY rnum DESC ) a
+		  ORDER BY rnum )
+		WHERE rnum BETWEEN #firstIndex# + 1 AND #lastIndex#
+		]]>
+	</select>	
+		 
+	<!--
+	사이버경찰청 > 정보마당 > 주요원문목록
+	-->
+	<select id="asisDAO.selectB0000028AsIsBbsArticles" parameterClass="fnwBoardVO" resultClass="fnwBoardVO" >
+		<![CDATA[
+		SELECT * FROM
+		( SELECT a.*, rownum+rnum-1 as totalRows
+		   FROM ( SELECT a.*, rownum rnum
+		            FROM (
+
+			Select 	
+				0		AS sortOrdr,	-- 정열
+				part		AS ntcrNm,	-- 게시자명
+				title 	AS nttSj,	-- 게시물제목
+				CASE WHEN state = 'Y' THEN '0' ELSE '1' 
+        		END AS delcode,  -- 삭제여부
+				0	AS parnts,	-- 상위
+        		DATE_FORMAT (set_date,'%Y-%m-%d')	 AS option1, 	-- 결제일
+				type_code_nm	AS section, 	-- 종류
+				reg_date		AS regDate, 	-- 등록일
+				seq AS nttNo
+			 From $orgTableNm$  a 
+			where 1=1 and seq > #currentSize#
+			order by regdate asc
+			
+		            ) a
+		          ORDER BY rnum DESC ) a
+		  ORDER BY rnum )
+		WHERE rnum BETWEEN #firstIndex# + 1 AND #lastIndex#
+		]]>
+	</select>
+	
+	<!--
+	사이버경찰청 > 정보마당 > 주요원문목록
+	-->		
+	<select id="asisDAO.selectB0000028BoardFiles" parameterClass="zvl" resultClass="zvl" >
+		<![CDATA[
+			 SELECT a.seq, b.seq, b.FILESYSNAME FROM ORIGINAL_BOARD a, ORIGINAL_BOARD_FILES b 
+			 WHERE b.seq=#seq# AND a.seq=#seq# AND b.seq=a.seq
+		]]>
+	</select>
+	
+		<!--
+	사이버경찰청 > 정보마당 > 법령정보 > 입법예고
+	-->
+	<select id="asisDAO.selectB0000029AsIsBbsArticles" parameterClass="fnwBoardVO" resultClass="fnwBoardVO" >
+		<![CDATA[
+		SELECT * FROM
+		( SELECT a.*, rownum+rnum-1 as totalRows
+		   FROM ( SELECT a.*, rownum rnum
+		            FROM (
+
+			Select 	
+				id 	AS ntcrId,	-- 게시자 ID
+				0		AS sortOrdr,	-- 정열
+				name	AS ntcrNm,	-- 게시자명
+				title 	AS nttSj,	-- 게시물제목
+				content AS nttCn,	-- 게시물내용
+				reads  AS inqireCo, 	-- 조회횟수
+				CASE WHEN state = 'Y' THEN '0' ELSE '1' 
+        		END AS delcode,  -- 삭제여부
+				wdate 	AS regDate, 	--등록일
+				idx AS nttNo,
+				0	AS parnts,	-- 상위
+				image as fileNm
+			 From $orgTableNm$  a 
+			where 1=1 and idx > #currentSize#
+			order by wdate asc
+			
+		            ) a
+		          ORDER BY rnum DESC ) a
+		  ORDER BY rnum )
+		WHERE rnum BETWEEN #firstIndex# + 1 AND #lastIndex#
+		]]>
+	</select>
+
+	<!--
+	사이버경찰청 > 정보마당 > 법령정보 > 입법예고
+	-->
+	<select id="asisDAO.selectB0000029AsIsCmmntBbsArticles" parameterClass="fnwBoardVO" resultClass="fnwBoardVO" >
+		<![CDATA[
+			Select 	
+				idx 	AS  nttId,
+				name		AS ntcrNm,	-- 게시자명
+				content 	AS nttCn,	-- 게시물내용
+				pwd  AS  password,
+				wdate	  AS regDate, 	--등록일
+			    CASE WHEN emoticon_idx = '1' THEN 1
+			  		WHEN emoticon_idx = '2' THEN 2
+			    	WHEN emoticon_idx = '3' THEN 3
+				ELSE 0 END AS opinion	
+			 From YBOARD_60_CMNT  a
+			where state = 'Y' and idx = #nttNo#
+			order by wdate asc
+		]]>
+	</select>
+			 
+	<!--
+	사이버경찰청 > 정보마당 > 법령정보 > 소관법령
+	-->
+	<select id="asisDAO.selectB0000031AsIsBbsArticles" parameterClass="fnwBoardVO" resultClass="fnwBoardVO" >
+		<![CDATA[
+		SELECT * FROM
+		( SELECT a.*, rownum+rnum-1 as totalRows
+		   FROM ( SELECT a.*, rownum rnum
+		            FROM (
+
+			Select 	
+				0		AS sortOrdr,	-- 정열
+				upd_aid  AS  ntcrId,  -- 아이디
+				part		AS ntcrNm,	-- 게시자명
+				title 	AS nttSj,	-- 게시물제목
+				tel  AS ntcrTel, -- 연락처
+				CASE WHEN state = 'Y' THEN '0' ELSE '1' 
+        		END AS delcode,  -- 삭제여부
+				0	AS parnts,	-- 상위
+				CASE WHEN kind = '청원경찰법' THEN '01'
+			        WHEN kind = '훈령' THEN '02'
+			        WHEN kind = '부령' THEN '03'
+			        WHEN kind = '대통령령' THEN '04'
+			        WHEN kind = '법률' THEN '05'
+        		END AS section,   -- 국관
+				link_url		AS option1, 	-- 링크
+				reg_date		AS regDate, 	-- 등록일
+				seq AS nttNo
+			 From $orgTableNm$  a 
+			where 1=1 and seq > #currentSize#
+			order by reg_date asc
+			
+		            ) a
+		          ORDER BY rnum DESC ) a
+		  ORDER BY rnum )
+		WHERE rnum BETWEEN #firstIndex# + 1 AND #lastIndex#
+		]]>
+	</select>
+	
+	<!--
+	사이버경찰청 > 정보마당 > 세계치안정보 > 대륙별치안정보(파견국관리)
+	-->
+	<select id="asisDAO.selectB0000033AsIsBbsArticles" parameterClass="fnwBoardVO" resultClass="fnwBoardVO" >
+		<![CDATA[
+		SELECT * FROM
+		( SELECT a.*, rownum+rnum-1 as totalRows
+		   FROM ( SELECT a.*, rownum rnum
+		            FROM (
+            
+			SELECT  
+				CON as section,
+				TREND as trend,
+				MATTER as matter,
+				CITY as city, 
+				AREA as area, 
+				POP as pop, 
+				POPGUSUNG as popgusung, 
+				LANGUAGE as language, 
+				NATION2 as nation2, 
+				ECT as etc, 
+				NATION as nation,
+				POP2 as pop2, 
+				AREA2 as area2, 
+				POPGUSUNG2 as popgusung2, 
+				ECT2 as etc2, 
+				NATIONMAP as nationmap,
+				UP_DATE as regDate,
+				CON_SEQ	AS option1,
+				PICTURE as fileNm
+			FROM
+				$orgTableNm$ a
+			WHERE 1=1
+			order by UP_DATE asc
+			
+		            ) a
+		          ORDER BY rnum DESC ) a
+		  ORDER BY rnum )
+		WHERE rnum BETWEEN #firstIndex# + 1 AND #lastIndex#
+		]]>
+	</select>
+	
+	<!--
+	사이버경찰청 > 정보마당 > 세계치안정보 > 대륙별치안정보(게시판관리)
+	-->
+	<select id="asisDAO.selectB0000034AsIsBbsArticles" parameterClass="fnwBoardVO" resultClass="fnwBoardVO" >
+		<![CDATA[
+		SELECT * FROM
+		( SELECT a.*, rownum+rnum-1 as totalRows
+		   FROM ( SELECT a.*, rownum rnum
+		            FROM (
+
+			Select 	
+				id 	AS ntcrId,	-- 게시자 ID
+				0		AS sortOrdr,	-- 정열
+				name		AS ntcrNm,	-- 게시자명
+				title 	AS nttSj,	-- 게시물제목
+				content 	AS nttCn,	-- 게시물내용
+				reads 	AS inqireCo, 	-- 조회횟수
+				0	AS parnts,	-- 상위
+				wdate		AS regDate, 	--등록일
+				SUBSTR (gubun, 0, 2)   AS  section,   -- 대륙구분
+				SUBSTR (gubun, 3, 3)   AS  option2,   -- 나라구분코드
+				nation  AS  option1,   -- 나라구분
+				con_seq  as  nttNo,
+				image as fileNm
+			 From $orgTableNm$  a 
+			where state = 'Y' and con_seq > #currentSize#
+			order by wdate asc
+			
+		            ) a
+		          ORDER BY rnum DESC ) a
+		  ORDER BY rnum )
+		WHERE rnum BETWEEN #firstIndex# + 1 AND #lastIndex#
+		]]>
+	</select>
+			 
+	<!--
+	사이버경찰청 > 소개마당 > 경찰소개 > 장비소개
+	-->
+	<select id="asisDAO.selectB0000035AsIsBbsArticles" parameterClass="fnwBoardVO" resultClass="fnwBoardVO" >
+		<![CDATA[
+		SELECT * FROM
+		( SELECT a.*, rownum+rnum-1 as totalRows
+		   FROM ( SELECT a.*, rownum rnum
+		            FROM (
+
+			Select 	
+				0		AS sortOrdr,	-- 정열
+				title 	AS nttSj,	-- 게시물제목
+				lar_cd    AS  section,  --  장비분류
+				feature		AS option1, 	-- 제원
+				charactor		AS option2, 	-- 특징
+				use		AS option3, 	-- 용도
+				holdings		AS option4, 	-- 보유량
+				picture     AS  fileNm,   -- 파일
+				up_date    AS regDate, 	-- 등록일
+				0	AS parnts,	-- 상위
+				lar_seq  AS nttNo
+			 From $orgTableNm$  a 
+			where 1=1 and lar_seq > #currentSize#
+			order by up_date asc
+			
+		            ) a
+		          ORDER BY rnum DESC ) a
+		  ORDER BY rnum )
+		WHERE rnum BETWEEN #firstIndex# + 1 AND #lastIndex#
+		]]>
+	</select>
+	
+	<!--
+	사이버경찰청 > 이용안내 > 개인정보침해신고
+	-->
+	<select id="asisDAO.selectB0000037AsIsBbsArticles" parameterClass="fnwBoardVO" resultClass="fnwBoardVO" >
+		<![CDATA[
+		SELECT * FROM
+		( SELECT a.*, rownum+rnum-1 as totalRows
+		   FROM ( SELECT a.*, rownum rnum
+		            FROM (
+
+			Select 	
+				0		AS sortOrdr,	-- 정열
+				writer		AS ntcrNm,	-- 게시자명
+				email   AS  ntcrEmail,  -- 이메일
+				tel  AS  ntcrTel,   -- 연락처
+				zip AS  ntcrZipcode,   -- 우편번호
+				addr   AS  ntcrAddr1,   -- 주소
+				subject 	AS nttSj,	-- 게시물제목
+				content 	AS nttCn,	-- 게시물내용
+				visit  AS inqireCo, 	-- 조회횟수
+				CASE WHEN del_yn = 'N' THEN '0' ELSE '1' 
+        		END AS delcode,  -- 삭제여부
+				0	AS parnts,	-- 상위
+				regdate   AS regDate, 	-- 등록일
+				id AS nttNo,
+				biid AS option1
+			 From $orgTableNm$  a 
+			where biid=#option1# and id > #currentSize#
+			order by regdate asc
+			
+		            ) a
+		          ORDER BY rnum DESC ) a
+		  ORDER BY rnum )
+		WHERE rnum BETWEEN #firstIndex# + 1 AND #lastIndex#
+		]]>
+	</select>
+	
+	<!--
+	사이버경찰청 > 홍보마당 > 정책홍보실 > 뉴스레터메일링
+	-->
+	<select id="asisDAO.selectB0000039AsIsBbsArticles" parameterClass="fnwBoardVO" resultClass="fnwBoardVO" >
+		<![CDATA[
+		SELECT * FROM
+		( SELECT a.*, rownum+rnum-1 as totalRows
+		   FROM ( SELECT a.*, rownum rnum
+		            FROM (
+
+			Select 	
+				0		AS sortOrdr,	-- 정열
+				kornm	AS nttSj,	-- 신청자명
+				email   AS  ntcrEmail,  -- 이메일
+				pwd   AS  password,  -- 비밀번호
+				tel1 || '-' || tel2 || '-' || tel3  AS  ntcrTel,   -- 연락처
+				CASE WHEN yn = 'Y' THEN '0' ELSE '1' 
+        		END AS option1,  -- 삭제여부
+				CASE WHEN sms_yn = 'Y' THEN '0' ELSE '1' 
+        		END AS option2,  -- 삭제여부
+				0	AS parnts	-- 상위
+			 From $orgTableNm$  a 
+			where 1=1 
+			order by kornm desc
+			
+		            ) a
+		          ORDER BY rnum DESC ) a
+		  ORDER BY rnum )
+		WHERE rnum BETWEEN #firstIndex# + 1 AND #lastIndex#
+		]]>
+	</select>
+	
+	<!--
+	사이버경찰청 > 국민마당 > 소통공감 > 자유게시판
+	-->
+	<select id="asisDAO.selectB0000003AsIsBbsArticlesCnt" parameterClass="fnwBoardVO" resultClass="int" >
+		<![CDATA[
+					
+					SELECT count(*) as cnt
+					  FROM YBOARD_31 A
+					  where A.idx > 183300 AND A.idx <=  183726 and a.idx <> 183346
+		]]>
+	</select>
+	
+	<select id="asisDAO.selectB0000003AsIsBbsArticles" parameterClass="fnwBoardVO" resultClass="fnwBoardVO" >
+		<![CDATA[
+					
+					SELECT A.IDX as nttNo,
+					       A.TITLE as nttSj,
+					       A.ID as ntcrId,
+					       A.NAME as ntcrNm,
+					       A.WDATE as regDate,
+					       A.READS as inqireCo,
+					       'Y' AS htmlYn,
+					       A.CONTENT as nttCn,
+					       A.PASSWD as password,
+					       A.DEPART as option1,
+					       case when A.PROCESS = 1 and A.POINT = '6' then '6'
+						        when A.PROCESS = 1 and A.POINT <> '6' then '5'
+								when A.PROCESS = 3 then '3'
+								when A.PROCESS = 2 then '4'
+                           end as replyAt,
+					       A.POINT as satisfaction,
+					       A.RE_CONT as option2,
+					       A.RE_NAME as option3,
+					       A.RE_WDATE as answerDate,
+					       A.RE_TEL as option5,
+					       A.RE_C_TEL as option6,
+					       A.RE_C_NAME as option7,
+					       A.RE_C_CONT as option8,
+					       A.RE_C_WDATE as answeringDate,
+					       A.SUB_DEPART as option10,
+					       A.RE_PART as option11,
+					       A.RE_C_PART as option12,
+					       case when A.STATE = 'Y' then '0'
+						        else '1'
+						   end as delcode,
+					       A.IPADDR as ntcrIp,
+					       A.FIN_DATE as finDate,
+					       A.DEPART_TEL as ntcrTel
+					  FROM YBOARD_31 A
+					  where A.idx > 183300 AND A.idx <=  183726 and a.idx <> 183346
+					  order by A.IDX asc
+		            
+		]]>
+	</select>
+	<!--
+	사이버경찰청 > 국민마당 > 소통공감 > 자유게시판(이첩히스토리)
+	-->
+	<select id="asisDAO.selectB0000003AsIsTransHistory" parameterClass="fnwBoardVO" resultClass="fnwBoardVO" >
+		<![CDATA[
+			SELECT
+			       A.DEPT as midNm,
+			       A.SUB_DEPT as smNm,
+			       A.REG_DATE as regDate,
+			       A.TRANS_ID as option3,
+			       A.TRANS_NAME as option4
+			  FROM YBOARD_31_TRNS A
+			  where BOARD_SEQ = #nttNo#
+		]]>
+	</select>
+	
+	<!--
+	사이버경찰청 > 국민마당 > 명예의전당 > 모범경찰추천
+	사이버경찰청 > 이용안내 > 홈페이지개선의견
+	-->
+	<select id="asisDAO.selectB0000009AsIsBbsArticles" parameterClass="fnwBoardVO" resultClass="fnwBoardVO" >
+		<![CDATA[
+		SELECT * FROM
+		( SELECT a.*, rownum+rnum-1 as totalRows
+		   FROM ( SELECT a.*, rownum rnum
+		            FROM (
+
+			Select 	
+				id 	AS ntcrId,	-- 게시자 ID
+				passwd as password,
+				0		AS sortOrdr,	-- 정열
+				name		AS ntcrNm,	-- 게시자명
+				title 	AS nttSj,	-- 게시물제목
+				content 	AS nttCn,	-- 게시물내용
+				reads 	AS inqireCo, 	-- 조회횟수
+				wdate    AS regDate, 	--등록일
+				idx as nttNo,
+				depth as option1,
+				image as fileNm
+			 From $orgTableNm$  a 
+			where 1=1 and idx > #currentSize#
+			order by pidx desc
+			
+		            ) a
+		          ORDER BY rnum DESC ) a
+		  ORDER BY rnum )
+		WHERE rnum BETWEEN #firstIndex# + 1 AND #lastIndex#
+		]]>
+	</select>
+	
+	<!--
+	사이버경찰청 > 홍보마당 > 경찰ITS > ITS자유게시판
+	-->
+	<select id="asisDAO.selectB0000022AsIsBbsArticles" parameterClass="fnwBoardVO" resultClass="fnwBoardVO" >
+		<![CDATA[
+		SELECT * FROM
+		( SELECT a.*, rownum+rnum-1 as totalRows
+		   FROM ( SELECT a.*, rownum rnum
+		            FROM (
+
+			Select 	
+				mbid 	AS ntcrId,	-- 게시자 ID
+				0		AS sortOrdr,	-- 정열
+				writer		AS ntcrNm,	-- 게시자명
+				subject 	AS nttSj,	-- 게시물제목
+				content 	AS nttCn,	-- 게시물내용
+				visit  AS inqireCo, 	-- 조회횟수
+				CASE WHEN del_yn = 'N' THEN '0' ELSE '1' 
+        		END AS delcode,  -- 삭제여부
+				regdate	AS regDate, 	--등록일
+				id as nttNo,
+				biid AS option1,
+				depth AS option2,
+				rootid as option3
+			 From $orgTableNm$  a 
+			where biid=#option1#
+			and depth = 0 and id > #currentSize#
+			order by regdate desc
+			
+		            ) a
+		          ORDER BY rnum DESC ) a
+		  ORDER BY rnum )
+		WHERE rnum BETWEEN #firstIndex# + 1 AND #lastIndex#
+		]]>
+	</select>
+	
+	<select id="asisDAO.selectB0000022AsIsBbsReArticles" parameterClass="fnwBoardVO" resultClass="fnwBoardVO" >
+		<![CDATA[
+			Select 	
+				mbid 	AS ntcrId,	-- 게시자 ID
+				0		AS sortOrdr,	-- 정열
+				writer		AS ntcrNm,	-- 게시자명
+				subject 	AS nttSj,	-- 게시물제목
+				content 	AS nttCn,	-- 게시물내용
+				visit  AS inqireCo, 	-- 조회횟수
+				CASE WHEN del_yn = 'N' THEN '0' ELSE '1' 
+        		END AS delcode,  -- 삭제여부
+				regdate	AS regDate, 	--등록일
+				id as nttNo,
+				biid AS option1,
+				replace (rootid,'-','') as option3,
+				CASE WHEN depth = '-1' THEN '1' ELSE '0'
+     				   END AS option2
+			 From $orgTableNm$  a 
+			where biid=#option1#
+			and rootid = #option3# and depth='-1' and id > #currentSize#
+			order by regdate desc
+			
+		]]>
+	</select>
+	
+	<!--
+	청장과의만남 > 청장과의만남 > 청장과의대화
+	-->
+	<select id="asisDAO.selectB0000042AsIsBbsArticles" parameterClass="fnwBoardVO" resultClass="fnwBoardVO" >
+		<![CDATA[
+		SELECT * FROM
+		( SELECT a.*, rownum+rnum-1 as totalRows
+		   FROM ( SELECT a.*, rownum rnum
+		            FROM (
+					
+					SELECT A.SEQ as sortOrdr,
+					       A.KORNM as ntcrNm,
+					       A.EMAIL as ntcrEmail,
+					       A.USERCODE as ntcrBirthday,
+						   case when A.STATE = 'D' then '1'
+						        else '0'
+						   end as delcode,					       
+					       case when A.PROCESS = 'C' then '5'
+						        when A.PROCESS = 'N' then '0'
+								when A.PROCESS = 'P' then '4'
+                           end as replyAt,
+					       A.HITS as inqireCo,
+					       A.TEL1 as ntcrTel1,
+					       A.TEL2 as ntcrTel2,
+					       A.TEL3 as ntcrTel3,
+					       A.ZIP as ntcrZipcode,
+					       A.ADDRESS as ntcrAddr1,
+					       A.TITLE as nttSj,
+					       A.CONT1 as option1,
+					       A.CONT2 as option2,
+					       A.CONT3 as option3,
+					       A.PWD as password,
+					       A.LAR_CD as larCd,
+					       A.MID_CD as midCd,
+					       A.AID as option4,
+					       A.LAR_NM as larNm,
+					       A.MID_NM as midNm,
+					       A.AID_NM as smNm,
+					       A.UP_DATE as regDate,
+					       A.IPADDR as ntcrIp,
+					       A.CIVIL as section,
+					       A.ACCEPT as option7,
+					       TO_CHAR(A.LIMIT_DATE, 'YYYY-MM-DD') AS deadline,
+					       A.RE_AID as option8,
+						   B.ADNM as option5,
+					       A.RE_DATE as answeringDate,
+					       A.RE_CONT1 as option9,
+					       A.RE_CONT2 as option10,
+					       A.RE_CONT3 as option11,
+					       A.RE_FILE as fileNm,
+					       A.DEL_AID as option12,
+					       A.DEL_DATE as option13,
+					       A.TR_FROM as option14,
+					       A.TR_ALLOW as option15,
+					       A.TR_DENY as searchCnd,
+					       A.TR_TO as searchWrd,
+					       A.TR_DATE as option6,
+					       A.HZ_FROM as optionCnd1,
+					       --A.HZ_ALLOW,
+					       --A.HZ_DENY,
+					       A.HZ_TO as optionCnd2,
+					       A.HZ_DATE as optionCndLike,
+					       A.HZ_SEQ as frstRegisterNm,
+					       A.HZ_TBNM as trend,
+					       --A.SMS,
+					       A.RE_CONT as con,
+					       A.ZIP_NEW as ntcrZipcode2,
+					       A.ADDRESS_NEW as ntcrAddr2,
+					       A.DUPINFO as ntcrPinno
+					       --A.RESNO,
+					       --A.AUTHTYPE,
+					       --A.BIRTHDATE as ntcrBirthday
+					  FROM TB_P1_CHIEF_DIALOG A, TB_POLICEADMIN B
+					  WHERE A.RE_AID = B.AID(+) and seq > #currentSize# and seq <= 43932
+					  order by seq asc
+
+		            ) a
+		          ORDER BY rnum DESC ) a
+		  ORDER BY rnum )
+		WHERE rnum BETWEEN #firstIndex# + 1 AND #lastIndex#
+		]]>
+	</select>
+	
+	<select id="asisDAO.selectB0000042AsIsBbsArticleFiles" parameterClass="fnwBoardVO" resultClass="fnwBoardVO" >
+		<![CDATA[
+			SELECT 
+			       A.FILENAME as fileNm
+			  FROM TB_P1_CHIEF_DIALOG_FILE A
+			  WHERE A.DIALOGID = #sortOrdr#
+		]]>
+	</select>
+	
+	<!--
+	청장과의만남 > 청장동정 > 포토스케치
+	-->
+	<select id="asisDAO.selectB0000040AsIsBbsArticles" parameterClass="fnwBoardVO" resultClass="fnwBoardVO" >
+		<![CDATA[
+		SELECT * FROM
+		( SELECT a.*, rownum+rnum-1 as totalRows
+		   FROM ( SELECT a.*, rownum rnum
+		            FROM (
+
+			Select 	
+				aid 	AS ntcrId,	-- 게시자 ID
+				0		AS sortOrdr,	-- 정열
+				adnm		AS ntcrNm,	-- 게시자명
+				title 	AS nttSj,	-- 게시물제목
+				contents 	AS nttCn,	-- 게시물내용
+				hits 	AS inqireCo, 	-- 조회횟수
+				CASE WHEN state = 'Y' THEN '0' ELSE '1' 
+        		END AS delcode,  -- 삭제여부
+				0	AS parnts,	-- 상위
+				up_date	AS regDate, 	--등록일
+				seq as nttNo,
+				file1 ||'/'|| file2 ||'/'|| file3 ||'/'|| file4 as fileNm
+			 From $orgTableNm$  a 
+			where 1=1 and seq > #currentSize#
+			order by up_date asc
+			
+		            ) a
+		          ORDER BY rnum DESC ) a
+		  ORDER BY rnum )
+		WHERE rnum BETWEEN #firstIndex# + 1 AND #lastIndex#
+		]]>
+	</select>
+	
+	<!--
+	청장과의만남 > 청장동정 > 영상스케치
+	-->
+	<select id="asisDAO.selectB0000041AsIsBbsArticles" parameterClass="fnwBoardVO" resultClass="fnwBoardVO" >
+		<![CDATA[
+		SELECT * FROM
+		( SELECT a.*, rownum+rnum-1 as totalRows
+		   FROM ( SELECT a.*, rownum rnum
+		            FROM (
+
+			Select 	
+				0		AS sortOrdr,	-- 정열
+				title 	AS nttSj,	-- 게시물제목
+				movieurl 	AS option1,	-- 영상링크
+				contents 	AS nttCn,	-- 게시물내용
+				0	AS parnts,	-- 상위
+				wdate	AS regDate, 	--등록일
+				idx as nttNo,
+				image as fileNm
+			 From $orgTableNm$  a 
+			where 1=1 and idx > #currentSize#
+			order by wdate asc
+			
+		            ) a
+		          ORDER BY rnum DESC ) a
+		  ORDER BY rnum )
+		WHERE rnum BETWEEN #firstIndex# + 1 AND #lastIndex#
+		]]>
+	</select>
+	
+	<!--
+	순직경찰추모관 > 추모경찰관찾기
+	-->
+	<select id="asisDAO.selectB0000043AsIsBbsArticles" parameterClass="fnwBoardVO" resultClass="fnwBoardVO" >
+		<![CDATA[
+		SELECT * FROM
+		( SELECT a.*, rownum+rnum-1 as totalRows
+		   FROM ( SELECT a.*, rownum rnum
+		            FROM (
+
+			Select 	
+				0		AS sortOrdr,	-- 정열
+				fd_admin	AS ntcrNm,	-- 게시자명
+				fd_name 	AS nttSj,	 -- 순직자
+				fd_content 	AS nttCn,	-- 게시물내용
+				fd_cid 	AS inqireCo, 	-- 조회횟수
+				TO_CHAR(fd_hondate,'%Y-%m-%d')   AS option1, 	--순직일
+				fd_part  AS option2,  -- 소속
+				CASE WHEN fd_grade = '치안총감' THEN 'C01'
+			  		WHEN fd_grade = '치안정감' THEN 'C02'
+			    	WHEN fd_grade = '치안감' THEN 'C03'
+			    	WHEN fd_grade = '경무관' THEN 'C04'
+			    	WHEN fd_grade = '총경' THEN 'C05'
+			    	WHEN fd_grade = '경정' THEN 'C06'
+			    	WHEN fd_grade = '경감' THEN 'C07'
+			    	WHEN fd_grade = '경위' THEN 'C08'
+			    	WHEN fd_grade = '경사' THEN 'C09'
+			    	WHEN fd_grade = '경장' THEN 'C10'
+			    	WHEN fd_grade = '순경' THEN 'C11'
+			    	WHEN fd_grade = '행정관' THEN 'C12'
+				END AS section, -- 계급
+				0	AS parnts,	-- 상위
+				fd_regdate	AS regDate, 	--등록일
+				fd_idx as nttNo,
+				fd_flash1 ||'/'|| fd_image1 ||'/'|| fd_image2 ||'/'|| fd_image3 ||'/'|| fd_image4 ||'/'|| fd_image5 ||'/'|| fd_image6 as fileNm
+			 From $orgTableNm$  a 
+			where 1=1 and fd_idx > #currentSize#
+			order by fd_hondate desc
+			
+		            ) a
+		          ORDER BY rnum DESC ) a
+		  ORDER BY rnum )
+		WHERE rnum BETWEEN #firstIndex# + 1 AND #lastIndex#
+		]]>
+	</select>
+	
+	<select id="asisDAO.selectB0000043AsIsCmmntBbsArticles" parameterClass="fnwBoardVO" resultClass="fnwBoardVO" >
+		<![CDATA[
+			Select 	
+				pwd  AS  password,
+				kornm		AS ntcrNm,	-- 게시자명
+				title 	AS nttSj,	 -- 게시물제목
+				contents 	AS nttCn,	-- 게시물내용
+				hits	AS inqireCo, 	-- 조회횟수
+				up_date	  AS regDate, 	--등록일
+				seq AS nttId
+			 From TB_HONEST_BOARD  a
+			where fd_idxfk=#nttNo#
+			order by up_date asc			
+		]]>
+	</select>
+	
+	<!--
+	순직경찰추모관 > 추모의글보기
+	-->
+	<select id="asisDAO.selectB0000044AsIsBbsArticles" parameterClass="fnwBoardVO" resultClass="fnwBoardVO" >
+		<![CDATA[
+		SELECT * FROM
+		( SELECT a.*, rownum+rnum-1 as totalRows
+		   FROM ( SELECT a.*, rownum rnum
+		            FROM (
+
+			Select 	
+				0		AS sortOrdr,	-- 정열
+				kornm	AS ntcrNm,	-- 게시자명
+				pwd  AS password, -- 비밀번호
+				title 	AS nttSj,	-- 게시물제목
+				contents 	AS nttCn,	-- 게시물내용
+				hits 	AS inqireCo, 	-- 조회횟수
+				0	AS parnts,	-- 상위
+				up_date	AS regDate, 	--등록일
+				seq as nttNo
+			 From $orgTableNm$  a
+			where 1=1 and seq > #currentSize#
+			order by up_date asc
+			
+		            ) a
+		          ORDER BY rnum DESC ) a
+		  ORDER BY rnum )
+		WHERE rnum BETWEEN #firstIndex# + 1 AND #lastIndex#
+		]]>
+	</select>
+	
+	<!--
+	어린이경찰청 > 경찰스케치 > 사진으로보는경찰
+	-->
+	<select id="asisDAO.selectB0000049AsIsBbsArticles" parameterClass="fnwBoardVO" resultClass="fnwBoardVO" >
+		<![CDATA[
+		SELECT * FROM
+		( SELECT a.*, rownum+rnum-1 as totalRows
+		   FROM ( SELECT a.*, rownum rnum
+		            FROM (
+
+			Select 	
+				0		AS sortOrdr,	-- 정열
+				kornm		AS ntcrNm,	-- 게시자명
+				title 	AS nttSj,	-- 게시물제목
+				0	AS parnts,	-- 상위
+				up_date	AS regDate, 	--등록일
+				seq as nttNo,
+				file1 as fileNm
+			 From $orgTableNm$  a 
+			where 1=1 and seq > #currentSize#
+			order by up_date asc
+			
+		            ) a
+		          ORDER BY rnum DESC ) a
+		  ORDER BY rnum )
+		WHERE rnum BETWEEN #firstIndex# + 1 AND #lastIndex#
+		]]>
+	</select>
+	
+	<!--
+	어린이경찰청 > 경찰스케치 > 영상스케치
+	-->
+	<select id="asisDAO.selectB0000050AsIsBbsArticles" parameterClass="fnwBoardVO" resultClass="fnwBoardVO" >
+		<![CDATA[
+		SELECT * FROM
+		( SELECT a.*, rownum+rnum-1 as totalRows
+		   FROM ( SELECT a.*, rownum rnum
+		            FROM (
+
+			Select 	
+				aid 	AS ntcrId,	-- 게시자 ID
+				0		AS sortOrdr,	-- 정열
+				kornm		AS ntcrNm,	-- 게시자명
+				title 	AS nttSj,	-- 게시물제목
+				contents 	AS nttCn,	-- 게시물내용
+				vod_url   AS option1,  -- 영상링크
+				0	AS parnts,	-- 상위
+				up_date		AS regDate, 	--등록일
+				seq as nttNo,
+				still_img as fileNm
+			 From $orgTableNm$  a 
+			where 1=1 and seq > #currentSize#
+			order by up_date asc
+			
+		            ) a
+		          ORDER BY rnum DESC ) a
+		  ORDER BY rnum )
+		WHERE rnum BETWEEN #firstIndex# + 1 AND #lastIndex#
+		]]>
+	</select>
+	
+	<!--
+	어린이경찰청 > 명예경찰소년단 > 소년단활동 > 소년단활동
+	어린이경찰청 > 명예경찰소년단 > 소년단활동 > 우수소년단
+	-->
+	<select id="asisDAO.selectB0000051AsIsBbsArticles" parameterClass="fnwBoardVO" resultClass="fnwBoardVO" >
+		<![CDATA[
+		SELECT * FROM
+		( SELECT a.*, rownum+rnum-1 as totalRows
+		   FROM ( SELECT a.*, rownum rnum
+		            FROM (
+
+			Select 	
+				id 	AS ntcrId,	-- 게시자 ID
+				0		AS sortOrdr,	-- 정열
+				kornm		AS ntcrNm,	-- 게시자명
+				title 	AS nttSj,	-- 게시물제목
+				contents 	AS nttCn,	-- 게시물내용
+				hits	AS inqireCo, 	-- 조회횟수
+				0	AS parnts,	-- 상위
+				reg_date		AS regDate, 	--등록일
+				seq as nttNo
+			 From $orgTableNm$  a 
+			where 1=1 and seq > #currentSize#
+			order by reg_date asc
+			
+		            ) a
+		          ORDER BY rnum DESC ) a
+		  ORDER BY rnum )
+		WHERE rnum BETWEEN #firstIndex# + 1 AND #lastIndex#
+		]]>
+	</select>
+	
+	<!--
+	어린이경찰청 > 명예경찰소년단 > 소년단활동 > 소년단활동(파일)
+	-->
+	<select id="asisDAO.selectB0000051BoardFiles" parameterClass="zvl" resultClass="zvl" >
+		<![CDATA[
+			 SELECT a.seq, b.seq, b.FILESYSNAME FROM TB_P5_BOYPHOTO a, TB_P5_BOYPHOTO_FILES b 
+			 WHERE b.seq=#seq# AND a.seq=#seq# AND b.seq=a.seq
+		]]>
+	</select>
+	<!--
+	어린이경찰청 > 명예경찰소년단 > 소년단활동 > 우수소년단(파일)
+	-->
+	<select id="asisDAO.selectB0000052BoardFiles" parameterClass="zvl" resultClass="zvl" >
+		<![CDATA[
+			 SELECT a.seq, b.seq, b.FILESYSNAME FROM TB_P5_BOYPHOTO2 a, TB_P5_BOYPHOTO2_FILES b 
+			 WHERE b.seq=#seq# AND a.seq=#seq# AND b.seq=a.seq
+		]]>
+	</select>
+	
+	<select id="asisDAO.selectB0000054AsIsBbsArticles" parameterClass="fnwBoardVO" resultClass="fnwBoardVO" >
+		<![CDATA[
+		SELECT * FROM
+		( SELECT a.*, rownum+rnum-1 as totalRows
+		   FROM ( SELECT a.*, rownum rnum
+		            FROM (
+
+			Select 	
+				0		AS sortOrdr,	-- 정열
+				title 	AS nttSj,	-- 게시물제목
+				movieurl		AS option1,	-- 게시자명
+				contents 	AS nttCn,	-- 게시물내용
+				0	AS parnts,	-- 상위
+				wdate	AS regDate, 	--등록일
+				idx as nttNo,
+				image || '/' || filename as fileNm
+			 From $orgTableNm$  a 
+			where 1=1 and idx > #currentSize#
+			order by wdate asc
+			
+		            ) a
+		          ORDER BY rnum DESC ) a
+		  ORDER BY rnum )
+		WHERE rnum BETWEEN #firstIndex# + 1 AND #lastIndex#
+		]]>
+	</select>
+	
+	<!--
+	국회정보공개 > 주요정책자료 > 국회제출자료
+	-->
+	<select id="asisDAO.selectB0000061AsIsBbsArticles" parameterClass="fnwBoardVO" resultClass="fnwBoardVO" >
+		<![CDATA[
+		SELECT * FROM
+		( SELECT a.*, rownum+rnum-1 as totalRows
+		   FROM ( SELECT a.*, rownum rnum
+		            FROM (
+
+			Select 	
+				0		AS sortOrdr,	-- 정열
+				title 	AS nttSj,	-- 게시물제목
+				contents	AS nttCn,	-- 게시물내용
+				hits 	AS inqireCo, 	-- 조회횟수
+				CASE WHEN state = 'Y' THEN '0' ELSE '1' 
+        		END AS delcode,  -- 삭제여부
+				CASE WHEN div = '0' THEN '17'
+			  		WHEN div = '1' THEN '01'
+			    	WHEN div = '2' THEN '03'
+			    	WHEN div = '3' THEN '04'
+			    	WHEN div = '4' THEN '05'
+			    	WHEN div = '5' THEN '06'
+			    	WHEN div = '6' THEN '07'
+			    	WHEN div = '7' THEN '08'
+			    	WHEN div = '8' THEN '09'
+			    	WHEN div = '9' THEN '10'
+			    	WHEN div = '10' THEN '11'
+			    	WHEN div = '11' THEN '12'
+			    	WHEN div = '12' THEN '02'
+				ELSE '17'	
+				END AS section, -- 국관
+				flag AS ntcrPinno, -- 게시판분류
+				0	AS parnts,	-- 상위
+				reg_date	AS regDate, 	--등록일
+				seq as nttNo,
+				filename as fileNm
+			 From $orgTableNm$  a 
+			where flag = #ntcrPinno# and seq > #currentSize#
+			order by reg_date asc
+			
+		            ) a
+		          ORDER BY rnum DESC ) a
+		  ORDER BY rnum )
+		WHERE rnum BETWEEN #firstIndex# + 1 AND #lastIndex#
+		]]>
+	</select>
+	
+	<!--
+	국회정보공개 > 주요정책자료 > 치안정책자료
+	-->
+	<select id="asisDAO.selectB0000062AsIsBbsArticles" parameterClass="fnwBoardVO" resultClass="fnwBoardVO" >
+		<![CDATA[
+		SELECT * FROM
+		( SELECT a.*, rownum+rnum-1 as totalRows
+		   FROM ( SELECT a.*, rownum rnum
+		            FROM (
+
+			Select 	
+				0		AS sortOrdr,	-- 정열
+				title 	AS nttSj,	-- 게시물제목
+				contents	AS nttCn,	-- 게시물내용
+				hits 	AS inqireCo, 	-- 조회횟수
+				CASE WHEN state = 'Y' THEN '0' ELSE '1' 
+        		END AS delcode,  -- 삭제여부
+				flag AS ntcrPinno, -- 게시판분류
+				0	AS parnts,	-- 상위
+				reg_date	AS regDate, 	--등록일
+				seq as nttNo,
+				filename as fileNm
+			 From $orgTableNm$  a
+			where flag = #ntcrPinno# and seq > #currentSize#
+			order by reg_date asc
+			
+		            ) a
+		          ORDER BY rnum DESC ) a
+		  ORDER BY rnum )
+		WHERE rnum BETWEEN #firstIndex# + 1 AND #lastIndex#
+		]]>
+	</select>
+
+	<select id="asisDAO.selectB0000055AsIsBbsArticles" parameterClass="fnwBoardVO" resultClass="fnwBoardVO" >
+		<![CDATA[
+		SELECT * FROM
+		( SELECT a.*, rownum+rnum-1 as totalRows
+		   FROM ( SELECT a.*, rownum rnum
+		            FROM (
+				SELECT A.SEQ as nttNo,
+				       A.KORNM as ntcrNm,
+				       A.EMAIL as ntcrEmail,
+				       --A.JUMIN1,
+				       --A.JUMIN2,
+				       case when A.STATE = 'D' then '1'
+					        else '0'
+					   end as delcode,				       
+				       case when A.PROCESS = 'C' then '5'
+					        when A.PROCESS = 'N' then '0'
+							when A.PROCESS = 'P' then '4'
+                       end as replyAt,
+				       A.HITS as inqireCo,
+				       A.TEL1 as ntcrTel1,
+				       A.TEL2 as ntcrTel2,
+				       A.TEL3 as ntcrTel3,
+				       A.ZIP as ntcrZipcode,
+				       A.ADDRESS as ntcrAddr1,
+				       A.TITLE as nttSj,
+				       A.CONT1 as option1,
+				       A.CONT2 as option2,
+				       A.CONT3 as option3,
+				       A.PWD as password,
+				       A.LAR_CD as larCd,
+				       A.MID_CD as midCd,
+				       A.AID as ntcrId,
+				       A.LAR_NM as larNm,
+				       A.MID_NM as midNm,
+				       A.AID_NM as smNm,
+				       A.UP_DATE as regDate,
+				       A.IPADDR as ntcrIp,
+				       A.CIVIL as section,
+				       --A.ACCEPT,
+				       TO_CHAR(A.LIMIT_DATE, 'YYYY-MM-DD') as deadline,
+				       --A.P_CONT1 as option4,
+				       --A.P_CONT2 as option5,
+				       --A.P_CONT3 as option6,
+				       A.RE_AID as option8,
+				       A.RE_DATE as answeringDate,
+				       A.RE_CONT1 as option9,
+				       A.RE_CONT2 as option10,
+				       A.RE_CONT3 as option11,
+				       --A.RE_FILE,
+				       --A.DEL_AID,
+				       --A.DEL_DATE,
+				       A.TR_FROM as option14,
+				       A.TR_ALLOW as option15,
+				       A.TR_DENY as searchCnd,
+				       A.TR_TO as searchWrd,
+				       A.TR_DATE as option6,
+				       --A.HZ_FROM,
+				       --A.HZ_ALLOW,
+				       --A.HZ_DENY,
+				       --A.HZ_TO,
+				       --A.HZ_DATE,
+				       --A.HZ_SEQ,
+				       --A.HZ_TBNM,
+				       --A.SMS,
+				       A.RE_CONT as con,
+				       case when A.OPEN = '0' then 'N'
+					        else 'Y'
+					   end as secret
+				  FROM ENG_POLICE.TB_P0_ENG_QA2 A
+				  order by seq desc
+
+		            ) a
+		          ORDER BY rnum DESC ) a
+		  ORDER BY rnum )
+		WHERE rnum BETWEEN #firstIndex# + 1 AND #lastIndex#
+		]]>
+	</select>
+
+	
+	<select id="asisDAO.selectB0000055AsIsFiles" parameterClass="fnwBoardVO" resultClass="fnwBoardVO" >
+		<![CDATA[
+			select FILESYSNAME as fileNm
+			from ENG_POLICE.TB_P0_ENG_QA2_FILES
+			where SEQ = #nttNo#
+		]]>
+	</select>
+	
+	
+	<select id="asisDAO.selectB0000075AsIsBbsArticles" parameterClass="fnwBoardVO" resultClass="fnwBoardVO" >
+		<![CDATA[
+		SELECT * FROM
+		( SELECT a.*, rownum+rnum-1 as totalRows
+		   FROM ( SELECT a.*, rownum rnum
+		            FROM (
+			SELECT 
+				  CASE WHEN A.HP_ID = '4' THEN '40'
+			  		WHEN A.HP_ID = '19' THEN '50'
+			    	WHEN A.HP_ID = '24' THEN '60'
+			    	WHEN A.HP_ID = '25' THEN '70'
+			    	WHEN A.HP_ID = '26' THEN '80'
+			    	WHEN A.HP_ID = '27' THEN '90'
+			    	WHEN A.HP_ID = '28' THEN '00'
+				  END AS option4, -- 년대
+			       A.BRF_ID as nttNo,
+			       A.MAIN_YN as option1,
+			       A.BRF_YEAR as section,
+			       A.TITLE as nttSj,
+			       A.IMG as fileNm,
+			       case when A.DEL_YN = 'Y' then '1'
+				        else '0'
+				   end as delcode,	
+			       A.CRE_ID as ntcrId,
+			       A.CRE_DT as regDate,
+			       A.UPD_ID as lastUpdusrId,
+			       --A.UPD_DT,
+			       A.BRF_MONTH || '.' || A.BRF_DAY as option2,
+			       --A.MAIN_IMG_YN,
+			       A.IMG_TITLE as option3
+			  FROM PS_HISTORY_PHOTO_BRIEF A
+			  WHERE 1=1 and brf_id > #currentSize#
+			  ORDER BY A.CRE_DT
+			
+		            ) a
+		          ORDER BY rnum DESC ) a
+		  ORDER BY rnum )
+		WHERE rnum BETWEEN #firstIndex# + 1 AND #lastIndex#
+		]]>
+	</select>
+	
+	<!--
+	해외주재관 > 자유게시판
+	-->
+	<select id="asisDAO.selectB0000092AsIsBbsArticles" parameterClass="fnwBoardVO" resultClass="fnwBoardVO" >
+		<![CDATA[
+		SELECT * FROM
+		( SELECT a.*, rownum+rnum-1 as totalRows
+		   FROM ( SELECT a.*, rownum rnum
+		            FROM (
+
+			Select 	
+				id 	AS ntcrId,	-- 게시자 ID
+				passwd  AS password,
+				name	AS ntcrNm,	-- 게시자명
+				title 	AS nttSj,	-- 게시물제목
+				content AS nttCn,	-- 게시물내용
+				reads 	AS inqireCo, 	-- 조회횟수
+				wdate   AS regDate, 	--등록일
+				idx as nttNo,
+				pidx as parnts,
+				depth as replyLc,
+				image as fileNm
+			 From $orgTableNm$  a 
+			where 1=1
+			order by pidx desc
+			
+		            ) a
+		          ORDER BY rnum DESC ) a
+		  ORDER BY rnum )
+		WHERE rnum BETWEEN #firstIndex# + 1 AND #lastIndex#
+		]]>
+	</select>
+	
+	<select id="asisDAO.selectB0000092AsIsBbsCmmnt" parameterClass="fnwBoardVO" resultClass="fnwBoardVO" >
+		<![CDATA[
+		  SELECT 
+		       id as ntcrId,
+		       name as ntcrNm,
+		       title as nttCn,
+		       wdate as regDate,
+		       passwd as password
+		  FROM $orgTableNm$ a
+		  where idx = #nttNo#
+		  order by idx
+		]]>
+	</select>
+		
+</sqlMap>

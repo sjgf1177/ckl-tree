@@ -1,0 +1,972 @@
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ page import="com.sun.corba.se.spi.orbutil.fsm.Guard.Result"%>
+<%@ page import="java.util.*" %>
+<%@ page import="kr.co.funnywork.util.*" %>
+<%@ page import="kr.co.funnywork.mpm.service.*" %>
+<%@ page import="kr.co.funnywork.sym.mpm.service.*" %>
+<%@ page import="kr.co.funnywork.cmm.sec.ram.service.impl.FnwUserDetailsHelper" %>
+<%@ page import="egovframework.com.cmm.ComDefaultCodeVO" %>
+<%@ page import="kr.co.funnywork.sym.ccm.cde.service.CmmnDetailCode" %>
+<%@ page import="egovframework.com.cmm.service.impl.CmmUseDAO" %>
+<%@ page import="kr.co.funnywork.visitorLog.service.impl.VisitorLogServiceImpl" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="util" uri="http://www.funnywork.co.kr/util" %>
+<%
+	org.springframework.context.ApplicationContext context =
+	org.springframework.web.context.support.WebApplicationContextUtils.getWebApplicationContext(getServletContext());
+	WebFactory webFactory = (WebFactory)context.getBean("webFactory");
+	ZValue zvl = webFactory.getAttributes(request);
+
+	String menuNo = zvl.getString("menuNo");
+
+
+	//HashMap<String, List<MenuManageVO>> menuMap = (HashMap<String, List<MenuManageVO>>)application.getAttribute("menuAll2");
+	MasterMenuManager masterMenuManagerService = (MasterMenuManager)context.getBean("masterMenuManagerService");
+	HashMap<String, List<MenuManageVO>> menuMap = (HashMap<String, List<MenuManageVO>>)masterMenuManagerService.getMenuMap("menuAll2");
+
+	if(!"".equals(menuNo)){
+		MenuManageVO currentVo = masterMenuManagerService.getCurrentMenu(menuMap, zvl.getInt("menuNo"));
+		pageContext.setAttribute("currMenu", currentVo);
+
+		String position = currentVo.getPosition();
+		int depth01 = Integer.parseInt(position.substring(0,2)) -1;
+		int depth02 = Integer.parseInt(position.substring(2,4)) -1;
+		int depth03 = Integer.parseInt(position.substring(4,6)) -1;
+		int depth04 = Integer.parseInt(position.substring(6,8)) -1;
+		int depth05 = Integer.parseInt(position.substring(8,10)) -1;
+		pageContext.setAttribute("depth01", depth01);
+		pageContext.setAttribute("depth02", depth02);
+		pageContext.setAttribute("depth03", depth03);
+		pageContext.setAttribute("depth04", depth04);
+		pageContext.setAttribute("depth05", depth05);
+	}
+
+%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ko" lang="ko">
+<head>
+<title>선거정보포털 ㅣ 중앙선거관리위원회.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="/css/reset.css"/>
+<link rel="stylesheet" type="text/css" href="/css/layout.css"/>
+<link rel="stylesheet" type="text/css" href="/css/mains.css"/>
+<link rel="shortcut icon" href="/images/common/img16.ico" />
+<script type="text/javascript" src="/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="/js/jquery.carouFredSel-6.0.5-packed.js"></script>
+<script type="text/javascript" src="/js/jquery.cycle.all.js"></script>
+<script type="text/javascript" src="/js/jqcomons.js"></script>
+<script type="text/javascript" src="/js/commons.js"></script>
+<script type="text/javascript" src="/js/jquery.jcarousel.min.js"></script>
+<!-- <script type="text/javascript" src="/js/rolling.js"></script>  -->
+<script type="text/javascript" src="/js/dqAutoCompleteCommon.js"></script>
+<style type="text/css" media="screen">
+.acArrow { position: absolute; top: 9px; right: 68px; }
+</style>
+<script type="text/javascript">
+//<![CDATA[
+	function viewPopUp(){
+		window.open("http://m.nec.go.kr/m/mainView.do","viewPopUp","resizable=1,scrollbars=1 ,width=165, height=170px");
+	}
+	//$(document).ready(function(e) {
+	//	window.open("http://livenec.tv/","tvMovLive","resizable=1,scrollbars=1 ,width=900, height=810");
+	//});
+//]]>
+</script>
+</head>
+<!-- <body onload="viewPopUp()"> -->
+<body>
+<%@include file="/search/include/cmd_WordQuery.jsp" %>
+
+
+<ul class="skip">
+	<li><a href="#content">본문내용 바로가기</a></li>
+	<li><a href="#gnb">주메뉴 바로가기</a></li>
+</ul>
+
+<div class="wrapper">
+		<jsp:include page="/WEB-INF/jsp/portal/inc/top.jsp" flush="true" />
+
+<!-- [[ ::include page start ]] -->
+<%// 위의 주석은 메인 페이지를 html로 변환시 login/out include 페이지로 처리하기 위한 주석입니다. 변경하지 말것!! %>
+<!-- [[ ::include page end ]] -->
+	<!-- header -->
+	<div class="header mb10" id="header">
+		<div class="heading">
+				<h1 class="logo"><a href="/portal/main.do"><span class="sr-only">중앙선거관리위원회</span></a></h1>
+
+			<!-- [[ ::include page3 start ]] -->
+			<%// 위의 주석은 메인 페이지를 html로 변환시 login/out include 페이지로 처리하기 위한 주석입니다. 변경하지 말것!! %>
+			<%@include file="/WEB-INF/jsp/portal/inc/topSearchInc.jsp" %>
+			<!-- [[ ::include page3 end ]] -->
+			<div class="rightHeadLink fr"><jsp:include page="/WEB-INF/jsp/portal/inc/top_logo.jsp" flush="true" /></div>
+		</div>
+
+		<!-- gnb -->
+
+		<c:set var="topCategories" value="${menuAll2['menu_0']}" />
+		<div id="gnb" class="gnb clear">
+			<ul>
+			<c:forEach var="x" begin="0" end="5" varStatus="status">
+				<c:set var="d01Category" value="${topCategories[x]}" />
+                <c:set var="d01menuKey" value="menu_${d01Category.menuNo}" />
+                <c:set var="d02Categories" value="${menuAll2[d01menuKey]}" />
+				<li class="pl0"><a href="<c:out value="${topCategories[x].fullMenuLink}" />"><c:out value="${topCategories[x].menuNm}" /></a>
+					<ul class="sub<c:out value="${status.count}" />0">
+					<c:if test="${fn:length(d02Categories)>0}">
+					<c:forEach var="y" begin="0" end="${fn:length(d02Categories)-1}" varStatus="status">
+						<li><a href="<c:out value="${d02Categories[y].fullMenuLink}" />" ${d02Categories[y].menuPopupYn eq 'Y' ? 'target="_blank"' : ''} >${d02Categories[y].menuNm}</a></li>
+					</c:forEach>
+					</c:if>
+					</ul>
+				</li>
+			</c:forEach>
+			</ul>
+			<!-- totalMenu -->
+			<a class="totalMenu" href="#">더보기</a>
+			<div id="gnb_all" class="gnb_all" style="display: none;">
+				<div class="gnb_scroll">
+					<c:set var="topCategories" value="${menuAll2['menu_0']}" />
+					<c:forEach var="x" begin="0" end="5">
+					<c:choose>
+						<c:when test="${x eq '0'}"><c:set var="clss" value="class='w169 pl15'" /></c:when>
+						<c:when test="${x eq '1'}"><c:set var="clss" value="class='pl15 w135'" /></c:when>
+						<c:when test="${x eq '2'}"><c:set var="clss" value="class='pl15 w135'" /></c:when>
+						<c:when test="${x eq '3'}"><c:set var="clss" value="class='pl15'" /></c:when>
+						<c:when test="${x eq '5'}"><c:set var="clss" value="class='brn last'" /></c:when>
+					</c:choose>
+					<dl ${clss}>
+						<dt><c:out value="${topCategories[x].menuNm}" /></dt>
+						<dd>
+							<c:set var="d01Category" value="${topCategories[x]}" />
+							<c:set var="d01menuKey" value="menu_${d01Category.menuNo}" />
+							<c:set var="d02Categories" value="${menuAll2[d01menuKey]}" />
+							<c:if test="${fn:length(d02Categories)>0}">
+								<ul>
+									<c:forEach var="y" begin="0" end="${fn:length(d02Categories)-1}">
+										<li><a href="${fn:replace(fn:replace(d02Categories[y].fullMenuLink,'&amp;','&'),'&','&amp;')}" ${d02Categories[y].menuPopupYn eq 'Y' ? 'target="_blank"' : ''}>${d02Categories[y].menuNm}</a>
+											<c:set var="d03menuKey" value="menu_${d02Categories[y].menuNo}" />
+											<c:set var="d03Categories" value="${menuAll2[d03menuKey]}" />
+											<c:if test="${fn:length(d03Categories)>0}">
+												<ul>
+													<c:forEach var="z" begin="0" end="${fn:length(d03Categories)-1}">
+														<li><a href="${fn:replace(fn:replace(d03Categories[z].fullMenuLink,'&amp;','&'),'&','&amp;')}" ${d03Categories[z].menuPopupYn eq 'Y' ? 'target="_blank"' : ''}>${d03Categories[z].menuNm}</a></li>
+													</c:forEach>
+												</ul>
+											</c:if>
+										</li>
+									</c:forEach>
+								</ul>
+							</c:if>
+						</dd>
+					</dl>
+				</c:forEach>
+				</div>
+				<p class="gnb_menu_close"><a href="#"><img src="/images/gnb/gnb_menu_close.gif" alt="전체보기 닫기"></a></p>
+			</div>
+
+			<!-- //totalMenu -->
+		</div>
+		<!-- //gnb -->
+
+	</div>
+	<!-- //header -->
+
+
+	<!-- contents -->
+	<div id="content" class="content">
+
+		<!-- lastest1 -->
+		<div class="lastest1">
+
+		<!-- <iframe src="/portal/mainCoverStory.do?gb=portal" scrolling="no" style="height:382px;width:100%" frameborder="0" title="본 프레임은 커버스코리, 선거 디데이, 역대선거 투표율 정보를 제공합니다."></iframe> -->
+		<div class="visualSet">
+				<div class="visual">
+					<div class="thumbs" id="vsThumbs">
+						<c:forEach var="result" items="${coverStoryList}" varStatus="_status">
+						<div>
+							<a href="/portal/bbs/view/${result.bbsId}/${result.nttId}.do?menuNo=${result.menuNo}"><img src="${result.imgUrl}" width="635" height="380" alt="${result.nttSj}" /></a>
+							<c:out value="${result.description}" escapeXml="false"/>
+						</div>
+						</c:forEach>
+
+					</div>
+					<div class="thumbsList" id="thumbsList">
+						<ul>
+							<c:forEach var="result" items="${coverStoryList}" varStatus="_status">
+							<li><a href="#self"><img src="${result.imgUrl}" width="211" height="112" alt="${result.nttSj}" /></a></li>
+							</c:forEach>
+						</ul>
+					</div>
+					<div class="visualCtrl"><a href="#self" class="nextVs"><img src="/images/mains/m_44.gif" width="211" height="40" alt="다음 배너 보기" /></a></div>
+				</div>
+			</div>
+
+
+			<script type="text/javascript">
+			$(function() {
+				 $('#thumbsList ul').find( 'li:eq(0)' ).addClass( 'on' );
+
+				 $('#thumbsList ul').carouFredSel({
+					items		:{
+						visible : 3
+					},
+					direction: 'up',
+					scroll      :{
+						items		:1,
+						pauseOnHover	: true
+					},
+					auto: {
+						play: true,
+						duration: 750,
+						timeoutDuration: 8000,
+						easing: 'quadratic',
+						onBefore: function() {
+							var index = $(this).triggerHandler( 'currentPosition' );
+							if ( index == 0 ) {
+								index = $(this).children().length;
+							}
+							$('#vsThumbs').trigger('slideTo', [ index, {
+								fx: 'directscroll'
+							}, 'prev' ]);
+							 $('#thumbsList ul').find( 'li' ).removeClass( 'on' );
+							 $('#thumbsList ul').find( 'li:eq(1)' ).addClass( 'on' );
+							 //console.log("index : "+index);
+						},
+						onAfter:function(){
+						},
+					},
+					next : ".nextVs"
+				 });
+				var thumbsList = $('#thumbsList ul li');
+				thumbsList.bind("click", function(){
+					var index =  thumbsList.index(this);
+					$('#vsThumbs').trigger('slideTo', [ index, {
+						fx: 'directscroll'
+					}, 'prev' ]);
+
+
+					 $('#thumbsList ul').find( 'li' ).removeClass( 'on' );
+					 $(this).addClass( 'on' );
+					// console.log("index : "+index);
+				});
+				 $('#vsThumbs').carouFredSel({
+					items: 1,
+					direction: 'left',
+					width:635,
+					height:380,
+					scroll :{
+						items : 1
+					},
+					auto: {
+						play: false,
+						duration: 750,
+						easing: 'directscroll'
+					}
+				 });
+			});
+			</script>
+
+
+			<div class="lastest1Rt">
+				<div class="dDay">
+					<c:choose>
+					<c:when test="${not empty dDayVO}">
+						<c:set var="dDayData" value="${fn:split(dDayVO.option3,'-')}" />
+						<div class="dDayCts">
+							<div class="dayCnt"><em class="sr-only">D- </em>
+								<span class="num${fn:substring(dayDiffStr,0,1)} nFirst"><strong class="sr-only">${fn:substring(dayDiffStr,0,1)}</strong></span><!-- num0 과 0 값이 매칭 -->
+								<span class="num${fn:substring(dayDiffStr,1,2)} nSecond"><strong class="sr-only">${fn:substring(dayDiffStr,1,2)}</strong></span>
+								<span class="num${fn:substring(dayDiffStr,2,3)} nThird"><strong class="sr-only">${fn:substring(dayDiffStr,2,3)}</strong></span>
+							</div>
+							<p><a href="http://info.nec.go.kr/" target="_blank" title="새창열림">${dDayVO.nttSj}</a></p>
+						</div>
+						</div>
+					</c:when>
+					<c:otherwise>
+					<div class="fr"> <img src="/images/main/top_banner.png" alt="소중한 권리 공정한 관리" style="width:252px;height:110px" /> </div>
+					</c:otherwise>
+				</c:choose>
+
+				<h2><img src="/images/mains/m_31.gif" width="203" height="30"  alt="역대선거 투표율"/></h2>
+				<div class="perList">
+					<div class="perCrt rv">
+						<h3 class="pl0"><a href="http://nec2014.maru.net/vote/vote_02.html" target="_blank" title="새창열림"><img src="/images/mains/mT1_01_on.gif" alt="대통령 선거" /></a></h3>
+						<div>
+							<ul class="on">
+								<li><a href="http://nec2014.maru.net/vote/vote_02.html" target="_blank" title="새창열림"><img src="/images/mains/charts_01.gif" alt=""/></a></li>
+							</ul>
+						</div>
+						<h3><a href="http://nec2014.maru.net/vote/vote_03.html" target="_blank" title="새창열림"><img src="/images/mains/mT1_02_off.gif" alt="국회의원 선거" /></a></h3>
+						<div>
+							<ul>
+								<li><a href="http://nec2014.maru.net/vote/vote_03.html" target="_blank" title="새창열림"><img src="/images/mains/charts_02.gif" alt=""/></a></li>
+							</ul>
+						</div>
+						<h3><a href="http://nec2014.maru.net/vote/vote_05.html" target="_blank" title="새창열림"><img src="/images/mains/mT1_03_off.gif" alt="지방선거"></a></h3>
+						<div>
+							<ul>
+								<li><a href="http://nec2014.maru.net/vote/vote_04.html" target="_blank" title="새창열림"><img src="/images/mains/charts_03.gif" width="187" height="231"  alt=""/></a></li>
+
+							</ul>
+						</div>
+						<h3><a href="http://nec2014.maru.net/vote/vote_04.html" target="_blank" title="새창열림"><img src="/images/mains/mT1_04_off.gif" alt="재보궐 선거"></a></h3>
+						<div>
+							<ul>
+								<li><a href="http://nec2014.maru.net/vote/vote_05.html" target="_blank" title="새창열림"><img src="/images/mains/charts_04.gif" width="187" height="231"  alt=""/></a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+
+
+				<!-- <h2 class="st02"><span class="sr-only">현재 선거 정보</span></h2>
+				<div class="perListSet">
+					<div class="perCrtList rv2">
+						<h3 class="pl0 on"><a href="#perListShow1"><img src="/images/mains/mtb_t001.gif" alt="기본현황" /></a></h3>
+						<div class="perListShow on"  id="perListShow1">
+							기본현황
+							<div class="listDt ico01">
+								<dl>
+									<dt>기본현황</dt>
+									<dd><a href="http://info.nec.go.kr/main/showDocument.xhtml?electionId=0020151028&topMenuId=BI&secondMenuId=BIES01" target="_blank" title="새창열림">선거일정</a></dd>
+									<dd><a href="#self">일반현황</a></dd>
+									<dd><a href="#self">사전투표소현황</a></dd>
+								</dl>
+							</div>
+							//기본현황
+						</div>
+						<h3><a href="#perListShow2"><img src="/images/mains/mtb_t002.gif" alt="후보자" /></a></h3>
+						<div class="perListShow"  id="perListShow2">
+							기본현황
+							<div class="listDt ico02">
+								<dl>
+									<dt>예비후보자</dt>
+									<dd><a href="http://info.nec.go.kr/main/showDocument.xhtml?electionId=0020151028&topMenuId=PC&secondMenuId=PCRI03" target="_blank" title="새창열림">예비후보자 명부</a></dd>
+									<dd><a href="http://info.nec.go.kr/main/showDocument.xhtml?electionId=0020151028&topMenuId=PC&secondMenuId=PCRI01" target="_blank" title="새창열림">예비후보자 등록수</a></dd>
+									<dd><a href="http://info.nec.go.kr/main/showDocument.xhtml?electionId=0020151028&topMenuId=PC&secondMenuId=PCRI04" target="_blank" title="새창열림">사퇴/사망/등록무효</a></dd>
+									<dd><a href="http://info.nec.go.kr/main/showDocument.xhtml?electionId=0020151028&topMenuId=PC&secondMenuId=PCRI05" target="_blank" title="새창열림">예비후보자 각종 통계</a></dd>
+								</dl>
+							</div>
+							//기본현황
+						</div>
+						<h3><a href="#perListShow3"><img src="/images/mains/mtb_t003.gif" alt="선거운동" /></a></h3>
+						<div class="perListShow"  id="perListShow3">
+							기본현황
+							<div class="listDt ico03">
+								<dl>
+									<dt>선거운동</dt>
+									<dd><a href="http://info.nec.go.kr/main/showDocument.xhtml?electionId=0020151028&topMenuId=EC&secondMenuId=ECPC" target="_blank" title="새창열림">예비후보자 운동기구</a></dd>
+								</dl>
+							</div>
+							//기본현황
+						</div>
+						<h3><a href="#perListShow4"><img src="/images/mains/mtb_t004.gif" alt="투&middot;개표"></a></h3>
+						<div class="perListShow"  id="perListShow4">
+							기본현황
+							<div class="listDt ico04">
+								<dl>
+									<dt>투&middot;개표</dt>
+									<dd><a href="http://info.nec.go.kr/main/showDocument.xhtml?electionId=0020151028&topMenuId=VC" target="_blank" title="새창열림">사전투표진행결과</a></dd>
+									<dd><a href="http://info.nec.go.kr/main/showDocument.xhtml?electionId=0020151028&topMenuId=VC" target="_blank" title="새창열림">투표진행</a></dd>
+									<dd><a href="http://info.nec.go.kr/main/showDocument.xhtml?electionId=0020151028&topMenuId=VC" target="_blank" title="새창열림">개표진행</a></dd>
+								</dl>
+							</div>
+							//기본현황
+						</div>
+					</div>
+				</div> -->
+			</div>
+		</div>
+		<!-- lastest1 -->
+
+		<!-- lastest2 -->
+		<div class="lastest2 grid5">
+			<div>
+				<h3><a href="/portal/subMain.do?menuNo=200050"><img src="/images/mains/h3_la21.gif" alt="선거정보"/></a></h3>
+				<ul class="bullList">
+					<li><a href="http://info.nec.go.kr/" target="_blank" title="새 창 열림">최근 선거정보</a></li>
+					<li><a href="http://info.nec.go.kr/main/showDocument.xhtml?electionId=0000000000&topMenuId=BI" target="_blank" title="새 창 열림">역대 선거정보</a></li>
+					<li><a href="http://info.nec.go.kr/electioninfo/electionInfo_report.xhtml?electionId=0000000000&requestURI=%2Felectioninfo%2F0000000000%2Fvc%2Fvcvp04.jsp&topMenuId=VC&secondMenuId=VCVP&menuId=VCVP04&statementId=VCVP04_%231&electionType=0&electionName=20071219" target="_blank" title="새창열림">투표율 정보</a></li>
+					<li><a href="/portal/bbs/list/B0000363.do?scDs=1&menuNo=200542" target="_blank" title="새 창 열림">당선자 공약보기</a></li>
+					<li><a href="/portal/bbs/list/B0000298.do?menuNo=200504" target="_blank" title="새 창 열림">공약은행</a></li>
+				</ul>
+			</div>
+			<div>
+				<h3><a href="/portal/subMain.do?menuNo=200080"><img src="/images/mains/h3_la22.gif" alt="정치관계법"/></a></h3>
+				<ul class="bullList">
+					<li><a href="/portal/knowLaw/list.do?menuNo=200084" target="_blank" title="새 창 열림">제도정보</a></li>
+					<li><a href="/portal/lawContents.do?GENSOL_P_KEY=KLWD&GENSOL_M_KEY=KLWDDTIL101011&LAW_ID=199403160001&menuNo=200112" target="_blank" title="새 창 열림">법령검색</a></li>
+					<li><a href="/portal/lawContents.do?GENSOL_P_KEY=PANL&GENSOL_M_KEY=PANLLIST101010&PAN_CLASS_CD=&PAN_ID=&menuNo=200127" target="_blank" title="새 창 열림">판례검색</a></li>
+					<li><a href="/portal/docQna/list.do?menuNo=200134" target="_blank" title="새 창 열림">질의검색</a></li>
+					<li><a href="/portal/bbs/list/B0000236.do?menuNo=200180" target="_blank" title="새 창 열림">개정의견</a></li>
+				</ul>
+			</div>
+			<div>
+				<h3><a href="/portal/subMain.do?menuNo=200080"><img src="/images/mains/h3_la23.gif" alt="자료실"/></a></h3>
+				<ul class="bullList">
+					<li><a href="/portal/bbs/list/B0000338.do?menuNo=200185" target="_blank" title="새 창 열림">선거 &middot; 정당 &middot; 정치자금</a></li>
+					<li><a href="/portal/bbs/list/B0000340.do?menuNo=200191" target="_blank" title="새 창 열림">각종서식</a></li>
+					<li><a href="/portal/bbs/list/B0000215.do?viewType=P&amp;menuNo=200186" target="_blank" title="새 창 열림">간행물</a></li>
+					<li><a href="/portal/bbs/list/B0000141.do?viewType=P&amp;menuNo=200032" target="_blank" title="새 창 열림">선거공보</a></li>
+				</ul>
+			</div>
+			<div>
+				<h3><a href="/portal/subMain.do?menuNo=200001"><img src="/images/mains/h3_la24.gif" alt="참여 &middot; 소통"/></a></h3>
+				<ul class="bullList">
+					<li><a href="http://open.nec.go.kr" target="_blank" title="새창열림">정보공개청구</a></li>
+					<li><a href="/portal/contents.do?menuNo=200012" target="_blank" title="새 창 열림">정치관계법질의</a></li>
+					<li><a href="/portal/contents.do?menuNo=200013" target="_blank" title="새 창 열림">정치관계법 위반행위 신고</a></li>
+				</ul>
+			</div>
+			<div class="last mr0">
+
+				<!-- popupZone -->
+				<div class="sm03_boxT1 popupSet">
+					<div class="popup mb10">
+						<h2><img src="/images/submains/popupzone_01.gif" alt="팝업존"></h2>
+						<div>
+							<p class="total">Total : <span class="col_red bold">${fn:length(portalAlertList) eq 0 ? 3 : fn:length(portalAlertList)}</span></p>
+							<ul class="pop_control">
+								<li><button type="button" class="prev_pop" id="prev_pop" style="display: block;"><span>이전팝업보기</span></button></li>
+								<li><button type="button" class="stop_pop" id="stop_pop"><span>팝업정지</span></button></li>
+								<li><button type="button" class="play_pop" id="play_pop"><span>팝업재생</span></button></li>
+								<li><button type="button" class="next_pop" id="next_pop" style="display: block;"><span>다음팝업보기</span></button></li>
+							</ul>
+						</div>
+						<div class="pop_img">
+							<div>
+								<ul>
+							<c:if test="${fn:length(portalAlertList) == 0}">
+								<li><a href="#"><span class="img"><img src="/images/main/popup_01.gif" alt="알면 선거가 즐겁다! 투표함의 모든 것" style="width:221px;height:121px" /></span> <span class="title">알면 선거가 즐겁다! 투표함의 모든 것</span></a></li>
+								<li><a href="#"><span class="img"><img src="/images/main/popup_02.gif" alt="투표지분류기 어떻게 알고 계십니까?"  style="width:221px;height:121px"/></span> <span class="title">투표지분류기 어떻게 알고 계십니까?</span></a></li>
+								<li><a href="#"><span class="img"><img src="/images/main/popup_03.gif" alt="인터넷방송"  style="width:221px;height:121px"/></span> <span class="title">인터넷방송</span></a></li>
+							</c:if>
+							<c:forEach var="popup" items="${portalAlertList}" varStatus="_status">
+								<li>
+									<c:choose>
+										<c:when test="${empty popup.alert_url}"> <span class="img"><img src="/portal/images/portalAlert/${popup.img_nm}" alt="${popup.img_alt}"  style="width:221px;height:121px" /></span><span class="title">
+											<util:head value="${popup.alert_nm}" length="22" />
+											</span> </c:when>
+										<c:otherwise> <a href="${empty popup.alert_url ? '#' : popup.alert_url}" <c:if test="${popup.popup == 'Y'}">target="_blank" title="새창열림"</c:if>><span class="img"><img src="/portal/images/portalAlert/${popup.img_nm}" alt="${popup.img_alt}"  style="width:221px;height:121px"/></span><span class="title">
+											<util:head value="${popup.alert_nm}" length="22" />
+											</span></a> </c:otherwise>
+									</c:choose>
+								</li>
+							</c:forEach>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+				<script type="text/javascript">
+					//<![CDATA[
+					$(".pop_img ul li").hide();
+					$(".pop_img ul li:first").show();
+					$(function(){
+						$(".pop_img ul li").show();
+						$(".pop_img ul").carouFredSel({
+							align		: "left",
+						//	padding: 0,
+							width		: 221,
+							height		: 121,
+							items		:{
+							visible : 1
+						},
+							scroll      :{
+							items		:1,
+							duration        : 390,
+							pauseOnHover	: false
+						},
+							next: '.next_pop',
+							prev: '.prev_pop',
+							direction	: "left"
+						});
+						$(".stop_pop").click(function() {
+							$(".pop_img ul").trigger("pause");
+						});
+						$(".play_pop").click(function() {
+							$(".pop_img ul").trigger("play");
+						});
+						$('.pop_img a').each(function(index) {
+							$(this).bind('focus', function() {
+								$(".pop_img ul").trigger("pause");
+							});
+						});
+					});
+					//]]>
+				</script>
+				<!-- popupZone -->
+
+<!-- <a href="/portal/delimitation.jsp" onclick="window.open(this.href,'delimitation','width=1280, height=748, scrollbars=yes'); return false;" ><img src="/images/mains/m_smBan.gif" width="204" height="147"  alt=""/></a> --></div>
+
+		</div>
+		<!-- lastest2 -->
+
+		<!-- <iframe src="/portal/mainData.do?gb=portal" scrolling="no" style="height:578px;width:100%" frameborder="0" title="본 프레임은 줌인, 인포그래픽, 주간카툰, 이슈카드, 간행물의 정보를 제공합니다."></iframe> -->
+
+		<div class="lastest3 grid1 clear">
+			<div>
+				<h3><a href="/portal/bbs/list/B0000247.do?menuNo=200040"><img src="/images/mains/m_70.gif" alt="줌인"/></a></h3>
+				<div class="zoomIns">
+					<div class="zoominCts">
+						<a href="/portal/bbs/view/${mainZoomBoard.bbsId}/${mainZoomBoard.nttId}.do?menuNo=200040&amp;pageIndex=1"><img src="${mainZoomBoard.imgUrl}" width="204" height="140" alt="" class="fl mr30" /></a>
+						<dl>
+							<dt><a href="/portal/bbs/view/${mainZoomBoard.bbsId}/${mainZoomBoard.nttId}.do?menuNo=200040&amp;pageIndex=1"><util:head value="${mainZoomBoard.nttSj}" length="30" /></a></dt>
+							<dd class="mt5"><a href="/portal/bbs/view/${mainZoomBoard.bbsId}/${mainZoomBoard.nttId}.do?menuNo=200040&amp;pageIndex=1"><util:head value="${mainZoomBoard.nttCn}" length="170" /></a></dd>
+						</dl>
+					</div>
+					<ul class="zoominList">
+						<c:forEach var="result" items="${mainZoomInList}" varStatus="_status">
+						<c:choose>
+							<c:when test="${_status.last}">
+								<c:set var="clss" value=" class='mr0'" />
+							</c:when>
+							<c:otherwise>
+								<c:set var="clss" value="" />
+							</c:otherwise>
+						</c:choose>
+
+						<li ${clss}><a href="/portal/bbs/view/${result.bbsId}/${result.nttId}.do?menuNo=200040&amp;pageIndex=1" ><img src="${result.imgUrl}" width="139" height="104" alt="${result.nttSj}" /><util:head value="${result.nttSj}" length="12" /></a></li>
+						</c:forEach>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<!-- lastest3 -->
+
+		<!-- lastest4 -->
+		<div class="lastest4 grid4">
+			<div>
+				<h3><a href="/portal/bbs/list/B0000282.do?viewType=P&menuNo=200199"><img src="/images/mains/m_83.gif" alt="인포그래픽"/></a></h3>
+				<p><a href="/portal/bbs/list/B0000282.do?viewType=P&menuNo=200199" ${targetType} ><img src="/images/mains/m_98.jpg" width="292" height="249" alt="" /></a></p>
+			</div>
+			<div>
+				<h3><a href="/portal/bbs/list/B0000423.do?menuNo=200619"><img src="/images/mains/m_86.gif" alt="주간카툰"/></a></h3>
+				<c:set var="resultList" value="${basicBoardMap['B0000423']}" />
+				<c:forEach var="x" begin="0" end="0" step="1">
+				<p><a href="/portal/bbs/view/${resultList[x].bbsId}/${resultList[x].nttId}.do?menuNo=200619&amp;pageIndex=1" ><img src="${resultList[x].imgUrl}" width="292" height="249" alt="" /></a></p>
+				</c:forEach>
+			</div>
+			<div>
+				<h3><a href="/portal/bbs/list/B0000424.do?menuNo=200625"><img src="/images/mains/m_89.gif" alt="이슈카드"/></a></h3>
+				<p><a href="/portal/bbs/view/B0000424/31708.do?menuNo=200625&searchYear=&searchMonth=&searchWrd=&searchCnd=&viewType=&pageIndex=1"><img src="/images/mains/m_102.jpg" width="292" height="249" alt="" /></a></p>
+			</div>
+			<div class="last mr0">
+				<h3><a href="/portal/bbs/list/B0000215.do?viewType=P&menuNo=200186"><img src="/images/mains/m_92.gif"  alt="간행물"/></a></h3>
+				<c:set var="resultList" value="${basicBoardMap['B0000215']}" />
+				<c:forEach var="x" begin="0" end="1" step="1">
+				<c:choose>
+				<c:when test="${x == 0}">
+				<div class="fl mr10"><a href="${resultList[x].fileUrl}" target="_blank" title="새창열림"><img src="${resultList[x].imgUrl}" width="97" height="138" alt="${resultList[x].nttSj}" /></a></div>
+				</c:when>
+				<c:when test="${x == 1}">
+				<div class="fl"><a href="${resultList[x].fileUrl}" target="_blank" title="새창열림"><img src="${resultList[x].imgUrl}" width="97" height="138" alt="${resultList[x].nttSj}" /></a></div>
+				</c:when>
+				</c:choose>
+				</c:forEach>
+
+				<div class="fl" style="margin-top:8px;"><a href="/portal/delimitation.jsp" onclick="window.open(this.href,'delimitation','width=1280, height=748, scrollbars=yes'); return false;" ><img src="/images/mains/m_smBan.gif" width="204" height="147"  alt=""/></a></div>
+			</div>
+		</div>
+		<!-- lastest4 -->
+
+
+		<!-- lastest5 -->
+		<div class="lastest5">
+			<div class="nectv">
+				<h3><a href="/portal/subMain.do?menuNo=200041"><img src="/images/mains/m_114.gif" alt="인터넷방송 NECTV"/></a></h3>
+				<div class="fl lgbox"><iframe id="broadcastTv" src="http://tv.nec.go.kr/nec/main_vod.asp" width="462" height="258" frameborder="0"  scrolling="no" title="선거 FOCUS 프레임"></iframe></a></div>
+
+				<div class="fl"><a href="/portal/subMain.do?menuNo=200584"><img src="/images/mains/m_119.jpg" width="231" height="122" alt="" /></a></div>
+				<div class="fl mt15"><a href="/portal/subMain.do?menuNo=200614"><img src="/images/mains/m_124.jpg" width="231" height="122" alt="" /></a></div>
+			</div>
+			<div class="noticeSet">
+				<div class="fl focus">
+					<h3><a href="/portal/bbs/list/B0000242.do?menuNo=200028"><img src="/images/mains/m_127.gif" alt="포커스"/></a></h3>
+					<div>
+						<a href="/portal/bbs/view/${recentNewsBoard.bbsId}/${recentNewsBoard.nttId}.do?menuNo=${recentNewsBoard.menuNo}">
+							<img src="${recentNewsBoard.imgUrl}" alt="${recentNewsBoard.nttSj}" />
+							<strong class="mt10 db"><util:head value="${recentNewsBoard.nttSj}" length="23" /></strong>
+						</a>
+					</div>
+				</div>
+
+
+				<div class="board_list">
+					<div class="board rv2">
+						<h2 class="hidden">게시판</h2>
+						<h3 class="pl0"><a href="/portal/bbs/list/B0000341.do?menuNo=200029"><img src="/images/mains/h3_t11_on.gif" alt="공지" /></a></h3>
+						<c:set var="resultList" value="${boardMap['B0000341']}" />
+						<div class="on">
+							<ul class="on" style="display: block;">
+							<c:forEach var="result" items="${resultList}" varStatus="_status">
+								<li><a href="/portal/bbs/view/${result.bbsId}/${result.nttId}.do?menuNo=${result.menuNo}"><util:head value="${result.nttSj}" length="23" /></a></li>
+							</c:forEach>
+							</ul>
+						</div>
+						<h3><a href="/portal/bbs/list/B0000342.do?menuNo=200035"><img src="/images/mains/h3_t12_off.gif" alt="보도자료" /></a></h3>
+						<c:set var="resultList" value="${boardMap['B0000342']}" />
+						<div>
+							<ul class="on" style="display: none;">
+							<c:forEach var="result" items="${resultList}" varStatus="_status">
+								<li><a href="/portal/bbs/view/${result.bbsId}/${result.nttId}.do?menuNo=${result.menuNo}"><util:head value="${result.nttSj}" length="23" /></a></li>
+							</c:forEach>
+							</ul>
+						</div>
+						<h3 class="bgn"><a href="/portal/bbs/list/B0000244.do?menuNo=200030"><img src="/images/mains/h3_t13_off.gif" alt="채용"></a></h3>
+						<c:set var="resultList" value="${boardMap['B0000244']}" />
+						<div>
+							<ul class="on" style="display: none;">
+							<c:forEach var="result" items="${resultList}" varStatus="_status">
+								<li><a href="/portal/bbs/view/${result.bbsId}/${result.nttId}.do?menuNo=${result.menuNo}"><util:head value="${result.nttSj}" length="23" /></a></li>
+							</c:forEach>
+							</ul>
+						</div>
+					</div>
+					<div class="info rv2">
+						<h3 class="pl0"><a href="/portal/contents.do?menuNo=200607"><img src="/images/mains/h3_t21_on.gif" alt="시도소식"></a></h3>
+						<div class="on">
+							<jsp:include page="/portal/sidoNews.jsp" flush="true" />
+						</div>
+						<h3><a href="/portal/nec/necGoList.do?menuNo=200038"><img src="/images/mains/h3_t22_off.gif" alt="언론기사"></a></h3>
+						<div>
+							<ul style="display: none;">
+							<c:forEach var="item" items="${mainResultList}" varStatus="status" end="2">
+								<li><a href="${item.url}" target="_blank" title="새 창 열림"> <util:head value="${item.title}" length="20" /> </a></li>
+							</c:forEach>
+							</ul>
+						</div>
+						<h3 class="bgn"><a href="/portal/bbs/list/B0000231.do?menuNo=200039"><img src="/images/mains/h3_t23_off.gif" alt="언론영상"></a></h3>
+						<div>
+							<ul style="display: none;">
+							<c:forEach var="result" items="${mainMediaNewsList}" varStatus="_status">
+								<li><a href="${result.option1}" target="_blank" title="새 창 열림"> <util:head value="${result.nttSj}" length="22" /> </a></li>
+							</c:forEach>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="laster5B">
+				<!-- roller -->
+				<div class="rollers" style="width:404px;height582px;overflow:hidden;">
+					<ul>
+						<c:forEach var="visual" items="${visualList}" varStatus="status">
+						<li><a href="${fn:replace(fn:replace(visual.option3,'&amp;',''),'&','&amp;')}" <c:if test="${visual.option5 == 'Y'}">target="_blank" title="새창열림"</c:if>><img src="${visual.imgUrl1}" alt="${visual.option2}" width="404px" height="582px"/></a></li>
+						</c:forEach>
+					</ul>
+				</div>
+
+
+			<script type="text/javascript">
+			$(function() {
+				 $('.rollers ul').carouFredSel({
+					items		:{
+						visible : 1
+					},
+					direction: 'left',
+					scroll      :{
+						items		:1,
+						pauseOnHover	: true
+					},
+					auto: {
+						play: true,
+						duration: 750,
+						timeoutDuration: 2000
+					}
+				 });
+			});
+			</script>
+				<!-- //roller -->
+			</div>
+		</div>
+		<!-- lastest5 -->
+
+		<div id="quick">
+			<ul class="rv">
+				<li style="height:46px"><a href="http://blog.naver.com/nec1963.do" target="_blank" title="새창 열림"  style="height:46px"><img src="/images/mains/quick_01.gif" alt="블로그" /></a></li>
+				<li><a href="http://me2.do/IDW76ByD" target="_blank" title="새창 열림"><img src="/images/mains/quick_02.gif" alt="사이버홍보" /></a></li>
+				<li><a href="https://www.facebook.com/2014nec" target="_blank" title="새창 열림"><img src="/images/mains/quick_03.gif" alt="페이스북" /></a></li>
+				<li><a href="https://mobile.twitter.com/necmedia2013" target="_blank" title="새창 열림"><img src="/images/mains/quick_04.gif" alt="트위터" /></a></li>
+				<li><a href="http://www.youtube.com/user/necpr" target="_blank" title="새창 열림"><img src="/images/mains/quick_05.gif" alt="유투브" /></a></li>
+				<!--<li><a href="#wrap"><img src="/portal/images/common/quick_top.gif" alt="페이지 상단으로 이동" /></a></li>-->
+			</ul>
+		</div>
+
+	</div>
+	<!-- //content -->
+
+
+
+	<div id="footer">
+		<div class="bottom_con">
+			<div class="serviceLink">
+				<ul>
+					<li style="width:124px;">
+						<dl>
+							<dt><a href="/portal/subMain.do?menuNo=200050">선거정보</a></dt>
+							<dd><a href="/portal/contents.do?menuNo=200562">선거통계</a></dd>
+							<dd><a href="/portal/bbs/list/B0000254.do?menuNo=200054">공직선거제도</a></dd>
+							<dd><a href="/portal/bbs/list/B0000357.do?menuNo=200561">사전투표제도</a></dd>
+							<dd><a href="/portal/bbs/list/B0000255.do?menuNo=200055">선상투표제도</a></dd>
+							<dd><a href="/portal/bbs/list/B0000256.do?menuNo=200056">위탁선거제도</a></dd>
+							<dd><a href="/portal/bbs/list/B0000185.do?menuNo=200057">선거일정</a></dd>
+						</dl>
+					</li>
+					<li style="width:159px;">
+						<dl>
+							<dt><a href="/portal/subMain.do?menuNo=200063">재외선거</a></dt>
+							<dd><a href="/portal/contents.do?menuNo=200606">언어선택</a></dd>
+							<dd><a href="/portal/bbs/list/B0000194.do?menuNo=200067">재외선거제도</a></dd>
+							<dd><a href="/portal/bbs/list/B0000404.do?menuNo=200067">선거법 위반행위</a></dd>
+							<dd><a href="/portal/viewContents.do?menuNo=200068">재외선거현항</a></dd>
+							<dd><a href="/portal/bbs/list/B0000196.do?section=20&menuNo=200072">재외선거관활동소식</a></dd>
+							<dd><a href="/portal/bbs/list/B0000264.do?viewType=P&menuNo=200608">홍보자료</a></dd>
+						</dl>
+					</li>
+					<li style="width:173px;">
+						<dl>
+							<dt><a href="/portal/subMain.do?menuNo=200166">정당 &middot; 정치자금</a></dt>
+							<dd><a href="/portal/bbs/list/B0000348.do?menuNo=200473">정당정보</a></dd>
+							<dd><a href="/portal/bbs/list/B0000269.do?menuNo=200170">정치자금제도</a></dd>
+							<dd><a href="/portal/bbs/list/B0000270.do?menuNo=200171">후원회등록절차</a></dd>
+							<dd><a href="/portal/bbs/list/B0000271.do?menuNo=200172">정치후원금이란?</a></dd>
+							<dd><a href="/portal/bbs/view/B0000271/1260.do?menuNo=200172">기부금 영수증 출력방법</a></dd>
+							<dd><a href="/portal/bbs/view/B0000271/1261.do?menuNo=200172&amp;searchYear=2013&amp;searchMonth=&amp;searchWrd=&amp;searchCnd=&amp;viewType=&amp;pageIndex=1">연말정산 소득공제</a></dd>
+						</dl>
+					</li>
+					<li style="width:160px;">
+						<dl class="last">
+							<dt><a href="/portal/subMain.do?menuNo=200146">정책 &middot; 공약알리미</a></dt>
+							<dd><a href="/portal/contents.do?menuNo=200500">유권자 공약제안</a></dd>
+							<dd><a href="http://policy.nec.go.kr" target="_blank" title="새창열림">정책보기</a></dd>
+							<dd><a href="/portal/contents.do?menuNo=200506">공약평가</a></dd>
+						</dl>
+						<dl class="last mt20">
+							<dt><a href="/portal/subMain.do?menuNo=200026">알림</a></dt>
+							<dd><a href="/portal/bbs/list/B0000341.do?menuNo=200029">공지</a></dd>
+							<dd><a href="/portal/bbs/list/B0000342.do?menuNo=200035">보도자료</a></dd>
+							<dd><a href="/portal/bbs/list/B0000244.do?menuNo=200030">채용정보</a></dd>
+						</dl>
+					</li>
+					<li style="width:144px">
+						<dl>
+							<dt><a href="/portal/subMain.do?menuNo=200176">제도연구 &middot; 자료</a></dt>
+							<dd><a href="/portal/bbs/list/B0000235.do?menuNo=200182">외부연구용역</a></dd>
+							<dd><a href="/portal/bbs/list/B0000233.do?menuNo=200183">국외연구</a></dd>
+							<dd><a href="/portal/bbs/list/B0000234.do?menuNo=200184">국내연구</a></dd>
+							<dd><a href="/portal/bbs/list/B0000215.do?viewType=P&amp;menuNo=200186">간행물</a></dd>
+							<dd><a href="/portal/bbs/list/B0000277.do?menuNo=200190">만물상</a></dd>
+							<dd><a href="/portal/bbs/list/B0000300.do?menuNo=200189">연구과제신청</a></dd>
+						</dl>
+					</li>
+					<li>
+						<dl>
+							<dt class="sr-only">제도연구 &middot; 자료</dt>
+							<dd style="margin-top:-3px"><a href="/portal/bbs/list/B0000340.do?menuNo=200062">각종 서식</a></dd>
+							<dd><a href="/portal/bbs/list/B0000338.do?menuNo=200185">선거&middot;정당&middot;정치자금</a></dd>
+
+							<dt class="mt5"><a href="/portal/subMain.do?menuNo=200080">선거법령정보</a></dt>
+							<dd><a href="/portal/knowLaw/list.do?menuNo=200084">자주찾는 선거정보</a></dd>
+							<dd><a href="http://law.nec.go.kr/lawweb/Controller.do?GENSOL_P_KEY=KLWL&GENSOL_M_KEY=KLWLLIST101010&SELECT_MENU=2" target="_blank" title="새 창 열림">법령검색</a></dd>
+							<dd><a href="http://law.nec.go.kr/lawweb/Controller.do?GENSOL_P_KEY=PANL&GENSOL_M_KEY=PANLLIST101000&SELECT_MENU=3" target="_blank" title="새 창 열림">판례검색</a></dd>
+							<dd><a href="/portal/docQna/list.do?menuNo=200134">질의검색</a></dd>
+						</dl>
+					</li>
+					<li class="brn" style="width:140px;">
+						<dl>
+							<dt style="padding-bottom:2px"><a href="/portal/subMain.do?menuNo=200192">홍보자료</a></dt>
+							<dd><a href="/portal/bbs/list/B0000278.do?menuNo=200193">영상</a></dd>
+							<dd><a href="/portal/bbs/list/B0000281.do?menuNo=200197">이미지</a></dd>
+							<dd><a href="/portal/bbs/list/B0000282.do?menuNo=200198">인포그래픽</a></dd>
+							<dd><a href="/portal/bbs/list/B0000283.do?viewType=P&amp;menuNo=200200">웹툰</a></dd>
+							<dd><a href="/portal/bbs/list/B0000423.do?menuNo=200619">카툰</a></dd>
+							<dd><a href="/portal/bbs/list/B0000424.do?menuNo=200625">이슈카드</a></dd>
+
+						</dl>
+					</li>
+				</ul>
+			</div>
+
+
+
+	<!-- bannerZone -->
+	<div class="bannerZone">
+		<div class="banner_ctl">
+			<h2 ><img src="/images/mains/bannerZt.gif" alt="BannerZone" /></h2>
+			<ul>
+				<li><a href="/portal/banner/List.do?menuNo=200522"><img src="/images/main/btn_banner_view.gif" alt="전체보기" /></a></li>
+				<li><button type="button" class="prev_banner" id="prev_banner"><span>이전배너보기</span></button></li>
+				<li><button type="button" class="next_banner" id="next_banner"><span>다음배너보기</span></button></li>
+				<li><button type="button" class="stop_banner" id="stop_banner"><span>배너일시정지</span></button></li>
+				<li><button type="button" class="play_banner" id="play_banner"><span>배너재생</span></button></li>
+			</ul>
+		</div>
+
+		<div class="banner">
+			<ul>
+				<c:forEach var="banner" items="${bannerList}" varStatus="status">
+				<li><a href="${banner.bnr_url}" target="_blank" title="배너(새창열림)"><img src="/portal/images/banner/${banner.bnr_img_nm}" alt="${banner.img_alt}" /></a> </li>
+				</c:forEach>
+			</ul>
+		</div>
+	</div>
+<script type="text/javascript">
+//<![CDATA[
+	$(".banner ul").carouFredSel({
+		align		: "left",
+		width		: 900,
+		height		: 60,
+		items		:{
+		visible : 4
+	},
+		scroll      :{
+	items		:1,
+	duration        : 390,
+	pauseOnHover	: true
+	},
+		next: '.next_banner',
+		prev: '.prev_banner',
+		direction	: "left"
+	});
+	$(".stop_banner").click(function() {
+		$(".banner ul").trigger("pause");
+	});
+	$(".play_banner").click(function() {
+		$(".banner ul").trigger("play");
+	});
+	$('.banner a').each(function(index) {
+		$(this).bind('focus', function() {
+	$(".banner ul").trigger("pause");
+		});
+	});
+//]]>
+</script>
+<!-- //bannerZone -->
+
+<!-- 2013-08-31 상단 search-->
+<c:set var="ipVal" value="" />
+<c:set var="imgVal" value="" />
+<c:choose>
+	<c:when test="${fn:indexOf(pageContext.request.serverName,'nec.go.kr') > -1}">
+		<c:set var="ipVal" value="weblog.nec.go.kr" />
+		<c:set var="imgVal" value="http://weblog.nec.go.kr/?uid=1&je=n&" />
+	</c:when>
+	<c:otherwise>
+		<c:set var="ipVal" value="weblog.nec.go.kr" />
+		<c:set var="imgVal" value="http://weblog.nec.go.kr/?uid=1&je=n&" />
+	</c:otherwise>
+</c:choose>
+<!-- AceCounter Log Gathering Script V.71.2010011401 -->
+<script language='javascript'>
+var _GUL = 'weblog.nec.go.kr';var _GPT='443'; var _SGPT='443';var _AIMG = new Image(); var _bn=navigator.appName; var _PR = location.protocol=="https:"?"https://"+_GUL+":"+_SGPT:"https://"+_GUL+":"+_GPT;if( _bn.indexOf("Netscape") > -1 || _bn=="Mozilla"){ setTimeout("_AIMG.src = _PR+'/?cookie';",1); } else{ _AIMG.src = _PR+'/?cookie'; };
+document.writeln("<scr"+"ipt language='javascript' src='/js/acecounter/m_acecounter_V70.js'></scr"+"ipt>");
+</script>
+<script language='javascript'>
+var _GUL = 'weblog.nec.go.kr';var _GPT='443'; var _SGPT='443';var _AIMG = new Image(); var _bn=navigator.appName; var _PR = location.protocol=="https:"?"https://"+_GUL+":"+_SGPT:"https://"+_GUL+":"+_GPT;if( _bn.indexOf("Netscape") > -1 || _bn=="Mozilla"){ setTimeout("_AIMG.src = _PR+'/?cookie';",1); } else{ _AIMG.src = _PR+'/?cookie'; };
+document.writeln("<scr"+"ipt language='javascript' src='/js/acecounter/acecounter_V70.js'></scr"+"ipt>");
+</script>
+<noscript>
+<img src='${imgVal}' border=0 width=0 height=0 alt="" />
+</noscript>
+<!-- AceCounter Log Gathering Script End -->
+
+			<div class="footer_bg">
+				<div class="f_menu">
+					<ul>
+						<li class="bgn"><a href="/portal/contents.do?menuNo=200519"><strong>개인정보처리방침</strong></a></li>
+						<li><a href="/portal/contents.do?menuNo=200520">저작권정책</a></li>
+						<li><a href="/portal/contents.do?menuNo=200564">첫방문자 이용가이드</a></li>
+						<li><a href="/portal/contents.do?menuNo=200371">연락처</a></li>
+						<li><a href="/portal/contents.do?menuNo=200385">찾아오시는길</a></li>
+						<li><a href="/portal/contents.do?menuNo=200438">모바일웹·앱</a></li>
+						<li><a href="/portal/contents.do?menuNo=200434">RSS</a></li>
+						<li class="none"><a href="/portal/contents.do?menuNo=200426">홈페이지도우미</a></li>
+					</ul>
+				</div>
+				<div class="foot">
+					<p class="f_logo"><a href="http://ntv.nec.go.kr" target="_blank" title="ntv.nec.go.kr (새창열림)"><img src="/images/mains/f_logo.gif" alt="중앙선거관리위원회" /></a></p>
+					<div class="f_add">
+						<address>
+						[13809] 경기도 과천시 홍촌말로 44 중앙선거관리위원회
+						</address>
+						대표전화 : <span class="bold pr25">02-503-1114</span> 선거법질의·신고제보 : <span class="bold">국번없이</span> <img src="/images/common/ico_1390.gif" alt="1390" class="vb" /> </div>
+					<div class="family">
+						<ul>
+							<li>
+								<select id="selectbox1" name="selectbox1" class="input_select" title="이동할 시·도 선거관리위원회 선택">
+									<option selected="selected" value="NO">시·도 선거관리위원회</option>
+									<option value="http://su.nec.go.kr">서울특별시선거관리위원회</option>
+									<option value="http://bs.nec.go.kr">부산광역시선거관리위원회</option>
+									<option value="http://dg.nec.go.kr">대구광역시선거관리위원회</option>
+									<option value="http://ic.nec.go.kr">인천광역시선거관리위원회</option>
+									<option value="http://gj.nec.go.kr">광주광역시선거관리위원회</option>
+									<option value="http://dj.nec.go.kr">대전광역시선거관리위원회</option>
+									<option value="http://us.nec.go.kr">울산광역시선거관리위원회</option>
+									<option value="http://sj.nec.go.kr">세종특별자치시선거관리위원회</option>
+									<option value="http://gg.nec.go.kr">경기도선거관리위원회</option>
+									<option value="http://gw.nec.go.kr">강원도선거관리위원회</option>
+									<option value="http://cb.nec.go.kr">충청북도선거관리위원회</option>
+									<option value="http://cn.nec.go.kr">충청남도선거관리위원회</option>
+									<option value="http://jb.nec.go.kr">전라북도선거관리위원회</option>
+									<option value="http://jn.nec.go.kr">전라남도선거관리위원회</option>
+									<option value="http://gb.nec.go.kr">경상북도선거관리위원회</option>
+									<option value="http://gn.nec.go.kr">경상남도선거관리위원회</option>
+									<option value="http://jj.nec.go.kr">제주특별자치도선거관리위원회</option>
+								</select>
+								<input type="image" src="/images/common/btn_family.gif" alt="시·도 홈페이지 이동(새창열림)" id="inputBTN1" name="" value="" class="input_img" />
+							</li>
+						</ul>
+						<script type="text/javascript">
+							$("#selectbox1").change(function(){
+								var urlChange = $("#selectbox1 option:selected").val();
+								var urlTxt = $("#selectbox1 option:selected").text();
+								$("#inputBTN1").unbind("click");
+								$("#inputBTN1").click(function(){
+									window.open(urlChange);
+									$(this).attr("alt", $(this).attr("alt").replace("홈페이지 이동" , urlTxt + " 홈페이지 이동 새창열림"));
+								});
+							});
+							$("#selectbox2").change(function(){
+								var urlChange = $("#selectbox2 option:selected").val();
+								var urlTxt = $("#selectbox2 option:selected").text();
+								$("#inputBTN2").unbind("click");
+								$("#inputBTN2").click(function(){
+									window.open(urlChange);
+									$(this).attr("alt", $(this).attr("alt").replace("홈페이지 이동" , urlTxt + " 홈페이지 이동 새창열림"));
+								});
+							});
+							//window.open('http://livetv.nec.go.kr/','livetv','resizable=1,scrollbars=1,width=650,height=500,top=0,left=0');
+						</script>
+					</div>
+					<p class="mark"><a href="http://webwatch.or.kr/certification/situation.html" target="_blank"><img src="/images/mains/m_167.gif" border="0" alt="미래창조과학부 WEB ACCESSIBILITY 마크(웹 접근성 품질인증 마크)" title="국가 공인 인증기관 : 웹와치" /></a></p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- //wrapper -->
+
+<!--[if lte IE 7]>
+<script type="text/javascript">
+//<![CDATA[
+	$('*').each(function(index) {
+		if ($(this).css("overflow")=="hidden"){
+			$(this).css("zoom",1);
+		}
+		if ($(this).css("display")=="inline-block"){
+			$(this).css("display",'inline');
+			$(this).css("zoom",1);
+		}
+	});
+//]]>
+</script>
+<![endif]-->
+
+</body>
+</html>

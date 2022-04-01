@@ -1,0 +1,925 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="member">
+
+	<typeAlias  alias="zvl" type="kr.co.unp.util.ZValue"/>
+	<typeAlias  alias="usersVO" type="kr.co.unp.member.vo.UsersVO"/>
+
+	<!-- 여기서부터 관리자 쿼리입니다. -->
+	<select id="memberDAO.selectMember" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/*memberDAO.selectMember*/
+			SELECT
+				   A.USER_IDX,
+				   A.USER_ID,
+			       A.PASSWORD,
+			       A.USER_NM,
+			       A.MOBLPHON,
+			       A.EMAIL,
+			       A.SEAT_NO,
+			       A.DEPT_ID,
+			       A.STATUS,
+			       A.AUTHOR_CODE,
+			       B.AUTHOR_NM,
+			       DATE_FORMAT(A.FRST_REGIST_PNTTM, '%Y-%m-%d') AS REG_DATE,
+			       C.DEPT_NM_KOR,
+			       C.DEPT_NM_ENG
+			  FROM TM_USER A
+			  LEFT OUTER JOIN TC_AUTHORINFO B ON B.AUTHOR_CODE = A.AUTHOR_CODE
+			  LEFT OUTER JOIN TM_ADMIN_DEPT C ON C.DEPT_ID = A.DEPT_ID
+			  WHERE A.USER_ID = #userId#
+		]]>
+		<isNotEmpty prepend="AND" property="status">
+			<![CDATA[	A.STATUS = #status# 		]]>
+		</isNotEmpty>
+	</select>
+
+	<sql id="memberDAO.selectMemberList-where">
+		<isNotEmpty prepend="AND" property="sdate">
+			<![CDATA[	DATE_FORMAT(A.FRST_REGIST_PNTTM, '%Y%m%d') >= REPLACE(#sdate#,'-','') 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="edate">
+			<![CDATA[	DATE_FORMAT(A.FRST_REGIST_PNTTM, '%Y%m%d') <= REPLACE(#edate#,'-','') 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="userIdx">
+			<![CDATA[	USER_IDX = #userIdx# 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="userId">
+			<![CDATA[	USER_ID = #userId# 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchWrd">
+			<isEqual property="searchCnd" compareValue="1">
+				<![CDATA[	A.USER_ID LIKE CONCAT('%',trim(#searchWrd#), '%') 		]]>
+			</isEqual>
+			<isEqual property="searchCnd" compareValue="3">
+				<![CDATA[	C.DEPT_NM_KOR LIKE CONCAT('%',trim(UPPER(#searchWrd#)), '%')	]]>
+			</isEqual>
+			<isEqual property="searchCnd" compareValue="4">
+				<![CDATA[	A.USER_NM LIKE CONCAT('%',trim(#searchWrd#), '%') 		]]>
+			</isEqual>
+		</isNotEmpty>
+	</sql>
+
+	<select id="memberDAO.selectMemberList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/*memberDAO.selectMemberList*/
+		SELECT
+			A.USER_IDX,
+			A.USER_ID,
+			A.PASSWORD,
+			A.USER_NM,
+			A.MOBLPHON,
+			A.EMAIL,
+			A.SEAT_NO,
+			A.DEPT_ID,
+			A.STATUS,
+			C.DEPT_NM_KOR AS DEPT_NAME,
+			A.AUTHOR_CODE,
+			B.AUTHOR_NM,
+			DATE_FORMAT(A.FRST_REGIST_PNTTM, '%Y-%m-%d') AS REG_DATE,
+			C.DEPT_NM_KOR,
+			C.DEPT_NM_ENG
+		FROM TM_USER A
+		LEFT OUTER JOIN TC_AUTHORINFO B ON B.AUTHOR_CODE = A.AUTHOR_CODE
+		LEFT OUTER JOIN TM_ADMIN_DEPT C ON C.DEPT_ID = A.DEPT_ID
+		WHERE A.M_TYPE = '0'
+		]]>
+		<include refid="memberDAO.selectMemberList-where" />
+	    <![CDATA[
+	    		order by A.FRST_REGIST_PNTTM DESC
+			limit #firstIndex#, #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="memberDAO.selectMembers" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/*memberDAO.selectMembers*/
+			SELECT
+				A.USER_IDX,
+				A.USER_ID,
+				A.PASSWORD,
+				A.USER_NM,
+				A.MOBLPHON,
+				A.EMAIL,
+				A.SEAT_NO,
+				A.DEPT_ID,
+				A.STATUS,
+				C.DEPT_NM_KOR AS DEPT_NAME,
+				A.AUTHOR_CODE,
+				B.AUTHOR_NM,
+				DATE_FORMAT(A.FRST_REGIST_PNTTM, '%Y-%m-%d') AS REG_DATE,
+				C.DEPT_NM_KOR,
+				C.DEPT_NM_ENG
+			FROM TM_USER A
+			LEFT OUTER JOIN TC_AUTHORINFO B ON B.AUTHOR_CODE = A.AUTHOR_CODE
+			LEFT OUTER JOIN TM_ADMIN_DEPT C ON C.DEPT_ID = A.DEPT_ID
+			WHERE 1=1
+		]]>
+		<include refid="memberDAO.selectMemberList-where" />
+	</select>
+
+	<insert id="memberDAO.insertMember" parameterClass="zvl" >
+		<![CDATA[
+		/*memberDAO.insertMember*/
+			INSERT INTO TM_USER (
+				USER_IDX, M_TYPE, USER_ID, PASSWORD, USER_NM, DEPT_ID, AUTHOR_CODE, FRST_REGIST_PNTTM, MOBLPHON, EMAIL, SEAT_NO, STATUS
+			)
+			VALUES (
+				#userIdx#, #mType#, #userId#, #encodedPwd#, #userNm#, #deptId#, #authorCode#, NOW(), #moblphon#, #email#, #seatNo#, #status#
+ 			)
+		]]>
+	</insert>
+
+	<update id="memberDAO.updateMember" parameterClass="zvl">
+		<![CDATA[
+		/*memberDAO.updateMember*/
+			UPDATE TM_USER
+			SET
+			     USER_NM = #userNm#,
+			     DEPT_ID = #deptId#,
+			     MOBLPHON = #moblphon#,
+			     EMAIL = #email#,
+			     SEAT_NO = #seatNo#,
+			     STATUS = #status#,
+		]]>
+		<isNotEmpty property="encodedPwd">
+			<![CDATA[	PASSWORD = #encodedPwd#, 		]]>
+		</isNotEmpty>
+		<![CDATA[
+			     AUTHOR_CODE = #authorCode#
+			  WHERE USER_ID = #userId#
+		]]>
+	</update>
+
+	<delete id="memberDAO.deleteMember" parameterClass="zvl">
+		<![CDATA[
+		/*memberDAO.deleteMember*/
+			DELETE FROM TM_USER
+			WHERE USER_ID = #userId#
+		]]>
+	</delete>
+
+	<update id="memberDAO.updatePwdReset" parameterClass="zvl">
+		<![CDATA[
+		/*memberDAO.updatePwdReset*/
+			UPDATE TM_USER	SET
+				PASSWORD = #pwd#
+			WHERE USER_ID = #userId#
+		]]>
+	</update>
+
+	<select id="memberDAO.selectMemberListCnt" parameterClass="zvl" resultClass="int">
+		<![CDATA[
+		/*memberDAO.selectMemberListCnt*/
+			SELECT COUNT(*)
+			  FROM TM_USER A
+			  LEFT OUTER JOIN TC_AUTHORINFO B ON B.AUTHOR_CODE = A.AUTHOR_CODE
+			  LEFT OUTER JOIN TM_ADMIN_DEPT C ON C.DEPT_ID = A.DEPT_ID
+			  WHERE 1=1
+		]]>
+		<include refid="memberDAO.selectMemberList-where" />
+	</select>
+
+	<update id="memberDAO.updateMemberMy" parameterClass="zvl">
+		<![CDATA[
+		/*memberDAO.updateMemberMy*/
+			UPDATE TM_USER SET
+				SEAT_NO = #seatNo#,
+				MOBLPHON = #moblphon#,
+		]]>
+		<isNotEmpty property="encodedPwd">
+			<![CDATA[	PASSWORD = #encodedPwd#, 		]]>
+		</isNotEmpty>
+		<![CDATA[
+			     EMAIL = #email#
+			  WHERE USER_ID = #userId#
+		]]>
+	</update>
+
+
+	<!-- 여기서부터 사용자 쿼리입니다. -->
+
+	<!-- 사용자 로그인 체크 -->
+	<select id="memberDAO.selectLoginInfo" resultClass="zvl">
+		<![CDATA[
+		/*memberDAO.selectLoginInfo*/
+			SELECT A.USER_ID AS username,
+			       A.PASSWORD AS password
+			  FROM TM_USER A
+			WHERE A.USER_ID = #username#
+		]]>
+	</select>
+
+	<sql id="memberDAO.selectUserMemberList-where">
+		<isNotEmpty prepend="AND" property="sdate">
+			<![CDATA[	DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y%m%d') >= REPLACE(#sdate#,'-','') 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="edate">
+			<![CDATA[	DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y%m%d') <= REPLACE(#edate#,'-','') 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="userId">
+			<![CDATA[	USER_ID = #userId# 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="userIdx">
+			<![CDATA[	USER_IDX = #userIdx# 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="evltrYn">
+			<![CDATA[	EVLTR_YN = #evltrYn# 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="mentorYn">
+			<![CDATA[	MENTOR_YN = #mentorYn# 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="mentorGubun">
+			<![CDATA[	MENTOR_GUBUN = #mentorGubun# 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchMentorYn">
+			<![CDATA[	A.MENTOR_YN = #searchMentorYn# 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchWrd">
+			<isEqual property="searchCnd" compareValue="1">
+				<![CDATA[	A.USER_ID LIKE CONCAT('%',trim(#searchWrd#), '%') 		]]>
+			</isEqual>
+			<isEqual property="searchCnd" compareValue="2">
+				<![CDATA[	A.USER_NM LIKE CONCAT('%',trim(#searchWrd#), '%') 		]]>
+			</isEqual>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="mType">
+			<![CDATA[	M_TYPE = #mType# 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="moblphon">
+			<![CDATA[	REPLACE(A.MOBLPHON,'-','') = REPLACE(#moblphon#,'-','') 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="email">
+			<![CDATA[	A.EMAIL = #email# 		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="userNm">
+			<![CDATA[	A.USER_NM LIKE CONCAT('%',trim(#userNm#), '%')  		]]>
+		</isNotEmpty>
+
+	</sql>
+
+	<select id="memberDAO.selectUserMemberList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/*memberDAO.selectUserMemberList*/
+			SELECT
+			    A.USER_IDX,
+			    A.M_TYPE,
+			    A.USER_ID,
+			    A.PASSWORD,
+			    A.USER_NM,
+			    A.EMAIL,
+			    A.MOBLPHON,
+			    A.BRTHDY,
+			    A.SEX,
+			    A.EMAIL_AT,
+			    A.SMS_AT,
+			    A.ENTRPRS_NO,
+			    A.ATCH_FILE_ID,
+			    A.STATUS,
+			    A.MENTOR_YN,
+			    A.MENTOR_GUBUN,
+			    DATE_FORMAT(A.FRST_REGIST_PNTTM, '%Y-%m-%d') AS REG_DATE,
+			    B.AUTH_GUBUN,
+          		C.BSNM
+			FROM TM_USER A
+			LEFT OUTER JOIN TM_CRTFC B ON A.USER_IDX = B.USER_IDX
+			LEFT OUTER JOIN TC_ENTRPRS C ON A.ENTRPRS_NO = C.ENTRPRS_NO
+            WHERE 1 = 1
+		]]>
+		<isEqual prepend="AND" property="mentorYn" compareValue="Y">
+			<![CDATA[	A.M_TYPE != '0'		]]>
+		</isEqual>
+		<isNotEqual prepend="AND" property="mentorYn" compareValue="Y">
+			<![CDATA[	A.M_TYPE = '1'		]]>
+		</isNotEqual>
+
+		<include refid="memberDAO.selectUserMemberList-where" />
+	    <![CDATA[
+	    		order by A.LAST_UPDT_PNTTM DESC, A.FRST_REGIST_PNTTM DESC
+
+			limit #firstIndex#, #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="memberDAO.selectUserMainMemberList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/*memberDAO.selectUserMainMemberList*/
+			SELECT
+			    A.USER_IDX,
+			    A.M_TYPE,
+			    A.USER_NM,
+			    A.ENTRPRS_NO,
+			    A.ATCH_FILE_ID,
+			    A.STATUS,
+			    A.MENTOR_YN,
+			    A.MENTOR_GUBUN,
+         		B.BSNM
+			FROM TM_USER A
+			LEFT OUTER JOIN TC_ENTRPRS B ON A.ENTRPRS_NO = B.ENTRPRS_NO
+
+            WHERE A.M_TYPE = '1'
+            AND A.MENTOR_YN = 'Y'
+
+		]]>
+	    <![CDATA[
+	    		order by A.LAST_UPDT_PNTTM DESC, A.FRST_REGIST_PNTTM DESC
+
+			limit 0, #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="memberDAO.selectUserMemberListCnt" parameterClass="zvl" resultClass="int">
+		<![CDATA[
+		/*memberDAO.selectUserMemberListCnt*/
+			SELECT COUNT(*)
+			  FROM TM_USER A
+			LEFT OUTER JOIN TM_CRTFC B ON A.USER_IDX = B.USER_IDX
+
+            WHERE A.M_TYPE = '1'
+		]]>
+		<include refid="memberDAO.selectUserMemberList-where" />
+	</select>
+
+	<select id="memberDAO.selectUserMembers" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/*memberDAO.selectUserMembers*/
+			SELECT
+			    A.USER_IDX,
+			    A.M_TYPE,
+			    A.USER_id,
+			    A.PASSWORD,
+			    A.USER_NM,
+			    A.EMAIL,
+			    A.MOBLPHON,
+			    A.BRTHDY,
+			    A.SEX,
+			    A.EMAIL_AT,
+			    A.SMS_AT,
+			    A.FB_URL,
+			    A.TW_URL,
+			    A.NB_URL,
+			    A.INTRCN,
+			    A.ENTRPRS_NO,
+			    A.ATCH_FILE_ID,
+			    A.STATUS,
+			    A.MNG_YN,
+			    A.ENT_YN,
+			    A.MENTOR_YN,
+			    A.MENTOR_GUBUN,
+			    A.MENTOR_INFO,
+			    B.BSNM
+			FROM TM_USER A
+			LEFT OUTER JOIN TC_ENTRPRS B ON A.ENTRPRS_NO = B.ENTRPRS_NO
+			WHERE 1 = 1
+		]]>
+		<include refid="memberDAO.selectUserMemberList-where" />
+	</select>
+
+	<insert id="memberDAO.insertUserMember" parameterClass="zvl" >
+		<![CDATA[
+		/*memberDAO.insertUserMember*/
+			INSERT INTO TM_USER (
+			    USER_IDX,M_TYPE,USER_ID,PASSWORD,USER_NM,EMAIL,
+			    MOBLPHON,BRTHDY,SEX,EMAIL_AT,SMS_AT,
+			    ENTRPRS_NO,FRST_REGIST_PNTTM,
+			    STATUS,ATCH_FILE_ID,FB_URL,TW_URL,NB_URL,INTRCN,
+			    EVLTR_YN
+			)
+			VALUES (
+			    #userIdx#,#mType#,#userId#,#password#,#userNm#,#email#,
+			    #moblphon#,#brthdy#,#sex#,#emailAt#,#smsAt#,
+			    IFNULL(#entrprsNo#, 0),now(),
+			    'Y',#atchFileId#,#fbUrl#,#twUrl#,#nbUrl#,#intrcn#,
+			    IFNULL(#evltrYn#, 'N')
+			)
+
+		]]>
+	</insert>
+
+	<insert id="memberDAO.insertEntUserMember" parameterClass="zvl" >
+		<![CDATA[
+		/*memberDAO.insertEntUserMember*/
+			INSERT INTO TM_USER (
+			    USER_IDX,M_TYPE,USER_ID,PASSWORD,USER_NM,EMAIL,
+			    MOBLPHON,BRTHDY,SEX,EMAIL_AT,SMS_AT,
+			    ENTRPRS_NO,FRST_REGIST_PNTTM,
+			    STATUS,ATCH_FILE_ID,FB_URL,TW_URL,NB_URL,INTRCN,MNG_YN,ENT_YN
+			)
+			VALUES (
+			    #userIdx#,#mType#,#userId#,#password#,#userNm#,#email#,
+			    #moblphon#,#brthdy#,#sex#,#emailAt#,#smsAt#,
+			    #entrprsNo#,now(),
+			    'Y',#ciAtchFileId#,#entFbUrl#,#entTwUrl#,#entNbUrl#,#cmpnyIntrcn#,#mngYn#,#entYn#
+			)
+
+		]]>
+	</insert>
+
+	<update id="memberDAO.updateUserMember" parameterClass="zvl">
+		<![CDATA[
+		/*memberDAO.updateUserMember*/
+			UPDATE TM_USER
+			SET
+			    EMAIL = #email#,
+			    MOBLPHON = #moblphon#,
+			    EMAIL_AT = #emailAt#,
+			    SMS_AT = #smsAt#,
+			    FB_URL = #fbUrl#,
+			    TW_URL = #twUrl#,
+			    NB_URL = #nbUrl#,
+			    ENTRPRS_NO = #entrprsNo#,
+			    INTRCN = #intrcn#,
+			    MENTOR_YN = #mentorYn#,
+			    MENTOR_GUBUN = #mentorGubun#,
+			    MENTOR_INFO = #mentorInfo#,
+		]]>
+
+		<isNotEmpty property="entrprsNo">
+				<![CDATA[	ENTRPRS_NO = #entrprsNo#,		]]>
+		</isNotEmpty>
+		<isNotEmpty property="status">
+			<![CDATA[	STATUS = #status#,		]]>
+		</isNotEmpty>
+		<![CDATA[
+
+				ATCH_FILE_ID = #atchFileId#
+
+			  WHERE USER_ID = #userId#
+		]]>
+	</update>
+
+	<update id="memberDAO.updateEntMember" parameterClass="zvl">
+		<![CDATA[
+		/*memberDAO.updateEntMember*/
+			UPDATE TM_USER
+			SET
+			    EMAIL = #email#,
+			    FB_URL = #entFbUrl#,
+			    TW_URL = #entTwUrl#,
+			    NB_URL = #entNbUrl#,
+			    ENTRPRS_NO = #entrprsNo#,
+			    INTRCN = #cmpnyIntrcn#,
+			    MENTOR_YN = #mentorYn#,
+			    MENTOR_GUBUN = #mentorGubun#,
+			    MENTOR_INFO = #mentorInfo#,
+		]]>
+
+		<isNotEmpty property="entrprsNo">
+				<![CDATA[	ENTRPRS_NO = #entrprsNo#,		]]>
+
+		</isNotEmpty>
+		<![CDATA[
+
+				ATCH_FILE_ID = #atchFileId#
+
+			  WHERE USER_ID = #userId#
+		]]>
+	</update>
+
+	<update id="memberDAO.updateEntYnMember" parameterClass="zvl">
+		<![CDATA[
+		/*memberDAO.updateEntYnMember*/
+		UPDATE TM_USER
+		SET
+			ENT_YN = #entYn#
+
+		WHERE ENTRPRS_NO = #entrprsNo#
+		]]>
+	</update>
+
+	<update id="memberDAO.changeEntMember" parameterClass="zvl">
+		<![CDATA[
+		/*memberDAO.changeEntMember*/
+			UPDATE TM_USER
+			SET
+			    ENTRPRS_NO = #entrprsNo#,
+		]]>
+		<isNotEmpty property="mngYn">
+			<![CDATA[	MNG_YN = #mngYn#,		]]>
+		</isNotEmpty>
+		<isNotEmpty property="entYn">
+			<![CDATA[	ENT_YN = #entYn#,		]]>
+		</isNotEmpty>
+		<![CDATA[
+			    LAST_UPDT_PNTTM = now()
+			WHERE USER_IDX = #userIdx#
+		]]>
+	</update>
+
+
+	<update id="memberDAO.AddEntMember" parameterClass="zvl">
+		<![CDATA[
+		/*memberDAO.AddEntMember*/
+			UPDATE TM_USER
+			SET
+			    ENTRPRS_NO = #entrprsNo#,
+
+			    LAST_UPDT_PNTTM = now()
+			WHERE USER_ID = #userId#
+		]]>
+	</update>
+
+	<select id="memberDAO.selectDupCountDIKey" parameterClass="usersVO" resultClass="java.lang.Integer">
+		<![CDATA[
+		/*memberDAO.selectDupCountDIKey*/
+			SELECT count(*) as cnt FROM TM_CRTFC
+			WHERE AUTH_KEY = #userKey#
+		]]>
+	</select>
+
+	<insert id="memberDAO.insertUserKey" parameterClass="usersVO">
+		<selectKey resultClass="java.lang.Long" keyProperty="userIdx">
+		/*memberDAO.insertUserKey*/
+			SELECT IFNULL(MAX(USER_IDX),0)+1 AS USER_IDX FROM TM_CRTFC
+		</selectKey>
+		<![CDATA[
+			INSERT INTO TM_CRTFC
+			(
+				USER_IDX, AUTH_KEY, AUTH_NM, AUTH_GUBUN
+			)
+			VALUES
+			(
+				#userIdx#,#userKey#,#userNm#,#crtfcSe#
+			)
+		]]>
+	</insert>
+
+	<insert id="memberDAO.insertUserKeyZvl" parameterClass="zvl">
+		<selectKey resultClass="java.lang.Long" keyProperty="userIdx">
+			SELECT IFNULL(MAX(USER_IDX),0)+1 AS USER_IDX FROM TM_CRTFC
+		</selectKey>
+		<![CDATA[
+			INSERT INTO TM_CRTFC
+			(
+				USER_IDX, AUTH_KEY, AUTH_NM, AUTH_GUBUN
+			)
+			VALUES
+			(
+				#userIdx#,#userKey#,#userNm#,#crtfcSe#
+			)
+		]]>
+	</insert>
+
+	<insert id="memberDAO.insertEntUserKey" parameterClass="usersVO" >
+		<selectKey resultClass="java.lang.Long" keyProperty="userIdx">
+		/*memberDAO.insertEntUserKey*/
+			SELECT IFNULL(MAX(USER_IDX),0)+1 AS USER_IDX FROM TM_CRTFC
+		</selectKey>
+		<![CDATA[
+			INSERT INTO TM_CRTFC
+			(
+				USER_IDX, AUTH_KEY, AUTH_NM, AUTH_GUBUN
+			)
+			VALUES
+			(
+				#userIdx#,#userKey#,#bsnm#,#crtfcSe#
+			)
+		]]>
+	</insert>
+
+	<select id="memberDAO.selectAuthDataZvl" parameterClass="zvl" resultClass="zvl" >
+		<![CDATA[
+		/*memberDAO.selectAuthData*/
+			SELECT USER_IDX as userIdx, AUTH_KEY as userKey, AUTH_NM as userNm, AUTH_GUBUN as crtfcSe
+			FROM TM_CRTFC
+			WHERE AUTH_KEY = #userKey#
+		]]>
+	</select>
+
+	<select id="memberDAO.selectAuthData" parameterClass="usersVO" resultClass="usersVO" >
+		<![CDATA[
+		/*memberDAO.selectAuthData*/
+			SELECT USER_IDX as userIdx, AUTH_KEY as userKey, AUTH_NM as userNm, AUTH_GUBUN as crtfcSe
+			FROM TM_CRTFC
+			WHERE AUTH_KEY = #userKey#
+		]]>
+	</select>
+
+
+	<select id="memberDAO.checkDupID" parameterClass="zvl" resultClass="java.lang.Integer">
+		<![CDATA[
+		/*memberDAO.checkDupID*/
+			SELECT COUNT(*) AS cnt
+			  FROM TM_USER
+			 WHERE USER_ID = #userId#
+		]]>
+	</select>
+
+	<select id="memberDAO.checkDupEmail" parameterClass="zvl" resultClass="java.lang.Integer">
+		<![CDATA[
+		/*memberDAO.checkDupEmail*/
+			SELECT COUNT(*) AS cnt
+			  FROM TM_USER
+			 WHERE EMAIL = #email#
+		]]>
+	</select>
+
+	<select id="memberDAO.checkDupBizno" parameterClass="zvl" resultClass="java.lang.Integer">
+		<![CDATA[
+		/*memberDAO.checkDupBizno*/
+			SELECT COUNT(*) AS cnt
+			  FROM TC_ENTRPRS
+			 WHERE BIZRNO = #bizrno#
+		]]>
+		<isNotEmpty prepend="AND" property="entYn">
+			<![CDATA[	ENT_YN = #entYn#	]]>
+		</isNotEmpty>
+	</select>
+
+	<select id="memberDAO.selectEntsStaffs" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/*memberDAO.selectEntsStaffs*/
+			SELECT
+			    USER_ID,USER_NM,EMAIL,MNG_YN,ENT_YN,ATCH_FILE_ID
+			FROM TM_USER
+			WHERE ENTRPRS_NO = #entrprsNo#
+			AND M_TYPE = '1'
+		]]>
+	</select>
+
+
+	<delete id="memberDAO.deleteUserMember" parameterClass="zvl">
+		<![CDATA[
+		/*memberDAO.deleteUserMember*/
+			DELETE
+			  FROM PRTLTMEMBER
+			  WHERE ID = #id#
+		]]>
+	</delete>
+
+	<update id="memberDAO.updateUserMemberPwdReset" parameterClass="zvl">
+		<![CDATA[
+		/*memberDAO.updateUserMemberPwdReset*/
+			UPDATE TM_USER SET
+				PASSWORD = #password2#
+			WHERE USER_ID = #userId#
+		]]>
+	</update>
+
+	<select id="memberDAO.selectAllMemberDeptList" resultClass="zvl">
+		<![CDATA[
+		/*memberDAO.selectAllMemberDeptList*/
+			SELECT
+				DEPT_ID,
+				DEPT_NM_KOR,
+				DEPT_NM_ENG
+			FROM TM_ADMIN_DEPT
+			order by DEPT_NM_KOR
+		]]>
+	</select>
+
+	<insert id="memberDAO.insertMemberDept" parameterClass="zvl" >
+		<![CDATA[
+		/*memberDAO.insertMemberDept*/
+			INSERT INTO TM_ADMIN_DEPT (DEPT_NM_KOR,DEPT_NM_ENG,FRST_REGIST_PNTTM)
+			VALUES ( #deptNmKor#, #deptNmEng#, now() )
+		]]>
+	</insert>
+
+	<update id="memberDAO.updateMemberDept" parameterClass="zvl">
+		<![CDATA[
+		/*memberDAO.updateMemberDept*/
+			UPDATE TM_ADMIN_DEPT
+			SET
+		       DEPT_NM_KOR = #deptNmKor#,
+		       DEPT_NM_ENG = #deptNmEng#
+			WHERE DEPT_ID = #deptId#
+		]]>
+	</update>
+
+	<delete id="memberDAO.deleteMemberDept" parameterClass="zvl">
+		<![CDATA[
+		/*memberDAO.deleteMemberDept*/
+			DELETE FROM TM_ADMIN_DEPT
+			WHERE DEPT_ID = #deptId#
+		]]>
+	</delete>
+
+<!-- 아이디/비밀번호 찾기 요청 -->
+ 	<select id="memberDAO.searchRequest" parameterClass="zvl" resultClass="zvl" >
+ 		<![CDATA[
+ 		/*memberDAO.searchRequest*/
+			SELECT
+			  USER_IDX,
+			  USER_ID,
+			  EMAIL,
+			  USER_NM
+			FROM TM_USER A
+			WHERE M_TYPE != '0' AND EMAIL = #email#
+ 		]]>
+		<isNotEmpty prepend="AND" property="userNm">
+			<![CDATA[   USER_NM = #userNm#   ]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="userId">
+			<![CDATA[   USER_ID = #userId#   ]]>
+		</isNotEmpty>
+ 	</select>
+
+<!-- 비밀번호 변경 -->
+ 	<update id="memberDAO.pwdChange" parameterClass="zvl" >
+ 		<![CDATA[
+ 		/*memberDAO.pwdChange*/
+		    UPDATE TM_USER SET
+			  PASSWORD = #pwdNew#
+			  ,LAST_UPDT_PNTTM = NOW()
+			WHERE USER_IDX = #userIdx#
+ 		]]>
+ 	</update>
+
+	<sql id="memberDAO.selectMemberDeptList-where">
+		<isNotEmpty prepend="AND" property="searchWrd">
+			<isEqual property="searchCnd" compareValue="1">
+				<![CDATA[	( DEPT_NM_KOR LIKE CONCAT('%',trim(#searchWrd#), '%') OR DEPT_NM_ENG LIKE CONCAT('%',trim(#searchWrd#), '%') ) 		]]>
+			</isEqual>
+		</isNotEmpty>
+	</sql>
+
+	<select id="memberDAO.selectMemberDeptListCnt" parameterClass="zvl" resultClass="int">
+		<![CDATA[
+		/*memberDAO.selectMemberDeptListCnt*/
+			SELECT COUNT(*)
+			FROM TM_ADMIN_DEPT
+			WHERE 1=1
+		]]>
+		<include refid="memberDAO.selectMemberDeptList-where" />
+	</select>
+
+	<select id="memberDAO.selectMemberDeptList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/*memberDAO.selectMemberDeptList*/
+			SELECT  *
+			  FROM  (
+			SELECT @RN:=@RN+1 AS RNUM, ALL_LIST.*
+			  FROM  (
+
+			SELECT DEPT_ID,
+			       DEPT_NM_KOR,
+			       DEPT_NM_ENG,
+			       DATE_FORMAT(FRST_REGIST_PNTTM, '%Y-%m-%d') AS REG_DATE
+			  FROM TM_ADMIN_DEPT
+			  WHERE 1=1
+		]]>
+		<include refid="memberDAO.selectMemberDeptList-where" />
+	    <![CDATA[
+	    		order by FRST_REGIST_PNTTM DESC
+
+				    ) ALL_LIST
+			    ) ALL_LIST
+			limit #firstIndex#, #recordCountPerPage#
+		]]>
+	</select>
+
+<!-- SNS(페이스북) 로그인 연계 -->
+	<select id="memberDAO.selectMemberAuthInfo" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/*memberDAO.selectMemberAuthInfo*/
+			SELECT
+			  A.USER_IDX
+			  ,A.AUTH_KEY
+			  ,B.USER_ID AS username
+			  ,B.PASSWORD
+			FROM TM_CRTFC A
+			LEFT OUTER JOIN TM_USER B ON A.USER_IDX = B.USER_IDX
+			WHERE AUTH_KEY = #authKey#
+		]]>
+	</select>
+
+	<sql id="memberDAO.selectUserStaffMemberList-where">
+		<isNotEmpty prepend="AND" property="searchWrd">
+			<![CDATA[	 A.USER_NM LIKE CONCAT('%',trim(#searchWrd#), '%') 	]]>
+		</isNotEmpty>
+	</sql>
+
+	<select id="memberDAO.selectUserStaffMemberList" parameterClass="zvl" resultClass="zvl" remapResults="true" >
+		<![CDATA[
+		/*memberDAO.selectUserStaffMemberList*/
+			SELECT
+			    A.USER_IDX,
+			    A.M_TYPE,
+			    A.USER_ID,
+			    A.PASSWORD,
+			    A.USER_NM,
+			    A.EMAIL,
+			    A.MOBLPHON,
+			    A.BRTHDY,
+			    A.SEX,
+			    A.EMAIL_AT,
+			    A.SMS_AT,
+			    A.ENTRPRS_NO,
+			    A.ATCH_FILE_ID,
+			    A.STATUS,
+          		A.INTRCN,
+			    DATE_FORMAT(A.FRST_REGIST_PNTTM, '%Y-%m-%d') AS REG_DATE,
+			    B.AUTH_GUBUN
+			FROM TM_USER A
+			LEFT OUTER JOIN TM_CRTFC B ON A.USER_IDX = B.USER_IDX
+            WHERE A.M_TYPE = '1'
+		]]>
+		<isNotEmpty property="gubun">
+		<![CDATA[
+			AND A.ENTRPRS_NO = #entrprsNo#
+      	]]>
+		</isNotEmpty>
+		<isEmpty property="gubun">
+		<![CDATA[
+			AND (A.ENTRPRS_NO = '0' OR A.ENTRPRS_NO = '')
+		]]>
+		</isEmpty>
+		<include refid="memberDAO.selectUserStaffMemberList-where" />
+	    <![CDATA[
+			order by A.LAST_UPDT_PNTTM DESC, A.FRST_REGIST_PNTTM DESC
+			limit #firstIndex#, #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="memberDAO.selectUserStaffMemberListCnt" parameterClass="zvl" resultClass="int">
+		<![CDATA[
+		/*memberDAO.selectUserStaffMemberListCnt*/
+			SELECT
+			    count(A.USER_IDX) as cnt
+			FROM TM_USER A
+			LEFT OUTER JOIN TM_CRTFC B ON A.USER_IDX = B.USER_IDX
+
+            WHERE A.M_TYPE = '1'
+		]]>
+		<isNotEmpty property="gubun">
+		<![CDATA[
+			AND A.ENTRPRS_NO = #entrprsNo#
+      	]]>
+		</isNotEmpty>
+		<isEmpty property="gubun">
+		<![CDATA[
+			AND (A.ENTRPRS_NO = '0' OR A.ENTRPRS_NO = '')
+		]]>
+		</isEmpty>
+		<include refid="memberDAO.selectUserStaffMemberList-where" />
+	</select>
+
+
+	<select id="memberDAO.actDtlsListCnt" parameterClass="zvl" resultClass="int">
+		<![CDATA[
+		/*memberDAO.actDtlsListCnt*/
+		SELECT COUNT(*) FROM TS_EVENT_APPLICANT A
+		LEFT OUTER JOIN TS_EVENT_SECTION B ON B.EVENT_NO = A.EVENT_NO AND B.SECTION_NO = A.APP_SECTION
+		LEFT OUTER JOIN (
+			SELECT APP_NO, SUM(POINT) AS TOT_POINT
+			FROM TS_EVENT_APPLICANT_EVALUATE
+			GROUP BY APP_NO
+		) C ON C.APP_NO = A.APP_NO
+		WHERE 1=1
+		]]>
+	</select>
+
+	<!-- 사용자 프로필 활동내역 -->
+	<select id="memberDAO.actDtlsList" parameterClass="zvl" resultClass="zvl" >
+		<![CDATA[
+		/*memberDAO.actDtlsList*/
+			SELECT  *
+			  FROM  (
+			SELECT @RN:=@RN+1 AS RNUM, ALL_LIST.*
+			  FROM  (
+			SELECT A.APP_NO,
+			    A.EVENT_NO,
+			    A.APP_NM,
+			    A.APP_ENT,
+			    A.APP_SECTION,
+			    B.SECTION AS APP_SECTION_NM,
+			    A.ATCH_FILE_ID,
+			    DATE_FORMAT(A.APP_DE, '%Y-%m-%d %H:%i') as APP_DE,
+			    A.STATUS,
+			    A.APP_HP,
+			    A.APP_EMAIL,
+			    A.APP_INTR,
+			    A.TEAM_INSTR,
+			    A.SERVICE_NM,
+			    A.SERVICE_INSTR,
+			    A.RTRN_REASON,
+			    IFNULL(C.TOT_POINT,0) AS TOT_POINT
+			FROM TS_EVENT_APPLICANT A
+			LEFT OUTER JOIN TS_EVENT_SECTION B ON B.EVENT_NO = A.EVENT_NO AND B.SECTION_NO = A.APP_SECTION
+			LEFT OUTER JOIN (
+				SELECT APP_NO, SUM(POINT) AS TOT_POINT
+				FROM TS_EVENT_APPLICANT_EVALUATE
+				GROUP BY APP_NO
+			) C ON A.APP_NO = A.APP_NO
+			WHERE 1=1
+
+			ORDER BY APP_NO DESC
+				    ) ALL_LIST
+			    ) ALL_LIST
+			limit #firstIndex#, #recordCountPerPage#
+		]]>
+	</select>
+
+	<select id="memberDAO.selectFileCnt" parameterClass="zvl" resultClass="int">
+		<![CDATA[
+		/*memberDAO.selectFileCnt*/
+			SELECT COUNT(*)
+			FROM TC_COMMNFILE_DETAIL
+			WHERE ATCH_FILE_ID = #atchFileId# AND FILE_SN = '1'
+		]]>
+	</select>
+
+</sqlMap>
+

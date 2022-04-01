@@ -1,0 +1,881 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="careerManage">
+	<typeAlias  alias="zvl" type="kr.co.unp.util.ZValue"/>
+	
+	<!-- 교육사업 관련 조건 -->
+	<sql id="CareerManageDAO.listEduMng-where">
+		<isNotEmpty prepend="AND" property="eduNm">
+			<![CDATA[	A.EDU_NM LIKE '%' || #eduNm# || '%'		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="eduCode">
+			<![CDATA[	A.EDU_CODE LIKE '%' || #eduCode# || '%'		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="useAt">
+			<![CDATA[	A.USE_AT = #useAt#		]]>
+		</isNotEmpty>
+	</sql>
+	
+	<!-- 교육생 관련 조건 -->
+	<sql id="CareerManageDAO.listStuCareerMng-where">
+		<isNotEmpty prepend="AND" property="stuNm">
+			<![CDATA[	A.STU_NM LIKE '%' || #stuNm# || '%'		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="gender">
+			<![CDATA[	A.GENDER = #gender#		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="generation">
+			<![CDATA[	TO_NUMBER(A.AGE) BETWEEN TO_NUMBER(#generation#) AND TO_NUMBER(#generation#) + 9	]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="interField">
+			<iterate property="interFieldList" conjunction="OR">
+				<![CDATA[	A.INTER_FIELD LIKE '%' || #{interFieldList} || '%'		]]>
+			</iterate>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="phone">
+			<![CDATA[	REPLACE(A.PHONE, '-', '') LIKE '%' || #phone# || '%'		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="email">
+			<![CDATA[	A.EMAIL LIKE '%' || #email# || '%'		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="finalSch">
+			<![CDATA[	A.FINAL_SCH = #finalSch#		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="eduSn">
+			<![CDATA[	EXISTS (SELECT 1 FROM TN_MNG_CR_EDUJOIN EJ WHERE EJ.STU_SN = A.STU_SN AND EJ.EDU_SN = #eduSn# AND EJ.DELETE_AT = 'N' )		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="major">
+			<![CDATA[	EXISTS (SELECT 1 FROM TN_MNG_CR_SCHOOL SC WHERE SC.STU_SN = A.STU_SN AND SC.DELETE_AT = 'N' AND SC.MAJOR LIKE '%'||#major#||'%'  )		]]>
+		</isNotEmpty>
+	</sql>
+	
+	<sql id="CareerManageDAO.liststatisticMng-where">
+		<isNotEmpty prepend="AND" property="year">
+			<![CDATA[	EXISTS (SELECT 1 FROM TN_MNG_CR_EDUJOIN EJ WHERE EJ.STU_SN = ST.STU_SN AND EJ.YEAR = #year# AND EJ.DELETE_AT = 'N' )		]]>
+		</isNotEmpty>
+		
+		<isNotEmpty prepend="AND" property="eduSn">
+			<![CDATA[	EXISTS (SELECT 1 FROM TN_MNG_CR_EDUJOIN EJ WHERE EJ.STU_SN = ST.STU_SN AND EJ.EDU_SN = #eduSn# AND EJ.DELETE_AT = 'N' )		]]>
+		</isNotEmpty>
+		
+	</sql>
+	
+	<!-- 교육사업 목록카운트 -->
+	<select id="CareerManageDAO.listEduMng" parameterClass="zvl" resultClass="zvl" >
+	<![CDATA[
+		/* CareerManageDAO.listEduMng */
+		SELECT 
+			A.EDU_SN,
+			A.EDU_CODE,
+			A.EDU_NM,
+			A.USE_AT,
+			A.REG_DATE 
+		FROM TN_MNG_CR_EDU A
+		WHERE A.DELETE_AT = 'N'
+	]]>
+		<include refid="CareerManageDAO.listEduMng-where" />
+		ORDER BY A.REG_DATE DESC
+	</select>
+	
+	<!-- 교육사업 목록카운트 -->
+	<select id="CareerManageDAO.listEduMngCnt" parameterClass="zvl" resultClass="java.lang.Integer" >
+	<![CDATA[
+		/* CareerManageDAO.listEduMngCnt */
+		SELECT COUNT(*) FROM TN_MNG_CR_EDU A
+		WHERE A.DELETE_AT = 'N'
+	]]>
+		<include refid="CareerManageDAO.listEduMng-where" />
+	</select>
+	
+	<!-- 교육사업 상세보기 -->
+	<select id="CareerManageDAO.viewEduMng" parameterClass="zvl" resultClass="zvl" >
+	<![CDATA[
+		/* CareerManageDAO.viewEduMng */
+		SELECT 
+			A.EDU_SN,
+			A.EDU_CODE,
+			A.EDU_NM,
+			A.USE_AT
+		FROM TN_MNG_CR_EDU A
+		WHERE A.DELETE_AT = 'N'
+			AND A.EDU_SN = #eduSn#
+	]]>
+	</select>
+	
+	<!-- 교육사업 등록 -->
+	<insert id="CareerManageDAO.insertEduMng" parameterClass="zvl">
+		<selectKey resultClass="java.lang.Long" keyProperty="eduSn">
+			SELECT NVL(MAX(EDU_SN),0) + 1 AS EDU_SN FROM TN_MNG_CR_EDU
+		</selectKey>
+		<![CDATA[
+			INSERT INTO TN_MNG_CR_EDU (
+				EDU_SN,
+				EDU_CODE,
+				EDU_NM,
+				USE_AT,
+				REG_DATE
+			) VALUES (
+				#eduSn#,
+				#insertEduCode#,
+				#insertEduNm#,
+				#insertUseAt#,
+				SYSDATE
+			)
+		]]>
+	</insert>
+	
+	<!-- 교육사업 수정 -->
+	<update id="CareerManageDAO.updateEduMng" parameterClass="zvl">
+		<![CDATA[
+			UPDATE TN_MNG_CR_EDU SET
+				EDU_CODE = #insertEduCode#,
+				EDU_NM = #insertEduNm#,
+				USE_AT = #insertUseAt#,
+				MOD_DATE = SYSDATE
+			WHERE
+				EDU_SN = #eduSn#
+		]]>
+	</update>
+	
+	<!-- 교육사업 삭제 -->
+	<update id="CareerManageDAO.deleteEduMng" parameterClass="zvl">
+		<![CDATA[
+			UPDATE TN_MNG_CR_EDU SET
+				DELETE_AT = 'Y',
+				DEL_DATE = SYSDATE
+			WHERE
+				EDU_SN = #eduSn#
+		]]>
+	</update>
+	
+	<!-- 수강생 목록 -->
+	<select id="CareerManageDAO.listStu" parameterClass="zvl" resultClass="zvl" >
+		<![CDATA[
+		/* CareerManageDAO.listStu */
+		SELECT * FROM (SELECT A.*, ROWNUM RNUM FROM (
+			SELECT
+				STU.STU_SN,
+				STU.STU_NM,
+				STU.GENDER,
+				(TO_NUMBER(TO_CHAR(SYSDATE, 'YYYY')) - TO_NUMBER(TO_CHAR(STU.BIRTH, 'YYYY')) + 1) AS AGE,
+				STU.PHONE,
+				STU.EMAIL,
+				(SELECT 
+					MAX(B.SCH_GUBUN) 
+				FROM TN_MNG_CR_SCHOOL B 
+				WHERE B.STU_SN = STU.STU_SN
+					AND B.GRADUATED_YN = '01') AS FINAL_SCH
+			FROM TN_MNG_CR_STUDENT STU ) A
+			
+			WHERE 1=1
+			
+		]]>
+		<include refid="CareerManageDAO.listStuCareerMng-where" />
+		)
+		WHERE RNUM BETWEEN #firstIndex# + 1 AND #lastIndex#
+		ORDER BY RNUM
+	</select>
+	
+	<select id="CareerManageDAO.listStuExcel" parameterClass="zvl" resultClass="zvl" >
+		<![CDATA[
+		/* CareerManageDAO.listStu */
+		SELECT * FROM (SELECT A.*, ROWNUM RNUM FROM (
+			SELECT
+				STU.*
+			FROM TN_MNG_CR_STUDENT STU ) A
+			
+			WHERE 1=1
+			
+		]]>
+		<include refid="CareerManageDAO.listStuCareerMng-where" />
+		)
+		ORDER BY RNUM
+	</select>
+	
+	<!-- 수강생 목록카운트 -->
+	<select id="CareerManageDAO.listStuCnt" parameterClass="zvl" resultClass="java.lang.Integer" >
+	<![CDATA[
+		/* CareerManageDAO.listStuCnt */
+		SELECT COUNT(*) FROM (
+			SELECT
+				STU.STU_SN,
+				STU.STU_NM,
+				STU.GENDER,
+				(TO_NUMBER(TO_CHAR(SYSDATE, 'YYYY')) - TO_NUMBER(TO_CHAR(STU.BIRTH, 'YYYY')) + 1) AS AGE,
+				STU.PHONE,
+				STU.EMAIL,
+				(SELECT 
+					MAX(B.SCH_GUBUN) 
+				FROM TN_MNG_CR_SCHOOL B 
+				WHERE B.STU_SN = STU.STU_SN
+					AND B.GRADUATED_YN = '01') AS FINAL_SCH
+			FROM TN_MNG_CR_STUDENT STU ) A
+			
+			WHERE 1=1
+	]]>
+		<include refid="CareerManageDAO.listStuCareerMng-where" />
+	</select>
+	
+	<!-- 수강생 정보 상세보기 -->
+	<select id="CareerManageDAO.viewStu" parameterClass="zvl" resultClass="zvl" >
+		<![CDATA[
+			/* CareerManageDAO.viewStu */
+			SELECT  
+				A.STU_SN,
+				A.STU_NM,
+				A.GENDER,
+				A.BIRTH,
+				SUBSTR(A.PHONE, 1, INSTR(A.PHONE, '-')-1) AS PHONE1,
+				SUBSTR(A.PHONE, INSTR(A.PHONE, '-')+1, INSTR(A.PHONE, '-', 1, 2)-INSTR(A.PHONE, '-')-1) AS PHONE2,
+				SUBSTR(A.PHONE, INSTR(A.PHONE, '-', 1, 2)+1, LENGTH(A.PHONE)-INSTR(A.PHONE, '-', 1, 2)) AS PHONE3,
+				SUBSTR(A.EMAIL, 1, INSTR(A.EMAIL, '@')-1) AS EMAIL1,
+				SUBSTR(A.EMAIL, INSTR(A.EMAIL, '@')+1) AS EMAIL2,
+				A.JOB_SEARCH_YN,
+				A.INTER_FIELD,
+				A.INTER_JOB,
+				A.FLD_STR_DTL,
+				A.FLD_ETC_DTL,
+				A.JOB_ETC_DTL,
+				A.SCHOOL_USE_YN,
+				A.FIELD_CAREER_YN,
+				A.FIELD_CREATE_YN,
+				A.FIELD_CREATE_PERIOD
+			FROM TN_MNG_CR_STUDENT A WHERE A.STU_SN = #stuSn#
+		]]>
+	</select>
+	
+	<!-- 수강생 정보 수정 -->
+	<update id="CareerManageDAO.updateStu" parameterClass="zvl">
+		<![CDATA[
+			/* CareerManageDAO.updateStu */
+			UPDATE TN_MNG_CR_STUDENT SET
+				STU_NM = #stuNm#,
+				GENDER = #gender#,
+				BIRTH = #birth#,
+				PHONE = #phone#,
+				EMAIL = #email#,
+				JOB_SEARCH_YN = #jobSearchYn#,
+				INTER_FIELD = #interField#,
+				INTER_JOB = #interJob#,
+				MOD_DATE = SYSDATE,
+				FLD_STR_DTL = #fldStrDtl#,
+				FLD_ETC_DTL = #fldEtcDtl#,
+				JOB_ETC_DTL = #jobEtcDtl#
+		]]>
+		<isNotEmpty property="fieldCareerYn">
+			<![CDATA[, FIELD_CAREER_YN = #fieldCareerYn#]]>
+		</isNotEmpty>
+		<isNotEmpty property="fieldCreateYn">
+			<![CDATA[, FIELD_CREATE_YN = #fieldCreateYn#]]>
+		</isNotEmpty>
+		<isNotEmpty property="fieldCreatePeriod">
+			<![CDATA[, FIELD_CREATE_PERIOD = #fieldCreatePeriod#]]>
+		</isNotEmpty>	
+		<![CDATA[
+			WHERE STU_SN = #stuSn#
+		]]>
+	</update>
+	
+	<!-- 수강생 정보 등록 -->
+	<insert id="CareerManageDAO.insertStu" parameterClass="zvl">
+		<selectKey resultClass="java.lang.Long" keyProperty="stuSn">
+			SELECT NVL(MAX(STU_SN),0) + 1 AS STU_SN FROM TN_MNG_CR_STUDENT
+		</selectKey>
+		<![CDATA[
+			/* CareerManageDAO.insertStu */
+			INSERT INTO TN_MNG_CR_STUDENT(
+				STU_SN,
+				STU_NM,
+				GENDER,
+				BIRTH,
+				PHONE,
+				EMAIL,
+				JOB_SEARCH_YN,
+				INTER_FIELD,
+				INTER_JOB,
+				REG_DATE,
+				FLD_STR_DTL,
+				FLD_ETC_DTL,
+				JOB_ETC_DTL
+		]]>
+		<isNotEmpty property="schoolUseYn">
+			<![CDATA[, SCHOOL_USE_YN]]>
+		</isNotEmpty>
+		<isNotEmpty property="fieldCareerYn">
+			<![CDATA[, FIELD_CAREER_YN]]>
+		</isNotEmpty>	
+		<isNotEmpty property="fieldCreateYn">
+			<![CDATA[, FIELD_CREATE_YN]]>
+		</isNotEmpty>
+		<isNotEmpty property="fieldCreatePeriod">
+			<![CDATA[, FIELD_CREATE_PERIOD]]>
+		</isNotEmpty>
+
+		<![CDATA[
+			) VALUES (
+				#stuSn#,
+				#stuNm#,
+				#gender#,
+				#birth#,
+				#phone#,
+				#email#,
+				#jobSearchYn#,
+				#interField#,
+				#interJob#,
+				SYSDATE,
+				#fldStrDtl#,
+				#fldEtcDtl#,
+				#jobEtcDtl#
+		]]>
+		<isNotEmpty property="schoolUseYn">
+			<![CDATA[, #schoolUseYn#]]>
+		</isNotEmpty>
+		<isNotEmpty property="fieldCareerYn">
+			<![CDATA[, #fieldCareerYn#]]>
+		</isNotEmpty>	
+		<isNotEmpty property="fieldCreateYn">
+			<![CDATA[, #fieldCreateYn#]]>
+		</isNotEmpty>
+		<isNotEmpty property="fieldCreatePeriod">
+			<![CDATA[, #fieldCreatePeriod#]]>
+		</isNotEmpty>
+		<![CDATA[
+			)
+		]]>
+	</insert>
+	
+	<!-- 수강생 학력 리스트 -->
+	<select id="CareerManageDAO.schoolList" parameterClass="zvl" resultClass="zvl" >
+		<![CDATA[
+			SELECT 
+				A.SCH_SN,
+				A.STU_SN,
+				A.SCH_GUBUN,
+				A.SCH_NM,
+				A.MAJOR,
+				A.GRADUATED_YN,
+				A.GRADUATED_YEAR,
+				A.QUALIFICATION_EXAM,
+				A.TRANSFER_YN,
+				A.MAJOR_FIELD
+			FROM TN_MNG_CR_SCHOOL A
+			WHERE
+				A.STU_SN = #stuSn#
+				AND A.DELETE_AT = 'N'
+			ORDER BY A.SCH_GUBUN
+		]]>
+	</select>
+	
+	<select id="CareerManageDAO.viewSchool" parameterClass="zvl" resultClass="zvl" >
+		<![CDATA[
+			SELECT 
+				A.SCH_SN,
+				A.STU_SN,
+				A.SCH_GUBUN,
+				A.SCH_NM,
+				A.MAJOR,
+				A.GRADUATED_YN,
+				A.GRADUATED_YEAR,
+				A.QUALIFICATION_EXAM,
+				A.TRANSFER_YN,
+				A.MAJOR_FIELD
+			FROM TN_MNG_CR_SCHOOL A
+			WHERE
+				SCH_SN = #schSn#
+		]]>
+	</select>
+	
+	<update id="CareerManageDAO.updateSchool" parameterClass="zvl">
+		<![CDATA[
+			UPDATE TN_MNG_CR_SCHOOL SET
+				SCH_GUBUN = #schGubun#,
+				SCH_NM = #schNm#,
+				MAJOR = #major#,
+				GRADUATED_YN = #graduatedYn#,
+				GRADUATED_YEAR = #graduatedYear#,
+				QUALIFICATION_EXAM = #qualificationExam#,
+				TRANSFER_YN = #transferYn#,
+				MAJOR_FIELD = #majorField#,
+				MOD_DATE = SYSDATE
+			WHERE SCH_SN = #schSn#
+		]]>
+	</update>
+	
+	<insert id="CareerManageDAO.insertSchool" parameterClass="zvl">
+		<selectKey resultClass="java.lang.Long" keyProperty="schSn">
+			SELECT NVL(MAX(SCH_SN),0) + 1 AS SCH_SN FROM TN_MNG_CR_SCHOOL
+		</selectKey>
+		<![CDATA[
+			INSERT INTO TN_MNG_CR_SCHOOL(
+				SCH_SN,
+				STU_SN,
+				SCH_GUBUN,
+				SCH_NM,
+				MAJOR,
+				GRADUATED_YN,
+				GRADUATED_YEAR,
+				QUALIFICATION_EXAM,
+				TRANSFER_YN,
+				MAJOR_FIELD,
+				REG_DATE
+			) VALUES (
+				#schSn#,
+				#stuSn#,
+				#schGubun#,
+				#schNm#,
+				#major#,
+				#graduatedYn#,
+				#graduatedYear#,
+				#qualificationExam#,
+				#transferYn#,
+				#majorField#,
+				SYSDATE
+			)
+		]]>
+	</insert>
+	
+	<update id="CareerManageDAO.changeSchoolUseYn" parameterClass="zvl">
+		<![CDATA[
+			UPDATE TN_MNG_CR_STUDENT SET
+				SCHOOL_USE_YN = #schoolUseYn#
+			WHERE STU_SN = #stuSn#
+		]]>
+	</update>
+	
+	<!-- 수강생 참여사업 리스트 -->
+	<select id="CareerManageDAO.joinEduList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+			SELECT A.* FROM (
+				SELECT
+					EJ.JOIN_SN,
+					EJ.EDU_SN,
+					ED.EDU_CODE,
+					ED.EDU_NM,
+					EJ.YEAR,
+					EJ.GRADUATE_YN,
+					EJ.JOINEDU_DTL
+				FROM TN_MNG_CR_EDUJOIN EJ, TN_MNG_CR_EDU ED
+				WHERE EJ.EDU_SN = ED.EDU_SN
+					AND ED.USE_AT = 'Y'
+					AND ED.DELETE_AT = 'N'
+					AND EJ.STU_SN = #stuSn#
+					AND EJ.DELETE_AT = 'N'
+				) A	
+			ORDER BY A.EDU_SN
+		]]>
+	</select>
+	
+	<select id="CareerManageDAO.viewJoinEdu" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+			SELECT 
+				A.* 
+			FROM TN_MNG_CR_EDUJOIN A 
+			WHERE A.JOIN_SN = #joinSn#
+		]]>
+	</select>
+	
+	<update id="CareerManageDAO.updateJoinEdu" parameterClass="zvl">
+		<![CDATA[
+			UPDATE TN_MNG_CR_EDUJOIN SET
+				EDU_SN = #eduSn#,
+				YEAR = #year#,
+				GRADUATE_YN = #graduateYn#, 
+				MOD_DATE = SYSDATE,
+				JOINEDU_DTL = #joineduDtl#
+			WHERE JOIN_SN = #joinSn#
+		]]>
+	</update>
+	
+	<insert id="CareerManageDAO.insertJoinEdu" parameterClass="zvl">
+		<selectKey resultClass="java.lang.Long" keyProperty="joinSn">
+			SELECT NVL(MAX(JOIN_SN),0) + 1 AS JOIN_SN FROM TN_MNG_CR_EDUJOIN
+		</selectKey>
+		<![CDATA[
+			INSERT INTO TN_MNG_CR_EDUJOIN(
+				JOIN_SN,
+				EDU_SN,
+				STU_SN,
+				YEAR,
+				GRADUATE_YN,
+				REG_DATE,
+				JOINEDU_DTL
+			) VALUES (
+				#joinSn#,
+				#eduSn#,
+				#stuSn#,
+				#year#,
+				#graduateYn#,
+				SYSDATE,
+				#joineduDtl#
+			)
+		]]>
+	</insert>
+	
+	<update id="CareerManageDAO.deleteSch" parameterClass="zvl">
+		<![CDATA[
+			UPDATE TN_MNG_CR_SCHOOL SET
+				DELETE_AT = 'Y'
+			WHERE SCH_SN = #schSn#
+		]]>
+	</update>
+	
+	<update id="CareerManageDAO.deleteJoinEdu" parameterClass="zvl">
+		<![CDATA[
+			UPDATE TN_MNG_CR_EDUJOIN SET
+				DELETE_AT = 'Y'
+			WHERE JOIN_SN = #joinSn#
+		]]>
+	</update>
+	
+	<select id="CareerManageDAO.careerList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+			SELECT A.CAREER_SN
+				, A.STU_SN
+				, A.COMP_NM
+				, A.JOIN_YEAR
+				, A.RESIGN_YEAR
+				, A.EMPLOYMENT_YN
+				, A.WORKER_TYPE
+				, A.RANK
+			FROM TN_MNG_CR_CAREER A
+			WHERE A.STU_SN = #stuSn#
+				AND DELETE_AT = 'N'
+			ORDER BY A.JOIN_YEAR
+		]]>
+	</select>
+	
+	<select id="CareerManageDAO.viewCareer" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+			SELECT A.*
+			FROM TN_MNG_CR_CAREER A
+			WHERE A.CAREER_SN = #careerSn#
+		]]>
+	</select>
+	
+	<update id="CareerManageDAO.changeFieldCareerYn" parameterClass="zvl">
+		<![CDATA[
+			UPDATE TN_MNG_CR_STUDENT SET
+				FIELD_CAREER_YN = #fieldCareerYn#
+			WHERE STU_SN = #stuSn#
+		]]>
+	</update>
+	
+	<update id="CareerManageDAO.updateCareer" parameterClass="zvl">
+		<![CDATA[
+			UPDATE TN_MNG_CR_CAREER SET
+				COMP_NM = #compNm#,
+				JOIN_YEAR = #joinYear#,
+				RESIGN_YEAR = #resignYear#,
+				EMPLOYMENT_YN = #employmentYn#,
+				WORKER_TYPE = #workerType#,
+				RANK = #rank#,
+				MOD_DATE = SYSDATE
+			WHERE CAREER_SN = #careerSn#
+		]]>
+	</update>
+	
+	<insert id="CareerManageDAO.insertCareer" parameterClass="zvl">
+		<selectKey resultClass="java.lang.Long" keyProperty="careerSn">
+			SELECT NVL(MAX(CAREER_SN),0) + 1 AS CAREER_SN FROM TN_MNG_CR_CAREER
+		</selectKey>
+		<![CDATA[
+			INSERT INTO TN_MNG_CR_CAREER(
+				CAREER_SN,
+				STU_SN,
+				COMP_NM,
+				JOIN_YEAR,
+				RESIGN_YEAR,
+				EMPLOYMENT_YN,
+				WORKER_TYPE,
+				RANK,
+				REG_DATE,
+				DELETE_AT
+			) VALUES (
+				#careerSn#,
+				#stuSn#,
+				#compNm#,
+				#joinYear#,
+				#resignYear#,
+				#employmentYn#,
+				#workerType#,
+				#rank#,
+				SYSDATE,
+				'N'
+			)
+		]]>
+	</insert>
+	
+	<update id="CareerManageDAO.deleteCareer" parameterClass="zvl">
+		<![CDATA[
+			UPDATE TN_MNG_CR_CAREER SET
+				DELETE_AT = 'Y'
+			WHERE CAREER_SN = #careerSn#
+		]]>
+	</update>
+	
+	<select id="CareerManageDAO.createList" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+			SELECT A.CREATE_SN
+				, A.STU_SN
+				, A.CREATE_NM
+				, A.CREATE_YEAR
+				, A.CONTRACT
+			FROM TN_MNG_CR_CREATE A
+			WHERE A.STU_SN = #stuSn#
+				AND DELETE_AT = 'N'
+			ORDER BY A.CREATE_YEAR
+		]]>
+	</select>
+	
+	<select id="CareerManageDAO.viewCreate" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+			SELECT A.*
+			FROM TN_MNG_CR_CREATE A
+			WHERE A.CREATE_SN = #createSn#
+		]]>
+	</select>
+	
+	<update id="CareerManageDAO.changeFieldCreate" parameterClass="zvl">
+		<![CDATA[
+			UPDATE TN_MNG_CR_STUDENT SET
+				FIELD_CREATE_YN = #fieldCreateYn#,
+				FIELD_CREATE_PERIOD = #fieldCreatePeriod#
+			WHERE STU_SN = #stuSn#
+		]]>
+	</update>
+	
+	<update id="CareerManageDAO.updateCreate" parameterClass="zvl">
+		<![CDATA[
+			UPDATE TN_MNG_CR_CREATE SET
+				STU_SN = #stuSn#,
+				CREATE_NM = #createNm#,
+				CREATE_YEAR = #createYear#,
+				CONTRACT = #contractGroup#,
+				MOD_DATE = SYSDATE
+			WHERE CREATE_SN = #createSn#
+		]]>
+	</update>
+	
+	<insert id="CareerManageDAO.insertCreate" parameterClass="zvl">
+		<selectKey resultClass="java.lang.Long" keyProperty="createSn">
+			SELECT NVL(MAX(CREATE_SN),0) + 1 AS CREATE_SN FROM TN_MNG_CR_CREATE
+		</selectKey>
+		<![CDATA[
+			INSERT INTO TN_MNG_CR_CREATE(
+				CREATE_SN,
+				STU_SN,
+				CREATE_NM,
+				CREATE_YEAR,
+				CONTRACT,
+				REG_DATE,
+				DELETE_AT
+			) VALUES (
+				#createSn#,
+				#stuSn#,
+				#createNm#,
+				#createYear#,
+				#contractGroup#,
+				SYSDATE,
+				'N'
+			)
+		]]>
+	</insert>
+	
+	<update id="CareerManageDAO.deleteCreate" parameterClass="zvl">
+		<![CDATA[
+			UPDATE TN_MNG_CR_CREATE SET
+				DELETE_AT = 'Y'
+			WHERE CREATE_SN = #createSn#
+		]]>
+	</update>
+	
+	<select id="CareerManageDAO.excelStuDuplCheck" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+			SELECT A.STU_SN
+			FROM TN_MNG_CR_STUDENT A
+			WHERE A.STU_NM = #stuNm#
+				AND A.GENDER = #gender#
+				AND A.BIRTH = TO_DATE(#birth#, 'yyyymmdd')
+		]]>
+	</select>
+	
+	<select id="CareerManageDAO.excelSchDuplCheck" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+			SELECT A.SCH_SN
+			FROM TN_MNG_CR_SCHOOL A
+			WHERE A.STU_SN = #stuSn#
+				AND A.SCH_GUBUN = #schGubun#
+				AND A.SCH_NM = #schNm#
+		]]>
+	</select>
+	
+	<select id="CareerManageDAO.excelJoinEduDuplCheck" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+			SELECT A.JOIN_SN 
+			FROM (SELECT EJ.*, ED.EDU_CODE, ED.EDU_NM
+				FROM TN_MNG_CR_EDUJOIN EJ, TN_MNG_CR_EDU ED
+				WHERE EJ.EDU_SN = ED.EDU_SN
+			        AND EJ.STU_SN = #stuSn#
+			        AND ED.EDU_CODE = #eduCode#
+			        AND EJ.YEAR = #year#) A
+		]]>
+	</select>
+	
+	<select id="CareerManageDAO.eduInfoForCode" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+			SELECT A.* FROM TN_MNG_CR_EDU A WHERE A.EDU_CODE = #eduCode#
+		]]>
+	</select>
+	
+	<select id="CareerManageDAO.excelCareerDuplCheck" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+			SELECT A.CAREER_SN
+			FROM TN_MNG_CR_CAREER A
+			WHERE A.STU_SN = #stuSn#
+				AND A.COMP_NM = #compNm#
+		]]>
+	</select>
+	
+	<select id="CareerManageDAO.excelcreateDuplCheck" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+			SELECT A.CREATE_SN
+			FROM TN_MNG_CR_CREATE A
+			WHERE A.STU_SN = #stuSn#
+				AND A.CREATE_NM = #createNm#
+				AND A.CREATE_YEAR = #createYear#
+				AND A.CONTRACT = #contractGroup#
+		]]>
+	</select>
+	
+	<select id="CareerManageDAO.statisticsGubun1" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+			SELECT A.* 
+				FROM (SELECT 
+						  SUM(CASE WHEN GENDER = 'M' THEN 1 ELSE 0 END) AS MAN,
+						  SUM(CASE WHEN GENDER = 'F' THEN 1 ELSE 0 END) AS WOMAN
+					FROM(SELECT
+			            JE.JOIN_SN,
+			            JE.STU_SN,
+			            ST.GENDER,
+			            FLOOR(((TO_NUMBER(TO_CHAR(SYSDATE, 'YYYY')) - TO_NUMBER(TO_CHAR(ST.BIRTH, 'YYYY')) + 1)/10)) AS GENERATION,
+			            (TO_NUMBER(TO_CHAR(SYSDATE, 'YYYY')) - TO_NUMBER(TO_CHAR(ST.BIRTH, 'YYYY')) + 1) AS AGE,
+			            (SELECT 
+								MAX(B.SCH_GUBUN) 
+							FROM TN_MNG_CR_SCHOOL B 
+							WHERE B.STU_SN = ST.STU_SN
+								AND B.GRADUATED_YN = '01') AS FINAL_SCH,
+						ST.INTER_FIELD
+			          FROM TN_MNG_CR_EDUJOIN JE, TN_MNG_CR_STUDENT ST
+			          WHERE JE.STU_SN = ST.STU_SN
+		]]>
+					<include refid="CareerManageDAO.liststatisticMng-where" />
+		<![CDATA[
+				)
+			) A
+		]]>
+	</select>
+	
+	<select id="CareerManageDAO.statisticsGubun2" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+			SELECT A.* 
+				FROM (SELECT 
+						  SUM(CASE WHEN GENERATION < 2 THEN 1 ELSE 0 END) AS AGE10,
+						  SUM(CASE WHEN GENERATION = 2 THEN 1 ELSE 0 END) AS AGE20,
+						  SUM(CASE WHEN GENERATION = 3 THEN 1 ELSE 0 END) AS AGE30,
+						  SUM(CASE WHEN GENERATION = 4 THEN 1 ELSE 0 END) AS AGE40,
+						  SUM(CASE WHEN GENERATION >=5 THEN 1 ELSE 0 END) AS AGE50
+					FROM(SELECT
+			            JE.JOIN_SN,
+			            JE.STU_SN,
+			            ST.GENDER,
+			            FLOOR(((TO_NUMBER(TO_CHAR(SYSDATE, 'YYYY')) - TO_NUMBER(TO_CHAR(ST.BIRTH, 'YYYY')) + 1)/10)) AS GENERATION,
+			            (TO_NUMBER(TO_CHAR(SYSDATE, 'YYYY')) - TO_NUMBER(TO_CHAR(ST.BIRTH, 'YYYY')) + 1) AS AGE,
+			            (SELECT 
+								MAX(B.SCH_GUBUN) 
+							FROM TN_MNG_CR_SCHOOL B 
+							WHERE B.STU_SN = ST.STU_SN
+								AND B.GRADUATED_YN = '01') AS FINAL_SCH,
+						ST.INTER_FIELD
+			          FROM TN_MNG_CR_EDUJOIN JE, TN_MNG_CR_STUDENT ST
+			          WHERE JE.STU_SN = ST.STU_SN
+		]]>
+					<include refid="CareerManageDAO.liststatisticMng-where" />
+		<![CDATA[
+				)
+			) A
+		]]>
+	</select>
+	
+	<select id="CareerManageDAO.statisticsGubun3" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+			SELECT A.* 
+				FROM (SELECT 
+						  SUM(CASE WHEN FINAL_SCH = '01' THEN 1 ELSE 0 END) AS ELEMENTARY,
+						  SUM(CASE WHEN FINAL_SCH = '02' THEN 1 ELSE 0 END) AS MIDDLE,
+						  SUM(CASE WHEN FINAL_SCH = '03' THEN 1 ELSE 0 END) AS HIGH,
+						  SUM(CASE WHEN FINAL_SCH = '04' THEN 1 ELSE 0 END) AS UNIVERSITY,
+						  SUM(CASE WHEN FINAL_SCH = '05' THEN 1 ELSE 0 END) AS GRADUATE_SCH
+					FROM(SELECT
+			            JE.JOIN_SN,
+			            JE.STU_SN,
+			            ST.GENDER,
+			            FLOOR(((TO_NUMBER(TO_CHAR(SYSDATE, 'YYYY')) - TO_NUMBER(TO_CHAR(ST.BIRTH, 'YYYY')) + 1)/10)) AS GENERATION,
+			            (TO_NUMBER(TO_CHAR(SYSDATE, 'YYYY')) - TO_NUMBER(TO_CHAR(ST.BIRTH, 'YYYY')) + 1) AS AGE,
+			            (SELECT 
+								MAX(B.SCH_GUBUN) 
+							FROM TN_MNG_CR_SCHOOL B 
+							WHERE B.STU_SN = ST.STU_SN
+								AND B.GRADUATED_YN = '01') AS FINAL_SCH,
+						ST.INTER_FIELD
+			          FROM TN_MNG_CR_EDUJOIN JE, TN_MNG_CR_STUDENT ST
+			          WHERE JE.STU_SN = ST.STU_SN
+		]]>
+					<include refid="CareerManageDAO.liststatisticMng-where" />
+		<![CDATA[
+				)
+			) A
+		]]>
+	</select>
+	
+	<select id="CareerManageDAO.statisticsGubun4" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+			SELECT A.* 
+				FROM (SELECT 
+						  SUM(CASE WHEN INTER_FIELD LIKE '%01%' THEN 1 ELSE 0 END) AS INTER01,
+						  SUM(CASE WHEN INTER_FIELD LIKE '%02%' THEN 1 ELSE 0 END) AS INTER02,
+						  SUM(CASE WHEN INTER_FIELD LIKE '%03%' THEN 1 ELSE 0 END) AS INTER03,
+						  SUM(CASE WHEN INTER_FIELD LIKE '%04%' THEN 1 ELSE 0 END) AS INTER04,
+			              SUM(CASE WHEN INTER_FIELD LIKE '%05%' THEN 1 ELSE 0 END) AS INTER05,
+			              SUM(CASE WHEN INTER_FIELD LIKE '%06%' THEN 1 ELSE 0 END) AS INTER06,
+			              SUM(CASE WHEN INTER_FIELD LIKE '%07%' THEN 1 ELSE 0 END) AS INTER07,
+			              SUM(CASE WHEN INTER_FIELD LIKE '%08%' THEN 1 ELSE 0 END) AS INTER08,
+			              SUM(CASE WHEN INTER_FIELD LIKE '%09%' THEN 1 ELSE 0 END) AS INTER09,
+			              SUM(CASE WHEN INTER_FIELD LIKE '%10%' THEN 1 ELSE 0 END) AS INTER10,
+			              SUM(CASE WHEN INTER_FIELD LIKE '%11%' THEN 1 ELSE 0 END) AS INTER11,
+			              SUM(CASE WHEN INTER_FIELD LIKE '%12%' THEN 1 ELSE 0 END) AS INTER12,
+			              SUM(CASE WHEN INTER_FIELD LIKE '%13%' THEN 1 ELSE 0 END) AS INTER13,
+			              SUM(CASE WHEN INTER_FIELD LIKE '%14%' THEN 1 ELSE 0 END) AS INTER14,
+			              SUM(CASE WHEN INTER_FIELD LIKE '%15%' THEN 1 ELSE 0 END) AS INTER15
+					FROM(SELECT
+			            JE.JOIN_SN,
+			            JE.STU_SN,
+			            ST.GENDER,
+			            FLOOR(((TO_NUMBER(TO_CHAR(SYSDATE, 'YYYY')) - TO_NUMBER(TO_CHAR(ST.BIRTH, 'YYYY')) + 1)/10)) AS GENERATION,
+			            (TO_NUMBER(TO_CHAR(SYSDATE, 'YYYY')) - TO_NUMBER(TO_CHAR(ST.BIRTH, 'YYYY')) + 1) AS AGE,
+			            (SELECT 
+								MAX(B.SCH_GUBUN) 
+							FROM TN_MNG_CR_SCHOOL B 
+							WHERE B.STU_SN = ST.STU_SN
+								AND B.GRADUATED_YN = '01') AS FINAL_SCH,
+						ST.INTER_FIELD
+			          FROM TN_MNG_CR_EDUJOIN JE, TN_MNG_CR_STUDENT ST
+			          WHERE JE.STU_SN = ST.STU_SN
+		]]>
+					<include refid="CareerManageDAO.liststatisticMng-where" />
+		<![CDATA[
+				)
+			) A
+		]]>
+	</select>
+	
+</sqlMap>

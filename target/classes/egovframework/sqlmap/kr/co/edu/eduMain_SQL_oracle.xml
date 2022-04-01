@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="onlineEduMain">
+
+	<typeAlias alias="zvl" type="kr.co.unp.util.ZValue" />
+	
+	
+	<!-- 온라인교육 메인화면 -->
+	<select id="onlineEduMainDAO.list" parameterClass="zvl" resultClass="zvl">
+		<![CDATA[
+		/* onlineEduMainDAO.list 온라인교육 메인화면 */
+             select '' as a
+              
+              
+              
+              
+		]]>
+	</select>
+	
+	
+	<!-- rsg20180201 -->
+	<select id="onlineEduMainDAO.listRecommend" parameterClass="zvl" resultClass="zvl">
+	<![CDATA[
+		SELECT
+		  TYPE
+		  , PRGR_SEQ
+		  , PRIORITY
+		FROM TZ_RECOMMEND_PROGRAM  
+		WHERE SYSDATE BETWEEN START_DATE AND END_DATE
+		ORDER BY PRIORITY ASC
+	]]>
+	</select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</sqlMap>
+
+
+
+
