@@ -69,7 +69,7 @@ if( StringUtils.hasText(menuNo) ) {
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>에듀코카 korea creative content agency</title>
+    <title>에듀코카11 korea creative content agency</title>
     <%-- <c:if test="${param.mobileTp ne 'Y' }">
 		<script type="text/javascript">
 	        if (/(iphone|ipod|ipad|android|blackberry|windows ce|palm|symbian)/i.test(navigator.userAgent)) {
