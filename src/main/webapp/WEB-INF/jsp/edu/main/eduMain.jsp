@@ -1,4 +1,4 @@
-﻿﻿﻿<%@page import="java.net.URLEncoder"%>
+﻿<%@page import="java.net.URLEncoder"%>
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ page import="kr.co.unp.cmm.sec.ram.service.impl.UnpUserDetailsHelper" %>
 <%@ page import="kr.co.unp.member.vo.*" %>
@@ -69,7 +69,7 @@ if( StringUtils.hasText(menuNo) ) {
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>에듀코카133 korea creative content agency</title>
+    <title>에듀코카555 korea creative content agency</title>
     <%-- <c:if test="${param.mobileTp ne 'Y' }">
 		<script type="text/javascript">
 	        if (/(iphone|ipod|ipad|android|blackberry|windows ce|palm|symbian)/i.test(navigator.userAgent)) {
