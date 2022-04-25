@@ -45,16 +45,16 @@
 				<td><img src="../img/content_impact_goal_icon.jpg" alt="콘텐츠임팩트 아이콘_수료인원"></td>
 			</tr>
 			<tr>
-				<td>2019년</td>
-				<td><span>6개</span>과정</td>
+				<td>2021년</td>
+				<td><span>5개</span>과정</td>
 				<td><span>37개</span>프로젝트</td>
-				<td><span>282명</span>수료</td>
+				<td><span>193명</span>수료</td>
 			</tr>
 			<tr>
-				<td>2018년</td>
+				<td>2020년</td>
 				<td><span>6개</span>과정</td>
-				<td><span>31개</span>프로젝트</td>
-				<td><span>243명</span>수료</td>
+				<td><span>40개</span>프로젝트</td>
+				<td><span>211명</span>수료</td>
 			</tr>
 		</table>
 		<p style="font-size:20px; font-weight:bold; margin-bottom:10px;">[콘텐츠임팩트 하이라이트]</p>
