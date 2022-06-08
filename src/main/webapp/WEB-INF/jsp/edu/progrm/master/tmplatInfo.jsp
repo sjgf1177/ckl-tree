@@ -46,7 +46,14 @@
 					<c:if test="${empty info.sex}"><c:set var="sex" value="${user.sex}" /></c:if>
 					<c:forEach var="code" items="${COM079CodeList}" varStatus="status">
 						<span class="radio_box_con">
-							<input type="radio" name="infoData${idx}" id="infoData${idx}_${status.count}" value="${code.code}" <c:if test="${sex eq code.code}">checked="checked"</c:if> class="radio_style_0" title="성별 라디오 <c:out value="${code.codeNm}"/>"/>
+							<c:set var="sexType" value="" />
+							<c:if test="${code.codeNm eq '남'}">
+								<c:set var="sexType" value="M" />
+							</c:if>
+							<c:if test="${code.codeNm eq '여'}">
+								<c:set var="sexType" value="W" />
+							</c:if>
+							<input type="radio" name="infoData${idx}" id="infoData${idx}_${status.count}" value="${sexType}" <c:if test="${sex eq code.code}">checked="checked"</c:if> class="radio_style_0" title="성별 라디오 <c:out value="${code.codeNm}"/>"/>
 							<label for="infoData${idx}_${status.count}"><c:out value="${code.codeNm}"/></label>
 						</span>
 					</c:forEach>

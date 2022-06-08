@@ -15,10 +15,6 @@
 		<p class="sub_text">02.6310.0624</p>
 		<p class="sub_text"><span class="sub_text_title">콘텐츠플러스</span></p>
 		<p class="sub_text">02.6310.0770</p>
-		<p class="sub_text"><span class="sub_text_title">게임인재원</span></p>
-		<p class="sub_text">031.759.9307</p>
-		<p class="sub_text"><span class="sub_text_title">게임리터러시</span></p>
-		<p class="sub_text">061.900.6321</p>
 	</li>
 	<li>
 		<p class="sub_title">온라인교육</p>
@@ -27,9 +23,9 @@
 	<li>
 		<p class="sub_title">교육지원사업</p>
 		<p class="sub_text"><span class="sub_text_title">창의인재동반</span></p>
-		<p class="sub_text">02.6310.0661</p>
+		<p class="sub_text">061.900.6383/6385</p>
 		<p class="sub_text"><span class="sub_text_title">콘텐츠원캠퍼스</span></p>
-		<p class="sub_text">02.6310.0628</p>
+		<p class="sub_text">061.900.6382</p>
 		<p class="sub_text"><span class="sub_text_title">콘텐츠임팩트</span></p>
 		<p class="sub_text">02.6310.0621</p>
 	</li>
