@@ -3,15 +3,21 @@ package kr.co.unp.ems.service;
 
 import javax.annotation.Resource;
 
+import kr.co.edu.batch.ManageUserStudyEncourageBean;
 import kr.co.unp.cmm.dataaccess.ISqlDAO;
 import kr.co.unp.siteMng.service.SiteMngService;
 import kr.co.unp.util.ZValue;
+import kr.co.unp.cmm.crud.service.MariaDBSendSms;
 
 import org.springframework.stereotype.Service;
 
 import com.mnwise.lts.client.TcpipClient;
 
 import egovframework.com.cmm.service.EgovProperties;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 @Service("emsService")
 public class EmsService  {
@@ -79,7 +85,7 @@ public class EmsService  {
 
     /**
      * sms발송
-     * @param paramCtx
+     * @param param
      * @throws Exception
      */
     public void sndngSms(ZValue param) throws Exception {
@@ -88,8 +94,9 @@ public class EmsService  {
     	param.put("tranCallback", param.getString("callback"));
     	param.put("refkey", param.getString("refkey"));
     	param.put("tranMsg", param.getString("msg"));
-		sqlDao.insertDAO("emsDAO.insertSms", param);
+		//sqlDao.insertDAO("emsDAO.insertSms", param);
 
+		MariaDBSendSms.mariaDbSend(param.getString("phone"), param.getString("callback"), param.getString("msg"));
     }
 
 }

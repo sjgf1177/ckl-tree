@@ -13,6 +13,7 @@ import javax.annotation.Resource;
 import kr.co.edu.onlineEdu.paging.ThemeLecturePageInfo;
 import kr.co.unp.cmm.crud.paging.PageInfo;
 import kr.co.unp.cmm.crud.service.DefaultCmmProgramService;
+import kr.co.unp.cmm.crud.service.MariaDBSendSms;
 import kr.co.unp.cmm.crud.service.ParameterContext;
 import kr.co.unp.cmm.crud.util.MVUtils;
 import kr.co.unp.cmm.sec.ram.service.impl.UnpUserDetailsHelper;
@@ -207,7 +208,8 @@ public class ThemeLectureService extends DefaultCmmProgramService {
 		
 		try {
 			//SMS 전송(DB 저장)
-			lmsSqlDao.insertDAO("myLctrumDAO.sendSMSMsg", param);
+			//lmsSqlDao.insertDAO("myLctrumDAO.sendSMSMsg", param);
+			MariaDBSendSms.mariaDbSend(toPhone, fromPhone, v_msgStr);
 			log.info("SMS DB 저장 완료!");
 			result = true;
 		} catch (Exception e) {
