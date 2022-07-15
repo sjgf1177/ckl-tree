@@ -276,6 +276,18 @@ if( StringUtils.hasText(menuNo) ) {
 			</span>
 		</div>
 	</div> -->
+	<div class="pop_newopen" style="width: 100%; height: 100%; position: fixed; background-color: rgb(0,0,0,0.5); z-index: 9999;">
+		<div style="width: 500px; height: 500px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+			<img src="/edu/images/main/poup_open.png" alt="홈페이지 공사중입니다">
+			<button onclick="$('.pop_newopen').css({'display':'none'})" style="width:100%; height:60px; font-size:18px; font-weight: 600;">닫기</button>
+		</div>
+	</div>
+
+	<style>
+		@media screen and (max-width:1200px) {
+			.pop_newopen img{width:100% !important; padding: 0 20px;}
+		}
+	</style>
 	<div class="quick_menu">
 		<ul>
 			<li><a href="http://www.edukocca-vr.kr" target="_blank">성과<br/>전시관</a></li>
