@@ -71,7 +71,6 @@
 	<div class="lectMenu">
 		<a href="javascript:void(0);" class="icon lectToggle eduR_lt45" onclick="return false;"></a>
 	</div>
-	
 
 	<!-- Movie Player -->
 	<div class="lectMovSet" style="background:#ffffff; width:100%; overflow:hidden; position:relative">
@@ -88,8 +87,9 @@
 		<div style="position:relative; padding-bottom:60%; height:0; margin: 0 auto; overflow:hidden; z-index:999; " >
 			<iframe name="openstudy" 
 				id="openstudy" 
-				src="${p_url }" 
-				width="${view.prewidth }" 
+				<%--src="${p_url }" --%>
+				src=""
+				width="${view.prewidth }"
 				height="${view.preheight }" 
 				frameborder="0" 
 				title="본 프레임은 동영상 강의 정보를 제공합니다." 
@@ -154,7 +154,35 @@
 
 <!-- consumer_seq = 1077 /  -->
 <!-- 아카데미이야기 24725 : MTA3Ny8yNDcyNS8xNTA5  livere_seq = 24892  / 강좌 24892 : MTA3Ny8yNDg5Mi8xNTA5   livere_seq = 1509 -->
-<!-- 
+<div id="lv-container" data-id="kocca" data-uid="MTA3Ny8yNDg5Mi8xNTA5" data-site="">
+	<script type="text/javascript">
+		// 제목을 과정명으로 변경
+		//$(function(){
+		document.title = "<c:out value="${view.subjnm }" escapeXml="false" /> - "+document.title;
+		//});
+		var viewUrl = window.location.hostname + window.location.pathname;
+		$("#lv-container").attr("data-site", viewUrl.replace("http://","") + "?menuNo=<c:out value="${param.menuNo}" />"+"&p_subj=<c:out value="${param.p_subj}" />&p_year=<c:out value="${param.p_year}" />&p_subjseq=<c:out value="${param.p_subjseq}" />");
+		/* 라이브리 프리미엄 설치코드 */
+
+		window.livereOptions = {
+			refer: viewUrl.replace("http://","") + "?menuNo=<c:out value="${param.menuNo}" />"+"&p_subj=<c:out value="${param.p_subj}" />&p_year=<c:out value="${param.p_year}" />&p_subjseq=<c:out value="${param.p_subjseq}" />"
+			, title : "<c:out value="${view.subjnm }" escapeXml="false" />"
+			, description : "<c:out value="${view.subjnm }" escapeXml="false" />"
+		};
+		(function(d,s) {
+			var j, e=d.getElementsByTagName(s)[0];
+
+			if (typeof LivereTower === 'function') {return;}
+
+			j=d.createElement(s);
+			j.src='https://cdn-city.livere.com/js/embed.dist.js';
+			j.async=true;
+
+			e.parentNode.insertBefore(j,e);
+		})(document,'script');
+	</script>
+</div>
+<!--
 <div class="mb20 pt40" style="clear:left;">
 	<input type="radio" name="livere_ImgCheckBtn" id="livere_choiceBtn_1" value="[알려주세요]"  class="livere_choiceImg">
 	<label for="livere_choiceBtn_1">과정질문</label>

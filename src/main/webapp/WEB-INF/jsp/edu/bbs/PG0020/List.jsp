@@ -41,10 +41,11 @@
 							<c:forEach var="file" items="${fileList }">
 								<c:choose>
 									<c:when test="${file.fileFieldName eq 'main_image' }">
-										<img alt="에듀코카 이벤트 이미지" src="/cmm/fms/getImage.do?atchFileId=<c:out value="${file.atchFileId}" />&amp;fileSn=<c:out value="${file.fileSn}" />" style="width: 336px;height: 216px" />
+										<%--<img alt="에듀코카 이벤트 이미지" src="/cmm/fms/getImage.do?atchFileId=<c:out value="${file.atchFileId}" />&amp;fileSn=<c:out value="${file.fileSn}" />" style="width: 336px;height: 216px" />--%>
+										<img alt="에듀코카 이벤트 이미지" src="<c:out value="${file.imgUrl}" />" style="width: 336px;height: 216px" />
 									</c:when>
 									<c:otherwise>
-										<img alt="No Image" src="/edu/images/bm/noimage.png" />
+										<%--<img alt="No Image" src="/edu/images/bm/noimage.png" />--%>
 									</c:otherwise>
 								</c:choose>
 							</c:forEach>

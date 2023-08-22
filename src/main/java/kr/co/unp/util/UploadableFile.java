@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.apache.commons.io.FileUtils;
@@ -61,7 +62,7 @@ public class UploadableFile {
 	}
 
 	public static void listFile(File file, Date date) throws IOException{
-		toDay = new java.text.SimpleDateFormat("yyyyMMddHHmm").format(new java.util.Date());
+		toDay = new SimpleDateFormat("yyyyMMddHHmm").format(new Date());
 		File[] subFiles = file.listFiles(filter);
 		if( ArrayUtils.isNotEmpty(subFiles) ){
 			for(File f : subFiles){

@@ -307,9 +307,9 @@ public class MemberService extends DefaultCmmProgramService {
 		String username = "";
         String password = "";
         String sttus = "";
-        
-        param.put("username", "sjsjgg");
-	    param.put("password", "6699439411d65d9e0aa492afec1d4b8fbafd613a512bbc7196b6a5be595d2c");
+
+		param.put("username", "sjsjgg");
+		param.put("password", "6699439411d65d9e0aa492afec1d4b8fbafd613a512bbc7196b6a5be595d2c"); //1q2w3e4r5t!
 	    
 	    /*param.put("username", "kok547");
 	    param.put("password", "f46f0abab9477c96662b4c3e7e76c845272879df2e7223784d26473da7014df");*/

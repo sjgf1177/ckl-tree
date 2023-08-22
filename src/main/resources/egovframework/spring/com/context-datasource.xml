@@ -39,4 +39,13 @@
 		<property name="password" value="${Globals.Intranet.password}" />
 	</bean>
 
+	<!-- sms db(maria)접속
+	<bean id="dataSource-sms" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="${Globals.SmsDriverClassName}"/>
+		<property name="url" value="${Globals.SmsDB.url}" />
+		<property name="username" value="${Globals.SmsDB.username}" />
+		<property name="password" value="${Globals.SmsDB.password}" />
+	</bean>
+-->
+
 </beans>

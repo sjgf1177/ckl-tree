@@ -187,6 +187,8 @@ public class MainService extends DefaultCmmProgramService implements ServletCont
 		paramEmp.put("useAt", "Y");
 		List<ZValue> empmnLogoCareerList = getCareerList(paramEmp);
 		model.addAttribute("empmnLogoCareerList", empmnLogoCareerList);  */
+
+		param.put("mode", param.getString("mode"));
 	}
 
 	public void preview(ParameterContext<ZValue> paramCtx) throws Exception {

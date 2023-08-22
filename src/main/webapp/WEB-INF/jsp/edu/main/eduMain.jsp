@@ -58,7 +58,7 @@ if( StringUtils.hasText(menuNo) ) {
 %>
     
 <%@include file="/WEB-INF/jsp/edu/inc/incMainFn.jsp"%>
-
+<c:if test="${param.mode eq 'renewal'}">
 <jsp:useBean id="todayNow" class="java.util.Date"  />
 <fmt:formatDate value="${todayNow}" var="today" pattern="yyyy-MM-dd" />
 
@@ -750,3 +750,27 @@ if( StringUtils.hasText(menuNo) ) {
     </div>
 </body>
 </html>
+</c:if>
+<c:if test="${param.mode ne 'renewal'}">
+	<!DOCTYPE html>
+	<html lang="ko">
+	<head>
+		<title>에듀코카 korea creative content agency</title>
+		<meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1, maximum-scale=3, minimum-scale=1"/>
+	</head>
+	<body>
+	<div style="text-align : center; position: fixed; top: 42%; left: 50%; transform: translate(-50%, -50%);">
+		<img src="/edu/images/poup_open.png">
+		<p style="border-top: 1px solid #222; padding-top: 30px; font-weight: 600; font-size: 20px; ">2022년 콘텐츠스텝업 IP 과정 - 해외과정 1 “콘텐츠 로컬라이제이션”</p>
+		<p style="color: #545454;">교육 신청을 원하시는 분은 아래 버튼을 클릭해 주세요.</p>
+		<a href="https://docs.google.com/forms/d/e/1FAIpQLSe_C3-6cTfEONA0DAjCD3xpW7Y6PKO73qLeOZGNd5DHRit8XQ/viewform" style="color:#38b5ff; font-size:20px;" target="_blank">신청하기</a>
+		<style>
+			@media all and (max-width:640px) {
+				img{width: 100%;}
+				div{width: 100%;}
+			}
+		</style>
+	</div>
+	</body>
+	</html>
+</c:if>

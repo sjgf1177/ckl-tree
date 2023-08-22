@@ -1027,8 +1027,8 @@
 						</th>
 						<td>
 							<div class="input_wrap">
-								<c:choose>
-									<c:when test="${user.mberSe eq '01'}">
+<%--								<c:choose>
+									<c:when test="${user.mberSe eq '01'}">--%>
 									<span class="board_type_1_input_con">
 										<input name="email1" id="email1" class="input_style_0" type="text" title="직접입력" value="" />
 										<label for="email1">이메일 아이디</label>
@@ -1074,7 +1074,7 @@
 	
 									</span>
 									<a href="javascript:crtfcPopup('01');" title="이메일 인증하기(새창열기)" class="btn btn-default btn-sm">인증하기</a>
-									</c:when>
+<%--									</c:when>
 	
 									<c:otherwise>
 										<c:set var="data" value="${fn:split(user.email,'@')}" />
@@ -1084,7 +1084,7 @@
 										<input type="hidden" name="emailAuthAt" value="Y"/>
 										<c:out value="${user.email}"/>
 									</c:otherwise>
-								</c:choose>
+								</c:choose>--%>
 							</div>
 							<p>이메일 인증은 회원 가입 완료 후 인증해주시기바랍니다. (가입 도중에 인증되지 않습니다.)</p>
 						</td>

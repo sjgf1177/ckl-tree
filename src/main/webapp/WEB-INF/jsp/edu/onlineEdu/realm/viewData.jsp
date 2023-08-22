@@ -96,7 +96,8 @@
 								<c:set var="fileicn" value="${ext }" />
 							</c:if>
 						</c:forTokens>
-						<c:set var="url" value="https://edulms.kocca.kr/servlet/controller.library.DownloadServlet?p_savefile=${fileVO.savefile }&p_realfile=${fileVO.realfile }" />
+						<%--<c:set var="url" value="https://edulms.kocca.kr/servlet/controller.library.DownloadServlet?p_savefile=${fileVO.savefile }&p_realfile=${fileVO.realfile }" />--%>
+						<c:set var="url" value="http://localhost:8088/servlet/controller.library.DownloadServlet?p_savefile=${fileVO.savefile }&p_realfile=${fileVO.realfile }" />
 						<a href="${url }" class="${fileicn}">
 							<c:out value="${fileVO.realfile }"/><br />
 						</a>

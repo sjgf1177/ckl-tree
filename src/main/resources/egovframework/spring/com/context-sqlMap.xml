@@ -89,4 +89,19 @@
 		<property name="lobHandler" ref="egov.lobHandler"/>
 	</bean>
 	-->
+
+	<!-- SMS sqlMapClient 설정
+	<bean id="smsSqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+
+		<property name="configLocations">
+			<list>
+				<value>classpath:/egovframework/sqlmap/config/mysql/sql-map-config-mysql-sms.xml</value>
+			</list>
+		</property>
+
+		<property name="dataSource" ref="dataSource-sms"/>
+
+	 <property name="lobHandler" ref="egov.lobHandler"/>
+	</bean>
+-->
 </beans>
